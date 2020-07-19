@@ -1,11 +1,11 @@
-package io.alps.model;
+package com.apicatalog.alps.model;
 
 import java.net.URI;
 import java.util.List;
 
-import io.alps.model.element.Descriptor;
-import io.alps.model.element.Documentation;
-import io.alps.model.element.Link;
+import com.apicatalog.alps.model.element.Descriptor;
+import com.apicatalog.alps.model.element.Documentation;
+import com.apicatalog.alps.model.element.Link;
 
 public interface Document {
 

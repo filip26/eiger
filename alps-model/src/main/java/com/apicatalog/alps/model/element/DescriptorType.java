@@ -1,4 +1,4 @@
-package io.alps.model.element;
+package com.apicatalog.alps.model.element;
 
 public enum DescriptorType {
 

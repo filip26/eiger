@@ -1,4 +1,4 @@
-package io.alps.model.ref;
+package com.apicatalog.alps.model.ref;
 
 import java.net.URI;
 

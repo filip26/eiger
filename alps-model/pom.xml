@@ -6,11 +6,11 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.alps</groupId>
+    <groupId>com.apicatalog</groupId>
     <artifactId>alps-model</artifactId>
     <version>0.1-SNAPSHOT</version>
     
-    <name>ALPS Model</name>
+    <name>ALPS Document Model</name>
 
     <properties>
         
