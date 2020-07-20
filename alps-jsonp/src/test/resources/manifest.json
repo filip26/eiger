@@ -1,0 +1,11 @@
+{
+    "description": "ALPS test suite to test the ability of ALPS parser to process ALSP+JSON",
+    "sequence": [    
+        {
+           "@id"    : "#01",
+           "@type"  : "#PositiveEvaluationTest",
+            "name"  : "simple ALPS document",
+            "input" : "test-1.json" 
+        }
+    ]
+}
