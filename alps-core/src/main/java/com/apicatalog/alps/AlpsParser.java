@@ -3,6 +3,7 @@ package com.apicatalog.alps;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.URI;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.AlpsDocument;
@@ -16,8 +17,8 @@ public interface AlpsParser {
      */
     Set<String> mediaTypes();
     
-    AlpsDocument parse(String mediaType, InputStream stream) throws IOException, AlpsParserException;
+    AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException;
     
-    AlpsDocument parse(String mediaType, Reader reader) throws IOException, AlpsParserException;
+    AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException;
     
 }
