@@ -1,8 +1,8 @@
-package com.apicatalog.alps.model.element;
+package com.apicatalog.alps.dom.element;
 
 import java.util.List;
 
-import com.apicatalog.alps.model.ref.Reference;
+import com.apicatalog.alps.dom.ref.Reference;
 
 public interface Descriptor {
     

@@ -1,4 +1,4 @@
-package com.apicatalog.alps.model.element;
+package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
 
