@@ -25,13 +25,11 @@
                 
                 "descriptor": {
                     "id": "nameSearch",
-                    "type": "semantic",
                     "doc": "Input for a search form." 
                 }                
             },
             {
                 "id": "contact",
-                "type": "semantic",
                 
                 "descriptor": [
                     {
@@ -40,20 +38,16 @@
                         "doc": "A link to an individual contact."
                     },
                     {
-                        "id": "contact",
-                        "type": "semantic"
+                        "id": "contact"
                     },
                     {
-                        "id": "fullName",
-                        "type": "semantic"
+                        "id": "fullName"
                     },
                     {
-                        "id": "email",
-                        "type": "semantic"
+                        "id": "email"
                     },
                     {
-                        "id": "phone",
-                        "type": "semantic"
+                        "id": "phone"
                     }                    
                 ]            
             }        
