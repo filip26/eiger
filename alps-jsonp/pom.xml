@@ -27,4 +27,12 @@
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>   
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps-core</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>

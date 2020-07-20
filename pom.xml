@@ -13,7 +13,7 @@
     <name>Application-Level Profile Semantics</name>
 
     <modules>
-        <module>alps-model</module>
+        <module>alps-core</module>
         <module>alps-jsonp</module>
     </modules>
 
