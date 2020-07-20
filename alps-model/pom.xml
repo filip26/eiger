@@ -6,11 +6,16 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.apicatalog</groupId>
     <artifactId>alps-model</artifactId>
-    <version>0.1-SNAPSHOT</version>
     
     <name>ALPS Document Model</name>
+
+    <parent>
+        <groupId>com.apicatalog</groupId>
+        <artifactId>alps</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <properties>
         

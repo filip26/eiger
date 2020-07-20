@@ -6,11 +6,16 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.apicatalog</groupId>
     <artifactId>alps-jsonp</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    
+
     <name>JSON-P ALPS Document Parser</name>
+
+	<parent>
+        <groupId>com.apicatalog</groupId>
+        <artifactId>alps</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <properties>
         
