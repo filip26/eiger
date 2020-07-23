@@ -36,7 +36,7 @@ Compile sources:
 
 ```
 
-Add JSON-P provider, if it is not on the classpath already.
+Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the classpath already.
 
 ```xml
 <dependency>
