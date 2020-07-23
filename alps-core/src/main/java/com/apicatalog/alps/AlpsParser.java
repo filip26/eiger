@@ -4,18 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
-import java.util.Set;
 
 import com.apicatalog.alps.dom.AlpsDocument;
 
 public interface AlpsParser {
 
     /**
-     * A set of supported media types by the parser.
+     * Indicates where the media type can be parsed by the parser instance.
      * 
-     * @return a set of supported media types, never <code>null</code>
+     * @return <code>true</code> if the parser supports the given media type, otherwise false.
      */
-    Set<String> mediaTypes();
+    boolean canParse(String mediaType);
     
     AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException;
     

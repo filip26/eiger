@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
-import java.util.Set;
 
 import javax.json.Json;
 import javax.json.stream.JsonParser;
@@ -16,22 +15,29 @@ import com.apicatalog.alps.dom.AlpsDocument;
 public final class AlpsJsonParser implements AlpsParser {
 
     @Override
-    public Set<String> mediaTypes() {
-        // TODO Auto-generated method stub
-        return null;
+    public boolean canParse(String mediaType) {
+        return mediaType != null
+                && ("application/json".equalsIgnoreCase(mediaType)
+                    || mediaType.endsWith("+json")
+                    );
     }
 
     @Override
     public AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException {
-        
-        //TODO check mediaType
+
+        if (!canParse(mediaType)) {
+            throw new AlpsParserException();
+        }
         
         return parse(baseUri, Json.createParser(stream));
     }
 
     @Override
     public AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException {
-        //TODO check mediaType
+        
+        if (!canParse(mediaType)) {
+            throw new AlpsParserException();
+        }
         
         return parse(baseUri, Json.createParser(reader));
     }

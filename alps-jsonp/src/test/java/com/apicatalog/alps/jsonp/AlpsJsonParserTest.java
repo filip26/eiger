@@ -54,5 +54,4 @@ class AlpsJsonParserTest {
             return tests.stream().map(JsonObject.class::cast).map(AlpsParserTestCase::of);
         }
     }
-    
 }
