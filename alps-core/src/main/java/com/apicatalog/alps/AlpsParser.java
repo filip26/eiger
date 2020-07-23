@@ -20,5 +20,5 @@ public interface AlpsParser {
     AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException;
     
     AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException;
-    
+
 }
