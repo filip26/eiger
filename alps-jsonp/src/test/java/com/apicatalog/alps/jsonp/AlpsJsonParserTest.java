@@ -37,7 +37,7 @@ class AlpsJsonParserTest {
             assertNotNull(document);
             
         } catch (AlpsParserException e) {
-            fail(e);
+            fail(e.getMessage(), e);
         }
     }
     

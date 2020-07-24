@@ -1,6 +1,6 @@
 package com.apicatalog.alps.dom.element;
 
-public enum DescriptorType {
+public enum AlpsDescriptorType {
 
 	SEMANTIC,
 	

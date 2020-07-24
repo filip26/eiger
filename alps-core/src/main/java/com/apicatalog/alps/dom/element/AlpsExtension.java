@@ -2,7 +2,7 @@ package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
 
-public interface Extension  {
+public interface AlpsExtension  {
 
 	/**
 	 * {@link URI} pointing to an external document which provides the definition of the extension

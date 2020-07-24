@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.apicatalog.alps.dom.ref.Reference;
 
-public interface Descriptor {
+public interface AlpsDescriptor {
     
 	String getId();
 	
@@ -12,15 +12,15 @@ public interface Descriptor {
 	
 	String getName();
 	
-	DescriptorType getType();
+	AlpsDescriptorType getType();
 	
 	Reference getReturnType();
 	
-	Documentation getDocumentation();
+	AlpsDocumentation getDocumentation();
 	
-	List<Extension> getExtensions();
+	List<AlpsExtension> getExtensions();
 	
-	List<Descriptor> getDescriptors();
+	List<AlpsDescriptor> getDescriptors();
 	
-	List<Link> getLinks();
+	List<AlpsLink> getLinks();
 }

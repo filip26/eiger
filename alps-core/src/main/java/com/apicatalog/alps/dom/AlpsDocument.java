@@ -3,9 +3,9 @@ package com.apicatalog.alps.dom;
 import java.net.URI;
 import java.util.Set;
 
-import com.apicatalog.alps.dom.element.Descriptor;
-import com.apicatalog.alps.dom.element.Documentation;
-import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.dom.element.AlpsDescriptor;
+import com.apicatalog.alps.dom.element.AlpsDocumentation;
+import com.apicatalog.alps.dom.element.AlpsLink;
 
 /**
  * An ALPS document contains a machine-readable collection of
@@ -15,9 +15,9 @@ import com.apicatalog.alps.dom.element.Link;
  */
 public interface AlpsDocument {
 
-	Descriptor findById(final String id);
+	AlpsDescriptor findById(final String id);
 	
-	Set<Descriptor> findByName(final String name);
+	Set<AlpsDescriptor> findByName(final String name);
 	
 	/**
 	 * Indicates the version of the ALPS specification used in the document.
@@ -35,19 +35,19 @@ public interface AlpsDocument {
 	 * 
 	 * @return top level document descriptors
 	 */
-	Set<Descriptor> getDescriptors();
+	Set<AlpsDescriptor> getDescriptors();
 	
 	/**
 	 * Returns flattened document descriptors.
 	 * 
 	 * @return all descriptors present in the document
 	 */
-	Set<Descriptor> getAllDescriptors();
+	Set<AlpsDescriptor> getAllDescriptors();
 		
 	
-	Set<Link> getLinks();
+	Set<AlpsLink> getLinks();
 	
-	Documentation getDocumentation();
+	Set<AlpsDocumentation> getDocumentation();
 	
 	/**
 	 * Base {@link URI} of the ALPS document 

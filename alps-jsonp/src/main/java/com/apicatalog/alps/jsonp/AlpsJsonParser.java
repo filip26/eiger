@@ -6,7 +6,10 @@ import java.io.Reader;
 import java.net.URI;
 
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
 
 import com.apicatalog.alps.AlpsParser;
 import com.apicatalog.alps.AlpsParserException;
@@ -15,7 +18,7 @@ import com.apicatalog.alps.dom.AlpsDocument;
 public final class AlpsJsonParser implements AlpsParser {
 
     @Override
-    public boolean canParse(String mediaType) {
+    public boolean canParse(final String mediaType) {
         return mediaType != null
                 && ("application/json".equalsIgnoreCase(mediaType)
                     || mediaType.endsWith("+json")
@@ -23,8 +26,12 @@ public final class AlpsJsonParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException {
+    public AlpsDocument parse(final URI baseUri, final String mediaType, final InputStream stream) throws IOException, AlpsParserException {
 
+        if (stream == null) {
+            throw new IllegalArgumentException();
+        }
+        
         if (!canParse(mediaType)) {
             throw new AlpsParserException();
         }
@@ -33,7 +40,11 @@ public final class AlpsJsonParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException {
+    public AlpsDocument parse(final URI baseUri, final String mediaType, final Reader reader) throws IOException, AlpsParserException {
+
+        if (reader == null) {
+            throw new IllegalArgumentException();
+        }
         
         if (!canParse(mediaType)) {
             throw new AlpsParserException();
@@ -42,9 +53,30 @@ public final class AlpsJsonParser implements AlpsParser {
         return parse(baseUri, Json.createParser(reader));
     }
     
-    private AlpsDocument parse(URI baseUri, JsonParser parser)  throws IOException, AlpsParserException {
-        //TODO
-        return null;
+    private static final AlpsDocument parse(URI baseUri, JsonParser parser)  throws AlpsParserException {
+        
+        if (!parser.hasNext()) {
+            throw new AlpsParserException("Expected JSON object but was an empty input");
+        }
+            
+        final Event event = parser.next();
+        
+        if (!Event.START_OBJECT.equals(event)) {
+            throw new AlpsParserException("Expected JSON object but was " + event);
+        }
+        
+        final JsonObject rootObject = parser.getObject();
+        
+        if (!rootObject.containsKey(AlpsJsonConstant.ALPS_ROOT_KEY)) {
+            throw new AlpsParserException("Property '" + AlpsJsonConstant.ALPS_ROOT_KEY + "' is not present");
+        }
+        
+        final JsonValue alpsObject = rootObject.get(AlpsJsonConstant.ALPS_ROOT_KEY);
+        
+        if (JsonUtils.isNotObject(alpsObject)) {
+            throw new AlpsParserException("Property '" + AlpsJsonConstant.ALPS_ROOT_KEY + "' does not contain JSON object");
+        }
+            
+        return AlpsJsonDocument.parse(baseUri, alpsObject.asJsonObject());
     }
-
 }
