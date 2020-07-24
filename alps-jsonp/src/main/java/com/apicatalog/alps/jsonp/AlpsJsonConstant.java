@@ -1,6 +1,6 @@
 package com.apicatalog.alps.jsonp;
 
-public final class AlpsJsonConstant {
+final class AlpsJsonConstant {
 
     public static final String ALPS_ROOT_KEY = "alps";
     
@@ -19,6 +19,10 @@ public final class AlpsJsonConstant {
     public static final String FORMAT_KEY = "format";
     
     public static final String LINK_KEY = "link";
+    
+    public static final String DESCRIPTOR_KEY = "descriptor";
+    
+    public static final String TYPE_KEY = "type";
     
     private AlpsJsonConstant() {
     }

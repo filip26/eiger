@@ -6,7 +6,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
-public final class JsonUtils {
+final class JsonUtils {
 
     public static final boolean isObject(final JsonValue value) {
         return value != null && ValueType.OBJECT.equals(value.getValueType());

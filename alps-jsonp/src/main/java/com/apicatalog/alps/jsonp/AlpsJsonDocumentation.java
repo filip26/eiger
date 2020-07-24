@@ -11,7 +11,7 @@ import javax.json.JsonValue;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
-class AlpsJsonDocumentation implements AlpsDocumentation {
+final class AlpsJsonDocumentation implements AlpsDocumentation {
 
     private URI href;
     private String mediaType;

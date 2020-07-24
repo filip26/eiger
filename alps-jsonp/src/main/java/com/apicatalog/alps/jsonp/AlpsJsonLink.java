@@ -10,7 +10,7 @@ import javax.json.JsonValue;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
-class AlpsJsonLink implements AlpsLink {
+final class AlpsJsonLink implements AlpsLink {
 
     private URI href;
     private String rel;

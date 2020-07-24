@@ -1,26 +1,25 @@
 package com.apicatalog.alps.dom.element;
 
-import java.util.List;
-
-import com.apicatalog.alps.dom.ref.Reference;
+import java.net.URI;
+import java.util.Set;
 
 public interface AlpsDescriptor {
     
 	String getId();
 	
-	Reference getHref();
+	URI getHref();
 	
 	String getName();
 	
 	AlpsDescriptorType getType();
 	
-	Reference getReturnType();
+	URI getReturnType();
 	
-	AlpsDocumentation getDocumentation();
+	Set<AlpsDocumentation> getDocumentation();
 	
-	List<AlpsExtension> getExtensions();
+	Set<AlpsExtension> getExtensions();
 	
-	List<AlpsDescriptor> getDescriptors();
+	Set<AlpsDescriptor> getDescriptors();
 	
-	List<AlpsLink> getLinks();
+	Set<AlpsLink> getLinks();
 }

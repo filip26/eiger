@@ -14,7 +14,7 @@ import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
-class AlpsJsonDocument implements AlpsDocument {
+final class AlpsJsonDocument implements AlpsDocument {
 
     private AlpsVersion version;
     
@@ -104,6 +104,9 @@ class AlpsJsonDocument implements AlpsDocument {
         } else {
             document.links = Collections.emptySet();
         }
+        
+        // parse descriptors
+        
         
         return document;
     }
