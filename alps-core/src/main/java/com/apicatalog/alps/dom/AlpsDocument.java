@@ -1,6 +1,8 @@
 package com.apicatalog.alps.dom;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -15,7 +17,7 @@ import com.apicatalog.alps.dom.element.AlpsLink;
  */
 public interface AlpsDocument {
 
-	AlpsDescriptor findById(final String id);
+	Optional<AlpsDescriptor> findById(final String id);
 	
 	Set<AlpsDescriptor> findByName(final String name);
 	
@@ -26,7 +28,7 @@ public interface AlpsDocument {
      *
      * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2.2.14">ALPS Version</a>
      * 
-     * @return ALPS document version
+     * @return ALPS document version, nevern <code>null</code>
 	 */
 	AlpsVersion getVersion();
 
@@ -42,8 +44,7 @@ public interface AlpsDocument {
 	 * 
 	 * @return all descriptors present in the document
 	 */
-	Set<AlpsDescriptor> getAllDescriptors();
-		
+	Collection<AlpsDescriptor> getAllDescriptors();
 	
 	Set<AlpsLink> getLinks();
 	

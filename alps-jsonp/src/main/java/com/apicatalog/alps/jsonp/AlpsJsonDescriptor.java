@@ -1,6 +1,7 @@
 package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -38,8 +39,8 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -24,20 +28,23 @@ final class AlpsJsonDocument implements AlpsDocument {
     
     private Set<AlpsLink> links;
     
+    private Map<String, AlpsDescriptor> descriptors;
+    
     public AlpsJsonDocument() {
         this.version = AlpsVersion.VERSION_1_0;
     }
     
     @Override
-    public AlpsDescriptor findById(String id) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<AlpsDescriptor> findById(String id) {
+        return Optional.ofNullable(descriptors.get(id));
     }
 
     @Override
-    public Set<AlpsDescriptor> findByName(String name) {
-        // TODO Auto-generated method stub
-        return null;
+    public Set<AlpsDescriptor> findByName(final String name) {
+        return descriptors
+                    .values().stream()
+                    .filter(d -> d.getName().isPresent() && name.equals(d.getName().get()))
+                    .collect(Collectors.toSet());
     }
 
     @Override
@@ -52,9 +59,8 @@ final class AlpsJsonDocument implements AlpsDocument {
     }
 
     @Override
-    public Set<AlpsDescriptor> getAllDescriptors() {
-        // TODO Auto-generated method stub
-        return null;
+    public Collection<AlpsDescriptor> getAllDescriptors() {
+        return descriptors.values();
     }
 
     @Override
@@ -106,8 +112,12 @@ final class AlpsJsonDocument implements AlpsDocument {
         }
         
         // parse descriptors
-        
-        
+        if (alpsObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
+            
+        } else {
+            document.descriptors = Collections.emptyMap();
+        }
+
         return document;
     }
 }

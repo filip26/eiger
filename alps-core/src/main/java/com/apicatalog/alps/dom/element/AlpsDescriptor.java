@@ -1,6 +1,7 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.Set;
 
 public interface AlpsDescriptor {
@@ -9,7 +10,7 @@ public interface AlpsDescriptor {
 	
 	URI getHref();
 	
-	String getName();
+	Optional<String> getName();
 	
 	AlpsDescriptorType getType();
 	
