@@ -46,6 +46,11 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
     <version>1.1.6</version>
 </dependency>
 ```
+### Roadmap
+
+- [ ] 0.1 JSON Parser
+- [ ] 0.2 Effective Document Processor
+- [ ] TBD
 
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
