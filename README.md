@@ -1,4 +1,4 @@
-# Application-Level Profile Semantics for Java
+# Application-Level Profile Semantics
 
 An implementation of [Application-Level Profile Semantics](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02).
 
