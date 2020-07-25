@@ -16,13 +16,13 @@ Your contribution is welcome.
 Fork and clone the project repository:
 
 ```bash
-> git clone git@github.com:REPLACE_WITH_GITHUB_ID/alps-java.git
+> git clone git@github.com:REPLACE_WITH_GITHUB_ID/alps.git
 ```
 
 Compile sources:
 
 ```bash
-> cd alps-java
+> cd alps
 > mvn package install
 ```
 
