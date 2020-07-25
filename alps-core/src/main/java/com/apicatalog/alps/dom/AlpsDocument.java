@@ -17,7 +17,7 @@ import com.apicatalog.alps.dom.element.AlpsLink;
  */
 public interface AlpsDocument {
 
-	Optional<AlpsDescriptor> findById(final String id);
+	Optional<AlpsDescriptor> findById(final URI id);
 	
 	Set<AlpsDescriptor> findByName(final String name);
 	

@@ -28,14 +28,14 @@ final class AlpsJsonDocument implements AlpsDocument {
     
     private Set<AlpsLink> links;
     
-    private Map<String, AlpsDescriptor> descriptors;
+    private Map<URI, AlpsDescriptor> descriptors;
     
     public AlpsJsonDocument() {
         this.version = AlpsVersion.VERSION_1_0;
     }
     
     @Override
-    public Optional<AlpsDescriptor> findById(String id) {
+    public Optional<AlpsDescriptor> findById(URI id) {
         return Optional.ofNullable(descriptors.get(id));
     }
 
@@ -54,8 +54,11 @@ final class AlpsJsonDocument implements AlpsDocument {
 
     @Override
     public Set<AlpsDescriptor> getDescriptors() {
-        // TODO Auto-generated method stub
-        return null;
+        return descriptors
+                    .values().stream()
+                    .filter(d -> d.getParent().isEmpty())
+                    .collect(Collectors.toSet())
+                    ;
     }
 
     @Override
@@ -113,6 +116,7 @@ final class AlpsJsonDocument implements AlpsDocument {
         
         // parse descriptors
         if (alpsObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
+            document.descriptors = AlpsJsonDescriptor.parse(alpsObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
             
         } else {
             document.descriptors = Collections.emptyMap();

@@ -6,9 +6,9 @@ import java.util.Set;
 
 public interface AlpsDescriptor {
     
-	String getId();
+	URI getId();
 	
-	URI getHref();
+	Optional<URI> getHref();
 	
 	Optional<String> getName();
 	
@@ -21,6 +21,8 @@ public interface AlpsDescriptor {
 	Set<AlpsExtension> getExtensions();
 	
 	Set<AlpsDescriptor> getDescriptors();
+	
+	Optional<AlpsDescriptor> getParent();
 	
 	Set<AlpsLink> getLinks();
 }

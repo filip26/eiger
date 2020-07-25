@@ -37,20 +37,11 @@
                         "type": "safe",
                         "doc": "A link to an individual contact."
                     },
-                    {
-                        "id": "contact"
-                    },
-                    {
-                        "id": "fullName"
-                    },
-                    {
-                        "id": "email"
-                    },
-                    {
-                        "id": "phone"
-                    }                    
-                ]            
-            }        
+                    "fullName",
+                    "email",
+                    "phone"             
+                ]
+            }
         ]
     }
 }
