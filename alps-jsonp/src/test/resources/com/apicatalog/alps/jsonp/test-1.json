@@ -14,15 +14,14 @@
                     "value": "A search form with a two inputs"
                 },
             
-                "descriptor": [
+                "descriptor":
                     {
                         "id": "value",
                         "name": "search",
-                        "doc": { "value": "input for search" }
-                    },
-                
-                    { "href": "#resultType" }
-                ]
+                        "doc": { "value": "input for search" },
+                        "rt": "#resultType" 
+                    }
+               
             },
             {
                 "id": "resultType",
