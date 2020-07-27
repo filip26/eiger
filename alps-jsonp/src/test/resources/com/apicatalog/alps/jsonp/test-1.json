@@ -14,28 +14,23 @@
                     "value": "A search form with a two inputs"
                 },
             
-                "descriptor": [
+                "descriptor":
                     {
                         "id": "value",
                         "name": "search",
-                        "type": "descriptor",
-                        "doc": { "value": "input for search" }
-                    },
-                
-                    { "href": "#resultType" }
-                ]
+                        "doc": { "value": "input for search" },
+                        "rt": "#resultType" 
+                    }
+               
             },
-        
             {
                 "id": "resultType",
-                "type": "descriptor",
                 "description": { "value": "results format"},
-                "ext": [
-                    {
-                        "href": "http://alps.io/ext/range",
-                        "value": "summary,detail"
-                    }
-                ]
+                "ext": {
+                	"id": "rt-ext",
+                    "href": "http://alps.io/ext/range",
+                    "value": "summary,detail"
+                }
             }
         ]
     }

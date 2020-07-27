@@ -30,6 +30,7 @@
             },
             {
                 "id": "contact",
+                "href": "https://schema.org/Person",
                 
                 "descriptor": [
                     {
@@ -37,9 +38,22 @@
                         "type": "safe",
                         "doc": "A link to an individual contact."
                     },
-                    "fullName",
-                    "email",
-                    "phone"             
+                    {
+                        "id": "givenName",
+                        "href": "http://schema.org/givenName"
+                    },                    
+                    {
+                        "id": "familyName",
+                        "href": "http://schema.org/familyName"
+                    },
+                    { 
+                        "id": "email",
+                        "href": "http://schema.org/email"
+                    },
+                    {
+                        "id": "telephone",
+                        "href": "http://schema.org/telephone"
+                    }
                 ]
             }
         ]
