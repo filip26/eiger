@@ -18,17 +18,14 @@
                     {
                         "id": "value",
                         "name": "search",
-                        "type": "descriptor",
                         "doc": { "value": "input for search" }
                     },
                 
                     { "href": "#resultType" }
                 ]
             },
-        
             {
                 "id": "resultType",
-                "type": "descriptor",
                 "description": { "value": "results format"},
                 "ext": [
                     {

@@ -24,6 +24,10 @@ final class AlpsJsonConstant {
     
     public static final String TYPE_KEY = "type";
     
+    public static final String ID_KEY = "id";
+    
+    public static final String NAME_KEY = "name";
+    
     private AlpsJsonConstant() {
     }
 }
