@@ -30,6 +30,8 @@ final class AlpsJsonConstant {
     
     public static final String RETURN_TYPE_KEY = "rt";
     
+    public static final String EXTENSION_KEY = "ext";
+    
     private AlpsJsonConstant() {
     }
 }

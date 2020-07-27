@@ -37,6 +37,8 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
     
     private Set<AlpsLink> links;
     
+    private Set<AlpsExtension> extensions;
+    
     private AlpsDescriptor parent;
     
     private AlpsJsonDescriptor() {
@@ -76,8 +78,7 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
 
     @Override
     public Set<AlpsExtension> getExtensions() {
-        // TODO Auto-generated method stub
-        return null;
+        return extensions;
     }
 
     @Override
@@ -231,9 +232,18 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         // nested descriptors
         if (jsonObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
             descriptor.descriptors = AlpsJsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
+            
+        } else {
+            descriptor.descriptors = Collections.emptySet();
         }
-                
-        //TODO ext
+        
+        // extensions
+        if (jsonObject.containsKey(AlpsJsonConstant.EXTENSION_KEY)) {
+            descriptor.extensions = AlpsExtesionJson.parse(jsonObject.get(AlpsJsonConstant.EXTENSION_KEY));
+            
+        } else {
+            descriptor.extensions = Collections.emptySet();
+        }
         
         return descriptor;
     }
