@@ -1,4 +1,4 @@
-# Application-Level Profile Semantics for Java
+# Application-Level Profile Semantics
 
 An implementation of [Application-Level Profile Semantics](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02).
 
@@ -16,13 +16,13 @@ Your contribution is welcome.
 Fork and clone the project repository:
 
 ```bash
-> git clone git@github.com:REPLACE_WITH_GITHUB_ID/alps-java.git
+> git clone git@github.com:REPLACE_WITH_GITHUB_ID/alps.git
 ```
 
 Compile sources:
 
 ```bash
-> cd alps-java
+> cd alps
 > mvn package install
 ```
 
@@ -46,6 +46,11 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
     <version>1.1.6</version>
 </dependency>
 ```
+### Roadmap
+
+- [ ] 0.1 JSON Parser
+- [ ] 0.2 Effective Document Processor
+- [ ] TBD
 
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
