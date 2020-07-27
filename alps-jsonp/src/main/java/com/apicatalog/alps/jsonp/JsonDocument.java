@@ -88,38 +88,38 @@ final class JsonDocument implements AlpsDocument {
         document.baseUri = baseUri;
 
         // parse version
-        if (alpsObject.containsKey(JsonKeys.VERSION)) {
+        if (alpsObject.containsKey(AlpsJsonKeys.VERSION)) {
             
-            final JsonValue alpsVersion = alpsObject.get(JsonKeys.VERSION);
+            final JsonValue alpsVersion = alpsObject.get(AlpsJsonKeys.VERSION);
             
             if (JsonUtils.isString(alpsVersion) 
-                    && JsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
+                    && AlpsJsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
                 document.version = AlpsVersion.VERSION_1_0;
             }
         }
         
         // parse documentation
-        if (alpsObject.containsKey(JsonKeys.DOCUMENTATION)) {
-            document.documentation = JsonDocumentation.parse(alpsObject.get(JsonKeys.DOCUMENTATION));
+        if (alpsObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
+            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsJsonKeys.DOCUMENTATION));
             
         } else {
             document.documentation = Collections.emptySet();
         }
         
         // parse links
-        if (alpsObject.containsKey(JsonKeys.LINK)) {
-            document.links = JsonLink.parse(alpsObject.get(JsonKeys.LINK));
+        if (alpsObject.containsKey(AlpsJsonKeys.LINK)) {
+            document.links = JsonLink.parse(alpsObject.get(AlpsJsonKeys.LINK));
             
         } else {
             document.links = Collections.emptySet();
         }
         
         // parse descriptors
-        if (alpsObject.containsKey(JsonKeys.DESCRIPTOR)) {
+        if (alpsObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
-            JsonDescriptor.parse(document.descriptors, alpsObject.get(JsonKeys.DESCRIPTOR));
+            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsJsonKeys.DESCRIPTOR));
             
         } else {
             document.descriptors = Collections.emptyMap();

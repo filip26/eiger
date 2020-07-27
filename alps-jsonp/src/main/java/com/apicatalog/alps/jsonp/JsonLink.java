@@ -45,15 +45,15 @@ final class JsonLink implements AlpsLink {
         
         final JsonLink link = new JsonLink();
         
-        if (!linkObject.containsKey(JsonKeys.HREF)) {
+        if (!linkObject.containsKey(AlpsJsonKeys.HREF)) {
             throw new AlpsParserException("Link object must contain 'href' property");
         }
 
-        if (!linkObject.containsKey(JsonKeys.RELATION)) {
+        if (!linkObject.containsKey(AlpsJsonKeys.RELATION)) {
             throw new AlpsParserException("Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(JsonKeys.HREF);
+        final JsonValue href = linkObject.get(AlpsJsonKeys.HREF);
         
         if (JsonUtils.isNotString(href)) {
             throw new AlpsParserException("Link.href property must be URI but was " + href.getValueType());
@@ -67,7 +67,7 @@ final class JsonLink implements AlpsLink {
             throw new AlpsParserException("Link.href property must be URI but was " + href);
         }
 
-        final JsonValue rel = linkObject.get(JsonKeys.RELATION);
+        final JsonValue rel = linkObject.get(AlpsJsonKeys.RELATION);
         
         if (JsonUtils.isNotString(href)) {
             throw new AlpsParserException("Link.rel property must be string but was " + rel.getValueType());

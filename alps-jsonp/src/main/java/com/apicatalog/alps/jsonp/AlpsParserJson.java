@@ -67,14 +67,14 @@ public final class AlpsParserJson implements AlpsParser {
         
         final JsonObject rootObject = parser.getObject();
         
-        if (!rootObject.containsKey(JsonKeys.ROOT)) {
-            throw new AlpsParserException("Property '" + JsonKeys.ROOT + "' is not present");
+        if (!rootObject.containsKey(AlpsJsonKeys.ROOT)) {
+            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' is not present");
         }
         
-        final JsonValue alpsObject = rootObject.get(JsonKeys.ROOT);
+        final JsonValue alpsObject = rootObject.get(AlpsJsonKeys.ROOT);
         
         if (JsonUtils.isNotObject(alpsObject)) {
-            throw new AlpsParserException("Property '" + JsonKeys.ROOT + "' does not contain JSON object");
+            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
         }
             
         return JsonDocument.parse(baseUri, alpsObject.asJsonObject());

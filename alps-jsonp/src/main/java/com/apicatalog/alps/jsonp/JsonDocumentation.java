@@ -64,18 +64,18 @@ final class JsonDocumentation implements AlpsDocumentation {
         final JsonDocumentation doc = new JsonDocumentation();
         doc.mediaType = "text/plain";
         
-        if (value.containsKey(JsonKeys.VALUE)) {
+        if (value.containsKey(AlpsJsonKeys.VALUE)) {
 
-            final JsonValue content = value.get(JsonKeys.VALUE);
+            final JsonValue content = value.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(content)) {
                 throw new AlpsParserException("doc.value property must be string but was " + content.getValueType());
             }
             doc.content = JsonUtils.getString(content);
             
-        } else if (value.containsKey(JsonKeys.HREF)) {
+        } else if (value.containsKey(AlpsJsonKeys.HREF)) {
             
-            final JsonValue href = value.get(JsonKeys.HREF);
+            final JsonValue href = value.get(AlpsJsonKeys.HREF);
             
             if (JsonUtils.isNotString(href)) {
                 throw new AlpsParserException("'href' property must have string value but was " + href.getValueType());
@@ -93,9 +93,9 @@ final class JsonDocumentation implements AlpsDocumentation {
             throw new AlpsParserException("doc object must contain href of value property");
         }
         
-        if (value.containsKey(JsonKeys.FORMAT)) {
+        if (value.containsKey(AlpsJsonKeys.FORMAT)) {
             
-            final JsonValue format = value.get(JsonKeys.FORMAT);
+            final JsonValue format = value.get(AlpsJsonKeys.FORMAT);
             
             if (JsonUtils.isNotString(format)) {
                 throw new AlpsParserException("doc.format property must be string but was " + format.getValueType());

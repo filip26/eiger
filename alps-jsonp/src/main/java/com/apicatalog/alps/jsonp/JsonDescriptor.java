@@ -133,15 +133,15 @@ final class JsonDescriptor implements AlpsDescriptor {
         descriptor.parent = parent;
         
         // id
-        if (JsonUtils.isNotString(jsonObject.get(JsonKeys.ID))) {
-            throw new AlpsParserException("The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(JsonKeys.ID));
+        if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
+            throw new AlpsParserException("The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsJsonKeys.ID));
         }
         
         try {
-            descriptor.id = URI.create(jsonObject.getString(JsonKeys.ID));
+            descriptor.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
                     
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException("The 'id' must be valid URI but was " + jsonObject.getString(JsonKeys.ID));
+            throw new AlpsParserException("The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
         
         // check id conflict
@@ -152,8 +152,8 @@ final class JsonDescriptor implements AlpsDescriptor {
         index.put(descriptor.id, descriptor);
 
         // name
-        if (jsonObject.containsKey(JsonKeys.NAME)) {
-            final JsonValue name = jsonObject.get(JsonKeys.NAME);
+        if (jsonObject.containsKey(AlpsJsonKeys.NAME)) {
+            final JsonValue name = jsonObject.get(AlpsJsonKeys.NAME);
             
             if (JsonUtils.isNotString(name)) {
                 throw new AlpsParserException("The 'name' property value must be JSON string but was " + name);
@@ -163,9 +163,9 @@ final class JsonDescriptor implements AlpsDescriptor {
         }
 
         // type
-        if (jsonObject.containsKey(JsonKeys.TYPE)) {
+        if (jsonObject.containsKey(AlpsJsonKeys.TYPE)) {
             
-            final JsonValue type = jsonObject.get(JsonKeys.TYPE);
+            final JsonValue type = jsonObject.get(AlpsJsonKeys.TYPE);
             
             if (JsonUtils.isNotString(type)) {
                 throw new AlpsParserException("The 'type' property value must be JSON string but was " + type);
@@ -180,42 +180,30 @@ final class JsonDescriptor implements AlpsDescriptor {
         }
 
         // documentation
-        if (jsonObject.containsKey(JsonKeys.DOCUMENTATION)) {
-            descriptor.doc = JsonDocumentation.parse(jsonObject.get(JsonKeys.DOCUMENTATION));
+        if (jsonObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
+            descriptor.doc = JsonDocumentation.parse(jsonObject.get(AlpsJsonKeys.DOCUMENTATION));
             
         } else {
             descriptor.doc = Collections.emptySet();
         }
         
         // links
-        if (jsonObject.containsKey(JsonKeys.LINK)) {
-            descriptor.links = JsonLink.parse(jsonObject.get(JsonKeys.LINK));
+        if (jsonObject.containsKey(AlpsJsonKeys.LINK)) {
+            descriptor.links = JsonLink.parse(jsonObject.get(AlpsJsonKeys.LINK));
             
         } else {
             descriptor.links = Collections.emptySet();
         }
         
         // href
-        if (jsonObject.containsKey(JsonKeys.HREF)) {
-            
-            final JsonValue href = jsonObject.get(JsonKeys.HREF);
-            
-            if (JsonUtils.isNotString(href)) {
-                throw new AlpsParserException("The 'href' property value must be URI represented as JSON string but was " + href);
-            }
-
-            try {
-                descriptor.href = URI.create(JsonUtils.getString(href));
-                
-            } catch (IllegalArgumentException e) {
-                throw new AlpsParserException("The 'href' property value must be URI represented as JSON string but was " + href);
-            }
+        if (jsonObject.containsKey(AlpsJsonKeys.HREF)) {
+            descriptor.href = JsonUtils.getHref(jsonObject);
         }
 
         // return type
-        if (jsonObject.containsKey(JsonKeys.RETURN_TYPE)) {
+        if (jsonObject.containsKey(AlpsJsonKeys.RETURN_TYPE)) {
             
-            final JsonValue returnType = jsonObject.get(JsonKeys.RETURN_TYPE);
+            final JsonValue returnType = jsonObject.get(AlpsJsonKeys.RETURN_TYPE);
             
             if (JsonUtils.isNotString(returnType)) {
                 throw new AlpsParserException("The 'rt' property value must be URI represented as JSON string but was " + returnType);
@@ -230,16 +218,16 @@ final class JsonDescriptor implements AlpsDescriptor {
         }
         
         // nested descriptors
-        if (jsonObject.containsKey(JsonKeys.DESCRIPTOR)) {
-            descriptor.descriptors = JsonDescriptor.parse(index, descriptor, jsonObject.get(JsonKeys.DESCRIPTOR));
+        if (jsonObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
+            descriptor.descriptors = JsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsJsonKeys.DESCRIPTOR));
             
         } else {
             descriptor.descriptors = Collections.emptySet();
         }
         
         // extensions
-        if (jsonObject.containsKey(JsonKeys.EXTENSION)) {
-            descriptor.extensions = JsonExtesion.parse(jsonObject.get(JsonKeys.EXTENSION));
+        if (jsonObject.containsKey(AlpsJsonKeys.EXTENSION)) {
+            descriptor.extensions = JsonExtesion.parse(jsonObject.get(AlpsJsonKeys.EXTENSION));
             
         } else {
             descriptor.extensions = Collections.emptySet();

@@ -27,6 +27,7 @@
                 "id": "resultType",
                 "description": { "value": "results format"},
                 "ext": {
+                	"id": "rt-ext",
                     "href": "http://alps.io/ext/range",
                     "value": "summary,detail"
                 }
