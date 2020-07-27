@@ -227,7 +227,7 @@ final class JsonDescriptor implements AlpsDescriptor {
         
         // extensions
         if (jsonObject.containsKey(AlpsJsonKeys.EXTENSION)) {
-            descriptor.extensions = JsonExtesion.parse(jsonObject.get(AlpsJsonKeys.EXTENSION));
+            descriptor.extensions = JsonExtension.parse(jsonObject.get(AlpsJsonKeys.EXTENSION));
             
         } else {
             descriptor.extensions = Collections.emptySet();

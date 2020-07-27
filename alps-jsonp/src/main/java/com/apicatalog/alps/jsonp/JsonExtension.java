@@ -11,7 +11,7 @@ import javax.json.JsonValue;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsExtension;
 
-class JsonExtesion implements AlpsExtension {
+class JsonExtension implements AlpsExtension {
 
     private URI id;
     private URI href;
@@ -55,7 +55,7 @@ class JsonExtesion implements AlpsExtension {
             throw new AlpsParserException("An extension must have valid 'id' property but was " + jsonObject);
         }
  
-        final JsonExtesion extension = new JsonExtesion();
+        final JsonExtension extension = new JsonExtension();
         
         try {
             
