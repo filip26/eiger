@@ -56,4 +56,5 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
 - [alps.io homapge](http://alps.io/)
+- [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
 
