@@ -196,6 +196,7 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         
         // href
         if (jsonObject.containsKey(AlpsJsonConstant.HREF_KEY)) {
+            
             final JsonValue href = jsonObject.get(AlpsJsonConstant.HREF_KEY);
             
             if (JsonUtils.isNotString(href)) {
@@ -210,6 +211,24 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
             }
         }
 
+        // return type
+        if (jsonObject.containsKey(AlpsJsonConstant.RETURN_TYPE_KEY)) {
+            
+            final JsonValue returnType = jsonObject.get(AlpsJsonConstant.RETURN_TYPE_KEY);
+            
+            if (JsonUtils.isNotString(returnType)) {
+                throw new AlpsParserException("The 'rt' property value must be URI represented as JSON string but was " + returnType);
+            }
+
+            try {
+                descriptor.returnType = URI.create(JsonUtils.getString(returnType));
+                
+            } catch (IllegalArgumentException e) {
+                throw new AlpsParserException("The 'rt' property value must be URI represented as JSON string but was " + returnType);
+            }            
+        }
+        
+        // nested descriptors
         if (jsonObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
             descriptor.descriptors = AlpsJsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
         }
