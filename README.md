@@ -50,6 +50,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 - [ ] 0.1 JSON Parser
 - [ ] 0.2 Effective Document Processor
+- [ ] 0.3 XML Parser
 - [ ] TBD
 
 ## Resources
