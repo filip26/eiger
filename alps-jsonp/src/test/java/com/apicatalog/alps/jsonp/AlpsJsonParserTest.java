@@ -32,7 +32,7 @@ class AlpsJsonParserTest {
             
             assertNotNull(is);
             
-            AlpsDocument document = (new AlpsJsonParser()).parse(URI.create("http://example.com"), "application/json", is);
+            AlpsDocument document = (new AlpsParserJson()).parse(URI.create("http://example.com"), "application/json", is);
             
             assertNotNull(document);
             

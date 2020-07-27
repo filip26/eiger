@@ -19,7 +19,7 @@ import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
-final class AlpsJsonDocument implements AlpsDocument {
+final class JsonDocument implements AlpsDocument {
 
     private AlpsVersion version;
     
@@ -31,7 +31,7 @@ final class AlpsJsonDocument implements AlpsDocument {
     
     private Map<URI, AlpsDescriptor> descriptors;
     
-    public AlpsJsonDocument() {
+    public JsonDocument() {
         this.version = AlpsVersion.VERSION_1_0;
     }
     
@@ -84,42 +84,42 @@ final class AlpsJsonDocument implements AlpsDocument {
     
     public static final AlpsDocument parse(final URI baseUri, final JsonObject alpsObject) throws AlpsParserException {
         
-        AlpsJsonDocument document = new AlpsJsonDocument();
+        JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;
 
         // parse version
-        if (alpsObject.containsKey(AlpsJsonConstant.VERSION_KEY)) {
+        if (alpsObject.containsKey(JsonKeys.VERSION)) {
             
-            final JsonValue alpsVersion = alpsObject.get(AlpsJsonConstant.VERSION_KEY);
+            final JsonValue alpsVersion = alpsObject.get(JsonKeys.VERSION);
             
             if (JsonUtils.isString(alpsVersion) 
-                    && AlpsJsonConstant.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
+                    && JsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
                 document.version = AlpsVersion.VERSION_1_0;
             }
         }
         
         // parse documentation
-        if (alpsObject.containsKey(AlpsJsonConstant.DOCUMENTATION_KEY)) {
-            document.documentation = AlpsJsonDocumentation.parse(alpsObject.get(AlpsJsonConstant.DOCUMENTATION_KEY));
+        if (alpsObject.containsKey(JsonKeys.DOCUMENTATION)) {
+            document.documentation = JsonDocumentation.parse(alpsObject.get(JsonKeys.DOCUMENTATION));
             
         } else {
             document.documentation = Collections.emptySet();
         }
         
         // parse links
-        if (alpsObject.containsKey(AlpsJsonConstant.LINK_KEY)) {
-            document.links = AlpsJsonLink.parse(alpsObject.get(AlpsJsonConstant.LINK_KEY));
+        if (alpsObject.containsKey(JsonKeys.LINK)) {
+            document.links = JsonLink.parse(alpsObject.get(JsonKeys.LINK));
             
         } else {
             document.links = Collections.emptySet();
         }
         
         // parse descriptors
-        if (alpsObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
+        if (alpsObject.containsKey(JsonKeys.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
-            AlpsJsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
+            JsonDescriptor.parse(document.descriptors, alpsObject.get(JsonKeys.DESCRIPTOR));
             
         } else {
             document.descriptors = Collections.emptyMap();

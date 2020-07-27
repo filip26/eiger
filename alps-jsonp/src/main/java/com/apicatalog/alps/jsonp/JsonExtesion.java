@@ -8,7 +8,7 @@ import javax.json.JsonValue;
 
 import com.apicatalog.alps.dom.element.AlpsExtension;
 
-class AlpsExtesionJson implements AlpsExtension {
+class JsonExtesion implements AlpsExtension {
 
     private URI id;
     private URI href;
