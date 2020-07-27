@@ -2,7 +2,8 @@ package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -64,8 +65,8 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
     }
 
     @Override
-    public URI getReturnType() {
-        return returnType;
+    public Optional<URI> getReturnType() {
+        return Optional.ofNullable(returnType);
     }
 
     @Override
@@ -94,32 +95,41 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         return Optional.ofNullable(parent);
     }
 
-    public static Map<URI, AlpsDescriptor> parse(JsonValue jsonValue) throws AlpsParserException {
-        return parse(new HashMap<>(), jsonValue);
+    public static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonValue jsonValue) throws AlpsParserException {
+        return parse(index, null, jsonValue);
     }
     
-    private static Map<URI, AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonValue jsonValue) throws AlpsParserException {
+    private static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, AlpsJsonDescriptor parent, JsonValue jsonValue) throws AlpsParserException {
         
         if (JsonUtils.isObject(jsonValue)) {
 
-            return parseObject(index, jsonValue.asJsonObject());
+            return Set.of(parseObject(index, parent, jsonValue.asJsonObject()));
 
         } else if (JsonUtils.isArray(jsonValue)) {
             
+            final HashSet<AlpsDescriptor> descriptors = new HashSet<>();
+            
             for (final JsonValue item : jsonValue.asJsonArray()) {
-                parse(index, item);
+                
+                if (JsonUtils.isObject(item)) {
+                    descriptors.add(parseObject(index, parent, item.asJsonObject()));
+                    
+                } else {
+                    throw new AlpsParserException("The 'descriptor' property must be an object or an array of objects but was " + item.getValueType());
+                }
             }
+            
+            return descriptors;
             
         } else {
             throw new AlpsParserException("The 'descriptor' property must be an object or an array of objects but was " + jsonValue.getValueType());
         }
-
-        return index;
     }
     
-    private static Map<URI, AlpsDescriptor> parseObject(Map<URI, AlpsDescriptor> index, JsonObject jsonObject) throws AlpsParserException {
+    private static AlpsDescriptor parseObject(Map<URI, AlpsDescriptor> index, AlpsJsonDescriptor parent, JsonObject jsonObject) throws AlpsParserException {
         
         final AlpsJsonDescriptor descriptor = new AlpsJsonDescriptor();
+        descriptor.parent = parent;
         
         // id
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonConstant.ID_KEY))) {
@@ -137,6 +147,8 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         if (index.containsKey(descriptor.id)) {
             throw new AlpsParserException("Duplicate 'id' property value " + descriptor.id);
         }
+        
+        index.put(descriptor.id, descriptor);
 
         // name
         if (jsonObject.containsKey(AlpsJsonConstant.NAME_KEY)) {
@@ -169,11 +181,17 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         // documentation
         if (jsonObject.containsKey(AlpsJsonConstant.DOCUMENTATION_KEY)) {
             descriptor.doc = AlpsJsonDocumentation.parse(jsonObject.get(AlpsJsonConstant.DOCUMENTATION_KEY));
+            
+        } else {
+            descriptor.doc = Collections.emptySet();
         }
         
         // links
         if (jsonObject.containsKey(AlpsJsonConstant.LINK_KEY)) {
             descriptor.links = AlpsJsonLink.parse(jsonObject.get(AlpsJsonConstant.LINK_KEY));
+            
+        } else {
+            descriptor.links = Collections.emptySet();
         }
         
         // href
@@ -193,12 +211,11 @@ final class AlpsJsonDescriptor implements AlpsDescriptor {
         }
 
         if (jsonObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
-//            descriptor.
+            descriptor.descriptors = AlpsJsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
         }
-        
-        
+                
         //TODO ext
         
-        return index;
+        return descriptor;
     }
 }

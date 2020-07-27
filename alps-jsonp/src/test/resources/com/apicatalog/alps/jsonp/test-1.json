@@ -27,12 +27,10 @@
             {
                 "id": "resultType",
                 "description": { "value": "results format"},
-                "ext": [
-                    {
-                        "href": "http://alps.io/ext/range",
-                        "value": "summary,detail"
-                    }
-                ]
+                "ext": {
+                    "href": "http://alps.io/ext/range",
+                    "value": "summary,detail"
+                }
             }
         ]
     }

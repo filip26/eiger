@@ -3,6 +3,7 @@ package com.apicatalog.alps.jsonp;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -116,7 +117,9 @@ final class AlpsJsonDocument implements AlpsDocument {
         
         // parse descriptors
         if (alpsObject.containsKey(AlpsJsonConstant.DESCRIPTOR_KEY)) {
-            document.descriptors = AlpsJsonDescriptor.parse(alpsObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
+            
+            document.descriptors = new HashMap<>();
+            AlpsJsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsJsonConstant.DESCRIPTOR_KEY));
             
         } else {
             document.descriptors = Collections.emptyMap();
