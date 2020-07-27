@@ -48,8 +48,8 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 ```
 ### Roadmap
 
-- [ ] 0.1 JSON Parser
-- [ ] 0.2 XML Parser
+- [ ] 0.1 JSON Parser & Writer
+- [ ] 0.2 XML Parser & Writer
 - [ ] 0.3 Effective Document Processor
 - [ ] TBD
 
