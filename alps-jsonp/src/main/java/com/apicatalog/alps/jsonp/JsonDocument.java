@@ -17,6 +17,7 @@ import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
+import com.apicatalog.alps.dom.element.AlpsExtension;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
 final class JsonDocument implements AlpsDocument {
@@ -28,6 +29,8 @@ final class JsonDocument implements AlpsDocument {
     private Set<AlpsDocumentation> documentation;
     
     private Set<AlpsLink> links;
+    
+    private Set<AlpsExtension> extensions;
     
     private Map<URI, AlpsDescriptor> descriptors;
     
@@ -75,6 +78,11 @@ final class JsonDocument implements AlpsDocument {
     @Override
     public Set<AlpsDocumentation> getDocumentation() {
         return documentation;
+    }
+    
+    @Override
+    public Set<AlpsExtension> getExtensions() {
+        return extensions;
     }
 
     @Override
@@ -124,6 +132,14 @@ final class JsonDocument implements AlpsDocument {
         } else {
             document.descriptors = Collections.emptyMap();
         }
+        
+        // parse extensions
+        if (alpsObject.containsKey(AlpsJsonKeys.EXTENSION)) {
+            document.extensions = JsonExtension.parse(alpsObject.get(AlpsJsonKeys.EXTENSION));
+            
+        } else {
+            document.extensions = Collections.emptySet();
+        }        
 
         return document;
     }
