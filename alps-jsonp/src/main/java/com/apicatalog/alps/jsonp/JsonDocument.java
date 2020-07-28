@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
@@ -98,7 +99,7 @@ final class JsonDocument implements AlpsDocument {
         JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;
 
-        // parse version
+        // version
         if (alpsObject.containsKey(AlpsJsonKeys.VERSION)) {
             
             final JsonValue alpsVersion = alpsObject.get(AlpsJsonKeys.VERSION);
@@ -110,7 +111,7 @@ final class JsonDocument implements AlpsDocument {
             }
         }
         
-        // parse documentation
+        // documentation
         if (alpsObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
             document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsJsonKeys.DOCUMENTATION));
             
@@ -118,7 +119,7 @@ final class JsonDocument implements AlpsDocument {
             document.documentation = Collections.emptySet();
         }
         
-        // parse links
+        // links
         if (alpsObject.containsKey(AlpsJsonKeys.LINK)) {
             document.links = JsonLink.parse(alpsObject.get(AlpsJsonKeys.LINK));
             
@@ -126,7 +127,7 @@ final class JsonDocument implements AlpsDocument {
             document.links = Collections.emptySet();
         }
         
-        // parse descriptors
+        // descriptors
         if (alpsObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
@@ -136,7 +137,7 @@ final class JsonDocument implements AlpsDocument {
             document.descriptors = Collections.emptyMap();
         }
         
-        // parse extensions
+        // extensions
         if (alpsObject.containsKey(AlpsJsonKeys.EXTENSION)) {
             document.extensions = JsonExtension.parse(alpsObject.get(AlpsJsonKeys.EXTENSION));
             
@@ -152,15 +153,36 @@ final class JsonDocument implements AlpsDocument {
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
         // version
-        writeVersion(document.getVersion(), alps);
+        alps.add(AlpsJsonKeys.VERSION, toJson(document.getVersion()));
         
-        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
+        // documentation
+        if (isNotEmpty(document.getDocumentation())) {
             alps.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
         }
         
+        // links
+        if (isNotEmpty(document.getLinks())) {
+            alps.add(AlpsJsonKeys.LINK, JsonLink.toJson(document.getLinks()));            
+        }
+        
+        // descriptors
+        if (isNotEmpty(document.getDescriptors())) {
+            
+        }
+        
+        // extensions
+        if (isNotEmpty(document.getExtensions())) {
+            
+        }
+
         return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
     }
-    private static final void writeVersion(AlpsVersion version, JsonObjectBuilder alps) {
-        alps.add(AlpsJsonKeys.VERSION, "1.0");        
+    
+    private static final JsonString toJson(AlpsVersion version) {
+        return Json.createValue("1.0");        
+    }
+    
+    private static final boolean isNotEmpty(Collection<?> collection) {
+        return collection != null && !collection.isEmpty();
     }
 }

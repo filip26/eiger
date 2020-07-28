@@ -144,7 +144,7 @@ final class JsonDocumentation implements AlpsDocumentation {
         if (documentation.getMediaType() != null && !"text/plain".equalsIgnoreCase(documentation.getMediaType())) {
             doc.add(AlpsJsonKeys.FORMAT, documentation.getMediaType());
         }
-        
+
         if (documentation.getContent() != null) {
             doc.add(AlpsJsonKeys.VALUE, documentation.getContent());
         }

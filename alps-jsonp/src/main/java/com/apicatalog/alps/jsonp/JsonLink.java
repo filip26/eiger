@@ -4,7 +4,10 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
@@ -77,5 +80,36 @@ final class JsonLink implements AlpsLink {
         
         return link;
     }
+    
+    public static final JsonValue toJson(Set<AlpsLink> links) {
+        
+        if (links.size() == 1) {
+            return toJson(links.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
+        
+        for (AlpsLink link : links) {
+            jsonDocs.add(toJson(link));
+        }
+        
+        return jsonDocs.build();
+    }
+
+    public static final JsonValue toJson(AlpsLink link) {
+        
+        final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
+        
+        if (link.getHref() != null) {
+            jsonLink.add(AlpsJsonKeys.HREF, link.getHref().toString());
+        }
+        
+        if (link.getRel() != null && !link.getRel().isBlank()) {
+            jsonLink.add(AlpsJsonKeys.RELATION, link.getRel());
+        }
+        
+        return jsonLink.build();
+    }
+
     
 }
