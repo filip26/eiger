@@ -9,10 +9,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -142,5 +145,22 @@ final class JsonDocument implements AlpsDocument {
         }        
 
         return document;
+    }
+    
+    public static final JsonObject toJson(AlpsDocument document) throws AlpsWriterException {
+        
+        final JsonObjectBuilder alps = Json.createObjectBuilder();
+        
+        // version
+        writeVersion(document.getVersion(), alps);
+        
+        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
+            alps.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
+        }
+        
+        return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
+    }
+    private static final void writeVersion(AlpsVersion version, JsonObjectBuilder alps) {
+        alps.add(AlpsJsonKeys.VERSION, "1.0");        
     }
 }
