@@ -172,7 +172,7 @@ final class JsonDocument implements AlpsDocument {
         
         // extensions
         if (isNotEmpty(document.getExtensions())) {
-            
+            alps.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
         }
 
         return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
@@ -182,7 +182,7 @@ final class JsonDocument implements AlpsDocument {
         return Json.createValue("1.0");        
     }
     
-    private static final boolean isNotEmpty(Collection<?> collection) {
+    protected static final boolean isNotEmpty(Collection<?> collection) {
         return collection != null && !collection.isEmpty();
     }
 }

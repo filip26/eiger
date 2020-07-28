@@ -149,5 +149,4 @@ final class JsonDocumentation implements AlpsDocumentation {
         
         return doc.build();
     }
-
 }

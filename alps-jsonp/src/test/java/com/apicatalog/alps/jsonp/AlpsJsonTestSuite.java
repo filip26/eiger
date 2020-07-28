@@ -85,7 +85,7 @@ class AlpsJsonTestSuite {
 
             final JsonObject outputObject = JsonDocument.toJson(document);
 
-            final boolean match = expectedObject.equals(outputObject); 
+            final boolean match = JsonComparison.equals(expectedObject, outputObject); 
             
             if (!match) {
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());

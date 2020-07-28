@@ -267,23 +267,23 @@ final class JsonDescriptor implements AlpsDescriptor {
         descriptor.getReturnType().ifPresent(rt -> jsonDescriptor.add(AlpsJsonKeys.RETURN_TYPE, rt.toString()));
 
         // documentation
-        if (descriptor.getDocumentation() != null && !descriptor.getDocumentation().isEmpty()) {
+        if (JsonDocument.isNotEmpty(descriptor.getDocumentation())) {
             jsonDescriptor.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(descriptor.getDocumentation()));
         }
         
         // descriptors
-        if (descriptor.getDescriptors() != null && !descriptor.getDescriptors().isEmpty()) {
+        if (JsonDocument.isNotEmpty(descriptor.getDescriptors())) {
             jsonDescriptor.add(AlpsJsonKeys.DESCRIPTOR, toJson(descriptor.getDescriptors()));
         }
 
         // links
-        if (descriptor.getLinks() != null && !descriptor.getLinks().isEmpty()) {
+        if (JsonDocument.isNotEmpty(descriptor.getLinks())) {
             jsonDescriptor.add(AlpsJsonKeys.LINK, JsonLink.toJson(descriptor.getLinks()));
         }
 
         // extensions
-        if (descriptor.getExtensions() != null && !descriptor.getExtensions().isEmpty()) {
-//TODO            jsonDescriptor.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
+        if (JsonDocument.isNotEmpty(descriptor.getExtensions())) {
+            jsonDescriptor.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
         }
 
         return jsonDescriptor.build();

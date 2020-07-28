@@ -40,7 +40,6 @@
                     },
                     {
                         "id": "givenName",
-                        "type": "semantic",
                         "href": "http://schema.org/givenName"
                     },                    
                     {

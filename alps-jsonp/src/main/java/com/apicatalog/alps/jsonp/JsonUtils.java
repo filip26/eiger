@@ -58,7 +58,7 @@ final class JsonUtils {
             throw new AlpsParserException("The 'href' property value must be URI represented as JSON string but was " + href);
         }
     }
-    
+
     private JsonUtils() {
     }
 }
