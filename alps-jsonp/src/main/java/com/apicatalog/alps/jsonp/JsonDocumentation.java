@@ -116,13 +116,11 @@ final class JsonDocumentation implements AlpsDocumentation {
             return toJson(documentation.iterator().next());
         }
         
-        final JsonArrayBuilder docs = Json.createArrayBuilder();
+        final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
         
-        for (AlpsDocumentation item : documentation) {
-            docs.add(toJson(item));
-        }
+        documentation.stream().map(JsonDocumentation::toJson).forEach(jsonDocs::add);
         
-        return docs.build();
+        return jsonDocs.build();
     }
 
     public static final JsonValue toJson(AlpsDocumentation documentation) {

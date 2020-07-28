@@ -87,13 +87,11 @@ final class JsonLink implements AlpsLink {
             return toJson(links.iterator().next());
         }
         
-        final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
+        final JsonArrayBuilder jsonLinks = Json.createArrayBuilder();
         
-        for (AlpsLink link : links) {
-            jsonDocs.add(toJson(link));
-        }
+        links.stream().map(JsonLink::toJson).forEach(jsonLinks::add);
         
-        return jsonDocs.build();
+        return jsonLinks.build();
     }
 
     public static final JsonValue toJson(AlpsLink link) {
@@ -110,6 +108,4 @@ final class JsonLink implements AlpsLink {
         
         return jsonLink.build();
     }
-
-    
 }

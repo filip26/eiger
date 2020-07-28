@@ -9,7 +9,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
@@ -235,4 +238,55 @@ final class JsonDescriptor implements AlpsDescriptor {
         
         return descriptor;
     }
+    
+    public static final JsonValue toJson(final Set<AlpsDescriptor> descriptors) {
+        
+        if (descriptors.size() == 1) {
+            return toJson(descriptors.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonDescriptors = Json.createArrayBuilder();
+        
+        descriptors.stream().map(JsonDescriptor::toJson).forEach(jsonDescriptors::add);
+        
+        return jsonDescriptors.build();
+    }
+
+    public static final JsonValue toJson(final AlpsDescriptor descriptor) {
+        
+        final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
+        
+        jsonDescriptor.add(AlpsJsonKeys.ID, descriptor.getId().toString());
+        
+        if (descriptor.getType() != null && !AlpsDescriptorType.SEMANTIC.equals(descriptor.getType())) {
+            jsonDescriptor.add(AlpsJsonKeys.TYPE, descriptor.getType().name().toLowerCase());
+        }
+        
+        descriptor.getHref().ifPresent(href -> jsonDescriptor.add(AlpsJsonKeys.HREF, href.toString()));
+        descriptor.getName().ifPresent(name -> jsonDescriptor.add(AlpsJsonKeys.NAME, name));
+        descriptor.getReturnType().ifPresent(rt -> jsonDescriptor.add(AlpsJsonKeys.RETURN_TYPE, rt.toString()));
+
+        // documentation
+        if (descriptor.getDocumentation() != null && !descriptor.getDocumentation().isEmpty()) {
+            jsonDescriptor.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(descriptor.getDocumentation()));
+        }
+        
+        // descriptors
+        if (descriptor.getDescriptors() != null && !descriptor.getDescriptors().isEmpty()) {
+            jsonDescriptor.add(AlpsJsonKeys.DESCRIPTOR, toJson(descriptor.getDescriptors()));
+        }
+
+        // links
+        if (descriptor.getLinks() != null && !descriptor.getLinks().isEmpty()) {
+            jsonDescriptor.add(AlpsJsonKeys.LINK, JsonLink.toJson(descriptor.getLinks()));
+        }
+
+        // extensions
+        if (descriptor.getExtensions() != null && !descriptor.getExtensions().isEmpty()) {
+//TODO            jsonDescriptor.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
+        }
+
+        return jsonDescriptor.build();
+    }
+    
 }

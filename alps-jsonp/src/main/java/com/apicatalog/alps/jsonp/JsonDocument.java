@@ -167,7 +167,7 @@ final class JsonDocument implements AlpsDocument {
         
         // descriptors
         if (isNotEmpty(document.getDescriptors())) {
-            
+            alps.add(AlpsJsonKeys.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
         }
         
         // extensions
