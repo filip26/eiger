@@ -5,13 +5,15 @@
            "@id"    : "#01",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Search profile",
-            "input" : "test-1.json" 
+            "input" : "test-1.json",
+            "expected" : "test-1.json" 
         },
         {
            "@id"    : "#02",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Compacted contact profile",
-            "input" : "test-2.json" 
+            "input" : "test-2.json", 
+			"expected" : "test-2.json"
         }        
     ]
 }

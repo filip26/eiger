@@ -69,7 +69,11 @@ class AlpsJsonTestSuite {
     
     static final void compare(final AlpsParserTestCase testCase, final AlpsDocument document) {
 
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getInput())) {
+        if (testCase.getExpected() == null) {
+            return;
+        }
+        
+        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getExpected())) {
             
             final JsonParser expectedParser = Json.createParser(is);
          
