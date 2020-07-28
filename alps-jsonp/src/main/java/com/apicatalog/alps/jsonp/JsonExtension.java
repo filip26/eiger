@@ -5,13 +5,16 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsExtension;
 
-class JsonExtesion implements AlpsExtension {
+class JsonExtension implements AlpsExtension {
 
     private URI id;
     private URI href;
@@ -55,7 +58,7 @@ class JsonExtesion implements AlpsExtension {
             throw new AlpsParserException("An extension must have valid 'id' property but was " + jsonObject);
         }
  
-        final JsonExtesion extension = new JsonExtesion();
+        final JsonExtension extension = new JsonExtension();
         
         try {
             
@@ -83,5 +86,30 @@ class JsonExtesion implements AlpsExtension {
         }
         
         return extension;
+    }
+    
+    public static final JsonValue toJson(Set<AlpsExtension> extensions) {
+        
+        if (extensions.size() == 1) {
+            return toJson(extensions.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonExt = Json.createArrayBuilder();
+        
+        extensions.stream().map(JsonExtension::toJson).forEach(jsonExt::add);
+        
+        return jsonExt.build();
+    }
+
+    public static final JsonValue toJson(AlpsExtension extension) {
+        
+        final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
+
+        jsonExt.add(AlpsJsonKeys.ID, extension.getId().toString());
+
+        extension.getHref().ifPresent(href -> jsonExt.add(AlpsJsonKeys.HREF, href.toString()));
+        extension.getValue().ifPresent(value -> jsonExt.add(AlpsJsonKeys.VALUE, value));
+        
+        return jsonExt.build();
     }
 }

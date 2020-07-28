@@ -15,13 +15,13 @@ import com.apicatalog.alps.AlpsParser;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
-public final class AlpsParserJson implements AlpsParser {
+public final class AlpsJsonParser implements AlpsParser {
 
     @Override
     public boolean canParse(final String mediaType) {
         return mediaType != null
                 && ("application/json".equalsIgnoreCase(mediaType)
-                    || mediaType.endsWith("+json")
+                    || mediaType.toLowerCase().endsWith("+json")
                     );
     }
 

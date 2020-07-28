@@ -4,7 +4,10 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
@@ -106,5 +109,44 @@ final class JsonDocumentation implements AlpsDocumentation {
                 
         return doc;
     }
+    
+    public static final JsonValue toJson(Set<AlpsDocumentation> documentation) {
+        
+        if (documentation.size() == 1) {
+            return toJson(documentation.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
+        
+        documentation.stream().map(JsonDocumentation::toJson).forEach(jsonDocs::add);
+        
+        return jsonDocs.build();
+    }
 
+    public static final JsonValue toJson(AlpsDocumentation documentation) {
+        
+        if (documentation.getHref() == null 
+                && (documentation.getMediaType() == null
+                    || "text/plain".equals(documentation.getMediaType())
+                        )) {
+            
+            return Json.createValue(documentation.getContent());
+        }
+        
+        final JsonObjectBuilder doc = Json.createObjectBuilder();
+        
+        if (documentation.getHref() != null) {
+            doc.add(AlpsJsonKeys.HREF, documentation.getHref().toString());
+        }
+        
+        if (documentation.getMediaType() != null && !"text/plain".equalsIgnoreCase(documentation.getMediaType())) {
+            doc.add(AlpsJsonKeys.FORMAT, documentation.getMediaType());
+        }
+
+        if (documentation.getContent() != null) {
+            doc.add(AlpsJsonKeys.VALUE, documentation.getContent());
+        }
+        
+        return doc.build();
+    }
 }
