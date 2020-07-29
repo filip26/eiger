@@ -1,0 +1,62 @@
+{
+    "alps": {
+        "version": "1.0",
+        
+        "doc": [
+            {
+                "format": "html",
+                "value": "<b>A contact list.</b>"
+            },
+            "A contact list."
+        ],
+        
+        "link": {
+            "rel": "help",
+            "href": "http://example.org/help/contacts.html"
+        },
+        
+        "descriptor" : [
+            {
+                "id": "collection",
+                "type": "safe",
+                "rt": "contact",
+                
+                "doc": "A simple link/form for getting a list of contacts.",
+                
+                "descriptor": {
+                    "id": "nameSearch",
+                    "doc": "Input for a search form." 
+                }                
+            },
+            {
+                "id": "contact",
+                "href": "https://schema.org/Person",
+                
+                "descriptor": [
+                    {
+                        "id": "item",
+                        "type": "safe",
+                        "doc": "A link to an individual contact."
+                    },
+                    {
+                        "id": "givenName",
+                        "type": "semantic",
+                        "href": "http://schema.org/givenName"
+                    },                    
+                    {
+                        "id": "familyName",
+                        "href": "http://schema.org/familyName"
+                    },
+                    { 
+                        "id": "email",
+                        "href": "http://schema.org/email"
+                    },
+                    {
+                        "id": "telephone",
+                        "href": "http://schema.org/telephone"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -18,24 +18,19 @@
                     {
                         "id": "value",
                         "name": "search",
-                        "type": "descriptor",
-                        "doc": { "value": "input for search" }
-                    },
-                
-                    { "href": "#resultType" }
-                ]
-            },
-        
-            {
-                "id": "resultType",
-                "type": "descriptor",
-                "description": { "value": "results format"},
-                "ext": [
-                    {
-                        "href": "http://alps.io/ext/range",
-                        "value": "summary,detail"
+                        "doc": { "value": "input for search" },
+                        "rt": "#resultType" 
                     }
                 ]
+            },
+            {
+                "id": "resultType",
+                "doc": { "value": "results format"},
+                "ext": {
+                	"id": "rt-ext",
+                    "href": "http://alps.io/ext/range",
+                    "value": "summary,detail"
+                }
             }
         ]
     }

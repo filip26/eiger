@@ -4,13 +4,16 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
-final class AlpsJsonLink implements AlpsLink {
+final class JsonLink implements AlpsLink {
 
     private URI href;
     private String rel;
@@ -43,17 +46,17 @@ final class AlpsJsonLink implements AlpsLink {
     
     private static final AlpsLink parseObject(final JsonObject linkObject) throws AlpsParserException {
         
-        final AlpsJsonLink link = new AlpsJsonLink();
+        final JsonLink link = new JsonLink();
         
-        if (!linkObject.containsKey(AlpsJsonConstant.HREF_KEY)) {
+        if (!linkObject.containsKey(AlpsJsonKeys.HREF)) {
             throw new AlpsParserException("Link object must contain 'href' property");
         }
 
-        if (!linkObject.containsKey(AlpsJsonConstant.REL_KEY)) {
+        if (!linkObject.containsKey(AlpsJsonKeys.RELATION)) {
             throw new AlpsParserException("Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(AlpsJsonConstant.HREF_KEY);
+        final JsonValue href = linkObject.get(AlpsJsonKeys.HREF);
         
         if (JsonUtils.isNotString(href)) {
             throw new AlpsParserException("Link.href property must be URI but was " + href.getValueType());
@@ -67,7 +70,7 @@ final class AlpsJsonLink implements AlpsLink {
             throw new AlpsParserException("Link.href property must be URI but was " + href);
         }
 
-        final JsonValue rel = linkObject.get(AlpsJsonConstant.REL_KEY);
+        final JsonValue rel = linkObject.get(AlpsJsonKeys.RELATION);
         
         if (JsonUtils.isNotString(href)) {
             throw new AlpsParserException("Link.rel property must be string but was " + rel.getValueType());
@@ -78,4 +81,31 @@ final class AlpsJsonLink implements AlpsLink {
         return link;
     }
     
+    public static final JsonValue toJson(Set<AlpsLink> links) {
+        
+        if (links.size() == 1) {
+            return toJson(links.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonLinks = Json.createArrayBuilder();
+        
+        links.stream().map(JsonLink::toJson).forEach(jsonLinks::add);
+        
+        return jsonLinks.build();
+    }
+
+    public static final JsonValue toJson(AlpsLink link) {
+        
+        final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
+        
+        if (link.getHref() != null) {
+            jsonLink.add(AlpsJsonKeys.HREF, link.getHref().toString());
+        }
+        
+        if (link.getRel() != null && !link.getRel().isBlank()) {
+            jsonLink.add(AlpsJsonKeys.RELATION, link.getRel());
+        }
+        
+        return jsonLink.build();
+    }
 }

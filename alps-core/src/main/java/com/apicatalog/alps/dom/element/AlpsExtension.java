@@ -1,6 +1,7 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.Optional;
 
 public interface AlpsExtension  {
 
@@ -9,9 +10,9 @@ public interface AlpsExtension  {
 	 *  
 	 * @return {@link URI} of an external document
 	 */
-	URI getHref();
+	Optional<URI> getHref();
 	
-	String getId();
+	URI getId();
 	
-	String getValue();
+	Optional<String> getValue();
 }

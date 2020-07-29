@@ -21,7 +21,7 @@ public final class AlpsJsonParser implements AlpsParser {
     public boolean canParse(final String mediaType) {
         return mediaType != null
                 && ("application/json".equalsIgnoreCase(mediaType)
-                    || mediaType.endsWith("+json")
+                    || mediaType.toLowerCase().endsWith("+json")
                     );
     }
 
@@ -67,16 +67,16 @@ public final class AlpsJsonParser implements AlpsParser {
         
         final JsonObject rootObject = parser.getObject();
         
-        if (!rootObject.containsKey(AlpsJsonConstant.ALPS_ROOT_KEY)) {
-            throw new AlpsParserException("Property '" + AlpsJsonConstant.ALPS_ROOT_KEY + "' is not present");
+        if (!rootObject.containsKey(AlpsJsonKeys.ROOT)) {
+            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' is not present");
         }
         
-        final JsonValue alpsObject = rootObject.get(AlpsJsonConstant.ALPS_ROOT_KEY);
+        final JsonValue alpsObject = rootObject.get(AlpsJsonKeys.ROOT);
         
         if (JsonUtils.isNotObject(alpsObject)) {
-            throw new AlpsParserException("Property '" + AlpsJsonConstant.ALPS_ROOT_KEY + "' does not contain JSON object");
+            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
         }
             
-        return AlpsJsonDocument.parse(baseUri, alpsObject.asJsonObject());
+        return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
     }
 }

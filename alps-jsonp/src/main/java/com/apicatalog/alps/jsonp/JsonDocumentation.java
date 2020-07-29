@@ -4,14 +4,17 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
-final class AlpsJsonDocumentation implements AlpsDocumentation {
+final class JsonDocumentation implements AlpsDocumentation {
 
     private URI href;
     private String mediaType;
@@ -53,7 +56,7 @@ final class AlpsJsonDocumentation implements AlpsDocumentation {
     }
     
     private static AlpsDocumentation parseString(final JsonString value) {
-        final AlpsJsonDocumentation doc = new AlpsJsonDocumentation();
+        final JsonDocumentation doc = new JsonDocumentation();
         doc.content = value.getString();
         doc.mediaType = "text/plain";
         return doc;
@@ -61,21 +64,21 @@ final class AlpsJsonDocumentation implements AlpsDocumentation {
 
     private static AlpsDocumentation parseObject(final JsonObject value) throws AlpsParserException {
         
-        final AlpsJsonDocumentation doc = new AlpsJsonDocumentation();
+        final JsonDocumentation doc = new JsonDocumentation();
         doc.mediaType = "text/plain";
         
-        if (value.containsKey(AlpsJsonConstant.VALUE_KEY)) {
+        if (value.containsKey(AlpsJsonKeys.VALUE)) {
 
-            final JsonValue content = value.get(AlpsJsonConstant.VALUE_KEY);
+            final JsonValue content = value.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(content)) {
                 throw new AlpsParserException("doc.value property must be string but was " + content.getValueType());
             }
             doc.content = JsonUtils.getString(content);
             
-        } else if (value.containsKey(AlpsJsonConstant.HREF_KEY)) {
+        } else if (value.containsKey(AlpsJsonKeys.HREF)) {
             
-            final JsonValue href = value.get(AlpsJsonConstant.HREF_KEY);
+            final JsonValue href = value.get(AlpsJsonKeys.HREF);
             
             if (JsonUtils.isNotString(href)) {
                 throw new AlpsParserException("'href' property must have string value but was " + href.getValueType());
@@ -93,9 +96,9 @@ final class AlpsJsonDocumentation implements AlpsDocumentation {
             throw new AlpsParserException("doc object must contain href of value property");
         }
         
-        if (value.containsKey(AlpsJsonConstant.FORMAT_KEY)) {
+        if (value.containsKey(AlpsJsonKeys.FORMAT)) {
             
-            final JsonValue format = value.get(AlpsJsonConstant.FORMAT_KEY);
+            final JsonValue format = value.get(AlpsJsonKeys.FORMAT);
             
             if (JsonUtils.isNotString(format)) {
                 throw new AlpsParserException("doc.format property must be string but was " + format.getValueType());
@@ -106,5 +109,44 @@ final class AlpsJsonDocumentation implements AlpsDocumentation {
                 
         return doc;
     }
+    
+    public static final JsonValue toJson(Set<AlpsDocumentation> documentation) {
+        
+        if (documentation.size() == 1) {
+            return toJson(documentation.iterator().next());
+        }
+        
+        final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
+        
+        documentation.stream().map(JsonDocumentation::toJson).forEach(jsonDocs::add);
+        
+        return jsonDocs.build();
+    }
 
+    public static final JsonValue toJson(AlpsDocumentation documentation) {
+        
+        if (documentation.getHref() == null 
+                && (documentation.getMediaType() == null
+                    || "text/plain".equals(documentation.getMediaType())
+                        )) {
+            
+            return Json.createValue(documentation.getContent());
+        }
+        
+        final JsonObjectBuilder doc = Json.createObjectBuilder();
+        
+        if (documentation.getHref() != null) {
+            doc.add(AlpsJsonKeys.HREF, documentation.getHref().toString());
+        }
+        
+        if (documentation.getMediaType() != null && !"text/plain".equalsIgnoreCase(documentation.getMediaType())) {
+            doc.add(AlpsJsonKeys.FORMAT, documentation.getMediaType());
+        }
+
+        if (documentation.getContent() != null) {
+            doc.add(AlpsJsonKeys.VALUE, documentation.getContent());
+        }
+        
+        return doc.build();
+    }
 }

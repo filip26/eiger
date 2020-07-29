@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
+import com.apicatalog.alps.dom.element.AlpsExtension;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
 /**
@@ -49,6 +50,8 @@ public interface AlpsDocument {
 	Set<AlpsLink> getLinks();
 	
 	Set<AlpsDocumentation> getDocumentation();
+	
+	Set<AlpsExtension> getExtensions();
 	
 	/**
 	 * Base {@link URI} of the ALPS document 

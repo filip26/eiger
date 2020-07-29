@@ -1,0 +1,34 @@
+{
+    "alps": {
+        "version": "1.0",
+    
+        "doc": {
+            "href": "http://example.org/samples/full/doc.html"
+        },
+    
+        "descriptor": [
+            {
+                "id": "search",
+                "type": "safe",
+                "doc":  "A search form with a two inputs",
+            
+                "descriptor":
+                    {
+                        "id": "value",
+                        "name": "search",
+                        "doc": "input for search",
+                        "rt": "#resultType" 
+                    }  
+            },
+            {
+                "id": "resultType",
+                "doc": "results format",
+                "ext": {
+                	"id": "rt-ext",
+                    "href": "http://alps.io/ext/range",
+                    "value": "summary,detail"
+                }
+            }
+        ]
+    }
+}

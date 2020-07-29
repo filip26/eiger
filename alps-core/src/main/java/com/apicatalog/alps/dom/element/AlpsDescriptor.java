@@ -14,7 +14,7 @@ public interface AlpsDescriptor {
 	
 	AlpsDescriptorType getType();
 	
-	URI getReturnType();
+	Optional<URI> getReturnType();
 	
 	Set<AlpsDocumentation> getDocumentation();
 	
