@@ -15,6 +15,7 @@
     <modules>
         <module>alps-core</module>
         <module>alps-jsonp</module>
+        <module>alps-xml</module>
     </modules>
 
 </project>
