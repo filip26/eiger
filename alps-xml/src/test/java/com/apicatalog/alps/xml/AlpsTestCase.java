@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.xml;
 
 import javax.json.JsonObject;
 
-public final class AlpsParserTestCase {
+public final class AlpsTestCase {
 
     private String id;
     private String name;
     private String input;
     private String expected;
     
-    public static final AlpsParserTestCase of(JsonObject jsonObject) {
-        final AlpsParserTestCase testCase = new AlpsParserTestCase();
+    public static final AlpsTestCase of(JsonObject jsonObject) {
+        final AlpsTestCase testCase = new AlpsTestCase();
         
         testCase.id = jsonObject.getString("@id");
         testCase.name = jsonObject.getString("name");

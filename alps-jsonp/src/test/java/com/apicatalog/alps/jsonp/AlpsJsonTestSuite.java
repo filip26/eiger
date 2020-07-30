@@ -46,7 +46,7 @@ class AlpsJsonTestSuite {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
-    void testCase(AlpsParserTestCase testCase) throws IOException {
+    void testCase(AlpsTestCase testCase) throws IOException {
         
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
@@ -68,7 +68,7 @@ class AlpsJsonTestSuite {
         compare(testCase, document);
     }
     
-    static final Stream<AlpsParserTestCase> testCaseMethodSource() throws IOException {
+    static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
         
         try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream("manifest.json")) {
             
@@ -80,11 +80,11 @@ class AlpsJsonTestSuite {
             
             JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
             
-            return tests.stream().map(JsonObject.class::cast).map(AlpsParserTestCase::of);
+            return tests.stream().map(JsonObject.class::cast).map(AlpsTestCase::of);
         }
     }
     
-    static final void compare(final AlpsParserTestCase testCase, final AlpsDocument document) {
+    static final void compare(final AlpsTestCase testCase, final AlpsDocument document) {
 
         if (testCase.getExpected() == null) {
             return;

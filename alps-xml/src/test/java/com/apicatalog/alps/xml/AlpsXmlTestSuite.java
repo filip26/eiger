@@ -1,4 +1,3 @@
-package com.apicatalog.alps.xml;
 /*
  * Copyright 2020 the original author or authors.
  *
@@ -14,7 +13,7 @@ package com.apicatalog.alps.xml;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package com.apicatalog.alps.xml;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -35,18 +34,18 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
-class AlpsJsonTestSuite {
+class AlpsXmlTestSuite {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
-    void testCase(AlpsParserTestCase testCase) throws IOException {
+    void testCase(AlpsTestCase testCase) throws IOException {
         
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
         
         AlpsDocument document = null;
         
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getInput())) {
+        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getInput())) {
             
             assertNotNull(is);
             
@@ -61,9 +60,9 @@ class AlpsJsonTestSuite {
         compare(testCase, document);
     }
     
-    static final Stream<AlpsParserTestCase> testCaseMethodSource() throws IOException {
+    static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
         
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream("manifest.json")) {
+        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream("manifest.json")) {
             
             assertNotNull(is);
             
@@ -73,11 +72,11 @@ class AlpsJsonTestSuite {
             
             JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
             
-            return tests.stream().map(JsonObject.class::cast).map(AlpsParserTestCase::of);
+            return tests.stream().map(JsonObject.class::cast).map(AlpsTestCase::of);
         }
     }
     
-    static final void compare(final AlpsParserTestCase testCase, final AlpsDocument document) {
+    static final void compare(final AlpsTestCase testCase, final AlpsDocument document) {
 
         if (testCase.getExpected() == null) {
             return;
