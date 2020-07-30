@@ -1,3 +1,4 @@
+package com.apicatalog.alps.xml;
 /*
  * Copyright 2020 the original author or authors.
  *
@@ -13,33 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
-import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.AlpsParserException;
-import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 class AlpsJsonTestSuite {
@@ -57,7 +50,7 @@ class AlpsJsonTestSuite {
             
             assertNotNull(is);
             
-            document = (new AlpsJsonParser()).parse(URI.create("http://example.com"), "application/json", is);
+            document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
         } catch (AlpsParserException e) {
             fail(e.getMessage(), e);
@@ -89,55 +82,7 @@ class AlpsJsonTestSuite {
         if (testCase.getExpected() == null) {
             return;
         }
-        
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getExpected())) {
-            
-            final JsonParser expectedParser = Json.createParser(is);
-         
-            assertTrue(expectedParser.hasNext());
-            
-            expectedParser.next();
-            
-            final JsonObject expectedObject = expectedParser.getObject();
 
-            final JsonObject outputObject = JsonDocument.toJson(document);
-
-            final boolean match = JsonComparison.equals(expectedObject, outputObject); 
-            
-            if (!match) {
-                System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
-                System.out.println("Expected:");
-
-                Map<String, Object> properties = new HashMap<>(1);
-                properties.put(JsonGenerator.PRETTY_PRINTING, true);
-
-                JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
-
-                StringWriter writer = new StringWriter();
-                
-                JsonWriter jsonWriter1 = writerFactory.createWriter(writer);
-                jsonWriter1.write(expectedObject);
-                jsonWriter1.close();
-
-                writer.append("\n\n");
-                writer.append("Actual:\n");
-
-                JsonWriter jsonWriter2 = writerFactory.createWriter(writer);
-                jsonWriter2.write(outputObject);
-                jsonWriter2.close();
-
-                System.out.print(writer.toString());
-                System.out.println();
-                System.out.println();
-                
-                fail("Expected " + expectedObject + ", but was" + outputObject);
-            }
-            
-        } catch (AlpsWriterException e) {
-            fail(e.getMessage(), e);
-            
-        } catch (IOException e) {
-            fail(e.getMessage(), e);
-        }
+        //TODO comparison actual vs expected
     }    
 }
