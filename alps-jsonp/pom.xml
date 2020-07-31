@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>alps-jsonp</artifactId>
 
-    <name>JSON-P ALPS Document</name>
+    <name>JSON ALPS Document (JSON-P)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
@@ -17,25 +17,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <properties>
-        
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-        
-        <json-p.version>1.1.4</json-p.version>
-        <jakarta.json-p.version>1.1.6</jakarta.json-p.version> 
-        <junit.jupiter.version>5.6.2</junit.jupiter.version>               
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
             <artifactId>alps-core</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
