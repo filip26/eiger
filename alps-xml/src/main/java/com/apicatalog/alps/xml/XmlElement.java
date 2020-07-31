@@ -1,6 +1,6 @@
 package com.apicatalog.alps.xml;
 
-public interface XmlElement {
+interface XmlElement {
 
     void addDocumentation(XmlDocumentation doc);
 

@@ -12,7 +12,7 @@ import com.apicatalog.alps.dom.element.AlpsDocumentation;
 import com.apicatalog.alps.dom.element.AlpsExtension;
 import com.apicatalog.alps.dom.element.AlpsLink;
 
-public class XmlDocument implements AlpsDocument, XmlElement {
+final class XmlDocument implements AlpsDocument, XmlElement {
 
     @Override
     public Optional<AlpsDescriptor> findById(URI id) {
