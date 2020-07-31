@@ -52,6 +52,7 @@ class AlpsXmlTestSuite {
             document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
         } catch (AlpsParserException e) {
+            e.printStackTrace();
             fail(e.getMessage(), e);
         }
         

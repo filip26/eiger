@@ -15,15 +15,127 @@
  */
 package com.apicatalog.alps.xml;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 class AlpsDocumentHandler extends DefaultHandler {
 
-    public AlpsDocument getDocument() {
+    private Deque<XmlElement> stack;
+
+    public AlpsDocumentHandler() {
+        this.stack = new ArrayDeque<>(10);
+    }
+    
+    @Override
+    public void startDocument() throws SAXException {
+        super.startDocument();
+        stack.clear();
+    }
+    
+    @Override
+    public void endDocument() throws SAXException {
+        if (stack.size() != 1) {
+            throw new SAXException();
+        }
+        
+        // TODO validate document
+        super.endDocument();
+    }
+    
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        super.startElement(uri, localName, qName, attributes);
+        
+        String elementName = localName.toLowerCase();
+        
+        if (elementName == null || elementName.isEmpty()) {
+            elementName = qName.toLowerCase();
+        }
+        
+        if (elementName == null || elementName.isEmpty()) {
+            //TODO
+            return;
+        }
+
+        if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+
+            if (!stack.isEmpty()) {
+                throw new SAXException();
+            }
+            
+            stack.push(new XmlDocument());
+            return;
+        } 
+
+        if (stack.isEmpty()) {
+            throw new SAXException();
+        }
+
+        if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+            XmlDocumentation doc = XmlDocumentation.create(attributes);
+            stack.peek().addDocumentation(doc);
+            stack.push(doc);
+            
+        } else {
+            //TODO
+
+        }
+    }
+    
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException {
+        
+        String elementName = localName.toLowerCase();
+        
+        if (elementName == null || elementName.isEmpty()) {
+            elementName = qName.toLowerCase();
+        }
+        
+        if (elementName == null || elementName.isEmpty()) {
+            //TODO
+            return;
+        }
+        
+        if (!AlpsXmlKeys.DOCUMENT.equals(elementName) && elementName.equals(stack.peek().getElementName())) {
+            //TODO validate
+            stack.pop();
+        }
+        
+        
         // TODO Auto-generated method stub
-        return null;
+        super.endElement(uri, localName, qName);
+    }
+    
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        super.characters(ch, start, length);
+        
+        if (stack.isEmpty()) {
+            throw new SAXException();
+        }
+        
+        stack.peek().addText(ch, start, length);
+    }
+    
+    public AlpsDocument getDocument() throws AlpsParserException {
+        
+        if (stack.isEmpty()) {
+            //TODO
+            throw new AlpsParserException();
+            
+        } else if (stack.size() > 1)  {
+            //TODO
+            throw new AlpsParserException();
+        }
+        
+        return (AlpsDocument)stack.pop();
     }
 
 }
