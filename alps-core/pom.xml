@@ -13,8 +13,7 @@
     <parent>
         <groupId>com.apicatalog</groupId>
         <artifactId>alps</artifactId>
-        <version>0.2-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>${revision}</version>
     </parent>
 
 </project>
