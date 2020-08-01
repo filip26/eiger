@@ -128,6 +128,7 @@ class AlpsXmlTestSuite {
             }
             
         } catch (AlpsWriterException e) {
+            e.printStackTrace();
             fail(e.getMessage(), e);
             
         } catch (IOException e) {

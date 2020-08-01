@@ -25,5 +25,9 @@ public class AlpsParserException extends Exception {
     public AlpsParserException(final String message) {
         super(message);
     }
-    
+
+    public AlpsParserException(final Throwable throwable) {
+        super(throwable.getMessage(), throwable);
+    }
+
 }

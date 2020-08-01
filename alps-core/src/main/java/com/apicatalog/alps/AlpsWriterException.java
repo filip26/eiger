@@ -25,5 +25,9 @@ public class AlpsWriterException extends Exception {
     public AlpsWriterException(final String message) {
         super(message);
     }
-    
+
+    public AlpsWriterException(final Throwable throwable) {
+        super(throwable);
+    }
+
 }

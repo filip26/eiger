@@ -70,7 +70,7 @@ class AlpsDocumentHandler extends DefaultHandler {
                 throw new SAXException();
             }
             
-            stack.push(new XmlDocument());
+            stack.push(XmlDocument.create(attributes));
             return;
         } 
 
