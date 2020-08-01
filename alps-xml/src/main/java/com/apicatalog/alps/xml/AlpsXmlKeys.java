@@ -9,6 +9,8 @@ final class AlpsXmlKeys {
     public static final String DESCRIPTOR = "descriptor";
 
     public static final String VERSION = "version";
+
+    public static final String ID = "id";
     
     private AlpsXmlKeys() {
         

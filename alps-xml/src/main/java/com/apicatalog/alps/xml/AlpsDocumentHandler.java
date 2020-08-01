@@ -83,6 +83,11 @@ class AlpsDocumentHandler extends DefaultHandler {
             stack.peek().addDocumentation(doc);
             stack.push(doc);
             
+        } else if (AlpsXmlKeys.DESCRIPTOR.equals(elementName)) {
+            XmlDescriptor dsc = XmlDescriptor.create(attributes);
+            stack.peek().addDescriptor(dsc);
+            stack.push(dsc);
+            
         } else {
             //TODO
 

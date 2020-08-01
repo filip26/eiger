@@ -2,6 +2,7 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,11 +20,16 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
     private AlpsVersion version;
     
+    private Set<AlpsDocumentation> documentation;
+    
+    private Set<AlpsDescriptor> descriptors;
+    
     public static final XmlDocument create(Attributes attrs) throws SAXException {
         
         final XmlDocument doc = new XmlDocument();
         doc.version = readVersion(attrs);
-        
+        doc.documentation = new LinkedHashSet<>();
+        doc.descriptors = new LinkedHashSet<>();
         return doc;
     }
 
@@ -59,8 +65,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
     @Override
     public Set<AlpsDescriptor> getDescriptors() {
-        // TODO Auto-generated method stub
-        return null;
+        return descriptors;
     }
 
     @Override
@@ -77,8 +82,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
     @Override
     public Set<AlpsDocumentation> getDocumentation() {
-        // TODO Auto-generated method stub
-        return null;
+        return documentation;
     }
 
     @Override
@@ -95,8 +99,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
     @Override
     public void addDocumentation(XmlDocumentation doc) {
-        // TODO Auto-generated method stub
-        
+        documentation.add(doc);
     }
 
     @Override
@@ -107,6 +110,11 @@ final class XmlDocument implements AlpsDocument, XmlElement {
     @Override
     public void addText(char[] ch, int start, int length) {
         // TODO Auto-generated method stub   
+    }
+
+    @Override
+    public void addDescriptor(XmlDescriptor descriptor) {
+        descriptors.add(descriptor);
     }
 
 }

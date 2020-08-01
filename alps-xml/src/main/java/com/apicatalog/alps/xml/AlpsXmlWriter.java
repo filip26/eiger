@@ -57,8 +57,15 @@ public class AlpsXmlWriter implements AlpsWriter {
         if (document.getVersion() == null) {
             throw new AlpsWriterException();
         }
-        
         writer.writeAttribute(AlpsXmlKeys.VERSION, "1.0");
+        
+        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
+            XmlDocumentation.write(document.getDocumentation(), writer);
+        }
+        
+        if (document.getDescriptors() != null && !document.getDescriptors().isEmpty()) {
+            XmlDescriptor.write(document.getDescriptors(), writer);
+        }
         
         writer.writeEndElement();
         writer.writeEndDocument();

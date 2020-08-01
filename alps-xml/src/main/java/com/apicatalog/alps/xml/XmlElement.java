@@ -2,10 +2,12 @@ package com.apicatalog.alps.xml;
 
 interface XmlElement {
 
-    void addDocumentation(XmlDocumentation doc);
+    String getElementName();
 
     void addText(char[] ch, int start, int length);
 
-    String getElementName();
+    void addDocumentation(XmlDocumentation doc);
+
+    void addDescriptor(XmlDescriptor descriptor);
 
 }

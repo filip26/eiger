@@ -1,6 +1,10 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 
@@ -8,10 +12,14 @@ import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
 final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
+    private StringBuilder content;
     
     public static final XmlDocumentation create(Attributes attributes) {
         //TODO
-        return new XmlDocumentation(); 
+        XmlDocumentation doc = new XmlDocumentation();
+        doc.content = new StringBuilder();
+        
+        return doc; 
     }
 
     @Override
@@ -28,8 +36,7 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
     @Override
     public String getContent() {
-        // TODO Auto-generated method stub
-        return null;
+        return content.toString();
     }
 
     @Override
@@ -44,6 +51,23 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
     @Override
     public void addText(char[] ch, int start, int length) {
+        content.append(ch, start, length);
+    }
+
+    public static void write(Set<AlpsDocumentation> docs, XMLStreamWriter writer) throws XMLStreamException {
+        if (docs == null || docs.isEmpty()) {
+            return;
+        }
+        
+        for (final AlpsDocumentation doc : docs) {
+            writer.writeStartElement(AlpsXmlKeys.DOCUMENTATION);
+            writer.writeCharacters(doc.getContent());
+            writer.writeEndElement();
+        }
+    }
+
+    @Override
+    public void addDescriptor(XmlDescriptor descriptor) {
         // TODO Auto-generated method stub
         
     }
