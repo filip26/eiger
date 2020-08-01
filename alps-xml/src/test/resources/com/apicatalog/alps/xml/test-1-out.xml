@@ -1,1 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><alps version="1.0"><descriptor id="content" type="semantic"><doc>The content of a work.</doc></descriptor><descriptor id="publish" type="idempotent"><doc>Release a work for distribution.</doc></descriptor></alps>
+<?xml version="1.0" encoding="UTF-8"?>
+<alps version="1.0">
+
+<descriptor id="content" type="semantic"><doc>The content of a work.</doc></descriptor>
+
+<descriptor id="publish" type="idempotent"><doc>Release a work for distribution.</doc></descriptor>
+</alps>

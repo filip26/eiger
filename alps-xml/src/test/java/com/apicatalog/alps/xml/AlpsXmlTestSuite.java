@@ -18,26 +18,32 @@ package com.apicatalog.alps.xml;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
-import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
@@ -92,19 +98,34 @@ class AlpsXmlTestSuite {
             return;
         }
 
+        final DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
+        documentFactory.setNamespaceAware(false);
+        documentFactory.setCoalescing(true);
+        documentFactory.setIgnoringElementContentWhitespace(true);
+        documentFactory.setIgnoringComments(true);
+                
         try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getExpected())) {
             
             assertNotNull(is);
 
-            final byte[] expected = is.readAllBytes();
+            Transformer tr = TransformerFactory.newInstance().newTransformer();
+            tr.setOutputProperty(OutputKeys.INDENT, "yes");
+            tr.setOutputProperty(OutputKeys.METHOD, "xml");
+            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+            
+            final Document expected = documentFactory.newDocumentBuilder().parse(is);
+            expected.normalizeDocument();
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
             (new AlpsXmlWriter()).write("application/xml", document, outputStream);
             
-            final byte[] output = outputStream.toByteArray();
+            final Document output = documentFactory.newDocumentBuilder().parse(new ByteArrayInputStream(outputStream.toByteArray()));
+            output.normalizeDocument();
 
-            final boolean match = Arrays.equals(expected, output);
+            final boolean match = expected.isEqualNode(output);
             
             if (!match) {
             
@@ -112,27 +133,24 @@ class AlpsXmlTestSuite {
                 System.out.println("Expected:");
 
                 StringWriter writer = new StringWriter();
+  
+                tr.transform(new DOMSource(expected), new StreamResult(writer));
                 
-                writer.write(new String(expected));
-
                 writer.append("\n\n");
                 writer.append("Actual:\n");
 
-                writer.write(new String(output));
+                tr.transform(new DOMSource(output), new StreamResult(writer));
 
                 System.out.print(writer.toString());
                 System.out.println();
                 System.out.println();
                 
-                fail("Expected " + new String(expected) + ", but was" + new String(output));
+                fail("Expected output does not match.");
             }
             
-        } catch (AlpsWriterException e) {
+        } catch (IOException | SAXException | ParserConfigurationException | AlpsWriterException | TransformerException e) {
             e.printStackTrace();
-            fail(e.getMessage(), e);
-            
-        } catch (IOException e) {
-            fail(e.getMessage(), e);
+            fail(e.getMessage(), e);            
         }
     }    
 }
