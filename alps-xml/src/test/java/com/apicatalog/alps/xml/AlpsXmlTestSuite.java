@@ -18,20 +18,29 @@ package com.apicatalog.alps.xml;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonWriter;
+import javax.json.JsonWriterFactory;
+import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 class AlpsXmlTestSuite {
@@ -83,6 +92,46 @@ class AlpsXmlTestSuite {
             return;
         }
 
-        //TODO comparison actual vs expected
+        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getExpected())) {
+            
+            assertNotNull(is);
+
+            final byte[] expected = is.readAllBytes();
+            
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            
+            (new AlpsXmlWriter()).write("application/xml", document, outputStream);
+            
+            final byte[] output = outputStream.toByteArray();
+
+            final boolean match = Arrays.equals(expected, output);
+            
+            if (!match) {
+            
+                System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
+                System.out.println("Expected:");
+
+                StringWriter writer = new StringWriter();
+                
+                writer.write(new String(expected));
+
+                writer.append("\n\n");
+                writer.append("Actual:\n");
+
+                writer.write(new String(output));
+
+                System.out.print(writer.toString());
+                System.out.println();
+                System.out.println();
+                
+                fail("Expected " + new String(expected) + ", but was" + new String(output));
+            }
+            
+        } catch (AlpsWriterException e) {
+            fail(e.getMessage(), e);
+            
+        } catch (IOException e) {
+            fail(e.getMessage(), e);
+        }
     }    
 }

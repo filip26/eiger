@@ -5,7 +5,8 @@
            "@id"    : "#01",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Sample Works Domain",
-            "input" : "test-1-in.xml"
+            "input" : "test-1-in.xml",
+            "expected" : "test-1-in.xml"
         }
     ]
 }
