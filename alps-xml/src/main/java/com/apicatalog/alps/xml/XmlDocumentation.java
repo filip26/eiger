@@ -51,6 +51,7 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
     @Override
     public void addText(char[] ch, int start, int length) {
+        //TODO strip leading and trailing spaces
         content.append(ch, start, length);
     }
 

@@ -48,7 +48,7 @@ import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
-class AlpsXmlTestSuite {
+class AlpsXmlSuiteTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
@@ -59,7 +59,7 @@ class AlpsXmlTestSuite {
         
         AlpsDocument document = null;
         
-        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getInput())) {
+        try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream(testCase.getInput())) {
             
             assertNotNull(is);
             
@@ -76,7 +76,7 @@ class AlpsXmlTestSuite {
     
     static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
         
-        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream("manifest.json")) {
+        try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream("manifest.json")) {
             
             assertNotNull(is);
             
@@ -96,7 +96,7 @@ class AlpsXmlTestSuite {
             return;
         }
                 
-        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getExpected())) {
+        try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream(testCase.getExpected())) {
             
             assertNotNull(is);
             
@@ -148,7 +148,7 @@ class AlpsXmlTestSuite {
     
     private static final Transformer createInputTransformer() {
 
-        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream("strip-whitespace.xsl")) {
+        try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream("strip-whitespace.xsl")) {
 
             assertNotNull(is);
 

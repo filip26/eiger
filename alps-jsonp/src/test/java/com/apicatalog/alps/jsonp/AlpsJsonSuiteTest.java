@@ -42,7 +42,7 @@ import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
-class AlpsJsonTestSuite {
+class AlpsJsonSuiteTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
@@ -53,7 +53,7 @@ class AlpsJsonTestSuite {
         
         AlpsDocument document = null;
         
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getInput())) {
+        try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream(testCase.getInput())) {
             
             assertNotNull(is);
             
@@ -70,7 +70,7 @@ class AlpsJsonTestSuite {
     
     static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
         
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream("manifest.json")) {
+        try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream("manifest.json")) {
             
             assertNotNull(is);
             
@@ -90,7 +90,7 @@ class AlpsJsonTestSuite {
             return;
         }
         
-        try (final InputStream is = AlpsJsonTestSuite.class.getResourceAsStream(testCase.getExpected())) {
+        try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream(testCase.getExpected())) {
             
             final JsonParser expectedParser = Json.createParser(is);
          
