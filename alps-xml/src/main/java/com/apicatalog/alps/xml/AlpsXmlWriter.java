@@ -3,11 +3,9 @@ package com.apicatalog.alps.xml;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.nio.charset.Charset;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import com.apicatalog.alps.AlpsWriter;
 import com.apicatalog.alps.AlpsWriterException;
@@ -31,7 +29,7 @@ public class AlpsXmlWriter implements AlpsWriter {
     public void write(String mediaType, AlpsDocument document, OutputStream stream) throws IOException, AlpsWriterException {
         // TODO Auto-generated method stub
         try {
-            write(document, factory.createXMLStreamWriter(stream));
+            XmlDocument.write(document, factory.createXMLStreamWriter(stream));
         } catch (XMLStreamException e) {
             throw new AlpsWriterException(e);
         }        
@@ -42,33 +40,9 @@ public class AlpsXmlWriter implements AlpsWriter {
         // TODO Auto-generated method stub
         
         try {
-            write(document, factory.createXMLStreamWriter(writer));
+            XmlDocument.write(document, factory.createXMLStreamWriter(writer));
         } catch (XMLStreamException e) {
             throw new AlpsWriterException(e);
         }
-    }
-    
-    private void write(AlpsDocument document, XMLStreamWriter writer) throws XMLStreamException, AlpsWriterException {
-
-        writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
-        
-        writer.writeStartElement(AlpsXmlKeys.DOCUMENT);
-        
-        if (document.getVersion() == null) {
-            throw new AlpsWriterException();
-        }
-        writer.writeAttribute(AlpsXmlKeys.VERSION, "1.0");
-        
-        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
-            XmlDocumentation.write(document.getDocumentation(), writer);
-        }
-        
-        if (document.getDescriptors() != null && !document.getDescriptors().isEmpty()) {
-            XmlDescriptor.write(document.getDescriptors(), writer);
-        }
-        
-        writer.writeEndElement();
-        writer.writeEndDocument();
-        
     }
 }

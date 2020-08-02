@@ -26,6 +26,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private Set<AlpsDescriptor> descriptors;
     
+    private Set<AlpsLink> links;
+    
     public static final XmlDescriptor create(Attributes attrs) {
     
         String id = attrs.getValue(AlpsXmlKeys.ID);
@@ -43,6 +45,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         descriptor.documentation = new LinkedHashSet<>();
         
         descriptor.descriptors = new LinkedHashSet<>();
+        
+        descriptor.links = new LinkedHashSet<>();
         
         // TODO Auto-generated constructor stub
         return descriptor;
@@ -126,8 +130,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     @Override
     public Set<AlpsLink> getLinks() {
-        // TODO Auto-generated method stub
-        return null;
+        return links;
     }
 
     @Override
@@ -135,6 +138,11 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         descriptors.add(descriptor);
     }
 
+    @Override
+    public void addLink(XmlLink link) {
+        links.add(link);
+        
+    }
     public static void write(Set<AlpsDescriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
@@ -159,10 +167,11 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
             
+            XmlLink.write(descriptor.getLinks(), writer);
+            
             XmlDescriptor.write(descriptor.getDescriptors(), writer);
             
             writer.writeEndElement();
         }
     }
-
 }

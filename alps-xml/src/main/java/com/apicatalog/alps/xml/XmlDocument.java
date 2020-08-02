@@ -1,14 +1,19 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -24,12 +29,15 @@ final class XmlDocument implements AlpsDocument, XmlElement {
     
     private Set<AlpsDescriptor> descriptors;
     
+    private Set<AlpsLink> links;
+    
     public static final XmlDocument create(Attributes attrs) throws SAXException {
         
         final XmlDocument doc = new XmlDocument();
         doc.version = readVersion(attrs);
         doc.documentation = new LinkedHashSet<>();
         doc.descriptors = new LinkedHashSet<>();
+        doc.links = new LinkedHashSet<>();
         return doc;
     }
 
@@ -76,8 +84,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
     @Override
     public Set<AlpsLink> getLinks() {
-        // TODO Auto-generated method stub
-        return null;
+        return links;
     }
 
     @Override
@@ -117,4 +124,35 @@ final class XmlDocument implements AlpsDocument, XmlElement {
         descriptors.add(descriptor);
     }
 
+    @Override
+    public void addLink(XmlLink link) {
+        links.add(link);
+    }
+    
+    public static void write(AlpsDocument document, XMLStreamWriter writer) throws XMLStreamException, AlpsWriterException {
+
+        writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
+        
+        writer.writeStartElement(AlpsXmlKeys.DOCUMENT);
+        
+        if (document.getVersion() == null) {
+            throw new AlpsWriterException();
+        }
+        writer.writeAttribute(AlpsXmlKeys.VERSION, "1.0");
+        
+        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
+            XmlDocumentation.write(document.getDocumentation(), writer);
+        }
+        
+        if (document.getLinks() != null && !document.getLinks().isEmpty()) {
+            XmlLink.write(document.getLinks(), writer);
+        }
+
+        if (document.getDescriptors() != null && !document.getDescriptors().isEmpty()) {
+            XmlDescriptor.write(document.getDescriptors(), writer);
+        }
+
+        writer.writeEndElement();
+        writer.writeEndDocument();        
+    }
 }

@@ -87,7 +87,12 @@ class AlpsDocumentHandler extends DefaultHandler {
             XmlDescriptor dsc = XmlDescriptor.create(attributes);
             stack.peek().addDescriptor(dsc);
             stack.push(dsc);
-            
+
+        } else if (AlpsXmlKeys.LINK.equals(elementName)) {
+            XmlLink link = XmlLink.create(attributes);
+            stack.peek().addLink(link);
+            stack.push(link);
+
         } else {
             //TODO
 
@@ -107,7 +112,7 @@ class AlpsDocumentHandler extends DefaultHandler {
             //TODO
             return;
         }
-        
+
         if (!AlpsXmlKeys.DOCUMENT.equals(elementName) && elementName.equals(stack.peek().getElementName())) {
             //TODO validate
             stack.pop();

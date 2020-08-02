@@ -8,6 +8,7 @@ interface XmlElement {
 
     void addDocumentation(XmlDocumentation doc);
 
-    void addDescriptor(XmlDescriptor descriptor);
+    void addLink(XmlLink link);
 
+    void addDescriptor(XmlDescriptor descriptor);
 }

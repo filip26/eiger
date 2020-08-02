@@ -71,5 +71,11 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public void addLink(XmlLink link) {
+        // TODO Auto-generated method stub
+        
+    }
     
 }
