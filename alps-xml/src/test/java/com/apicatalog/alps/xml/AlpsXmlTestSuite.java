@@ -66,7 +66,6 @@ class AlpsXmlTestSuite {
             document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
         } catch (AlpsParserException e) {
-            e.printStackTrace();
             fail(e.getMessage(), e);
         }
         
@@ -85,7 +84,7 @@ class AlpsXmlTestSuite {
             
             jsonParser.next();
             
-            JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
+            final JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
             
             return tests.stream().map(JsonObject.class::cast).map(AlpsTestCase::of);
         }
@@ -101,30 +100,32 @@ class AlpsXmlTestSuite {
             
             assertNotNull(is);
             
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
-            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            Transformer inputTransformer = createInputTransformer();
             
-            Document expected = readDocument(is);          
+            final Document expected = readDocument(inputTransformer, is);
             expected.normalizeDocument();
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
             (new AlpsXmlWriter()).write("application/xml", document, outputStream);
             
-            final Document output = readDocument(new ByteArrayInputStream(outputStream.toByteArray()));
+            final Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
             
             if (!match) {
-            
+                
+                Transformer tr = TransformerFactory.newInstance().newTransformer();
+                tr.setOutputProperty(OutputKeys.INDENT, "yes");
+                tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+                              
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
                 System.out.println("Expected:");
 
-                StringWriter writer = new StringWriter();
+                final StringWriter writer = new StringWriter();
   
                 tr.transform(new DOMSource(expected), new StreamResult(writer));
                 
@@ -141,24 +142,17 @@ class AlpsXmlTestSuite {
             }
             
         } catch (IOException | AlpsWriterException | TransformerException e) {
-            e.printStackTrace();
             fail(e.getMessage(), e);            
         }
     }    
     
-    private static final Document readDocument(InputStream source) {
-        
+    private static final Transformer createInputTransformer() {
+
         try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream("strip-whitespace.xsl")) {
 
             assertNotNull(is);
 
-            Transformer tr = TransformerFactory.newInstance().newTransformer(new StreamSource(is));
-
-            DOMResult result = new DOMResult();
-            
-            tr.transform(new StreamSource(source), result);
-            
-            return (Document)result.getNode();
+            return TransformerFactory.newInstance().newTransformer(new StreamSource(is));
 
         } catch (TransformerFactoryConfigurationError | TransformerException | IOException e) {
             fail(e.getMessage(), e);
@@ -167,4 +161,19 @@ class AlpsXmlTestSuite {
         return null;
     }
     
+    private static final Document readDocument(Transformer transformer, InputStream source) {
+
+        try {
+            final DOMResult result = new DOMResult();
+            
+            transformer.transform(new StreamSource(source), result);
+            
+            return (Document)result.getNode();
+
+        } catch (TransformerFactoryConfigurationError | TransformerException e) {
+            fail(e.getMessage(), e);
+        }
+        
+        return null;
+    }
 }
