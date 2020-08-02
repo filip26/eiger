@@ -11,7 +11,9 @@ final class AlpsXmlKeys {
     public static final String VERSION = "version";
 
     public static final String ID = "id";
-    
+
+    public static final String TYPE = "type";
+
     private AlpsXmlKeys() {
         
     }

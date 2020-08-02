@@ -20,6 +20,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     private URI id;
     
+    private AlpsDescriptorType type;
+    
     private Set<AlpsDocumentation> documentation;
     
     public static final XmlDescriptor create(Attributes attrs) {
@@ -33,6 +35,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         XmlDescriptor descriptor = new XmlDescriptor();
         
         descriptor.id = URI.create(id);
+        
+        descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
 
         descriptor.documentation = new LinkedHashSet<>();
         
@@ -40,6 +44,16 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         return descriptor;
     }
     
+    private static AlpsDescriptorType parseType(String value) {
+
+        if (value == null || value.isBlank()) {
+            return AlpsDescriptorType.SEMANTIC;
+        }
+        
+        //TODO check 
+        return AlpsDescriptorType.valueOf(value.toUpperCase());
+    }
+
     @Override
     public void addDocumentation(XmlDocumentation doc) {
         documentation.add(doc);
@@ -75,8 +89,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     @Override
     public AlpsDescriptorType getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return type;
     }
 
     @Override
@@ -126,18 +139,28 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         }
         
         for (final AlpsDescriptor descriptor : descriptors) {
+            
             writer.writeStartElement(AlpsXmlKeys.DESCRIPTOR);
             
+            // id
             if (descriptor.getId() == null) {
                 //TODO
             }
             writer.writeAttribute(AlpsXmlKeys.ID, descriptor.getId().toString());
+         
+            // type
+            AlpsDescriptorType type = descriptor.getType();
+            
+            if (type == null) {
+                type = AlpsDescriptorType.SEMANTIC;
+            }
+            
+            writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
             
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
             
             writer.writeEndElement();
         }
-        
     }
 
 }
