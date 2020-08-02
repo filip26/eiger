@@ -30,20 +30,19 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.stream.JsonParser;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
@@ -97,31 +96,25 @@ class AlpsXmlTestSuite {
         if (testCase.getExpected() == null) {
             return;
         }
-
-        final DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
-        documentFactory.setNamespaceAware(false);
-        documentFactory.setCoalescing(true);
-        documentFactory.setIgnoringElementContentWhitespace(true);
-        documentFactory.setIgnoringComments(true);
                 
         try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream(testCase.getExpected())) {
             
             assertNotNull(is);
-
+            
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
             tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             
-            final Document expected = documentFactory.newDocumentBuilder().parse(is);
+            Document expected = readDocument(is);          
             expected.normalizeDocument();
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
             (new AlpsXmlWriter()).write("application/xml", document, outputStream);
             
-            final Document output = documentFactory.newDocumentBuilder().parse(new ByteArrayInputStream(outputStream.toByteArray()));
+            final Document output = readDocument(new ByteArrayInputStream(outputStream.toByteArray()));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
@@ -147,9 +140,31 @@ class AlpsXmlTestSuite {
                 fail("Expected output does not match.");
             }
             
-        } catch (IOException | SAXException | ParserConfigurationException | AlpsWriterException | TransformerException e) {
+        } catch (IOException | AlpsWriterException | TransformerException e) {
             e.printStackTrace();
             fail(e.getMessage(), e);            
         }
     }    
+    
+    private static final Document readDocument(InputStream source) {
+        
+        try (final InputStream is = AlpsXmlTestSuite.class.getResourceAsStream("strip-whitespace.xsl")) {
+
+            assertNotNull(is);
+
+            Transformer tr = TransformerFactory.newInstance().newTransformer(new StreamSource(is));
+
+            DOMResult result = new DOMResult();
+            
+            tr.transform(new StreamSource(source), result);
+            
+            return (Document)result.getNode();
+
+        } catch (TransformerFactoryConfigurationError | TransformerException | IOException e) {
+            fail(e.getMessage(), e);
+        }
+        
+        return null;
+    }
+    
 }
