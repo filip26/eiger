@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <alps version="1.0">
 
-	<doc format="text">A contact list.</doc>
- 
+	<doc>A contact list.</doc>
+
 	<link rel="help" href="http://example.org/help/contacts.html" />
 
  	<descriptor id="collection" type="safe" rt="contact">
    		<doc>A simple link/form for getting a list of contacts.</doc>
-   		
+
    		<descriptor id="nameSearch">
      		<doc>Input for a search form.</doc>
    		</descriptor>
@@ -17,7 +17,7 @@
     	<descriptor id="item" type="safe">
       		<doc>A link to an individual contact.</doc>
     	</descriptor>
-    	
+
     	<descriptor id="fullName"/>
     	<descriptor id="email"/>
     	<descriptor id="phone"/>

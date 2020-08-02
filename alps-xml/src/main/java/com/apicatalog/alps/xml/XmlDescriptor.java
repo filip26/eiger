@@ -24,6 +24,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private Set<AlpsDocumentation> documentation;
     
+    private Set<AlpsDescriptor> descriptors;
+    
     public static final XmlDescriptor create(Attributes attrs) {
     
         String id = attrs.getValue(AlpsXmlKeys.ID);
@@ -39,6 +41,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
 
         descriptor.documentation = new LinkedHashSet<>();
+        
+        descriptor.descriptors = new LinkedHashSet<>();
         
         // TODO Auto-generated constructor stub
         return descriptor;
@@ -111,8 +115,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     @Override
     public Set<AlpsDescriptor> getDescriptors() {
-        // TODO Auto-generated method stub
-        return null;
+        return descriptors;
     }
 
     @Override
@@ -129,8 +132,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     @Override
     public void addDescriptor(XmlDescriptor descriptor) {
-        // TODO Auto-generated method stub
-        
+        descriptors.add(descriptor);
     }
 
     public static void write(Set<AlpsDescriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
@@ -149,15 +151,15 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             writer.writeAttribute(AlpsXmlKeys.ID, descriptor.getId().toString());
          
             // type
-            AlpsDescriptorType type = descriptor.getType();
+            final AlpsDescriptorType type = descriptor.getType();
             
-            if (type == null) {
-                type = AlpsDescriptorType.SEMANTIC;
+            if (type != null && !AlpsDescriptorType.SEMANTIC.equals(type)) {
+                writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
             }
-            
-            writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
-            
+
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
+            
+            XmlDescriptor.write(descriptor.getDescriptors(), writer);
             
             writer.writeEndElement();
         }
