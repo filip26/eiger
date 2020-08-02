@@ -19,6 +19,8 @@ final class AlpsXmlKeys {
     public static final String HREF = "href";
 
     public static final String RELATION = "rel";
+    
+    public static final String RETURN_VALUE = "rt";
 
     private AlpsXmlKeys() {
         

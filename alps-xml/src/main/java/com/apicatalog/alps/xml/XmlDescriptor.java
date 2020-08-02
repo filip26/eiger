@@ -22,6 +22,8 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private AlpsDescriptorType type;
     
+    private URI returnValue;
+    
     private Set<AlpsDocumentation> documentation;
     
     private Set<AlpsDescriptor> descriptors;
@@ -41,6 +43,12 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         descriptor.id = URI.create(id);
         
         descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
+        
+        String rt = attrs.getValue(AlpsXmlKeys.RETURN_VALUE);
+        
+        if (rt != null && !rt.isBlank()) {
+            descriptor.returnValue = URI.create(rt);
+        }
 
         descriptor.documentation = new LinkedHashSet<>();
         
@@ -102,8 +110,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
     @Override
     public Optional<URI> getReturnType() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(returnValue);
     }
 
     @Override
@@ -163,6 +170,11 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             
             if (type != null && !AlpsDescriptorType.SEMANTIC.equals(type)) {
                 writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
+            }
+            
+            // return type
+            if (descriptor.getReturnType().isPresent()) {
+                writer.writeAttribute(AlpsXmlKeys.RETURN_VALUE, descriptor.getReturnType().get().toString());
             }
 
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
