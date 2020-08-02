@@ -7,6 +7,13 @@
             "name"  : "Sample Works Domain",
             "input" : "test-1-in.xml",
             "expected" : "test-1-out.xml"
-        }
+        },
+        {
+           "@id"    : "#02",
+           "@type"  : ["#PositiveEvaluationTest"],
+            "name"  : "Contact Profile Document",
+            "input" : "test-2-in.xml",
+            "expected" : "test-2-out.xml"
+        }        
     ]
 }
