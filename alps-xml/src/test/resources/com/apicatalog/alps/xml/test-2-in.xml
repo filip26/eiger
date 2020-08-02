@@ -5,7 +5,9 @@
 
  <!-- a hypermedia control for returning contacts -->
  <descriptor id="collection" type="safe" rt="contact">
-   <doc>A simple link/form for getting a list of contacts.</doc>
+   <doc>
+     A simple link/form for getting a list of contacts.
+   </doc>
    <descriptor id="nameSearch" type="semantic">
      <doc>Input for a search form.</doc>
    </descriptor>
