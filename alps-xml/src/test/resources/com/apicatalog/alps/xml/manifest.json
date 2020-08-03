@@ -5,15 +5,22 @@
            "@id"    : "#01",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Sample Works Domain",
-            "input" : "test-1-in.xml",
-            "expected" : "test-1-out.xml"
+            "input" : "t001-in.xml",
+            "expected" : "t001-out.xml"
         },
         {
            "@id"    : "#02",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Contact Profile Document",
-            "input" : "test-2-in.xml",
-            "expected" : "test-2-out.xml"
-        }        
+            "input" : "t002-in.xml",
+            "expected" : "t002-out.xml"
+        },
+        {
+           "@id"    : "#03",
+           "@type"  : ["#NegativeEvaluationTest"],
+            "name"  : "Descriptor must have an id",
+            "input" : "nt001-in.xml",
+            "expectedError" : "ID_REQUIRED"
+        }
     ]
 }

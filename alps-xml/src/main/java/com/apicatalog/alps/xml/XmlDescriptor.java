@@ -9,7 +9,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
+import com.apicatalog.alps.AlpsErrorCode;
+import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDescriptorType;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
@@ -30,12 +33,12 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private Set<AlpsLink> links;
     
-    public static final XmlDescriptor create(Attributes attrs) {
+    public static final XmlDescriptor create(Attributes attrs) throws SAXException {
     
         String id = attrs.getValue(AlpsXmlKeys.ID);
         
         if (id == null || id.isBlank()) {
-            //TODO
+            throw new SAXException(new AlpsParserException(AlpsErrorCode.ID_REQUIRED));
         }
         
         XmlDescriptor descriptor = new XmlDescriptor();

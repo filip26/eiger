@@ -26,6 +26,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsExtension;
 
@@ -60,7 +61,7 @@ class JsonExtension implements AlpsExtension {
                 extension.add(parseObject(item.asJsonObject()));
                 
             } else {
-                throw new AlpsParserException("Expected JSON string or object but was " + item.getValueType());
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Expected JSON string or object but was " + item.getValueType());
             }
         }        
         return extension;
@@ -70,7 +71,7 @@ class JsonExtension implements AlpsExtension {
         
         // id
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new AlpsParserException("An extension must have valid 'id' property but was " + jsonObject);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "An extension must have valid 'id' property but was " + jsonObject);
         }
  
         final JsonExtension extension = new JsonExtension();
@@ -80,7 +81,7 @@ class JsonExtension implements AlpsExtension {
             extension.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException("An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
 
         // href
@@ -94,7 +95,7 @@ class JsonExtension implements AlpsExtension {
             final JsonValue value = jsonObject.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(value)) {
-                throw new AlpsParserException("An extension value must be represented as JSON string but was " + value);
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "An extension value must be represented as JSON string but was " + value);
             }
             
             extension.value = JsonUtils.getString(value);

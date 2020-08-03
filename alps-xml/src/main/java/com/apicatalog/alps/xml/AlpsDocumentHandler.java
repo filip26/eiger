@@ -22,6 +22,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
@@ -138,11 +139,11 @@ class AlpsDocumentHandler extends DefaultHandler {
         
         if (stack.isEmpty()) {
             //TODO
-            throw new AlpsParserException();
+            throw new AlpsParserException(AlpsErrorCode.NOT_DOCUMENT);
             
         } else if (stack.size() > 1)  {
             //TODO
-            throw new AlpsParserException();
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED);
         }
         
         return (AlpsDocument)stack.pop();

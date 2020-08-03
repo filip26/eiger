@@ -17,12 +17,15 @@ package com.apicatalog.alps.xml;
 
 import javax.json.JsonObject;
 
+import com.apicatalog.alps.AlpsErrorCode;
+
 public final class AlpsTestCase {
 
     private String id;
     private String name;
     private String input;
     private String expected;
+    private AlpsErrorCode expectedError;
     
     public static final AlpsTestCase of(JsonObject jsonObject) {
         final AlpsTestCase testCase = new AlpsTestCase();
@@ -31,6 +34,10 @@ public final class AlpsTestCase {
         testCase.name = jsonObject.getString("name");
         testCase.input = jsonObject.getString("input");
         testCase.expected = jsonObject.getString("expected", null);
+        
+        if (jsonObject.containsKey("expectedError")) {
+            testCase.expectedError = AlpsErrorCode.valueOf(jsonObject.getString("expectedError"));
+        }
         
         return testCase;
     }
@@ -51,9 +58,12 @@ public final class AlpsTestCase {
         return expected;
     }
     
+    public AlpsErrorCode getExpectedError() {
+        return expectedError;
+    }
+
     @Override
     public String toString() {
         return id + ": " + name;
-    }
-    
+    }    
 }

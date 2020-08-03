@@ -26,6 +26,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
@@ -63,7 +64,7 @@ final class JsonDocumentation implements AlpsDocumentation {
                 docs.add(parseObject(item.asJsonObject()));
                 
             } else {
-                throw new AlpsParserException("Expected JSON string or object but was " + item.getValueType());
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Expected JSON string or object but was " + item.getValueType());
             }
         }
         
@@ -87,7 +88,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue content = value.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(content)) {
-                throw new AlpsParserException("doc.value property must be string but was " + content.getValueType());
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "doc.value property must be string but was " + content.getValueType());
             }
             doc.content = JsonUtils.getString(content);
             
@@ -96,7 +97,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue href = value.get(AlpsJsonKeys.HREF);
             
             if (JsonUtils.isNotString(href)) {
-                throw new AlpsParserException("'href' property must have string value but was " + href.getValueType());
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "'href' property must have string value but was " + href.getValueType());
             }
             
             try {
@@ -104,11 +105,11 @@ final class JsonDocumentation implements AlpsDocumentation {
                 doc.href = URI.create(JsonUtils.getString(href));
                 
             } catch (IllegalArgumentException e) {
-                throw new AlpsParserException("'href' property value is not URI but was " + JsonUtils.getString(href));
+                throw new AlpsParserException(AlpsErrorCode.NOT_URI, "'href' property value is not URI but was " + JsonUtils.getString(href));
             }
             
         } else {
-            throw new AlpsParserException("doc object must contain href of value property");
+            throw new AlpsParserException(AlpsErrorCode.HREF_REQUIRED, "doc object must contain href of value property");
         }
         
         if (value.containsKey(AlpsJsonKeys.FORMAT)) {
@@ -116,7 +117,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue format = value.get(AlpsJsonKeys.FORMAT);
             
             if (JsonUtils.isNotString(format)) {
-                throw new AlpsParserException("doc.format property must be string but was " + format.getValueType());
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "doc.format property must be string but was " + format.getValueType());
             }
 
             doc.mediaType = JsonUtils.getString(format);

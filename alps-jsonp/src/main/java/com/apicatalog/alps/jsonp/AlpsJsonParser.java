@@ -26,6 +26,7 @@ import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
+import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParser;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
@@ -48,7 +49,7 @@ public final class AlpsJsonParser implements AlpsParser {
         }
         
         if (!canParse(mediaType)) {
-            throw new AlpsParserException();
+            throw new AlpsParserException(AlpsErrorCode.UNSUPPORTED_MEDIA_TYPE);
         }
         
         return parse(baseUri, Json.createParser(stream));
@@ -62,7 +63,7 @@ public final class AlpsJsonParser implements AlpsParser {
         }
         
         if (!canParse(mediaType)) {
-            throw new AlpsParserException();
+            throw new AlpsParserException(AlpsErrorCode.UNSUPPORTED_MEDIA_TYPE);
         }
         
         return parse(baseUri, Json.createParser(reader));
@@ -71,25 +72,25 @@ public final class AlpsJsonParser implements AlpsParser {
     private static final AlpsDocument parse(URI baseUri, JsonParser parser)  throws AlpsParserException {
         
         if (!parser.hasNext()) {
-            throw new AlpsParserException("Expected JSON object but was an empty input");
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Expected JSON object but was an empty input");
         }
             
         final Event event = parser.next();
         
         if (!Event.START_OBJECT.equals(event)) {
-            throw new AlpsParserException("Expected JSON object but was " + event);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Expected JSON object but was " + event);
         }
         
         final JsonObject rootObject = parser.getObject();
         
         if (!rootObject.containsKey(AlpsJsonKeys.ROOT)) {
-            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' is not present");
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Property '" + AlpsJsonKeys.ROOT + "' is not present");
         }
         
         final JsonValue alpsObject = rootObject.get(AlpsJsonKeys.ROOT);
         
         if (JsonUtils.isNotObject(alpsObject)) {
-            throw new AlpsParserException("Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
         }
             
         return JsonDocument.parse(baseUri, alpsObject.asJsonObject());

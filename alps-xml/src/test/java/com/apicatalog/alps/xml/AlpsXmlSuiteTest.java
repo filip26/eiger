@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -52,7 +53,7 @@ class AlpsXmlSuiteTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
-    void testCase(AlpsTestCase testCase) throws IOException {
+    void testCase(final AlpsTestCase testCase) throws IOException {
         
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
@@ -66,7 +67,15 @@ class AlpsXmlSuiteTest {
             document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
         } catch (AlpsParserException e) {
-            fail(e.getMessage(), e);
+            
+            if (testCase.getExpectedError() != null) {
+                
+                assertEquals(testCase.getExpectedError(), e.getCode());
+                return;
+                    
+            } else {
+                fail(e.getMessage(), e);                
+            }
         }
         
         assertNotNull(document);

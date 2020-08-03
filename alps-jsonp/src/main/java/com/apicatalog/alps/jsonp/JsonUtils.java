@@ -24,6 +24,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
+import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
 
 final class JsonUtils {
@@ -63,14 +64,14 @@ final class JsonUtils {
         final JsonValue href = object.get(AlpsJsonKeys.HREF);
         
         if (JsonUtils.isNotString(href)) {
-            throw new AlpsParserException("The 'href' property value must be URI represented as JSON string but was " + href);
+            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
         }
 
         try {
             return URI.create(JsonUtils.getString(href));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException("The 'href' property value must be URI represented as JSON string but was " + href);
+            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
         }
     }
 
