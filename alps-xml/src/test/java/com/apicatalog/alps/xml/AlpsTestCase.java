@@ -15,6 +15,10 @@
  */
 package com.apicatalog.alps.xml;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Arrays;
+
 import javax.json.JsonObject;
 
 import com.apicatalog.alps.AlpsErrorCode;
@@ -37,7 +41,13 @@ public final class AlpsTestCase {
         testCase.expected = jsonObject.getString("expected", null);
         
         if (jsonObject.containsKey("expectedError")) {
-            testCase.expectedError = AlpsErrorCode.valueOf(jsonObject.getString("expectedError"));
+            
+            try {
+                testCase.expectedError = AlpsErrorCode.valueOf(jsonObject.getString("expectedError"));
+                
+            } catch (IllegalArgumentException e) {
+                fail("Invalid expectedError value '" + jsonObject.getString("expectedError") + ", must be one of " + Arrays.toString(AlpsErrorCode.values()));
+            }
         }
         
         testCase.expectedPath = jsonObject.getString("expectedPath", null);
