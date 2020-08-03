@@ -53,7 +53,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             descriptor.id = URI.create(id);
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Descriptor id must be valid URI but was " + id);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, XPathUtil.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
         }
         
         descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
