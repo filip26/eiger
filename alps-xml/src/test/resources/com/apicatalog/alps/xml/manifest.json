@@ -21,7 +21,7 @@
             "name"  : "Descriptor must have an id",
             "input" : "nt001-in.xml",
             "expectedError" : "ID_REQUIRED",
-            "expectedPath" : "/alps/descriptor[position()=0]"
+            "expectedPath" : "/alps/descriptor[position()=1]"
         },
         {
            "@id"    : "#nt002",
@@ -35,7 +35,9 @@
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Descriptor Id is not URI",
             "input" : "nt003-in.xml",
-            "expectedError" : "MALFORMED_URI"
+            "expectedError" : "MALFORMED_URI",
+            "expectedPath" : "/alps/descriptor[position()=2]"
+            
         }        
     ]
 }
