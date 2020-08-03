@@ -105,7 +105,7 @@ final class JsonDocumentation implements AlpsDocumentation {
                 doc.href = URI.create(JsonUtils.getString(href));
                 
             } catch (IllegalArgumentException e) {
-                throw new AlpsParserException(AlpsErrorCode.NOT_URI, "'href' property value is not URI but was " + JsonUtils.getString(href));
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "'href' property value is not URI but was " + JsonUtils.getString(href));
             }
             
         } else {

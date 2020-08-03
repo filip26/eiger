@@ -26,6 +26,7 @@ public final class AlpsTestCase {
     private String input;
     private String expected;
     private AlpsErrorCode expectedError;
+    private String expectedPath;
     
     public static final AlpsTestCase of(JsonObject jsonObject) {
         final AlpsTestCase testCase = new AlpsTestCase();
@@ -38,6 +39,8 @@ public final class AlpsTestCase {
         if (jsonObject.containsKey("expectedError")) {
             testCase.expectedError = AlpsErrorCode.valueOf(jsonObject.getString("expectedError"));
         }
+        
+        testCase.expectedPath = jsonObject.getString("expectedPath", null);
         
         return testCase;
     }
@@ -62,6 +65,10 @@ public final class AlpsTestCase {
         return expectedError;
     }
 
+    public String getExpectedPath() {
+        return expectedPath;
+    }
+    
     @Override
     public String toString() {
         return id + ": " + name;

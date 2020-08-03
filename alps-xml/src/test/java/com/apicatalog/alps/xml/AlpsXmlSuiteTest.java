@@ -71,6 +71,12 @@ class AlpsXmlSuiteTest {
             if (testCase.getExpectedError() != null) {
                 
                 assertEquals(testCase.getExpectedError(), e.getCode());
+                
+                if (testCase.getExpectedPath() != null) {
+                    
+                    assertEquals(testCase.getExpectedPath(), e.getPath());
+                }
+                
                 return;
                     
             } else {                

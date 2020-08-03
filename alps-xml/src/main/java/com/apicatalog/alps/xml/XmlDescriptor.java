@@ -1,6 +1,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -33,20 +34,21 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private Set<AlpsLink> links;
     
-    public static final XmlDescriptor create(Attributes attrs) throws SAXException {
+    public static final XmlDescriptor create(Deque<XmlElement> stack, Attributes attrs) throws SAXException {
     
         String id = attrs.getValue(AlpsXmlKeys.ID);
         
-        if (id == null || id.isBlank()) {
-            throw new SAXException(new AlpsParserException(AlpsErrorCode.ID_REQUIRED));
+        if (id == null || id.isBlank()) {            
+            throw new SAXException(new AlpsParserException(AlpsErrorCode.ID_REQUIRED, XmlUtils.getPath(stack, AlpsXmlKeys.DESCRIPTOR)));
         }
         
         XmlDescriptor descriptor = new XmlDescriptor();
         
         try {
             descriptor.id = URI.create(id);
+            
         } catch (IllegalArgumentException e) {
-            throw new SAXException(new AlpsParserException(AlpsErrorCode.NOT_URI, "Descriptor id must be valid URI but was " + id));
+            throw new SAXException(new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Descriptor id must be valid URI but was " + id));
         }
         
         descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));

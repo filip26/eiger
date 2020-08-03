@@ -160,7 +160,7 @@ final class JsonDescriptor implements AlpsDescriptor {
             descriptor.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
                     
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
         
         // check id conflict
@@ -232,7 +232,7 @@ final class JsonDescriptor implements AlpsDescriptor {
                 descriptor.returnType = URI.create(JsonUtils.getString(returnType));
                 
             } catch (IllegalArgumentException e) {
-                throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
+                throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
             }            
         }
         

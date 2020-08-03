@@ -64,14 +64,14 @@ final class JsonUtils {
         final JsonValue href = object.get(AlpsJsonKeys.HREF);
         
         if (JsonUtils.isNotString(href)) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
         }
 
         try {
             return URI.create(JsonUtils.getString(href));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
         }
     }
 

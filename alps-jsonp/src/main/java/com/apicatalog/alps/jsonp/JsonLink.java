@@ -75,7 +75,7 @@ final class JsonLink implements AlpsLink {
         final JsonValue href = linkObject.get(AlpsJsonKeys.HREF);
         
         if (JsonUtils.isNotString(href)) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "Link.href property must be URI but was " + href.getValueType());
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Link.href property must be URI but was " + href.getValueType());
         }
         
         try {
@@ -83,7 +83,7 @@ final class JsonLink implements AlpsLink {
             link.href = URI.create(JsonUtils.getString(href));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "Link.href property must be URI but was " + href);
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Link.href property must be URI but was " + href);
         }
 
         final JsonValue rel = linkObject.get(AlpsJsonKeys.RELATION);

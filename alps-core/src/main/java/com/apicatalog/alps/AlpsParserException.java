@@ -20,23 +20,33 @@ public class AlpsParserException extends Exception {
     private static final long serialVersionUID = 7826650786160247358L;
     
     private final AlpsErrorCode code;
+    private final String path;
     
-    public AlpsParserException(AlpsErrorCode code) {
-        super(code.name());
-        this.code = code;
-    }
-    
-    public AlpsParserException(AlpsErrorCode code, final String message) {
-        super(message);
-        this.code = code;
+    public AlpsParserException(final AlpsErrorCode code) {
+        this(code, null, code.name());
     }
 
+    public AlpsParserException(AlpsErrorCode code, String path) {
+        this(code, path, path + ": " + code.name());
+    }
+
+    public AlpsParserException(AlpsErrorCode code, String path, final String message) {
+        super(message);
+        this.code = code;
+        this.path = path;
+    }
+    
     public AlpsParserException(AlpsErrorCode code, final Throwable throwable) {
         super(code.name(), throwable);
         this.code = code;
+        this.path = null;
     }
 
     public AlpsErrorCode getCode() {
         return code;
+    }
+    
+    public String getPath() {
+        return path;
     }
 }

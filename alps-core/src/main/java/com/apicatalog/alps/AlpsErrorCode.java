@@ -6,7 +6,7 @@ public enum AlpsErrorCode {
     
     INVALID_DOCUMENT,
     
-    NOT_URI,
+    MALFORMED_URI,
     
     MALFORMED,
 

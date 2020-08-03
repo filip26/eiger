@@ -81,7 +81,7 @@ class JsonExtension implements AlpsExtension {
             extension.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.NOT_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
 
         // href
