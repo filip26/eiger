@@ -1,6 +1,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Deque;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
@@ -12,8 +13,14 @@ import com.apicatalog.alps.dom.element.AlpsLink;
 
 final class XmlLink implements AlpsLink, XmlElement {
 
+    private final int elementIndex;
+    
     private URI href;
     private String rel;
+    
+    private XmlLink(int index) {
+        this.elementIndex = index;
+    }
     
     @Override
     public URI getHref() {
@@ -42,9 +49,9 @@ final class XmlLink implements AlpsLink, XmlElement {
     }
 
     @Override
-    public void addDescriptor(XmlDescriptor descriptor) {
+    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     @Override
@@ -79,9 +86,9 @@ final class XmlLink implements AlpsLink, XmlElement {
 
     }
 
-    public static XmlLink create(Attributes attributes) {
+    public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {
 
-        final XmlLink link = new XmlLink();
+        final XmlLink link = new XmlLink(index);
         
         String href = attributes.getValue(AlpsXmlKeys.HREF);
         
@@ -100,5 +107,10 @@ final class XmlLink implements AlpsLink, XmlElement {
         link.rel = rel;
         
         return link;
+    }
+    
+    @Override
+    public int getElementIndex() {
+        return elementIndex;
     }
 }

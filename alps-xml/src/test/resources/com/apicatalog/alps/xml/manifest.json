@@ -21,7 +21,7 @@
             "name"  : "Descriptor must have an id",
             "input" : "nt001-in.xml",
             "expectedError" : "ID_REQUIRED",
-            "expectedPath" : "/alps/descriptor"
+            "expectedPath" : "/alps/descriptor[position()=0]"
         },
         {
            "@id"    : "#nt002",

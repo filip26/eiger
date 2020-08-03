@@ -65,38 +65,43 @@ class AlpsDocumentHandler extends DefaultHandler {
             return;
         }
 
-        if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
-
-            if (!stack.isEmpty()) {
-                throw new SAXException();
+        try { 
+        
+            if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+    
+                if (!stack.isEmpty()) {
+                    throw new SAXException();
+                }
+                
+                stack.push(XmlDocument.create(attributes));
+                return;
+            } 
+    
+            if (stack.isEmpty()) {
+                throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
             }
+    
             
-            stack.push(XmlDocument.create(attributes));
-            return;
-        } 
-
-        if (stack.isEmpty()) {
-            throw new SAXException(new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT));
-        }
-
-        if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
-            XmlDocumentation doc = XmlDocumentation.create(attributes);
-            stack.peek().addDocumentation(doc);
-            stack.push(doc);
             
-        } else if (AlpsXmlKeys.DESCRIPTOR.equals(elementName)) {
-            XmlDescriptor dsc = XmlDescriptor.create(stack, attributes);
-            stack.peek().addDescriptor(dsc);
-            stack.push(dsc);
-
-        } else if (AlpsXmlKeys.LINK.equals(elementName)) {
-            XmlLink link = XmlLink.create(attributes);
-            stack.peek().addLink(link);
-            stack.push(link);
-
-        } else {
-            //TODO
-
+            if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+                XmlDocumentation doc = XmlDocumentation.create(stack, -1, attributes);//FIXME
+                stack.peek().addDocumentation(doc);
+                stack.push(doc);
+                
+            } else if (AlpsXmlKeys.DESCRIPTOR.equals(elementName)) {
+                stack.push(stack.peek().addDescriptor(stack, attributes));
+    
+            } else if (AlpsXmlKeys.LINK.equals(elementName)) {
+                XmlLink link = XmlLink.create(stack, -1, attributes);   //FIXME
+                stack.peek().addLink(link);
+                stack.push(link);
+    
+            } else {
+                //TODO
+    
+            }
+        } catch (AlpsParserException e) {
+            throw new SAXException(e);
         }
     }
     

@@ -1,6 +1,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Deque;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
@@ -12,11 +13,16 @@ import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
 final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
+    private final int elementIndex;
     private StringBuilder content;
     
-    public static final XmlDocumentation create(Attributes attributes) {
+    private XmlDocumentation(int index) {
+        this.elementIndex = index;
+    }
+    
+    public static final XmlDocumentation create(Deque<XmlElement> stack, int index, Attributes attributes) {
         //TODO
-        XmlDocumentation doc = new XmlDocumentation();
+        XmlDocumentation doc = new XmlDocumentation(index);
         doc.content = new StringBuilder();
         
         return doc; 
@@ -68,15 +74,20 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
     }
 
     @Override
-    public void addDescriptor(XmlDescriptor descriptor) {
+    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     @Override
     public void addLink(XmlLink link) {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public int getElementIndex() {
+        return elementIndex;
     }
     
 }

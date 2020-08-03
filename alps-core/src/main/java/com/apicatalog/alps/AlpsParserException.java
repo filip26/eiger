@@ -22,6 +22,8 @@ public class AlpsParserException extends Exception {
     private final AlpsErrorCode code;
     private final String path;
     
+//TODO    private final String mediaType;
+    
     public AlpsParserException(final AlpsErrorCode code) {
         this(code, null, code.name());
     }

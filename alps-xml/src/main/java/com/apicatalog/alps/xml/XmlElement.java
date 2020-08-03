@@ -1,8 +1,16 @@
 package com.apicatalog.alps.xml;
 
+import java.util.Deque;
+
+import org.xml.sax.Attributes;
+
+import com.apicatalog.alps.AlpsParserException;
+
 interface XmlElement {
 
     String getElementName();
+    
+    int getElementIndex();
 
     void addText(char[] ch, int start, int length);
 
@@ -10,5 +18,5 @@ interface XmlElement {
 
     void addLink(XmlLink link);
 
-    void addDescriptor(XmlDescriptor descriptor);
+    XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException;
 }

@@ -10,7 +10,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
@@ -22,6 +21,8 @@ import com.apicatalog.alps.dom.element.AlpsLink;
 
 public class XmlDescriptor implements AlpsDescriptor, XmlElement {
 
+    private final int elementIndex;
+    
     private URI id;
     
     private AlpsDescriptorType type;
@@ -34,21 +35,25 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     
     private Set<AlpsLink> links;
     
-    public static final XmlDescriptor create(Deque<XmlElement> stack, Attributes attrs) throws SAXException {
+    private XmlDescriptor(int index) {
+        this.elementIndex = index;
+    }
+    
+    public static final XmlDescriptor create(Deque<XmlElement> stack, int index, Attributes attrs) throws AlpsParserException {
     
         String id = attrs.getValue(AlpsXmlKeys.ID);
         
         if (id == null || id.isBlank()) {            
-            throw new SAXException(new AlpsParserException(AlpsErrorCode.ID_REQUIRED, XmlUtils.getPath(stack, AlpsXmlKeys.DESCRIPTOR)));
+            throw new AlpsParserException(AlpsErrorCode.ID_REQUIRED, XmlUtils.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index));
         }
         
-        XmlDescriptor descriptor = new XmlDescriptor();
+        XmlDescriptor descriptor = new XmlDescriptor(index);
         
         try {
             descriptor.id = URI.create(id);
             
         } catch (IllegalArgumentException e) {
-            throw new SAXException(new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Descriptor id must be valid URI but was " + id));
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "Descriptor id must be valid URI but was " + id);
         }
         
         descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
@@ -150,8 +155,10 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     }
 
     @Override
-    public void addDescriptor(XmlDescriptor descriptor) {
-        descriptors.add(descriptor);
+    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException {
+        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+        descriptors.add(dsc);
+        return dsc;
     }
 
     @Override
@@ -194,5 +201,10 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             
             writer.writeEndElement();
         }
+    }
+
+    @Override
+    public int getElementIndex() {
+        return elementIndex;
     }
 }

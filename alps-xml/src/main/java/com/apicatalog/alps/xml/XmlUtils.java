@@ -9,8 +9,11 @@ class XmlUtils {
         return "/" + stack.stream().map(XmlElement::getElementName).collect(Collectors.joining("/"));
     }
 
-    public static final String getPath(Deque<XmlElement> stack, final String element) {
-        return "/" + stack.stream().map(XmlElement::getElementName).collect(Collectors.joining("/")) + "/" + element;
+    public static final String getPath(Deque<XmlElement> stack, final String element, final int index) {
+        return "/" 
+                + stack.stream().map(XmlElement::getElementName).collect(Collectors.joining("/")) 
+                + "/" + element
+                + (index != -1 ? "[position()=" + index + "]" : "");
     }
 
     private XmlUtils() {

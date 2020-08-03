@@ -3,6 +3,7 @@ package com.apicatalog.alps.xml;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
 import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
@@ -120,8 +122,10 @@ final class XmlDocument implements AlpsDocument, XmlElement {
     }
 
     @Override
-    public void addDescriptor(XmlDescriptor descriptor) {
-        descriptors.add(descriptor);
+    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException {
+        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+        descriptors.add(dsc);
+        return dsc;
     }
 
     @Override
@@ -154,5 +158,10 @@ final class XmlDocument implements AlpsDocument, XmlElement {
 
         writer.writeEndElement();
         writer.writeEndDocument();        
+    }
+    
+    @Override
+    public int getElementIndex() {
+        return -1;
     }
 }
