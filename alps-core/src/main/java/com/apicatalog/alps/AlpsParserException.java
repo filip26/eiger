@@ -22,6 +22,7 @@ public class AlpsParserException extends Exception {
     private final AlpsErrorCode code;
     
     public AlpsParserException(AlpsErrorCode code) {
+        super(code.name());
         this.code = code;
     }
     
@@ -31,7 +32,7 @@ public class AlpsParserException extends Exception {
     }
 
     public AlpsParserException(AlpsErrorCode code, final Throwable throwable) {
-        super(throwable);
+        super(code.name(), throwable);
         this.code = code;
     }
 

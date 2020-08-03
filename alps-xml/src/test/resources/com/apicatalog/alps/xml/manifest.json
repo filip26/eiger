@@ -28,6 +28,13 @@
             "name"  : "Invalid document",
             "input" : "nt002-in.xml",
             "expectedError" : "INVALID_DOCUMENT"
-        }
+        },
+        {
+           "@id"    : "#nt003",
+           "@type"  : ["#NegativeEvaluationTest"],
+            "name"  : "Descriptor Id is not URI",
+            "input" : "nt003-in.xml",
+            "expectedError" : "NOT_URI"
+        }        
     ]
 }

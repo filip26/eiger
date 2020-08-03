@@ -46,7 +46,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
         // version
         String version = attrs.getValue(AlpsXmlKeys.VERSION);
 
-        if ("1.0".equals(version)) {
+        if (version == null || version.isBlank() || "1.0".equals(version)) {
 
             return AlpsVersion.VERSION_1_0;            
         }
