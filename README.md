@@ -59,7 +59,8 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 - [x] ~0.1 JSON Parser & Writer~
 - [ ] 0.2 XML Parser & Writer
-- [ ] 0.3 Effective Document Processor
+- [ ] 0.3 CLI - validation, transformations (JSON <-> XML)
+- [ ] 0.4 Effective Document Processor
 - [ ] TBD
 
 ## Resources
