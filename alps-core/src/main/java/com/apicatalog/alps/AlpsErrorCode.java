@@ -4,7 +4,7 @@ public enum AlpsErrorCode {
 
     DUPLICATED_ID,
     
-    NOT_DOCUMENT,
+    INVALID_DOCUMENT,
     
     NOT_URI,
     

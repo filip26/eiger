@@ -2,25 +2,32 @@
     "description": "ALPS test suite to test the ability of ALPS parser to process ALSP+XML",
     "sequence": [    
         {
-           "@id"    : "#01",
+           "@id"    : "#t001",
            "@type"  : ["#PositiveEvaluationTest"],
-            "name"  : "Sample Works Domain",
+            "name"  : "Sample Works",
             "input" : "t001-in.xml",
             "expected" : "t001-out.xml"
         },
         {
-           "@id"    : "#02",
+           "@id"    : "#t002",
            "@type"  : ["#PositiveEvaluationTest"],
-            "name"  : "Contact Profile Document",
+            "name"  : "Contact Profile",
             "input" : "t002-in.xml",
             "expected" : "t002-out.xml"
         },
         {
-           "@id"    : "#03",
+           "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Descriptor must have an id",
             "input" : "nt001-in.xml",
             "expectedError" : "ID_REQUIRED"
+        },
+        {
+           "@id"    : "#nt002",
+           "@type"  : ["#NegativeEvaluationTest"],
+            "name"  : "Invalid document",
+            "input" : "nt002-in.xml",
+            "expectedError" : "INVALID_DOCUMENT"
         }
     ]
 }

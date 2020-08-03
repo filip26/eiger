@@ -76,7 +76,7 @@ class AlpsDocumentHandler extends DefaultHandler {
         } 
 
         if (stack.isEmpty()) {
-            throw new SAXException();
+            throw new SAXException(new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT));
         }
 
         if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
@@ -139,7 +139,7 @@ class AlpsDocumentHandler extends DefaultHandler {
         
         if (stack.isEmpty()) {
             //TODO
-            throw new AlpsParserException(AlpsErrorCode.NOT_DOCUMENT);
+            throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
             
         } else if (stack.size() > 1)  {
             //TODO

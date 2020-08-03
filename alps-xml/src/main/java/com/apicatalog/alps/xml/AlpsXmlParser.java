@@ -65,10 +65,12 @@ public class AlpsXmlParser implements AlpsParser {
             return handler.getDocument();
 
         } catch (SAXException e) {
+            
             if (e.getCause() instanceof AlpsParserException) {
                 throw (AlpsParserException)e.getCause();
             }
-            
+            e.printStackTrace();
+
             throw new AlpsParserException(AlpsErrorCode.PARSER_ERROR, e);
             
         } catch (ParserConfigurationException e) {            

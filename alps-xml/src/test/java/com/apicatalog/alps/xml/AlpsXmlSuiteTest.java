@@ -73,7 +73,7 @@ class AlpsXmlSuiteTest {
                 assertEquals(testCase.getExpectedError(), e.getCode());
                 return;
                     
-            } else {
+            } else {                
                 fail(e.getMessage(), e);                
             }
         }
