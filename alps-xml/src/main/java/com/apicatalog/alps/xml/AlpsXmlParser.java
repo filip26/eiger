@@ -25,7 +25,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParser;
@@ -57,7 +56,7 @@ public class AlpsXmlParser implements AlpsParser {
 
         try {
             final SAXParser parser = factory.newSAXParser();
-        
+
             final AlpsDocumentHandler handler = new AlpsDocumentHandler();
             
             parser.parse(stream, handler);

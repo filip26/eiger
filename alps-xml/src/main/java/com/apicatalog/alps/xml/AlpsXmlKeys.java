@@ -22,6 +22,8 @@ final class AlpsXmlKeys {
     
     public static final String RETURN_VALUE = "rt";
 
+    public static final String MEDIA_TYPE = "format";
+
     private AlpsXmlKeys() {
         
     }

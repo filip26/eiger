@@ -15,6 +15,7 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
     private final int elementIndex;
     private StringBuilder content;
+    private String mediaType;
     
     private XmlDocumentation(int index) {
         this.elementIndex = index;
@@ -23,6 +24,13 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
     public static final XmlDocumentation create(Deque<XmlElement> stack, int index, Attributes attributes) {
         //TODO
         XmlDocumentation doc = new XmlDocumentation(index);
+        
+        doc.mediaType = attributes.getValue(AlpsXmlKeys.MEDIA_TYPE);
+        
+        if (doc.mediaType == null) {
+            doc.mediaType = "text";
+        }
+        
         doc.content = new StringBuilder();
         
         return doc; 
@@ -36,8 +44,7 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
 
     @Override
     public String getMediaType() {
-        // TODO Auto-generated method stub
-        return null;
+        return mediaType;
     }
 
     @Override
@@ -68,6 +75,11 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
         
         for (final AlpsDocumentation doc : docs) {
             writer.writeStartElement(AlpsXmlKeys.DOCUMENTATION);
+            
+            if (doc.getMediaType() != null && !"text".equals(doc.getMediaType()) && !"text/plain".equals(doc.getMediaType())) {
+                writer.writeAttribute(AlpsXmlKeys.MEDIA_TYPE, doc.getMediaType());
+            }
+            
             writer.writeCharacters(doc.getContent());
             writer.writeEndElement();
         }

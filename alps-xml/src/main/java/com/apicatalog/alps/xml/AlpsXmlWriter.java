@@ -16,7 +16,8 @@ public class AlpsXmlWriter implements AlpsWriter {
     private final XMLOutputFactory factory;
     
     public AlpsXmlWriter() {
-        this.factory = XMLOutputFactory.newDefaultFactory();  
+        this.factory = XMLOutputFactory.newDefaultFactory();
+        factory.setProperty("escapeCharacters", false);
     }
     
     @Override
