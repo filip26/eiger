@@ -164,4 +164,16 @@ final class XmlDocument implements AlpsDocument, XmlElement {
     public int getElementIndex() {
         return -1;
     }
+
+    @Override
+    public void startElement(String elementName, Attributes attributes) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void endElement(String elementName) {
+        // TODO Auto-generated method stub
+        
+    }
 }

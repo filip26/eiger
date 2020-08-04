@@ -16,6 +16,13 @@
             "expected" : "t002-out.xml"
         },
         {
+           "@id"    : "#t003",
+           "@type"  : ["#PositiveEvaluationTest"],
+            "name"  : "HTML documentation with tags",
+            "input" : "t003-in.xml",
+            "expected" : "t003-out.xml"
+        },        
+        {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Descriptor must have an id",
@@ -37,6 +44,25 @@
             "input" : "nt003-in.xml",
             "expectedError" : "MALFORMED_URI",
             "expectedPath" : "/alps/descriptor[position()=2]"
-        }
+        },
+        {
+           "@id"    : "#nt004",
+           "@type"  : ["#NegativeEvaluationTest"],
+            "name"  : "Malformed XML",
+            "input" : "nt004-in.xml",
+            "expectedError" : "PARSER_ERROR",
+            "expectedRow": 1,
+            "expectedColumn": 1
+        },
+        {
+           "@id"    : "#nt005",
+           "@type"  : ["#NegativeEvaluationTest"],
+            "name"  : "Malformed ALPS+XML",
+            "input" : "nt005-in.xml",
+            "expectedError" : "PARSER_ERROR",
+            "expectedRow": 1,
+            "expectedColumn": 1            
+        }        
+        
     ]
 }

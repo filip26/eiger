@@ -19,4 +19,8 @@ interface XmlElement {
     void addLink(XmlLink link);
 
     XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException;
+
+    void startElement(String elementName, Attributes attributes);
+
+    void endElement(String elementName);
 }

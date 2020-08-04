@@ -113,4 +113,16 @@ final class XmlLink implements AlpsLink, XmlElement {
     public int getElementIndex() {
         return elementIndex;
     }
+
+    @Override
+    public void startElement(String elementName, Attributes attributes) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void endElement(String elementName) {
+        // TODO Auto-generated method stub
+        
+    }
 }

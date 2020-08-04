@@ -89,5 +89,19 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
     public int getElementIndex() {
         return elementIndex;
     }
+
+    @Override
+    public void startElement(String elementName, Attributes attributes) {
+        content.append('<');
+        content.append(elementName);
+        content.append('>');
+    }
+
+    @Override
+    public void endElement(String elementName) {
+        content.append("</");
+        content.append(elementName);        
+        content.append('>');
+    }
     
 }

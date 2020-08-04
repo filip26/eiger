@@ -28,7 +28,7 @@ import com.apicatalog.alps.dom.AlpsDocument;
 
 final class AlpsDocumentHandler extends DefaultHandler {
 
-    private enum State { INIT, START, END };
+    private enum State { INIT, DOCUMENT, DOCUMENTATION, DONE };
     
     private State state;
     
@@ -47,6 +47,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        
         super.startElement(uri, localName, qName, attributes);
         
         final String elementName = getElementName(localName, qName);
@@ -55,22 +56,29 @@ final class AlpsDocumentHandler extends DefaultHandler {
             return;
         }
 
+        if (State.DOCUMENTATION.equals(state)) {
+            stack.peek().startElement(elementName, attributes);
+            return;
+        }
+        
         try { 
         
             if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
                 
                 if (State.INIT.equals(state)) {
                     stack.push(XmlDocument.create(attributes));
-                    state = State.START;
+                    state = State.DOCUMENT;
                 }
                 return;
             } 
 
-            if (!State.START.equals(state)) {
+            if (!State.DOCUMENT.equals(state)) {
                 return;
             }
             
             if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+                
+                state = State.DOCUMENTATION;
                 XmlDocumentation doc = XmlDocumentation.create(stack, -1, attributes);//FIXME
                 stack.peek().addDocumentation(doc);
                 stack.push(doc);
@@ -101,7 +109,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             return;
         }
 
-        if (State.START.equals(state)) {
+        if (State.DOCUMENT.equals(state)) {
         
             try {
                 
@@ -110,8 +118,8 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 }
         
                 if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
-                    state = State.END;
-                    
+                    state = State.DONE;
+
                 } else {
                     stack.pop();            
                 }
@@ -119,8 +127,18 @@ final class AlpsDocumentHandler extends DefaultHandler {
             } catch (AlpsParserException e) {
                 throw new SAXException(e);
             }
-        }
         
+        } else if (State.DOCUMENTATION.equals(state)) {
+            
+            if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+                state = State.DOCUMENT;
+                stack.pop();
+                
+            } else {
+                stack.peek().endElement(elementName);
+            }
+        }
+
         super.endElement(uri, localName, qName);
     }
     
@@ -128,11 +146,9 @@ final class AlpsDocumentHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         super.characters(ch, start, length);
         
-        if (stack.isEmpty()) {
-            throw new SAXException();
+        if (State.DOCUMENTATION.equals(state)) {
+            stack.peek().addText(ch, start, length);
         }
-        
-        stack.peek().addText(ch, start, length);
     }
     
     public AlpsDocument getDocument() throws AlpsParserException {
@@ -141,7 +157,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
         }
         
-        if (State.START.equals(state))  {
+        if (!State.DONE.equals(state))  {
             throw new AlpsParserException(AlpsErrorCode.MALFORMED_DOCUMENT);
         }
         
