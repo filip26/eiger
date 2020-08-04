@@ -4,12 +4,14 @@ public enum AlpsErrorCode {
 
     DUPLICATED_ID,
     
+    /** provided document is not ALPS document, does not contain 'alps' root */
     INVALID_DOCUMENT,
-    
+
+    /** ALPS document is not well-formed */
+    MALFORMED_DOCUMENT,
+
     MALFORMED_URI,
     
-    MALFORMED,
-
     UNSUPPORTED_MEDIA_TYPE,
     
     PARSER_ERROR,
@@ -19,4 +21,7 @@ public enum AlpsErrorCode {
     HREF_REQUIRED,
  
     REL_REQUIRED,
+    
+    @Deprecated
+    MALFORMED
 }

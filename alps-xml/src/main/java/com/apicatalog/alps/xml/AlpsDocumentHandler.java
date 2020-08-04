@@ -26,8 +26,12 @@ import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
-class AlpsDocumentHandler extends DefaultHandler {
+final class AlpsDocumentHandler extends DefaultHandler {
 
+    private enum State { INIT, START, END };
+    
+    private State state;
+    
     private Deque<XmlElement> stack;
 
     public AlpsDocumentHandler() {
@@ -38,50 +42,33 @@ class AlpsDocumentHandler extends DefaultHandler {
     public void startDocument() throws SAXException {
         super.startDocument();
         stack.clear();
-    }
-    
-    @Override
-    public void endDocument() throws SAXException {
-        if (stack.size() != 1) {
-            throw new SAXException();
-        }
-        
-        // TODO validate document
-        super.endDocument();
+        state = State.INIT;
     }
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         
-        String elementName = localName.toLowerCase();
+        final String elementName = getElementName(localName, qName);
         
-        if (elementName == null || elementName.isEmpty()) {
-            elementName = qName.toLowerCase();
-        }
-        
-        if (elementName == null || elementName.isEmpty()) {
-            //TODO
+        if (elementName == null) {
             return;
         }
 
         try { 
         
             if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
-    
-                if (!stack.isEmpty()) {
-                    throw new SAXException();
-                }
                 
-                stack.push(XmlDocument.create(attributes));
+                if (State.INIT.equals(state)) {
+                    stack.push(XmlDocument.create(attributes));
+                    state = State.START;
+                }
                 return;
             } 
-    
-            if (stack.isEmpty()) {
-                throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
+
+            if (!State.START.equals(state)) {
+                return;
             }
-    
-            
             
             if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
                 XmlDocumentation doc = XmlDocumentation.create(stack, -1, attributes);//FIXME
@@ -108,24 +95,32 @@ class AlpsDocumentHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         
-        String elementName = localName.toLowerCase();
+        final String elementName = getElementName(localName, qName);
         
-        if (elementName == null || elementName.isEmpty()) {
-            elementName = qName.toLowerCase();
-        }
-        
-        if (elementName == null || elementName.isEmpty()) {
-            //TODO
+        if (elementName == null) {
             return;
         }
 
-        if (!AlpsXmlKeys.DOCUMENT.equals(elementName) && elementName.equals(stack.peek().getElementName())) {
-            //TODO validate
-            stack.pop();
+        if (State.START.equals(state)) {
+        
+            try {
+                
+                if (!elementName.equals(stack.peek().getElementName())) {
+                    throw new AlpsParserException(AlpsErrorCode.MALFORMED_DOCUMENT);
+                }
+        
+                if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+                    state = State.END;
+                    
+                } else {
+                    stack.pop();            
+                }
+                
+            } catch (AlpsParserException e) {
+                throw new SAXException(e);
+            }
         }
         
-        
-        // TODO Auto-generated method stub
         super.endElement(uri, localName, qName);
     }
     
@@ -142,16 +137,30 @@ class AlpsDocumentHandler extends DefaultHandler {
     
     public AlpsDocument getDocument() throws AlpsParserException {
         
-        if (stack.isEmpty()) {
-            //TODO
+        if (State.INIT.equals(state)) {
             throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
-            
-        } else if (stack.size() > 1)  {
-            //TODO
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED);
+        }
+        
+        if (State.START.equals(state))  {
+            throw new AlpsParserException(AlpsErrorCode.MALFORMED_DOCUMENT);
         }
         
         return (AlpsDocument)stack.pop();
     }
 
+    private static final String getElementName(String localName, String qName) {
+        
+        String elementName = localName.toLowerCase();
+        
+        if (elementName == null || elementName.isBlank()) {
+            elementName = qName.toLowerCase();
+        }
+        
+        if (elementName == null || elementName.isBlank()) {
+            return null;
+        }
+        
+        return elementName;
+    }
+    
 }

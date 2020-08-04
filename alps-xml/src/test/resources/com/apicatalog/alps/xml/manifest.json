@@ -37,7 +37,6 @@
             "input" : "nt003-in.xml",
             "expectedError" : "MALFORMED_URI",
             "expectedPath" : "/alps/descriptor[position()=2]"
-            
-        }        
+        }
     ]
 }
