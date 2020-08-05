@@ -27,42 +27,55 @@
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Descriptor must have an id",
             "input" : "nt001-in.xml",
-            "expectedError" : "ID_REQUIRED",
-            "expectedPath" : "/alps/descriptor[position()=1]"
+            "expected" : 
+            		{ 
+						"code": "ID_REQUIRED",
+            			"path" : "/alps/descriptor[position()=1]"
+            		}
         },
         {
            "@id"    : "#nt002",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Invalid document",
             "input" : "nt002-in.xml",
-            "expectedError" : "INVALID_DOCUMENT"
+            "expected" : 
+               		{ 
+						"code": "INVALID_DOCUMENT",
+            			"path" : "/alps/descriptor[position()=1]"
+            		}
         },
         {
            "@id"    : "#nt003",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Descriptor Id is not URI",
             "input" : "nt003-in.xml",
-            "expectedError" : "MALFORMED_URI",
-            "expectedPath" : "/alps/descriptor[position()=2]"
+            "expected" :
+               		{ 
+						"code": "MALFORMED_URI",
+            			"path" : "/alps/descriptor[position()=2]"
+            		}
         },
         {
            "@id"    : "#nt004",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Malformed XML",
             "input" : "nt004-in.xml",
-            "expectedError" : "PARSER_ERROR",
-            "expectedRow": 1,
-            "expectedColumn": 1
+            "expected" : 
+            		{
+            			"code": "PARSER_ERROR",
+			            "line": 2
+            		}
         },
         {
            "@id"    : "#nt005",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Malformed ALPS+XML",
             "input" : "nt005-in.xml",
-            "expectedError" : "PARSER_ERROR",
-            "expectedRow": 1,
-            "expectedColumn": 1            
+            "expected" :
+            		{
+            			"code": "PARSER_ERROR",
+			            "line": 3
+            		}            
         }        
-        
     ]
 }

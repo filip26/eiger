@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps;
 
+@Deprecated
 public final class AlpsParserException extends Exception {
     
     private static final long serialVersionUID = 7826650786160247358L;

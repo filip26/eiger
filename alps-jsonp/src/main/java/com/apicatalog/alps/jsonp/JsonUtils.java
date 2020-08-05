@@ -77,4 +77,8 @@ final class JsonUtils {
 
     private JsonUtils() {
     }
+
+    public static boolean isNull(JsonValue jsonValue) {
+        return jsonValue == null || ValueType.NULL.equals(jsonValue);
+    }
 }

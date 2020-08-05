@@ -150,8 +150,12 @@ final class JsonDescriptor implements AlpsDescriptor {
         
         final JsonDescriptor descriptor = new JsonDescriptor();
         descriptor.parent = parent;
-        
+
         // id
+        if (!jsonObject.containsKey(AlpsJsonKeys.ID) || JsonUtils.isNull(jsonObject.get(AlpsJsonKeys.ID))) {
+            throw new AlpsParserException(AlpsErrorCode.ID_REQUIRED, "The 'id' property value must be valid URI represented as JSON string");            
+        }
+        
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
             throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsJsonKeys.ID));
         }
