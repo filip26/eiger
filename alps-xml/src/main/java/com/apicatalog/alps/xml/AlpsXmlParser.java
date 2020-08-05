@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParser;
@@ -63,14 +64,18 @@ public class AlpsXmlParser implements AlpsParser {
           
             // TODO
             return handler.getDocument();
+        } catch (SAXParseException e) {
+            throw new AlpsParserException(e.getLineNumber(), e.getColumnNumber(), e.getMessage());
 
         } catch (ParserConfigurationException e) {            
             throw new AlpsParserException(AlpsErrorCode.PARSER_ERROR, e);
             
         } catch (SAXException e) {
+            
             if (e.getCause() instanceof AlpsParserException) {
                 throw (AlpsParserException)e.getCause();
             }
+                        
             throw new AlpsParserException(AlpsErrorCode.PARSER_ERROR, e);
         }        
     }

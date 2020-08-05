@@ -189,8 +189,10 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             }
             
             // return type
-            if (descriptor.getReturnType().isPresent()) {
-                writer.writeAttribute(AlpsXmlKeys.RETURN_VALUE, descriptor.getReturnType().get().toString());
+            final Optional<URI> returnType = descriptor.getReturnType(); 
+            
+            if (returnType.isPresent()) {
+                writer.writeAttribute(AlpsXmlKeys.RETURN_VALUE, returnType.get().toString());
             }
 
             XmlDocumentation.write(descriptor.getDocumentation(), writer);

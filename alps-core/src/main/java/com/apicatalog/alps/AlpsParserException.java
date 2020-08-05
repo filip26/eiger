@@ -15,14 +15,16 @@
  */
 package com.apicatalog.alps;
 
-public class AlpsParserException extends Exception {
+public final class AlpsParserException extends Exception {
     
     private static final long serialVersionUID = 7826650786160247358L;
     
     private final AlpsErrorCode code;
-    private final String path;
     
-//TODO    private final String mediaType;
+    private final String path;
+
+    private final int columnNumber;
+    private final int lineNumber;
     
     public AlpsParserException(final AlpsErrorCode code) {
         this(code, null, code.name());
@@ -32,16 +34,28 @@ public class AlpsParserException extends Exception {
         this(code, path, path + ": " + code.name());
     }
 
+    public AlpsParserException(int lineNumber, int columnNumber, String message) {
+        super(message);
+        this.code = AlpsErrorCode.PARSER_ERROR;
+        this.columnNumber = columnNumber;
+        this.lineNumber = lineNumber;
+        this.path = null;
+    }
+    
     public AlpsParserException(AlpsErrorCode code, String path, final String message) {
         super(message);
         this.code = code;
         this.path = path;
+        this.columnNumber = -1;
+        this.lineNumber = -1;
     }
     
     public AlpsParserException(AlpsErrorCode code, final Throwable throwable) {
         super(code.name(), throwable);
         this.code = code;
         this.path = null;
+        this.columnNumber = -1;
+        this.lineNumber = -1;        
     }
 
     public AlpsErrorCode getCode() {
@@ -50,5 +64,13 @@ public class AlpsParserException extends Exception {
     
     public String getPath() {
         return path;
+    }
+    
+    public int getColumnNumber() {
+        return columnNumber;
+    }
+    
+    public int getLineNumber() {
+        return lineNumber;
     }
 }

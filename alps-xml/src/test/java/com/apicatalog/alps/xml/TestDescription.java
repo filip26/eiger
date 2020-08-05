@@ -17,40 +17,42 @@ package com.apicatalog.alps.xml;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.Arrays;
-
 import javax.json.JsonObject;
+import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 
-import com.apicatalog.alps.AlpsErrorCode;
-
-public final class AlpsTestCase {
+public final class TestDescription {
 
     private String id;
     private String name;
     private String input;
     private String expected;
-    private AlpsErrorCode expectedError;
-    private String expectedPath;
     
-    public static final AlpsTestCase of(JsonObject jsonObject) {
-        final AlpsTestCase testCase = new AlpsTestCase();
+    private ExpectedError expectedError;
+    
+    public static final TestDescription of(JsonObject jsonObject) {
+        final TestDescription testCase = new TestDescription();
         
         testCase.id = jsonObject.getString("@id");
         testCase.name = jsonObject.getString("name");
         testCase.input = jsonObject.getString("input");
-        testCase.expected = jsonObject.getString("expected", null);
         
-        if (jsonObject.containsKey("expectedError")) {
+        JsonValue expected = jsonObject.get("expected");
+        
+        if (expected != null && !ValueType.NULL.equals(expected.getValueType())) {
             
-            try {
-                testCase.expectedError = AlpsErrorCode.valueOf(jsonObject.getString("expectedError"));
+            if (ValueType.STRING.equals(expected.getValueType())) {
+
+                testCase.expected = jsonObject.getString("expected", null);
+
+            } else if (ValueType.OBJECT.equals(expected.getValueType())) {
                 
-            } catch (IllegalArgumentException e) {
-                fail("Invalid expectedError value '" + jsonObject.getString("expectedError") + ", must be one of " + Arrays.toString(AlpsErrorCode.values()));
-            }
+                testCase.expectedError = ExpectedError.of((JsonObject)expected);
+                
+            } else {
+                fail("expected property value must be JSON string or JSON object but was " + expected.getValueType());
+            }    
         }
-        
-        testCase.expectedPath = jsonObject.getString("expectedPath", null);
         
         return testCase;
     }
@@ -71,14 +73,10 @@ public final class AlpsTestCase {
         return expected;
     }
     
-    public AlpsErrorCode getExpectedError() {
+    public ExpectedError getExpectedError() {
         return expectedError;
     }
 
-    public String getExpectedPath() {
-        return expectedPath;
-    }
-    
     @Override
     public String toString() {
         return id + ": " + name;

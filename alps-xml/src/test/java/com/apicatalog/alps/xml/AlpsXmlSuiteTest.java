@@ -53,7 +53,7 @@ class AlpsXmlSuiteTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
-    void testCase(final AlpsTestCase testCase) throws IOException {
+    void testCase(final TestDescription testCase) throws IOException {
         
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
@@ -70,11 +70,19 @@ class AlpsXmlSuiteTest {
             
             if (testCase.getExpectedError() != null) {
                 
-                assertEquals(testCase.getExpectedError(), e.getCode());
+                assertEquals(testCase.getExpectedError().getCode(), e.getCode());
                 
-                if (testCase.getExpectedPath() != null) {
+                if (testCase.getExpectedError().getPath() != null) {
                     
-                    assertEquals(testCase.getExpectedPath(), e.getPath());
+                    assertEquals(testCase.getExpectedError().getPath(), e.getPath());
+                    
+                } else if (testCase.getExpectedError().getLine() != -1) { 
+                    
+                    assertEquals(testCase.getExpectedError().getLine(), e.getLineNumber());
+                    
+                } else if (testCase.getExpectedError().getColumn() != -1) { 
+                    
+                    assertEquals(testCase.getExpectedError().getColumn(), e.getColumnNumber());                    
                 }
                 
                 return;
@@ -89,7 +97,7 @@ class AlpsXmlSuiteTest {
         compare(testCase, document);
     }
     
-    static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
+    static final Stream<TestDescription> testCaseMethodSource() throws IOException {
         
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream("manifest.json")) {
             
@@ -101,11 +109,11 @@ class AlpsXmlSuiteTest {
             
             final JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
             
-            return tests.stream().map(JsonObject.class::cast).map(AlpsTestCase::of);
+            return tests.stream().map(JsonObject.class::cast).map(TestDescription::of);
         }
     }
     
-    static final void compare(final AlpsTestCase testCase, final AlpsDocument document) {
+    static final void compare(final TestDescription testCase, final AlpsDocument document) {
 
         if (testCase.getExpected() == null) {
             return;

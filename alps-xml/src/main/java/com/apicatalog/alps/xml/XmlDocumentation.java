@@ -114,7 +114,7 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
             content.append(attributes.getValue(i));
             content.append('"');
         }
-        
+
         content.append('>');
     }
 

@@ -28,7 +28,7 @@ import com.apicatalog.alps.dom.AlpsDocument;
 
 final class AlpsDocumentHandler extends DefaultHandler {
 
-    private enum State { INIT, DOCUMENT, DOCUMENTATION, DONE };
+    private enum State { INIT, DOCUMENT, DOCUMENTATION, DONE }
     
     private State state;
     
@@ -103,6 +103,8 @@ final class AlpsDocumentHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         
+        super.endElement(uri, localName, qName);
+        
         final String elementName = getElementName(localName, qName);
         
         if (elementName == null) {
@@ -138,12 +140,11 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 stack.peek().endElement(elementName);
             }
         }
-
-        super.endElement(uri, localName, qName);
     }
     
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+        
         super.characters(ch, start, length);
         
         if (State.DOCUMENTATION.equals(state)) {
