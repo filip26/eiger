@@ -13,10 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.dom;
+package com.apicatalog.alps.dom.element;
 
-public enum AlpsVersion {
+import java.net.URI;
+import java.util.Optional;
+import java.util.Set;
 
-    VERSION_1_0
+public interface Descriptor {
     
+	URI getId();
+	
+	Optional<URI> getHref();
+	
+	Optional<String> getName();
+	
+	DescriptorType getType();
+	
+	Optional<URI> getReturnType();
+	
+	Set<Documentation> getDocumentation();
+	
+	Set<Extension> getExtensions();
+	
+	Set<Descriptor> getDescriptors();
+	
+	Optional<Descriptor> getParent();
+	
+	Set<Link> getLinks();
 }

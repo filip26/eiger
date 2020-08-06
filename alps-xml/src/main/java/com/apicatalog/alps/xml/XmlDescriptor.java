@@ -11,30 +11,30 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDescriptorType;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-public class XmlDescriptor implements AlpsDescriptor, XmlElement {
+public class XmlDescriptor implements Descriptor, XmlElement {
 
     private final int elementIndex;
     
     private URI id;
     
-    private AlpsDescriptorType type;
+    private DescriptorType type;
     
     private URI returnValue;
     
-    private Set<AlpsDocumentation> documentation;
+    private Set<Documentation> documentation;
     
-    private Set<AlpsDescriptor> descriptors;
+    private Set<Descriptor> descriptors;
     
-    private Set<AlpsLink> links;
+    private Set<Link> links;
     
     private XmlDescriptor(int index) {
         this.elementIndex = index;
@@ -75,14 +75,14 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         return descriptor;
     }
     
-    private static AlpsDescriptorType parseType(String value) {
+    private static DescriptorType parseType(String value) {
 
         if (value == null || value.isBlank()) {
-            return AlpsDescriptorType.SEMANTIC;
+            return DescriptorType.SEMANTIC;
         }
         
         //TODO check 
-        return AlpsDescriptorType.valueOf(value.toUpperCase());
+        return DescriptorType.valueOf(value.toUpperCase());
     }
 
     @Override
@@ -119,7 +119,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     }
 
     @Override
-    public AlpsDescriptorType getType() {
+    public DescriptorType getType() {
         return type;
     }
 
@@ -129,29 +129,29 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
     }
 
     @Override
-    public Set<AlpsDocumentation> getDocumentation() {
+    public Set<Documentation> getDocumentation() {
         return documentation;
     }
 
     @Override
-    public Set<AlpsExtension> getExtensions() {
+    public Set<Extension> getExtensions() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<AlpsDescriptor> getDescriptors() {
+    public Set<Descriptor> getDescriptors() {
         return descriptors;
     }
 
     @Override
-    public Optional<AlpsDescriptor> getParent() {
+    public Optional<Descriptor> getParent() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<AlpsLink> getLinks() {
+    public Set<Link> getLinks() {
         return links;
     }
 
@@ -167,12 +167,12 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         links.add(link);
         
     }
-    public static void write(Set<AlpsDescriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(Set<Descriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
         
-        for (final AlpsDescriptor descriptor : descriptors) {
+        for (final Descriptor descriptor : descriptors) {
             
             writer.writeStartElement(AlpsXmlKeys.DESCRIPTOR);
             
@@ -183,9 +183,9 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
             writer.writeAttribute(AlpsXmlKeys.ID, descriptor.getId().toString());
          
             // type
-            final AlpsDescriptorType type = descriptor.getType();
+            final DescriptorType type = descriptor.getType();
             
-            if (type != null && !AlpsDescriptorType.SEMANTIC.equals(type)) {
+            if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
                 writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
             }
             

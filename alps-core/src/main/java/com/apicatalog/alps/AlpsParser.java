@@ -20,7 +20,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 public interface AlpsParser {
 
@@ -31,8 +32,8 @@ public interface AlpsParser {
      */
     boolean canParse(String mediaType);
     
-    AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException;
+    Document parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException;
     
-    AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, DocumentException;
+    Document parse(URI baseUri, String mediaType, Reader reader) throws IOException, DocumentException;
 
 }

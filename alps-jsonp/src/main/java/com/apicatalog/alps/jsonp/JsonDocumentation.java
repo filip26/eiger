@@ -26,11 +26,11 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonDocumentation implements AlpsDocumentation {
+final class JsonDocumentation implements Documentation {
 
     private URI href;
     private String mediaType;
@@ -51,9 +51,9 @@ final class JsonDocumentation implements AlpsDocumentation {
         return content;
     }
 
-    public static Set<AlpsDocumentation> parse(final JsonValue jsonValue) throws InvalidDocumentException {
+    public static Set<Documentation> parse(final JsonValue jsonValue) throws InvalidDocumentException {
 
-        final Set<AlpsDocumentation> docs = new HashSet<>();
+        final Set<Documentation> docs = new HashSet<>();
                 
         for (final JsonValue item : JsonUtils.toArray(jsonValue)) {
             
@@ -71,14 +71,14 @@ final class JsonDocumentation implements AlpsDocumentation {
         return docs;
     }
     
-    private static AlpsDocumentation parseString(final JsonString value) {
+    private static Documentation parseString(final JsonString value) {
         final JsonDocumentation doc = new JsonDocumentation();
         doc.content = value.getString();
         doc.mediaType = "text/plain";
         return doc;
     }
 
-    private static AlpsDocumentation parseObject(final JsonObject value) throws InvalidDocumentException {
+    private static Documentation parseObject(final JsonObject value) throws InvalidDocumentException {
         
         final JsonDocumentation doc = new JsonDocumentation();
         doc.mediaType = "text/plain";
@@ -126,7 +126,7 @@ final class JsonDocumentation implements AlpsDocumentation {
         return doc;
     }
     
-    public static final JsonValue toJson(Set<AlpsDocumentation> documentation) {
+    public static final JsonValue toJson(Set<Documentation> documentation) {
         
         if (documentation.size() == 1) {
             return toJson(documentation.iterator().next());
@@ -139,7 +139,7 @@ final class JsonDocumentation implements AlpsDocumentation {
         return jsonDocs.build();
     }
 
-    public static final JsonValue toJson(AlpsDocumentation documentation) {
+    public static final JsonValue toJson(Documentation documentation) {
         
         if (documentation.getHref() == null 
                 && (documentation.getMediaType() == null

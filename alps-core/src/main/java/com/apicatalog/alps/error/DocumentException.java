@@ -1,4 +1,4 @@
-package com.apicatalog.alps;
+package com.apicatalog.alps.error;
 
 public class DocumentException extends Exception {
     

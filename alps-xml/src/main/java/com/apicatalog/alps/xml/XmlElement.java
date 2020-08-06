@@ -4,7 +4,7 @@ import java.util.Deque;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.DocumentException;
+import com.apicatalog.alps.error.DocumentException;
 
 interface XmlElement {
 

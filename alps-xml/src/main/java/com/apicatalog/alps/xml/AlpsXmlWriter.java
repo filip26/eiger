@@ -8,8 +8,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import com.apicatalog.alps.AlpsWriter;
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 public class AlpsXmlWriter implements AlpsWriter {
 
@@ -27,23 +27,25 @@ public class AlpsXmlWriter implements AlpsWriter {
     }
 
     @Override
-    public void write(String mediaType, AlpsDocument document, OutputStream stream) throws IOException, AlpsWriterException {
+    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
         // TODO Auto-generated method stub
         try {
             XmlDocument.write(document, factory.createXMLStreamWriter(stream));
+            
         } catch (XMLStreamException e) {
-            throw new AlpsWriterException(e);
+            throw new DocumentException(e);
         }        
     }
 
     @Override
-    public void write(String mediaType, AlpsDocument document, Writer writer) throws IOException, AlpsWriterException {
+    public void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException {
         // TODO Auto-generated method stub
         
         try {
             XmlDocument.write(document, factory.createXMLStreamWriter(writer));
+            
         } catch (XMLStreamException e) {
-            throw new AlpsWriterException(e);
+            throw new DocumentException(e);
         }
     }
 }

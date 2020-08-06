@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps;
+package com.apicatalog.alps.error;
 
 public final class InvalidDocumentException extends DocumentException {
     

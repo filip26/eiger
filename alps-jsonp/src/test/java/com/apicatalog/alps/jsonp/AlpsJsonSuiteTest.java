@@ -38,9 +38,8 @@ import javax.json.stream.JsonParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 class AlpsJsonSuiteTest {
 
@@ -51,7 +50,7 @@ class AlpsJsonSuiteTest {
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
         
-        AlpsDocument document = null;
+        Document document = null;
         
         try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream(testCase.getInput())) {
             
@@ -84,7 +83,7 @@ class AlpsJsonSuiteTest {
         }
     }
     
-    static final void compare(final AlpsTestCase testCase, final AlpsDocument document) {
+    static final void compare(final AlpsTestCase testCase, final Document document) {
 
         if (testCase.getExpected() == null) {
             return;
@@ -133,8 +132,6 @@ class AlpsJsonSuiteTest {
                 fail("Expected " + expectedObject + ", but was" + outputObject);
             }
             
-        } catch (AlpsWriterException e) {
-            fail(e.getMessage(), e);
             
         } catch (IOException e) {
             fail(e.getMessage(), e);

@@ -25,11 +25,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonLink implements AlpsLink {
+final class JsonLink implements Link {
 
     private URI href;
     private String rel;
@@ -44,9 +44,9 @@ final class JsonLink implements AlpsLink {
         return rel;
     }
 
-    public static final Set<AlpsLink> parse(final JsonValue value) throws InvalidDocumentException {
+    public static final Set<Link> parse(final JsonValue value) throws InvalidDocumentException {
         
-        final Set<AlpsLink> links = new HashSet<>();
+        final Set<Link> links = new HashSet<>();
         
         for (final JsonValue item : JsonUtils.toArray(value)) {
             
@@ -60,7 +60,7 @@ final class JsonLink implements AlpsLink {
         return links;
     }
     
-    private static final AlpsLink parseObject(final JsonObject linkObject) throws InvalidDocumentException {
+    private static final Link parseObject(final JsonObject linkObject) throws InvalidDocumentException {
         
         final JsonLink link = new JsonLink();
         
@@ -97,7 +97,7 @@ final class JsonLink implements AlpsLink {
         return link;
     }
     
-    public static final JsonValue toJson(Set<AlpsLink> links) {
+    public static final JsonValue toJson(Set<Link> links) {
         
         if (links.size() == 1) {
             return toJson(links.iterator().next());
@@ -110,7 +110,7 @@ final class JsonLink implements AlpsLink {
         return jsonLinks.build();
     }
 
-    public static final JsonValue toJson(AlpsLink link) {
+    public static final JsonValue toJson(Link link) {
         
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
         

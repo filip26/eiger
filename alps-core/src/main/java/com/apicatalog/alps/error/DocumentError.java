@@ -1,4 +1,4 @@
-package com.apicatalog.alps;
+package com.apicatalog.alps.error;
 
 public enum DocumentError {
 
@@ -7,6 +7,8 @@ public enum DocumentError {
     MALFORMED_URI,
 
     MISSING_ROOT,
+
+    MISSING_VERSION,
     
     MISSING_ID,
  

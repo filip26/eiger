@@ -9,9 +9,9 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
+import com.apicatalog.alps.dom.element.Documentation;
 
-final class XmlDocumentation implements AlpsDocumentation, XmlElement {
+final class XmlDocumentation implements Documentation, XmlElement {
 
     private final int elementIndex;
     private StringBuilder content;
@@ -68,12 +68,12 @@ final class XmlDocumentation implements AlpsDocumentation, XmlElement {
         content.append(ch, start, length);
     }
 
-    public static void write(Set<AlpsDocumentation> docs, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(Set<Documentation> docs, XMLStreamWriter writer) throws XMLStreamException {
         if (docs == null || docs.isEmpty()) {
             return;
         }
         
-        for (final AlpsDocumentation doc : docs) {
+        for (final Documentation doc : docs) {
             writer.writeStartElement(AlpsXmlKeys.DOCUMENTATION);
             
             if (doc.getMediaType() != null && !"text".equals(doc.getMediaType()) && !"text/plain".equals(doc.getMediaType())) {

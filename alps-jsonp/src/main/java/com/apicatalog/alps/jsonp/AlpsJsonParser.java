@@ -26,10 +26,10 @@ import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
 import com.apicatalog.alps.AlpsParser;
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
 public final class AlpsJsonParser implements AlpsParser {
 
@@ -42,7 +42,7 @@ public final class AlpsJsonParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(final URI baseUri, final String mediaType, final InputStream stream) throws DocumentException {
+    public Document parse(final URI baseUri, final String mediaType, final InputStream stream) throws DocumentException {
 
         if (stream == null) {
             throw new IllegalArgumentException();
@@ -56,7 +56,7 @@ public final class AlpsJsonParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(final URI baseUri, final String mediaType, final Reader reader) throws DocumentException {
+    public Document parse(final URI baseUri, final String mediaType, final Reader reader) throws DocumentException {
 
         if (reader == null) {
             throw new IllegalArgumentException();
@@ -69,7 +69,7 @@ public final class AlpsJsonParser implements AlpsParser {
         return parse(baseUri, Json.createParser(reader));
     }
     
-    private static final AlpsDocument parse(URI baseUri, JsonParser parser)  throws DocumentException {
+    private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentException {
         
         if (!parser.hasNext()) {
             throw new DocumentException("Expected JSON object but was an empty input");

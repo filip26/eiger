@@ -43,13 +43,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.w3c.dom.Document;
 
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.MalformedDocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.InvalidDocumentException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 
 class AlpsXmlSuiteTest {
 
@@ -60,7 +58,7 @@ class AlpsXmlSuiteTest {
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
         
-        AlpsDocument document = null;
+        Document document = null;
         
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream(testCase.getInput())) {
             
@@ -129,7 +127,7 @@ class AlpsXmlSuiteTest {
         }
     }
     
-    static final void compare(final TestDescription testCase, final AlpsDocument document) {
+    static final void compare(final TestDescription testCase, final Document document) {
 
         if (testCase.getExpected() == null) {
             return;
@@ -141,14 +139,14 @@ class AlpsXmlSuiteTest {
             
             Transformer inputTransformer = createInputTransformer();
             
-            final Document expected = readDocument(inputTransformer, is);
+            final org.w3c.dom.Document expected = readDocument(inputTransformer, is);
             expected.normalizeDocument();
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
             (new AlpsXmlWriter()).write("application/xml", document, outputStream);
             
-            final Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
+            final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
@@ -180,7 +178,7 @@ class AlpsXmlSuiteTest {
                 fail("Expected output does not match.");
             }
             
-        } catch (IOException | AlpsWriterException | TransformerException e) {
+        } catch (IOException | DocumentException | TransformerException e) {
             fail(e.getMessage(), e);            
         }
     }    
@@ -200,14 +198,14 @@ class AlpsXmlSuiteTest {
         return null;
     }
     
-    private static final Document readDocument(Transformer transformer, InputStream source) {
+    private static final org.w3c.dom.Document readDocument(Transformer transformer, InputStream source) {
 
         try {
             final DOMResult result = new DOMResult();
             
             transformer.transform(new StreamSource(source), result);
             
-            return (Document)result.getNode();
+            return (org.w3c.dom.Document)result.getNode();
 
         } catch (TransformerFactoryConfigurationError | TransformerException e) {
             fail(e.getMessage(), e);

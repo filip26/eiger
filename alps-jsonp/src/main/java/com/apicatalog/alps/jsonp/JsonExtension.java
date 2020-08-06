@@ -26,11 +26,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.element.AlpsExtension;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-class JsonExtension implements AlpsExtension {
+class JsonExtension implements Extension {
 
     private URI id;
     private URI href;
@@ -51,9 +51,9 @@ class JsonExtension implements AlpsExtension {
         return Optional.ofNullable(value);
     }
 
-    protected static final Set<AlpsExtension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
+    protected static final Set<Extension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
         
-        final Set<AlpsExtension> extension = new HashSet<>();
+        final Set<Extension> extension = new HashSet<>();
         
         for (final JsonValue item : JsonUtils.toArray(jsonValue)) {
             
@@ -67,7 +67,7 @@ class JsonExtension implements AlpsExtension {
         return extension;
     }
     
-    private static final AlpsExtension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
+    private static final Extension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
         
         // id
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
@@ -104,7 +104,7 @@ class JsonExtension implements AlpsExtension {
         return extension;
     }
     
-    public static final JsonValue toJson(Set<AlpsExtension> extensions) {
+    public static final JsonValue toJson(Set<Extension> extensions) {
         
         if (extensions.size() == 1) {
             return toJson(extensions.iterator().next());
@@ -117,7 +117,7 @@ class JsonExtension implements AlpsExtension {
         return jsonExt.build();
     }
 
-    public static final JsonValue toJson(AlpsExtension extension) {
+    public static final JsonValue toJson(Extension extension) {
         
         final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
 

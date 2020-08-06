@@ -19,14 +19,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 public interface AlpsWriter {
 
     boolean canWrite(String mediaType);
 
-    void write(String mediaType, AlpsDocument document, OutputStream stream) throws IOException, AlpsWriterException;
+    void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException;
     
-    void write(String mediaType, AlpsDocument document, Writer writer) throws IOException, AlpsWriterException;
+    void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException;
     
 }

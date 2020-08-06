@@ -9,9 +9,9 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Link;
 
-final class XmlLink implements AlpsLink, XmlElement {
+final class XmlLink implements Link, XmlElement {
 
     private final int elementIndex;
     
@@ -59,18 +59,18 @@ final class XmlLink implements AlpsLink, XmlElement {
         // TODO Auto-generated method stub
     }
 
-    public static void write(Set<AlpsLink> links, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(Set<Link> links, XMLStreamWriter writer) throws XMLStreamException {
 
         if (links == null || links.isEmpty()) {
             return;
         }
         
-        for (final AlpsLink link : links) {
+        for (final Link link : links) {
             write(link, writer);
         }        
     }
     
-    public static void write(final AlpsLink link, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(final Link link, XMLStreamWriter writer) throws XMLStreamException {
         
         writer.writeStartElement(AlpsXmlKeys.LINK);
         

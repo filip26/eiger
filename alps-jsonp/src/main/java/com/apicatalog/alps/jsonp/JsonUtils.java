@@ -24,8 +24,8 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.InvalidDocumentException;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
 final class JsonUtils {
 

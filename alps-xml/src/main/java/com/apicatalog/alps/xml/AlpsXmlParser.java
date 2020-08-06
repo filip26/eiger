@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.apicatalog.alps.AlpsParser;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.MalformedDocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 
 public class AlpsXmlParser implements AlpsParser {
 
@@ -51,7 +51,7 @@ public class AlpsXmlParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException {
+    public Document parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException {
 
         // TODO check media and arguments
 
@@ -83,7 +83,7 @@ public class AlpsXmlParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws DocumentException {
+    public Document parse(URI baseUri, String mediaType, Reader reader) throws DocumentException {
         // TODO Auto-generated method stub
         return null;
     }    

@@ -30,15 +30,15 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDescriptorType;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonDescriptor implements AlpsDescriptor {
+final class JsonDescriptor implements Descriptor {
 
     private URI id;
     
@@ -46,23 +46,23 @@ final class JsonDescriptor implements AlpsDescriptor {
     
     private String name;
     
-    private AlpsDescriptorType type;
+    private DescriptorType type;
     
     private URI returnType;
     
-    private Set<AlpsDocumentation> doc;
+    private Set<Documentation> doc;
     
-    private Set<AlpsDescriptor> descriptors;
+    private Set<Descriptor> descriptors;
     
-    private Set<AlpsLink> links;
+    private Set<Link> links;
     
-    private Set<AlpsExtension> extensions;
+    private Set<Extension> extensions;
     
-    private AlpsDescriptor parent;
+    private Descriptor parent;
     
     private JsonDescriptor() {
         // default values
-        this.type = AlpsDescriptorType.SEMANTIC;
+        this.type = DescriptorType.SEMANTIC;
     }
     
     @Override
@@ -81,7 +81,7 @@ final class JsonDescriptor implements AlpsDescriptor {
     }
 
     @Override
-    public AlpsDescriptorType getType() {
+    public DescriptorType getType() {
         return type;
     }
 
@@ -91,35 +91,35 @@ final class JsonDescriptor implements AlpsDescriptor {
     }
 
     @Override
-    public Set<AlpsDocumentation> getDocumentation() {
+    public Set<Documentation> getDocumentation() {
         return doc;
     }
 
     @Override
-    public Set<AlpsExtension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @Override
-    public Set<AlpsDescriptor> getDescriptors() {
+    public Set<Descriptor> getDescriptors() {
         return descriptors;
     }
 
     @Override
-    public Set<AlpsLink> getLinks() {
+    public Set<Link> getLinks() {
         return links;
     }
     
     @Override
-    public Optional<AlpsDescriptor> getParent() {
+    public Optional<Descriptor> getParent() {
         return Optional.ofNullable(parent);
     }
 
-    public static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonValue jsonValue) throws InvalidDocumentException {
+    public static Set<Descriptor> parse(Map<URI, Descriptor> index, JsonValue jsonValue) throws InvalidDocumentException {
         return parse(index, null, jsonValue);
     }
     
-    private static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonValue jsonValue) throws InvalidDocumentException {
+    private static Set<Descriptor> parse(Map<URI, Descriptor> index, JsonDescriptor parent, JsonValue jsonValue) throws InvalidDocumentException {
         
         if (JsonUtils.isObject(jsonValue)) {
 
@@ -127,7 +127,7 @@ final class JsonDescriptor implements AlpsDescriptor {
 
         } else if (JsonUtils.isArray(jsonValue)) {
             
-            final HashSet<AlpsDescriptor> descriptors = new HashSet<>();
+            final HashSet<Descriptor> descriptors = new HashSet<>();
             
             for (final JsonValue item : jsonValue.asJsonArray()) {
                 
@@ -146,7 +146,7 @@ final class JsonDescriptor implements AlpsDescriptor {
         }
     }
     
-    private static AlpsDescriptor parseObject(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonObject jsonObject) throws InvalidDocumentException {
+    private static Descriptor parseObject(Map<URI, Descriptor> index, JsonDescriptor parent, JsonObject jsonObject) throws InvalidDocumentException {
         
         final JsonDescriptor descriptor = new JsonDescriptor();
         descriptor.parent = parent;
@@ -195,10 +195,10 @@ final class JsonDescriptor implements AlpsDescriptor {
             }
             
             try {
-                descriptor.type = AlpsDescriptorType.valueOf(JsonUtils.getString(type).toUpperCase());
+                descriptor.type = DescriptorType.valueOf(JsonUtils.getString(type).toUpperCase());
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'type' property value must be one of " + (Arrays.stream(AlpsDescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + type);
+                throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'type' property value must be one of " + (Arrays.stream(DescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + type);
             }
         }
 
@@ -259,7 +259,7 @@ final class JsonDescriptor implements AlpsDescriptor {
         return descriptor;
     }
     
-    public static final JsonValue toJson(final Set<AlpsDescriptor> descriptors) {
+    public static final JsonValue toJson(final Set<Descriptor> descriptors) {
         
         if (descriptors.size() == 1) {
             return toJson(descriptors.iterator().next());
@@ -272,13 +272,13 @@ final class JsonDescriptor implements AlpsDescriptor {
         return jsonDescriptors.build();
     }
 
-    public static final JsonValue toJson(final AlpsDescriptor descriptor) {
+    public static final JsonValue toJson(final Descriptor descriptor) {
         
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
         
         jsonDescriptor.add(AlpsJsonKeys.ID, descriptor.getId().toString());
         
-        if (descriptor.getType() != null && !AlpsDescriptorType.SEMANTIC.equals(descriptor.getType())) {
+        if (descriptor.getType() != null && !DescriptorType.SEMANTIC.equals(descriptor.getType())) {
             jsonDescriptor.add(AlpsJsonKeys.TYPE, descriptor.getType().name().toLowerCase());
         }
         

@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
 
 /**
  * An ALPS document contains a machine-readable collection of
@@ -31,11 +31,11 @@ import com.apicatalog.alps.dom.element.AlpsLink;
  * 
  * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2">ALPS Document</a>
  */
-public interface AlpsDocument {
+public interface Document {
 
-	Optional<AlpsDescriptor> findById(final URI id);
+	Optional<Descriptor> findById(final URI id);
 	
-	Set<AlpsDescriptor> findByName(final String name);
+	Set<Descriptor> findByName(final String name);
 	
 	/**
 	 * Indicates the version of the ALPS specification used in the document.
@@ -46,27 +46,27 @@ public interface AlpsDocument {
      * 
      * @return ALPS document version, nevern <code>null</code>
 	 */
-	AlpsVersion getVersion();
+	DocumentVersion getVersion();
 
 	/**
 	 * Returns top level document descriptors.
 	 * 
 	 * @return top level document descriptors
 	 */
-	Set<AlpsDescriptor> getDescriptors();
+	Set<Descriptor> getDescriptors();
 	
 	/**
 	 * Returns flattened document descriptors.
 	 * 
 	 * @return all descriptors present in the document
 	 */
-	Collection<AlpsDescriptor> getAllDescriptors();
+	Collection<Descriptor> getAllDescriptors();
 	
-	Set<AlpsLink> getLinks();
+	Set<Link> getLinks();
 	
-	Set<AlpsDocumentation> getDocumentation();
+	Set<Documentation> getDocumentation();
 	
-	Set<AlpsExtension> getExtensions();
+	Set<Extension> getExtensions();
 	
 	/**
 	 * Base {@link URI} of the ALPS document 

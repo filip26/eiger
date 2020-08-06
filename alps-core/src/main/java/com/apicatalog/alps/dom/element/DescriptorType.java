@@ -15,29 +15,13 @@
  */
 package com.apicatalog.alps.dom.element;
 
-import java.net.URI;
-import java.util.Optional;
-import java.util.Set;
+public enum DescriptorType {
 
-public interface AlpsDescriptor {
-    
-	URI getId();
+	SEMANTIC,
 	
-	Optional<URI> getHref();
+	SAFE,
 	
-	Optional<String> getName();
+	IDEMPOTENT,
 	
-	AlpsDescriptorType getType();
-	
-	Optional<URI> getReturnType();
-	
-	Set<AlpsDocumentation> getDocumentation();
-	
-	Set<AlpsExtension> getExtensions();
-	
-	Set<AlpsDescriptor> getDescriptors();
-	
-	Optional<AlpsDescriptor> getParent();
-	
-	Set<AlpsLink> getLinks();
+	UNSAFE
 }

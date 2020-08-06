@@ -23,8 +23,8 @@ import javax.json.Json;
 import javax.json.JsonWriter;
 
 import com.apicatalog.alps.AlpsWriter;
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.dom.AlpsDocument;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 public final class AlpsJsonWriter implements AlpsWriter {
 
@@ -37,7 +37,7 @@ public final class AlpsJsonWriter implements AlpsWriter {
     }
     
     @Override
-    public void write(String mediaType, AlpsDocument document, OutputStream stream) throws IOException, AlpsWriterException {
+    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
         
         //TODO check media type and arguments
         
@@ -45,14 +45,14 @@ public final class AlpsJsonWriter implements AlpsWriter {
     }
 
     @Override
-    public void write(String mediaType, AlpsDocument document, Writer writer) throws IOException, AlpsWriterException {
+    public void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException {
 
         //TODO check media type and arguments
 
         write(document, Json.createWriter(writer));
     }
 
-    private void write(AlpsDocument document, JsonWriter jsonWriter) throws IOException, AlpsWriterException {
+    private void write(Document document, JsonWriter jsonWriter) throws IOException, DocumentException {
         jsonWriter.write(JsonDocument.toJson(document));
     }
 }

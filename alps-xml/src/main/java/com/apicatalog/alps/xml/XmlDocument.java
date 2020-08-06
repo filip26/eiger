@@ -14,24 +14,25 @@ import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
-import com.apicatalog.alps.dom.AlpsVersion;
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class XmlDocument implements AlpsDocument, XmlElement {
+final class XmlDocument implements Document, XmlElement {
 
-    private AlpsVersion version;
+    private DocumentVersion version;
     
-    private Set<AlpsDocumentation> documentation;
+    private Set<Documentation> documentation;
     
-    private Set<AlpsDescriptor> descriptors;
+    private Set<Descriptor> descriptors;
     
-    private Set<AlpsLink> links;
+    private Set<Link> links;
     
     public static final XmlDocument create(Attributes attrs) throws SAXException {
         
@@ -43,59 +44,59 @@ final class XmlDocument implements AlpsDocument, XmlElement {
         return doc;
     }
 
-    private static final AlpsVersion readVersion(Attributes attrs) throws SAXException {
+    private static final DocumentVersion readVersion(Attributes attrs) throws SAXException {
 
         // version
         String version = attrs.getValue(AlpsXmlKeys.VERSION);
 
         if (version == null || version.isBlank() || "1.0".equals(version)) {
 
-            return AlpsVersion.VERSION_1_0;            
+            return DocumentVersion.VERSION_1_0;            
         }
         
         throw new SAXException();
     }
     
     @Override
-    public Optional<AlpsDescriptor> findById(URI id) {
+    public Optional<Descriptor> findById(URI id) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<AlpsDescriptor> findByName(String name) {
+    public Set<Descriptor> findByName(String name) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public AlpsVersion getVersion() {
+    public DocumentVersion getVersion() {
         return version;
     }
 
     @Override
-    public Set<AlpsDescriptor> getDescriptors() {
+    public Set<Descriptor> getDescriptors() {
         return descriptors;
     }
 
     @Override
-    public Collection<AlpsDescriptor> getAllDescriptors() {
+    public Collection<Descriptor> getAllDescriptors() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Set<AlpsLink> getLinks() {
+    public Set<Link> getLinks() {
         return links;
     }
 
     @Override
-    public Set<AlpsDocumentation> getDocumentation() {
+    public Set<Documentation> getDocumentation() {
         return documentation;
     }
 
     @Override
-    public Set<AlpsExtension> getExtensions() {
+    public Set<Extension> getExtensions() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -133,14 +134,14 @@ final class XmlDocument implements AlpsDocument, XmlElement {
         links.add(link);
     }
     
-    public static void write(AlpsDocument document, XMLStreamWriter writer) throws XMLStreamException, AlpsWriterException {
+    public static void write(Document document, XMLStreamWriter writer) throws XMLStreamException, DocumentException {
 
         writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
         
         writer.writeStartElement(AlpsXmlKeys.DOCUMENT);
         
         if (document.getVersion() == null) {
-            throw new AlpsWriterException();
+            throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
         }
         writer.writeAttribute(AlpsXmlKeys.VERSION, "1.0");
         

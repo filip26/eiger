@@ -16,18 +16,17 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
-import java.util.Optional;
 
-public interface AlpsExtension  {
+public interface Link {
 
 	/**
-	 * {@link URI} pointing to an external document which provides the definition of the extension
+	 * {@link URI} pointing to an external document whose relationship to the current document 
+	 * or <code>descriptor</code> is described by the associated {@link #getRel()} property
 	 *  
 	 * @return {@link URI} of an external document
 	 */
-	Optional<URI> getHref();
+
+	URI getHref();
 	
-	URI getId();
-	
-	Optional<String> getValue();
+	String getRel();
 }

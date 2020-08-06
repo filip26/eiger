@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import javax.json.JsonObject;
 
-import com.apicatalog.alps.DocumentError;
+import com.apicatalog.alps.error.DocumentError;
 
 class ExpectedError {
 

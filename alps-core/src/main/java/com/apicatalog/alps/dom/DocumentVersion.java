@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps;
+package com.apicatalog.alps.dom;
 
-public class AlpsWriterException extends Exception {
-    
-    private static final long serialVersionUID = 7826650786160247358L;
-    
-    public AlpsWriterException() {
-    }
-    
-    public AlpsWriterException(final String message) {
-        super(message);
-    }
+public enum DocumentVersion {
 
-    public AlpsWriterException(final Throwable throwable) {
-        super(throwable);
-    }
-
+    VERSION_1_0
+    
 }

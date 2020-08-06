@@ -30,40 +30,39 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.InvalidDocumentException;
-import com.apicatalog.alps.dom.AlpsDocument;
-import com.apicatalog.alps.dom.AlpsVersion;
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonDocument implements AlpsDocument {
+final class JsonDocument implements Document {
 
-    private AlpsVersion version;
+    private DocumentVersion version;
     
     private URI baseUri;
     
-    private Set<AlpsDocumentation> documentation;
+    private Set<Documentation> documentation;
     
-    private Set<AlpsLink> links;
+    private Set<Link> links;
     
-    private Set<AlpsExtension> extensions;
+    private Set<Extension> extensions;
     
-    private Map<URI, AlpsDescriptor> descriptors;
+    private Map<URI, Descriptor> descriptors;
     
     public JsonDocument() {
-        this.version = AlpsVersion.VERSION_1_0;
+        this.version = DocumentVersion.VERSION_1_0;
     }
     
     @Override
-    public Optional<AlpsDescriptor> findById(URI id) {
+    public Optional<Descriptor> findById(URI id) {
         return Optional.ofNullable(descriptors.get(id));
     }
 
     @Override
-    public Set<AlpsDescriptor> findByName(final String name) {
+    public Set<Descriptor> findByName(final String name) {
         return descriptors
                     .values().stream()
                     .filter(d -> d.getName().isPresent() && name.equals(d.getName().get()))
@@ -71,12 +70,12 @@ final class JsonDocument implements AlpsDocument {
     }
 
     @Override
-    public AlpsVersion getVersion() {
+    public DocumentVersion getVersion() {
         return version;
     }
 
     @Override
-    public Set<AlpsDescriptor> getDescriptors() {
+    public Set<Descriptor> getDescriptors() {
         return descriptors
                     .values().stream()
                     .filter(d -> d.getParent().isEmpty())
@@ -85,22 +84,22 @@ final class JsonDocument implements AlpsDocument {
     }
 
     @Override
-    public Collection<AlpsDescriptor> getAllDescriptors() {
+    public Collection<Descriptor> getAllDescriptors() {
         return descriptors.values();
     }
 
     @Override
-    public Set<AlpsLink> getLinks() {
+    public Set<Link> getLinks() {
         return links;
     }
 
     @Override
-    public Set<AlpsDocumentation> getDocumentation() {
+    public Set<Documentation> getDocumentation() {
         return documentation;
     }
     
     @Override
-    public Set<AlpsExtension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
@@ -109,7 +108,7 @@ final class JsonDocument implements AlpsDocument {
         return baseUri;
     }
     
-    public static final AlpsDocument parse(final URI baseUri, final JsonObject alpsObject) throws InvalidDocumentException {
+    public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws InvalidDocumentException {
         
         JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;
@@ -122,7 +121,7 @@ final class JsonDocument implements AlpsDocument {
             if (JsonUtils.isString(alpsVersion) 
                     && AlpsJsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
-                document.version = AlpsVersion.VERSION_1_0;
+                document.version = DocumentVersion.VERSION_1_0;
             }
         }
         
@@ -163,7 +162,7 @@ final class JsonDocument implements AlpsDocument {
         return document;
     }
     
-    public static final JsonObject toJson(AlpsDocument document) throws AlpsWriterException {
+    public static final JsonObject toJson(Document document) {
         
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
@@ -193,7 +192,7 @@ final class JsonDocument implements AlpsDocument {
         return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
     }
     
-    private static final JsonString toJson(AlpsVersion version) {
+    private static final JsonString toJson(DocumentVersion version) {
         return Json.createValue("1.0");        
     }
     
