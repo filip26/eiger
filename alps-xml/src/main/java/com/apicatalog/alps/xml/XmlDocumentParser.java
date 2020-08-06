@@ -27,20 +27,20 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.apicatalog.alps.AlpsParser;
+import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
 import com.apicatalog.alps.error.MalformedDocumentException;
 
-public class AlpsXmlParser implements AlpsParser {
+public class XmlDocumentParser implements DocumentParser {
 
     private final SAXParserFactory factory;
     
-    public AlpsXmlParser() {
+    public XmlDocumentParser() {
         this(SAXParserFactory.newDefaultInstance());
     }
 
-    public AlpsXmlParser(SAXParserFactory factory) {
+    public XmlDocumentParser(SAXParserFactory factory) {
         this.factory = factory;
     }
 

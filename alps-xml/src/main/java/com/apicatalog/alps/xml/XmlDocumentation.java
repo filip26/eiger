@@ -25,7 +25,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
         //TODO
         XmlDocumentation doc = new XmlDocumentation(index);
         
-        doc.mediaType = attributes.getValue(AlpsXmlKeys.MEDIA_TYPE);
+        doc.mediaType = attributes.getValue(AlpsConstants.MEDIA_TYPE);
         
         if (doc.mediaType == null) {
             doc.mediaType = "text";
@@ -59,7 +59,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsXmlKeys.DOCUMENTATION;
+        return AlpsConstants.DOCUMENTATION;
     }
 
     @Override
@@ -74,10 +74,10 @@ final class XmlDocumentation implements Documentation, XmlElement {
         }
         
         for (final Documentation doc : docs) {
-            writer.writeStartElement(AlpsXmlKeys.DOCUMENTATION);
+            writer.writeStartElement(AlpsConstants.DOCUMENTATION);
             
             if (doc.getMediaType() != null && !"text".equals(doc.getMediaType()) && !"text/plain".equals(doc.getMediaType())) {
-                writer.writeAttribute(AlpsXmlKeys.MEDIA_TYPE, doc.getMediaType());
+                writer.writeAttribute(AlpsConstants.MEDIA_TYPE, doc.getMediaType());
             }
             
             writer.writeCharacters(doc.getContent());

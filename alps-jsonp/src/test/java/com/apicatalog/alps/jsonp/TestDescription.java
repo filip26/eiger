@@ -17,15 +17,15 @@ package com.apicatalog.alps.jsonp;
 
 import javax.json.JsonObject;
 
-public final class AlpsTestCase {
+final class TestDescription {
 
     private String id;
     private String name;
     private String input;
     private String expected;
     
-    public static final AlpsTestCase of(JsonObject jsonObject) {
-        final AlpsTestCase testCase = new AlpsTestCase();
+    public static final TestDescription of(JsonObject jsonObject) {
+        final TestDescription testCase = new TestDescription();
         
         testCase.id = jsonObject.getString("@id");
         testCase.name = jsonObject.getString("name");

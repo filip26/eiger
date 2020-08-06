@@ -47,7 +47,7 @@ final class XmlDocument implements Document, XmlElement {
     private static final DocumentVersion readVersion(Attributes attrs) throws SAXException {
 
         // version
-        String version = attrs.getValue(AlpsXmlKeys.VERSION);
+        String version = attrs.getValue(AlpsConstants.VERSION);
 
         if (version == null || version.isBlank() || "1.0".equals(version)) {
 
@@ -114,7 +114,7 @@ final class XmlDocument implements Document, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsXmlKeys.DOCUMENT;
+        return AlpsConstants.DOCUMENT;
     }
 
     @Override
@@ -138,12 +138,12 @@ final class XmlDocument implements Document, XmlElement {
 
         writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
         
-        writer.writeStartElement(AlpsXmlKeys.DOCUMENT);
+        writer.writeStartElement(AlpsConstants.DOCUMENT);
         
         if (document.getVersion() == null) {
             throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
         }
-        writer.writeAttribute(AlpsXmlKeys.VERSION, "1.0");
+        writer.writeAttribute(AlpsConstants.VERSION, "1.0");
         
         if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
             XmlDocumentation.write(document.getDocumentation(), writer);

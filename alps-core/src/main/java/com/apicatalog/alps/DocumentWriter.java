@@ -22,7 +22,7 @@ import java.io.Writer;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
 
-public interface AlpsWriter {
+public interface DocumentWriter {
 
     boolean canWrite(String mediaType);
 

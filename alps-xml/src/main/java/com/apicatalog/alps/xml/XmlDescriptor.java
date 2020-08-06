@@ -42,10 +42,10 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     public static final XmlDescriptor create(Deque<XmlElement> stack, int index, Attributes attrs) throws DocumentException {
     
-        String id = attrs.getValue(AlpsXmlKeys.ID);
+        String id = attrs.getValue(AlpsConstants.ID);
         
         if (id == null || id.isBlank()) {            
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index));
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index));
         }
         
         XmlDescriptor descriptor = new XmlDescriptor(index);
@@ -54,12 +54,12 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             descriptor.id = URI.create(id);
             
         } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
         }
         
-        descriptor.type = parseType(attrs.getValue(AlpsXmlKeys.TYPE));
+        descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
         
-        String rt = attrs.getValue(AlpsXmlKeys.RETURN_VALUE);
+        String rt = attrs.getValue(AlpsConstants.RETURN_VALUE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
@@ -98,7 +98,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsXmlKeys.DESCRIPTOR;
+        return AlpsConstants.DESCRIPTOR;
     }
 
     @Override
@@ -174,26 +174,26 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            writer.writeStartElement(AlpsXmlKeys.DESCRIPTOR);
+            writer.writeStartElement(AlpsConstants.DESCRIPTOR);
             
             // id
             if (descriptor.getId() == null) {
                 //TODO
             }
-            writer.writeAttribute(AlpsXmlKeys.ID, descriptor.getId().toString());
+            writer.writeAttribute(AlpsConstants.ID, descriptor.getId().toString());
          
             // type
             final DescriptorType type = descriptor.getType();
             
             if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
-                writer.writeAttribute(AlpsXmlKeys.TYPE, type.toString().toLowerCase());
+                writer.writeAttribute(AlpsConstants.TYPE, type.toString().toLowerCase());
             }
             
             // return type
             final Optional<URI> returnType = descriptor.getReturnType(); 
             
             if (returnType.isPresent()) {
-                writer.writeAttribute(AlpsXmlKeys.RETURN_VALUE, returnType.get().toString());
+                writer.writeAttribute(AlpsConstants.RETURN_VALUE, returnType.get().toString());
             }
 
             XmlDocumentation.write(descriptor.getDocumentation(), writer);

@@ -34,7 +34,7 @@ final class XmlLink implements Link, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsXmlKeys.LINK;
+        return AlpsConstants.LINK;
     }
 
     @Override
@@ -72,14 +72,14 @@ final class XmlLink implements Link, XmlElement {
     
     public static void write(final Link link, XMLStreamWriter writer) throws XMLStreamException {
         
-        writer.writeStartElement(AlpsXmlKeys.LINK);
+        writer.writeStartElement(AlpsConstants.LINK);
         
         if (link.getHref() != null) {
-            writer.writeAttribute(AlpsXmlKeys.HREF, link.getHref().toString());
+            writer.writeAttribute(AlpsConstants.HREF, link.getHref().toString());
         }
         
         if (link.getRel() != null && !link.getRel().isBlank()) {
-            writer.writeAttribute(AlpsXmlKeys.RELATION, link.getRel());
+            writer.writeAttribute(AlpsConstants.RELATION, link.getRel());
         }
         
         writer.writeEndElement();
@@ -90,7 +90,7 @@ final class XmlLink implements Link, XmlElement {
 
         final XmlLink link = new XmlLink(index);
         
-        String href = attributes.getValue(AlpsXmlKeys.HREF);
+        String href = attributes.getValue(AlpsConstants.HREF);
         
         if (href == null || href.isBlank()) {
             //TODO
@@ -98,7 +98,7 @@ final class XmlLink implements Link, XmlElement {
         
         link.href = URI.create(href);
         
-        String rel = attributes.getValue(AlpsXmlKeys.RELATION);
+        String rel = attributes.getValue(AlpsConstants.RELATION);
         
         if (rel == null || rel.isBlank()) {
             //TODO

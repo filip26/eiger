@@ -15,7 +15,7 @@
  */
 package com.apicatalog.alps.jsonp;
 
-final class AlpsJsonKeys {
+final class AlpsConstants {
 
     public static final String ROOT = "alps";
     
@@ -47,6 +47,6 @@ final class AlpsJsonKeys {
     
     public static final String EXTENSION = "ext";
     
-    private AlpsJsonKeys() {
+    private AlpsConstants() {
     }
 }

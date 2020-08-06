@@ -64,15 +64,15 @@ final class JsonLink implements Link {
         
         final JsonLink link = new JsonLink();
         
-        if (!linkObject.containsKey(AlpsJsonKeys.HREF)) {
+        if (!linkObject.containsKey(AlpsConstants.HREF)) {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "Link object must contain 'href' property");
         }
 
-        if (!linkObject.containsKey(AlpsJsonKeys.RELATION)) {
+        if (!linkObject.containsKey(AlpsConstants.RELATION)) {
             throw new InvalidDocumentException(DocumentError.MISSING_REL, "Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(AlpsJsonKeys.HREF);
+        final JsonValue href = linkObject.get(AlpsConstants.HREF);
         
         if (JsonUtils.isNotString(href)) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href.getValueType());
@@ -86,7 +86,7 @@ final class JsonLink implements Link {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href);
         }
 
-        final JsonValue rel = linkObject.get(AlpsJsonKeys.RELATION);
+        final JsonValue rel = linkObject.get(AlpsConstants.RELATION);
         
         if (JsonUtils.isNotString(href)) {
             throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + rel.getValueType());
@@ -115,11 +115,11 @@ final class JsonLink implements Link {
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
         
         if (link.getHref() != null) {
-            jsonLink.add(AlpsJsonKeys.HREF, link.getHref().toString());
+            jsonLink.add(AlpsConstants.HREF, link.getHref().toString());
         }
         
         if (link.getRel() != null && !link.getRel().isBlank()) {
-            jsonLink.add(AlpsJsonKeys.RELATION, link.getRel());
+            jsonLink.add(AlpsConstants.RELATION, link.getRel());
         }
         
         return jsonLink.build();

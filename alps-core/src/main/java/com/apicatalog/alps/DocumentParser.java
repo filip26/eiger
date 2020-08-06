@@ -23,7 +23,7 @@ import java.net.URI;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
 
-public interface AlpsParser {
+public interface DocumentParser {
 
     /**
      * Indicates where the media type can be parsed by the parser instance.

@@ -152,19 +152,19 @@ final class JsonDescriptor implements Descriptor {
         descriptor.parent = parent;
 
         // id
-        if (!jsonObject.containsKey(AlpsJsonKeys.ID) || JsonUtils.isNull(jsonObject.get(AlpsJsonKeys.ID))) {
+        if (!jsonObject.containsKey(AlpsConstants.ID) || JsonUtils.isNull(jsonObject.get(AlpsConstants.ID))) {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, "The 'id' property value must be valid URI represented as JSON string");            
         }
         
-        if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsJsonKeys.ID));
+        if (JsonUtils.isNotString(jsonObject.get(AlpsConstants.ID))) {
+            throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsConstants.ID));
         }
         
         try {
-            descriptor.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
+            descriptor.id = URI.create(jsonObject.getString(AlpsConstants.ID));
                     
         } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsConstants.ID));
         }
         
         // check id conflict
@@ -175,8 +175,8 @@ final class JsonDescriptor implements Descriptor {
         index.put(descriptor.id, descriptor);
 
         // name
-        if (jsonObject.containsKey(AlpsJsonKeys.NAME)) {
-            final JsonValue name = jsonObject.get(AlpsJsonKeys.NAME);
+        if (jsonObject.containsKey(AlpsConstants.NAME)) {
+            final JsonValue name = jsonObject.get(AlpsConstants.NAME);
             
             if (JsonUtils.isNotString(name)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_NAME, "The 'name' property value must be JSON string but was " + name);
@@ -186,9 +186,9 @@ final class JsonDescriptor implements Descriptor {
         }
 
         // type
-        if (jsonObject.containsKey(AlpsJsonKeys.TYPE)) {
+        if (jsonObject.containsKey(AlpsConstants.TYPE)) {
             
-            final JsonValue type = jsonObject.get(AlpsJsonKeys.TYPE);
+            final JsonValue type = jsonObject.get(AlpsConstants.TYPE);
             
             if (JsonUtils.isNotString(type)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'type' property value must be JSON string but was " + type);
@@ -203,30 +203,30 @@ final class JsonDescriptor implements Descriptor {
         }
 
         // documentation
-        if (jsonObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
-            descriptor.doc = JsonDocumentation.parse(jsonObject.get(AlpsJsonKeys.DOCUMENTATION));
+        if (jsonObject.containsKey(AlpsConstants.DOCUMENTATION)) {
+            descriptor.doc = JsonDocumentation.parse(jsonObject.get(AlpsConstants.DOCUMENTATION));
             
         } else {
             descriptor.doc = Collections.emptySet();
         }
         
         // links
-        if (jsonObject.containsKey(AlpsJsonKeys.LINK)) {
-            descriptor.links = JsonLink.parse(jsonObject.get(AlpsJsonKeys.LINK));
+        if (jsonObject.containsKey(AlpsConstants.LINK)) {
+            descriptor.links = JsonLink.parse(jsonObject.get(AlpsConstants.LINK));
             
         } else {
             descriptor.links = Collections.emptySet();
         }
         
         // href
-        if (jsonObject.containsKey(AlpsJsonKeys.HREF)) {
+        if (jsonObject.containsKey(AlpsConstants.HREF)) {
             descriptor.href = JsonUtils.getHref(jsonObject);
         }
 
         // return type
-        if (jsonObject.containsKey(AlpsJsonKeys.RETURN_TYPE)) {
+        if (jsonObject.containsKey(AlpsConstants.RETURN_TYPE)) {
             
-            final JsonValue returnType = jsonObject.get(AlpsJsonKeys.RETURN_TYPE);
+            final JsonValue returnType = jsonObject.get(AlpsConstants.RETURN_TYPE);
             
             if (JsonUtils.isNotString(returnType)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_RT, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
@@ -241,16 +241,16 @@ final class JsonDescriptor implements Descriptor {
         }
         
         // nested descriptors
-        if (jsonObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
-            descriptor.descriptors = JsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsJsonKeys.DESCRIPTOR));
+        if (jsonObject.containsKey(AlpsConstants.DESCRIPTOR)) {
+            descriptor.descriptors = JsonDescriptor.parse(index, descriptor, jsonObject.get(AlpsConstants.DESCRIPTOR));
             
         } else {
             descriptor.descriptors = Collections.emptySet();
         }
         
         // extensions
-        if (jsonObject.containsKey(AlpsJsonKeys.EXTENSION)) {
-            descriptor.extensions = JsonExtension.parse(jsonObject.get(AlpsJsonKeys.EXTENSION));
+        if (jsonObject.containsKey(AlpsConstants.EXTENSION)) {
+            descriptor.extensions = JsonExtension.parse(jsonObject.get(AlpsConstants.EXTENSION));
             
         } else {
             descriptor.extensions = Collections.emptySet();
@@ -276,34 +276,34 @@ final class JsonDescriptor implements Descriptor {
         
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
         
-        jsonDescriptor.add(AlpsJsonKeys.ID, descriptor.getId().toString());
+        jsonDescriptor.add(AlpsConstants.ID, descriptor.getId().toString());
         
         if (descriptor.getType() != null && !DescriptorType.SEMANTIC.equals(descriptor.getType())) {
-            jsonDescriptor.add(AlpsJsonKeys.TYPE, descriptor.getType().name().toLowerCase());
+            jsonDescriptor.add(AlpsConstants.TYPE, descriptor.getType().name().toLowerCase());
         }
         
-        descriptor.getHref().ifPresent(href -> jsonDescriptor.add(AlpsJsonKeys.HREF, href.toString()));
-        descriptor.getName().ifPresent(name -> jsonDescriptor.add(AlpsJsonKeys.NAME, name));
-        descriptor.getReturnType().ifPresent(rt -> jsonDescriptor.add(AlpsJsonKeys.RETURN_TYPE, rt.toString()));
+        descriptor.getHref().ifPresent(href -> jsonDescriptor.add(AlpsConstants.HREF, href.toString()));
+        descriptor.getName().ifPresent(name -> jsonDescriptor.add(AlpsConstants.NAME, name));
+        descriptor.getReturnType().ifPresent(rt -> jsonDescriptor.add(AlpsConstants.RETURN_TYPE, rt.toString()));
 
         // documentation
         if (JsonDocument.isNotEmpty(descriptor.getDocumentation())) {
-            jsonDescriptor.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(descriptor.getDocumentation()));
+            jsonDescriptor.add(AlpsConstants.DOCUMENTATION, JsonDocumentation.toJson(descriptor.getDocumentation()));
         }
         
         // descriptors
         if (JsonDocument.isNotEmpty(descriptor.getDescriptors())) {
-            jsonDescriptor.add(AlpsJsonKeys.DESCRIPTOR, toJson(descriptor.getDescriptors()));
+            jsonDescriptor.add(AlpsConstants.DESCRIPTOR, toJson(descriptor.getDescriptors()));
         }
 
         // links
         if (JsonDocument.isNotEmpty(descriptor.getLinks())) {
-            jsonDescriptor.add(AlpsJsonKeys.LINK, JsonLink.toJson(descriptor.getLinks()));
+            jsonDescriptor.add(AlpsConstants.LINK, JsonLink.toJson(descriptor.getLinks()));
         }
 
         // extensions
         if (JsonDocument.isNotEmpty(descriptor.getExtensions())) {
-            jsonDescriptor.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
+            jsonDescriptor.add(AlpsConstants.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
         }
 
         return jsonDescriptor.build();

@@ -64,7 +64,7 @@ class AlpsXmlSuiteTest {
             
             assertNotNull(is);
             
-            document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
+            document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
         } catch (InvalidDocumentException e) {
             if (testCase.getExpectedError() != null) {
@@ -144,7 +144,7 @@ class AlpsXmlSuiteTest {
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
-            (new AlpsXmlWriter()).write("application/xml", document, outputStream);
+            (new XmlDocumentWriter()).write("application/xml", document, outputStream);
             
             final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
             output.normalizeDocument();

@@ -45,7 +45,7 @@ class AlpsJsonSuiteTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
-    void testCase(AlpsTestCase testCase) throws IOException {
+    void testCase(TestDescription testCase) throws IOException {
         
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
@@ -56,7 +56,7 @@ class AlpsJsonSuiteTest {
             
             assertNotNull(is);
             
-            document = (new AlpsJsonParser()).parse(URI.create("http://example.com"), "application/json", is);
+            document = (new JsonDocumentParser()).parse(URI.create("http://example.com"), "application/json", is);
             
         } catch (DocumentException e) {
             fail(e.getMessage(), e);
@@ -67,7 +67,7 @@ class AlpsJsonSuiteTest {
         compare(testCase, document);
     }
     
-    static final Stream<AlpsTestCase> testCaseMethodSource() throws IOException {
+    static final Stream<TestDescription> testCaseMethodSource() throws IOException {
         
         try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream("manifest.json")) {
             
@@ -79,11 +79,11 @@ class AlpsJsonSuiteTest {
             
             JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
             
-            return tests.stream().map(JsonObject.class::cast).map(AlpsTestCase::of);
+            return tests.stream().map(JsonObject.class::cast).map(TestDescription::of);
         }
     }
     
-    static final void compare(final AlpsTestCase testCase, final Document document) {
+    static final void compare(final TestDescription testCase, final Document document) {
 
         if (testCase.getExpected() == null) {
             return;

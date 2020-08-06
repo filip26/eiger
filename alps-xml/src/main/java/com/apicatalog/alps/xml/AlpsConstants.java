@@ -1,6 +1,6 @@
 package com.apicatalog.alps.xml;
 
-final class AlpsXmlKeys {
+final class AlpsConstants {
 
     public static final String DOCUMENT = "alps";
     
@@ -24,7 +24,7 @@ final class AlpsXmlKeys {
 
     public static final String MEDIA_TYPE = "format";
 
-    private AlpsXmlKeys() {
+    private AlpsConstants() {
         
     }
     

@@ -21,7 +21,7 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
-public final class TestDescription {
+final class TestDescription {
 
     private String id;
     private String name;

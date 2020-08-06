@@ -7,15 +7,15 @@ import java.io.Writer;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
-import com.apicatalog.alps.AlpsWriter;
+import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
 
-public class AlpsXmlWriter implements AlpsWriter {
+public class XmlDocumentWriter implements DocumentWriter {
 
     private final XMLOutputFactory factory;
     
-    public AlpsXmlWriter() {
+    public XmlDocumentWriter() {
         this.factory = XMLOutputFactory.newDefaultFactory();
         factory.setProperty("escapeCharacters", false);
     }

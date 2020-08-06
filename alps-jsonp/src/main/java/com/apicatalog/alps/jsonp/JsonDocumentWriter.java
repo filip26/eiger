@@ -22,11 +22,11 @@ import java.io.Writer;
 import javax.json.Json;
 import javax.json.JsonWriter;
 
-import com.apicatalog.alps.AlpsWriter;
+import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
 
-public final class AlpsJsonWriter implements AlpsWriter {
+public final class JsonDocumentWriter implements DocumentWriter {
 
     @Override
     public boolean canWrite(String mediaType) {

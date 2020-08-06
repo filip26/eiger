@@ -70,7 +70,7 @@ class JsonExtension implements Extension {
     private static final Extension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
         
         // id
-        if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
+        if (JsonUtils.isNotString(jsonObject.get(AlpsConstants.ID))) {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, "An extension must have valid 'id' property but was " + jsonObject);
         }
  
@@ -78,21 +78,21 @@ class JsonExtension implements Extension {
         
         try {
             
-            extension.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
+            extension.id = URI.create(jsonObject.getString(AlpsConstants.ID));
             
         } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsConstants.ID));
         }
 
         // href
-        if (jsonObject.containsKey(AlpsJsonKeys.HREF)) {
+        if (jsonObject.containsKey(AlpsConstants.HREF)) {
             extension.href = JsonUtils.getHref(jsonObject);
         }
         
         // value
-        if (jsonObject.containsKey(AlpsJsonKeys.VALUE)) {
+        if (jsonObject.containsKey(AlpsConstants.VALUE)) {
             
-            final JsonValue value = jsonObject.get(AlpsJsonKeys.VALUE);
+            final JsonValue value = jsonObject.get(AlpsConstants.VALUE);
             
             if (JsonUtils.isNotString(value)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION_VALUE, "An extension value must be represented as JSON string but was " + value);
@@ -121,10 +121,10 @@ class JsonExtension implements Extension {
         
         final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
 
-        jsonExt.add(AlpsJsonKeys.ID, extension.getId().toString());
+        jsonExt.add(AlpsConstants.ID, extension.getId().toString());
 
-        extension.getHref().ifPresent(href -> jsonExt.add(AlpsJsonKeys.HREF, href.toString()));
-        extension.getValue().ifPresent(value -> jsonExt.add(AlpsJsonKeys.VALUE, value));
+        extension.getHref().ifPresent(href -> jsonExt.add(AlpsConstants.HREF, href.toString()));
+        extension.getValue().ifPresent(value -> jsonExt.add(AlpsConstants.VALUE, value));
         
         return jsonExt.build();
     }

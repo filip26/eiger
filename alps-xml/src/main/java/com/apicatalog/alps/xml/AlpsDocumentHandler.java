@@ -62,7 +62,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
         
         try { 
         
-            if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+            if (AlpsConstants.DOCUMENT.equals(elementName)) {
                 
                 if (State.INIT.equals(state)) {
                     stack.push(XmlDocument.create(attributes));
@@ -75,17 +75,17 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 return;
             }
             
-            if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
                 
                 state = State.DOCUMENTATION;
                 XmlDocumentation doc = XmlDocumentation.create(stack, -1, attributes);//FIXME
                 stack.peek().addDocumentation(doc);
                 stack.push(doc);
                 
-            } else if (AlpsXmlKeys.DESCRIPTOR.equals(elementName)) {
+            } else if (AlpsConstants.DESCRIPTOR.equals(elementName)) {
                 stack.push(stack.peek().addDescriptor(stack, attributes));
     
-            } else if (AlpsXmlKeys.LINK.equals(elementName)) {
+            } else if (AlpsConstants.LINK.equals(elementName)) {
                 XmlLink link = XmlLink.create(stack, -1, attributes);   //FIXME
                 stack.peek().addLink(link);
                 stack.push(link);
@@ -112,7 +112,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
 
         if (State.DOCUMENT.equals(state)) {
         
-            if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+            if (AlpsConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
 
             } else {
@@ -122,7 +122,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             
         } else if (State.DOCUMENTATION.equals(state)) {
             
-            if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
+            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
                 state = State.DOCUMENT;
                 stack.pop();
                 

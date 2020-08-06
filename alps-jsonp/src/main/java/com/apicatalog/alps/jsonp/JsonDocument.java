@@ -114,46 +114,46 @@ final class JsonDocument implements Document {
         document.baseUri = baseUri;
 
         // version
-        if (alpsObject.containsKey(AlpsJsonKeys.VERSION)) {
+        if (alpsObject.containsKey(AlpsConstants.VERSION)) {
             
-            final JsonValue alpsVersion = alpsObject.get(AlpsJsonKeys.VERSION);
+            final JsonValue alpsVersion = alpsObject.get(AlpsConstants.VERSION);
             
             if (JsonUtils.isString(alpsVersion) 
-                    && AlpsJsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
+                    && AlpsConstants.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
                 document.version = DocumentVersion.VERSION_1_0;
             }
         }
         
         // documentation
-        if (alpsObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
-            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsJsonKeys.DOCUMENTATION));
+        if (alpsObject.containsKey(AlpsConstants.DOCUMENTATION)) {
+            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsConstants.DOCUMENTATION));
             
         } else {
             document.documentation = Collections.emptySet();
         }
         
         // links
-        if (alpsObject.containsKey(AlpsJsonKeys.LINK)) {
-            document.links = JsonLink.parse(alpsObject.get(AlpsJsonKeys.LINK));
+        if (alpsObject.containsKey(AlpsConstants.LINK)) {
+            document.links = JsonLink.parse(alpsObject.get(AlpsConstants.LINK));
             
         } else {
             document.links = Collections.emptySet();
         }
         
         // descriptors
-        if (alpsObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
+        if (alpsObject.containsKey(AlpsConstants.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
-            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsJsonKeys.DESCRIPTOR));
+            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsConstants.DESCRIPTOR));
             
         } else {
             document.descriptors = Collections.emptyMap();
         }
         
         // extensions
-        if (alpsObject.containsKey(AlpsJsonKeys.EXTENSION)) {
-            document.extensions = JsonExtension.parse(alpsObject.get(AlpsJsonKeys.EXTENSION));
+        if (alpsObject.containsKey(AlpsConstants.EXTENSION)) {
+            document.extensions = JsonExtension.parse(alpsObject.get(AlpsConstants.EXTENSION));
             
         } else {
             document.extensions = Collections.emptySet();
@@ -167,29 +167,29 @@ final class JsonDocument implements Document {
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
         // version
-        alps.add(AlpsJsonKeys.VERSION, toJson(document.getVersion()));
+        alps.add(AlpsConstants.VERSION, toJson(document.getVersion()));
         
         // documentation
         if (isNotEmpty(document.getDocumentation())) {
-            alps.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
+            alps.add(AlpsConstants.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
         }
         
         // links
         if (isNotEmpty(document.getLinks())) {
-            alps.add(AlpsJsonKeys.LINK, JsonLink.toJson(document.getLinks()));            
+            alps.add(AlpsConstants.LINK, JsonLink.toJson(document.getLinks()));            
         }
         
         // descriptors
         if (isNotEmpty(document.getDescriptors())) {
-            alps.add(AlpsJsonKeys.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
+            alps.add(AlpsConstants.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
         }
         
         // extensions
         if (isNotEmpty(document.getExtensions())) {
-            alps.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
+            alps.add(AlpsConstants.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
         }
 
-        return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
+        return Json.createObjectBuilder().add(AlpsConstants.ROOT, alps).build();
     }
     
     private static final JsonString toJson(DocumentVersion version) {

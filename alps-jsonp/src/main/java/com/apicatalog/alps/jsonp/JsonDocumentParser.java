@@ -25,13 +25,13 @@ import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
-import com.apicatalog.alps.AlpsParser;
+import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-public final class AlpsJsonParser implements AlpsParser {
+public final class JsonDocumentParser implements DocumentParser {
 
     @Override
     public boolean canParse(final String mediaType) {
@@ -83,14 +83,14 @@ public final class AlpsJsonParser implements AlpsParser {
         
         final JsonObject rootObject = parser.getObject();
         
-        if (!rootObject.containsKey(AlpsJsonKeys.ROOT)) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsJsonKeys.ROOT + "' is not present");
+        if (!rootObject.containsKey(AlpsConstants.ROOT)) {
+            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' is not present");
         }
         
-        final JsonValue alpsObject = rootObject.get(AlpsJsonKeys.ROOT);
+        final JsonValue alpsObject = rootObject.get(AlpsConstants.ROOT);
         
         if (JsonUtils.isNotObject(alpsObject)) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
+            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' does not contain JSON object");
         }
             
         return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
