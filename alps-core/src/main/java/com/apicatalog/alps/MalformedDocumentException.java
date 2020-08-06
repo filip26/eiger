@@ -15,7 +15,7 @@
  */
 package com.apicatalog.alps;
 
-public final class MalformedDocumentException extends Exception {
+public final class MalformedDocumentException extends DocumentException {
     
     private static final long serialVersionUID = -4042494993712747461L;
 

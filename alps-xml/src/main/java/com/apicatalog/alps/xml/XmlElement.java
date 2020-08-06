@@ -4,7 +4,7 @@ import java.util.Deque;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.DocumentException;
 
 interface XmlElement {
 
@@ -18,7 +18,7 @@ interface XmlElement {
 
     void addLink(XmlLink link);
 
-    XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException;
+    XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException;
 
     void startElement(String elementName, Attributes attributes);
 

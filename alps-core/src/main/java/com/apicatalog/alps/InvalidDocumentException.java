@@ -15,27 +15,31 @@
  */
 package com.apicatalog.alps;
 
-public final class InvalidDocumentException extends Exception {
+public final class InvalidDocumentException extends DocumentException {
     
     private static final long serialVersionUID = -7523514970503251586L;
 
-    private final AlpsErrorCode code;
+    private final DocumentError code;
     
     private final String path;
-    
-    public InvalidDocumentException(AlpsErrorCode code, String path, final String message) {
+
+    public InvalidDocumentException(DocumentError code, final String message) {
+        this(code, null, message);
+    }
+
+    public InvalidDocumentException(DocumentError code, String path, final String message) {
         super(message);
         this.code = code;
         this.path = path;
     }
     
-    public InvalidDocumentException(AlpsErrorCode code, String path, final Throwable cause) {
+    public InvalidDocumentException(DocumentError code, String path, final Throwable cause) {
         super(cause);
         this.code = code;
         this.path = path;
     }
 
-    public AlpsErrorCode getCode() {
+    public DocumentError getCode() {
         return code;
     }
     

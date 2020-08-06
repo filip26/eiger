@@ -14,8 +14,8 @@ import javax.xml.stream.XMLStreamWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
+import com.apicatalog.alps.DocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -122,7 +122,7 @@ final class XmlDocument implements AlpsDocument, XmlElement {
     }
 
     @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws AlpsParserException {
+    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
         XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
         descriptors.add(dsc);
         return dsc;

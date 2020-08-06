@@ -38,8 +38,8 @@ import javax.json.stream.JsonParser;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
+import com.apicatalog.alps.DocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 class AlpsJsonSuiteTest {
@@ -59,7 +59,7 @@ class AlpsJsonSuiteTest {
             
             document = (new AlpsJsonParser()).parse(URI.create("http://example.com"), "application/json", is);
             
-        } catch (AlpsParserException e) {
+        } catch (DocumentException e) {
             fail(e.getMessage(), e);
         }
         

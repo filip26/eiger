@@ -22,8 +22,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.apicatalog.alps.AlpsErrorCode;
-import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.DocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 final class AlpsDocumentHandler extends DefaultHandler {
@@ -95,7 +94,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 //TODO
     
             }
-        } catch (AlpsParserException e) {
+        } catch (DocumentException e) {
             throw new SAXException(e);
         }
     }
@@ -113,23 +112,14 @@ final class AlpsDocumentHandler extends DefaultHandler {
 
         if (State.DOCUMENT.equals(state)) {
         
-            try {
-                
-                if (!elementName.equals(stack.peek().getElementName())) {
-                    throw new AlpsParserException(AlpsErrorCode.MALFORMED_DOCUMENT);
-                }
-        
-                if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
-                    state = State.DONE;
+            if (AlpsXmlKeys.DOCUMENT.equals(elementName)) {
+                state = State.DONE;
 
-                } else {
-                    stack.pop();            
-                }
-                
-            } catch (AlpsParserException e) {
-                throw new SAXException(e);
+            } else {
+                stack.pop();            
             }
-        
+                
+            
         } else if (State.DOCUMENTATION.equals(state)) {
             
             if (AlpsXmlKeys.DOCUMENTATION.equals(elementName)) {
@@ -152,14 +142,14 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
     }
     
-    public AlpsDocument getDocument() throws AlpsParserException {
+    public AlpsDocument getDocument() throws DocumentException {
         
         if (State.INIT.equals(state)) {
-            throw new AlpsParserException(AlpsErrorCode.INVALID_DOCUMENT);
+            throw new DocumentException("The document does not contain ALPS declaration.");
         }
         
         if (!State.DONE.equals(state))  {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED_DOCUMENT);
+            throw new DocumentException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
         return (AlpsDocument)stack.pop();

@@ -27,9 +27,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.apicatalog.alps.AlpsErrorCode;
 import com.apicatalog.alps.AlpsParser;
-import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.DocumentException;
+import com.apicatalog.alps.MalformedDocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 public class AlpsXmlParser implements AlpsParser {
@@ -51,7 +51,7 @@ public class AlpsXmlParser implements AlpsParser {
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException {
+    public AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException {
 
         // TODO check media and arguments
 
@@ -64,24 +64,26 @@ public class AlpsXmlParser implements AlpsParser {
           
             // TODO
             return handler.getDocument();
+            
         } catch (SAXParseException e) {
-            throw new AlpsParserException(e.getLineNumber(), e.getColumnNumber(), e.getMessage());
+            throw new MalformedDocumentException(e.getLineNumber(), e.getColumnNumber(), e.getMessage());
 
-        } catch (ParserConfigurationException e) {            
-            throw new AlpsParserException(AlpsErrorCode.PARSER_ERROR, e);
+        } catch (ParserConfigurationException e) {     
+            
+            throw new DocumentException(e);
             
         } catch (SAXException e) {
             
-            if (e.getCause() instanceof AlpsParserException) {
-                throw (AlpsParserException)e.getCause();
+            if (e.getCause() instanceof DocumentException) {
+                throw (DocumentException)e.getCause();
             }
                         
-            throw new AlpsParserException(AlpsErrorCode.PARSER_ERROR, e);
+            throw new DocumentException(e);
         }        
     }
 
     @Override
-    public AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException {
+    public AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws DocumentException {
         // TODO Auto-generated method stub
         return null;
     }    

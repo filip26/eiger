@@ -30,8 +30,9 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsErrorCode;
-import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.DocumentError;
+import com.apicatalog.alps.InvalidDocumentException;
+import com.apicatalog.alps.InvalidDocumentException;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
 import com.apicatalog.alps.dom.element.AlpsDescriptorType;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
@@ -115,11 +116,11 @@ final class JsonDescriptor implements AlpsDescriptor {
         return Optional.ofNullable(parent);
     }
 
-    public static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonValue jsonValue) throws AlpsParserException {
+    public static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonValue jsonValue) throws InvalidDocumentException {
         return parse(index, null, jsonValue);
     }
     
-    private static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonValue jsonValue) throws AlpsParserException {
+    private static Set<AlpsDescriptor> parse(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonValue jsonValue) throws InvalidDocumentException {
         
         if (JsonUtils.isObject(jsonValue)) {
 
@@ -135,41 +136,41 @@ final class JsonDescriptor implements AlpsDescriptor {
                     descriptors.add(parseObject(index, parent, item.asJsonObject()));
                     
                 } else {
-                    throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'descriptor' property must be an object or an array of objects but was " + item.getValueType());
+                    throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'descriptor' property must be an object or an array of objects but was " + item.getValueType());
                 }
             }
             
             return descriptors;
             
         } else {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'descriptor' property must be an object or an array of objects but was " + jsonValue.getValueType());
+            throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'descriptor' property must be an object or an array of objects but was " + jsonValue.getValueType());
         }
     }
     
-    private static AlpsDescriptor parseObject(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonObject jsonObject) throws AlpsParserException {
+    private static AlpsDescriptor parseObject(Map<URI, AlpsDescriptor> index, JsonDescriptor parent, JsonObject jsonObject) throws InvalidDocumentException {
         
         final JsonDescriptor descriptor = new JsonDescriptor();
         descriptor.parent = parent;
 
         // id
         if (!jsonObject.containsKey(AlpsJsonKeys.ID) || JsonUtils.isNull(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new AlpsParserException(AlpsErrorCode.ID_REQUIRED, "The 'id' property value must be valid URI represented as JSON string");            
+            throw new InvalidDocumentException(DocumentError.ID_REQUIRED, "The 'id' property value must be valid URI represented as JSON string");            
         }
         
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(AlpsJsonKeys.ID));
         }
         
         try {
             descriptor.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
                     
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
         
         // check id conflict
         if (index.containsKey(descriptor.id)) {
-            throw new AlpsParserException(AlpsErrorCode.DUPLICATED_ID, "Duplicate 'id' property value " + descriptor.id);
+            throw new InvalidDocumentException(DocumentError.DUPLICATED_ID, "Duplicate 'id' property value " + descriptor.id);
         }
         
         index.put(descriptor.id, descriptor);
@@ -179,7 +180,7 @@ final class JsonDescriptor implements AlpsDescriptor {
             final JsonValue name = jsonObject.get(AlpsJsonKeys.NAME);
             
             if (JsonUtils.isNotString(name)) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'name' property value must be JSON string but was " + name);
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'name' property value must be JSON string but was " + name);
             }
             
             descriptor.name = JsonUtils.getString(name);
@@ -191,14 +192,14 @@ final class JsonDescriptor implements AlpsDescriptor {
             final JsonValue type = jsonObject.get(AlpsJsonKeys.TYPE);
             
             if (JsonUtils.isNotString(type)) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'type' property value must be JSON string but was " + type);
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'type' property value must be JSON string but was " + type);
             }
             
             try {
                 descriptor.type = AlpsDescriptorType.valueOf(JsonUtils.getString(type).toUpperCase());
                 
             } catch (IllegalArgumentException e) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'type' property value must be one of " + (Arrays.stream(AlpsDescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + type);
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'type' property value must be one of " + (Arrays.stream(AlpsDescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + type);
             }
         }
 
@@ -229,14 +230,14 @@ final class JsonDescriptor implements AlpsDescriptor {
             final JsonValue returnType = jsonObject.get(AlpsJsonKeys.RETURN_TYPE);
             
             if (JsonUtils.isNotString(returnType)) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
             }
 
             try {
                 descriptor.returnType = URI.create(JsonUtils.getString(returnType));
                 
             } catch (IllegalArgumentException e) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
             }            
         }
         

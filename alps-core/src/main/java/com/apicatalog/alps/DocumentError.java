@@ -1,6 +1,6 @@
 package com.apicatalog.alps;
 
-public enum AlpsErrorCode {
+public enum DocumentError {
 
     DUPLICATED_ID,
     
@@ -11,9 +11,11 @@ public enum AlpsErrorCode {
     MALFORMED_DOCUMENT,
 
     MALFORMED_URI,
-    
+
+    @Deprecated
     UNSUPPORTED_MEDIA_TYPE,
     
+    @Deprecated
     PARSER_ERROR,
 
     ID_REQUIRED,

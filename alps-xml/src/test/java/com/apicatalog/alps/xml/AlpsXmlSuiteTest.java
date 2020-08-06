@@ -45,8 +45,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.Document;
 
-import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
+import com.apicatalog.alps.DocumentException;
+import com.apicatalog.alps.InvalidDocumentException;
+import com.apicatalog.alps.MalformedDocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 
 class AlpsXmlSuiteTest {
@@ -66,17 +68,27 @@ class AlpsXmlSuiteTest {
             
             document = (new AlpsXmlParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
-        } catch (AlpsParserException e) {
-            
+        } catch (InvalidDocumentException e) {
             if (testCase.getExpectedError() != null) {
                 
                 assertEquals(testCase.getExpectedError().getCode(), e.getCode());
                 
                 if (testCase.getExpectedError().getPath() != null) {
                     
-                    assertEquals(testCase.getExpectedError().getPath(), e.getPath());
+                    assertEquals(testCase.getExpectedError().getPath(), e.getPath());                    
+                }
+                
+                return;
                     
-                } else if (testCase.getExpectedError().getLine() != -1) { 
+            } else {                
+                fail(e.getMessage(), e);                
+            }
+            
+        } catch (MalformedDocumentException e) {
+            
+            if (testCase.getExpectedError() != null) {
+                
+                if (testCase.getExpectedError().getLine() != -1) { 
                     
                     assertEquals(testCase.getExpectedError().getLine(), e.getLineNumber());
                     
@@ -90,6 +102,10 @@ class AlpsXmlSuiteTest {
             } else {                
                 fail(e.getMessage(), e);                
             }
+
+        } catch (DocumentException e) {
+            
+            fail(e.getMessage(), e);                
         }
         
         assertNotNull(document);

@@ -30,8 +30,8 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsParserException;
 import com.apicatalog.alps.AlpsWriterException;
+import com.apicatalog.alps.InvalidDocumentException;
 import com.apicatalog.alps.dom.AlpsDocument;
 import com.apicatalog.alps.dom.AlpsVersion;
 import com.apicatalog.alps.dom.element.AlpsDescriptor;
@@ -109,7 +109,7 @@ final class JsonDocument implements AlpsDocument {
         return baseUri;
     }
     
-    public static final AlpsDocument parse(final URI baseUri, final JsonObject alpsObject) throws AlpsParserException {
+    public static final AlpsDocument parse(final URI baseUri, final JsonObject alpsObject) throws InvalidDocumentException {
         
         JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;

@@ -26,8 +26,8 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsErrorCode;
-import com.apicatalog.alps.AlpsParserException;
+import com.apicatalog.alps.DocumentError;
+import com.apicatalog.alps.InvalidDocumentException;
 import com.apicatalog.alps.dom.element.AlpsExtension;
 
 class JsonExtension implements AlpsExtension {
@@ -51,7 +51,7 @@ class JsonExtension implements AlpsExtension {
         return Optional.ofNullable(value);
     }
 
-    protected static final Set<AlpsExtension> parse(final JsonValue jsonValue) throws AlpsParserException {
+    protected static final Set<AlpsExtension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
         
         final Set<AlpsExtension> extension = new HashSet<>();
         
@@ -61,17 +61,17 @@ class JsonExtension implements AlpsExtension {
                 extension.add(parseObject(item.asJsonObject()));
                 
             } else {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "Expected JSON string or object but was " + item.getValueType());
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "Expected JSON string or object but was " + item.getValueType());
             }
         }        
         return extension;
     }
     
-    private static final AlpsExtension parseObject(final JsonObject jsonObject) throws AlpsParserException {
+    private static final AlpsExtension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
         
         // id
         if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED, "An extension must have valid 'id' property but was " + jsonObject);
+            throw new InvalidDocumentException(DocumentError.MALFORMED, "An extension must have valid 'id' property but was " + jsonObject);
         }
  
         final JsonExtension extension = new JsonExtension();
@@ -81,7 +81,7 @@ class JsonExtension implements AlpsExtension {
             extension.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException(AlpsErrorCode.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
         }
 
         // href
@@ -95,7 +95,7 @@ class JsonExtension implements AlpsExtension {
             final JsonValue value = jsonObject.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(value)) {
-                throw new AlpsParserException(AlpsErrorCode.MALFORMED, "An extension value must be represented as JSON string but was " + value);
+                throw new InvalidDocumentException(DocumentError.MALFORMED, "An extension value must be represented as JSON string but was " + value);
             }
             
             extension.value = JsonUtils.getString(value);

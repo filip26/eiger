@@ -6,11 +6,11 @@ import java.util.Arrays;
 
 import javax.json.JsonObject;
 
-import com.apicatalog.alps.AlpsErrorCode;
+import com.apicatalog.alps.DocumentError;
 
 class ExpectedError {
 
-    private AlpsErrorCode code;
+    private DocumentError code;
     private String path;
     
     private int line;
@@ -23,10 +23,10 @@ class ExpectedError {
         if (jsonObject.containsKey("code")) {
   
             try {
-                error.code = AlpsErrorCode.valueOf(jsonObject.getString("code"));
+                error.code = DocumentError.valueOf(jsonObject.getString("code"));
       
             } catch (IllegalArgumentException e) {
-                fail("Invalid expectedError value '" + jsonObject.getString("code") + ", must be one of " + Arrays.toString(AlpsErrorCode.values()));
+                fail("Invalid expectedError value '" + jsonObject.getString("code") + ", must be one of " + Arrays.toString(DocumentError.values()));
             }
         }
       
@@ -37,7 +37,7 @@ class ExpectedError {
         return error;
     }
     
-    public AlpsErrorCode getCode() {
+    public DocumentError getCode() {
         return code;
     }
     

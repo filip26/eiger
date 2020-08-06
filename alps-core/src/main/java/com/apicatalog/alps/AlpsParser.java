@@ -31,8 +31,8 @@ public interface AlpsParser {
      */
     boolean canParse(String mediaType);
     
-    AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, AlpsParserException;
+    AlpsDocument parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException;
     
-    AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, AlpsParserException;
+    AlpsDocument parse(URI baseUri, String mediaType, Reader reader) throws IOException, DocumentException;
 
 }
