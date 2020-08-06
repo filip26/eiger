@@ -19,7 +19,10 @@
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Missing descriptor id",
-            "input" : "nt001-in.json" 
+            "input" : "nt001-in.json",
+            "expected": {
+            	"code": "INVALID_ID"
+            } 
         }        
     ]
 }

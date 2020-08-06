@@ -27,8 +27,6 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import com.apicatalog.alps.DocumentError;
-import com.apicatalog.alps.DocumentException;
-import com.apicatalog.alps.InvalidDocumentException;
 import com.apicatalog.alps.InvalidDocumentException;
 import com.apicatalog.alps.dom.element.AlpsDocumentation;
 
@@ -66,7 +64,7 @@ final class JsonDocumentation implements AlpsDocumentation {
                 docs.add(parseObject(item.asJsonObject()));
                 
             } else {
-                throw new InvalidDocumentException(DocumentError.MALFORMED, "Expected JSON string or object but was " + item.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_DOC, "Expected JSON string or object but was " + item.getValueType());
             }
         }
         
@@ -90,7 +88,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue content = value.get(AlpsJsonKeys.VALUE);
             
             if (JsonUtils.isNotString(content)) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED, "doc.value property must be string but was " + content.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_DOC_VALUE, "doc.value property must be string but was " + content.getValueType());
             }
             doc.content = JsonUtils.getString(content);
             
@@ -99,7 +97,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue href = value.get(AlpsJsonKeys.HREF);
             
             if (JsonUtils.isNotString(href)) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED, "'href' property must have string value but was " + href.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_HREF, "'href' property must have string value but was " + href.getValueType());
             }
             
             try {
@@ -111,7 +109,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             }
             
         } else {
-            throw new InvalidDocumentException(DocumentError.HREF_REQUIRED, "doc object must contain href of value property");
+            throw new InvalidDocumentException(DocumentError.MISSING_HREF, "doc object must contain href of value property");
         }
         
         if (value.containsKey(AlpsJsonKeys.FORMAT)) {
@@ -119,7 +117,7 @@ final class JsonDocumentation implements AlpsDocumentation {
             final JsonValue format = value.get(AlpsJsonKeys.FORMAT);
             
             if (JsonUtils.isNotString(format)) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED, "doc.format property must be string but was " + format.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.format property must be string but was " + format.getValueType());
             }
 
             doc.mediaType = JsonUtils.getString(format);

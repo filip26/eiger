@@ -4,26 +4,42 @@ public enum DocumentError {
 
     DUPLICATED_ID,
     
-    /** provided document is not ALPS document, does not contain 'alps' root */
-    INVALID_DOCUMENT,
-
-    /** ALPS document is not well-formed */
-    MALFORMED_DOCUMENT,
-
     MALFORMED_URI,
 
-    @Deprecated
-    UNSUPPORTED_MEDIA_TYPE,
+    MISSING_ROOT,
     
-    @Deprecated
-    PARSER_ERROR,
+    MISSING_ID,
+ 
+    MISSING_HREF,
+ 
+    MISSING_REL,
 
-    ID_REQUIRED,
- 
-    HREF_REQUIRED,
- 
-    REL_REQUIRED,
+    INVALID_ROOT,
+
+    INVALID_ID,
     
-    @Deprecated
-    MALFORMED
+    INVALID_DESCRIPTOR,
+    
+    INVALID_NAME,
+    
+    INVALID_TYPE,
+    
+    INVALID_RT,
+    
+    INVALID_DOC,
+    
+    INVALID_DOC_VALUE,
+    
+    INVALID_HREF,
+    
+    INVALID_DOC_MEDIATYPE,
+    
+    INVALID_EXTENSION,
+    
+    INVALID_EXTENSION_VALUE,
+    
+    INVALID_LINK,
+    
+    INVALID_REL,
+    
 }

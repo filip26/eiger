@@ -29,7 +29,7 @@
             "input" : "nt001-in.xml",
             "expected" : 
             		{ 
-						"code": "ID_REQUIRED",
+						"code": "MISSING_ID",
             			"path" : "/alps/descriptor[position()=1]"
             		}
         },
@@ -62,7 +62,6 @@
             "input" : "nt004-in.xml",
             "expected" : 
             		{
-            			"code": "PARSER_ERROR",
 			            "line": 2
             		}
         },
@@ -73,7 +72,6 @@
             "input" : "nt005-in.xml",
             "expected" :
             		{
-            			"code": "PARSER_ERROR",
 			            "line": 3
             		}            
         }        

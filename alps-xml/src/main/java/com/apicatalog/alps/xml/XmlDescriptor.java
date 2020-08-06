@@ -45,7 +45,7 @@ public class XmlDescriptor implements AlpsDescriptor, XmlElement {
         String id = attrs.getValue(AlpsXmlKeys.ID);
         
         if (id == null || id.isBlank()) {            
-            throw new InvalidDocumentException(DocumentError.ID_REQUIRED, XPathUtil.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index));
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsXmlKeys.DESCRIPTOR, index));
         }
         
         XmlDescriptor descriptor = new XmlDescriptor(index);

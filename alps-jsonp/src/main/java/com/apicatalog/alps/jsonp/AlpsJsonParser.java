@@ -72,25 +72,25 @@ public final class AlpsJsonParser implements AlpsParser {
     private static final AlpsDocument parse(URI baseUri, JsonParser parser)  throws DocumentException {
         
         if (!parser.hasNext()) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED, "Expected JSON object but was an empty input");
+            throw new DocumentException("Expected JSON object but was an empty input");
         }
             
         final Event event = parser.next();
         
         if (!Event.START_OBJECT.equals(event)) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED, "Expected JSON object but was " + event);
+            throw new DocumentException("Expected JSON object but was " + event);
         }
         
         final JsonObject rootObject = parser.getObject();
         
         if (!rootObject.containsKey(AlpsJsonKeys.ROOT)) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED, "Property '" + AlpsJsonKeys.ROOT + "' is not present");
+            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsJsonKeys.ROOT + "' is not present");
         }
         
         final JsonValue alpsObject = rootObject.get(AlpsJsonKeys.ROOT);
         
         if (JsonUtils.isNotObject(alpsObject)) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED, "Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
+            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsJsonKeys.ROOT + "' does not contain JSON object");
         }
             
         return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
