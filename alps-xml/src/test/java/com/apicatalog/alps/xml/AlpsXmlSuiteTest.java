@@ -15,7 +15,6 @@
  */
 package com.apicatalog.alps.xml;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -46,8 +45,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
-import com.apicatalog.alps.error.InvalidDocumentException;
-import com.apicatalog.alps.error.MalformedDocumentException;
 
 class AlpsXmlSuiteTest {
 
@@ -66,42 +63,11 @@ class AlpsXmlSuiteTest {
             
             document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), "application/xml", is);
             
-        } catch (InvalidDocumentException e) {
-            if (testCase.getExpectedError() != null) {
-                
-                assertEquals(testCase.getExpectedError().getCode(), e.getCode());
-                
-                if (testCase.getExpectedError().getPath() != null) {
-                    
-                    assertEquals(testCase.getExpectedError().getPath(), e.getPath());                    
-                }
-                
-                return;
-                    
-            } else {                
-                fail(e.getMessage(), e);                
-            }
-            
-        } catch (MalformedDocumentException e) {
-            
-            if (testCase.getExpectedError() != null) {
-                
-                if (testCase.getExpectedError().getLine() != -1) { 
-                    
-                    assertEquals(testCase.getExpectedError().getLine(), e.getLineNumber());
-                    
-                } else if (testCase.getExpectedError().getColumn() != -1) { 
-                    
-                    assertEquals(testCase.getExpectedError().getColumn(), e.getColumnNumber());                    
-                }
-                
-                return;
-                    
-            } else {                
-                fail(e.getMessage(), e);                
-            }
-
         } catch (DocumentException e) {
+
+            if (testCase.isNegativeTest()) {
+                return;
+            }
             
             fail(e.getMessage(), e);                
         }

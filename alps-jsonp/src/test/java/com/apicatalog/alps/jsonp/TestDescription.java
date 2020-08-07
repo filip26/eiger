@@ -15,7 +15,11 @@
  */
 package com.apicatalog.alps.jsonp;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.json.JsonObject;
+import javax.json.JsonString;
 
 final class TestDescription {
 
@@ -24,14 +28,18 @@ final class TestDescription {
     private String input;
     private String expected;
     
+    private Set<String> type;
+    
     public static final TestDescription of(JsonObject jsonObject) {
         final TestDescription testCase = new TestDescription();
         
         testCase.id = jsonObject.getString("@id");
+        testCase.type = jsonObject.getJsonArray("@type").stream().map(JsonString.class::cast).map(JsonString::getString).collect(Collectors.toSet());
+
         testCase.name = jsonObject.getString("name");
         testCase.input = jsonObject.getString("input");
         testCase.expected = jsonObject.getString("expected", null);
-        
+            
         return testCase;
     }
     
@@ -54,6 +62,14 @@ final class TestDescription {
     @Override
     public String toString() {
         return id + ": " + name;
+    }
+
+    public boolean isType(final String type) {
+        return type != null && type.contains(type);
+    }
+    
+    public boolean isNegativeTest() {
+        return isType("#NegativeEvaluationTest");
     }
     
 }

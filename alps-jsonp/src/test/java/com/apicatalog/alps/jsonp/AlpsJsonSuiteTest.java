@@ -59,6 +59,11 @@ class AlpsJsonSuiteTest {
             document = (new JsonDocumentParser()).parse(URI.create("http://example.com"), "application/json", is);
             
         } catch (DocumentException e) {
+            
+            if (testCase.isNegativeTest()) {
+                return;
+            }
+            
             fail(e.getMessage(), e);
         }
         

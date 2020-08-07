@@ -2,27 +2,24 @@
     "description": "ALPS test suite to test the ability of ALPS parser to process ALSP+JSON",
     "sequence": [    
         {
-           "@id"    : "#01",
+           "@id"    : "#t001",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Search profile",
-            "input" : "test-1-in.json",
-            "expected" : "test-1-out.json" 
+            "input" : "t001-in.json",
+            "expected" : "t001-out.json" 
         },
         {
-           "@id"    : "#02",
+           "@id"    : "#t002",
            "@type"  : ["#PositiveEvaluationTest"],
             "name"  : "Compacted contact profile",
-            "input" : "test-2-in.json", 
-			"expected" : "test-2-out.json"
+            "input" : "t002-in.json", 
+			"expected" : "t002-out.json"
         },
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
             "name"  : "Missing descriptor id",
-            "input" : "nt001-in.json",
-            "expected": {
-            	"code": "INVALID_ID"
-            } 
+            "input" : "nt001-in.json"
         }        
     ]
 }
