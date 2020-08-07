@@ -1,0 +1,24 @@
+<alps>
+  <link rel="self" href="http://alps.io/profiles/useraccount" /> <1>
+
+  <!-- data elements --> <2>
+  <descriptor id="user" type="semantic" />
+  <descriptor id="accessCode" type="semantic" />
+  <descriptor id="givenName" type="semantic" />
+  <descriptor id="familyName" type="semantic" />
+  <descriptor id="email" type="semantic" />
+  <descriptor id="telephone" type="semantic" />
+
+  <!-- transitions --> <3>
+  <descriptor id="list" type="safe" /> <4>
+  <descriptor id="detail" type="safe" /> <5>
+  <descriptor id="login-link" type="safe" name="login" /> <6>
+  <descriptor id="login-form" type="unsafe" name="login" /> <7>
+  <descriptor id="create-link" type="safe" name="create"/> <7>
+  <descriptor id="create-form" type="unsafe" "name="create/> <8>
+  <descriptor id="update-link" type="safe" name="update"/> <9>
+  <descriptor id="update-form" type="idempotent" name="update" /> <10>
+  <descriptor id="remove-link" type="safe" name="remove" /> <11>
+  <descriptor id="remove-form" type="idempotent" name="remove" /> <12>
+
+</alps>
