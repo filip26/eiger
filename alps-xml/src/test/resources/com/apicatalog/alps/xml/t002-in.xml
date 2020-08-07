@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<alps version="1.0">
+ <doc format="text">A contact list.</doc>
+ <link rel="help" href="http://example.org/help/contacts.html" />
+
+ <!-- a hypermedia control for returning contacts -->
+ <descriptor id="collection" type="safe" rt="contact">
+   <doc>
+     A simple link/form for getting a list of contacts.
+   </doc>
+   <descriptor id="nameSearch" type="semantic">
+     <doc>Input for a search form.</doc>
+   </descriptor>
+ </descriptor>
+
+ <!--  a contact: one or more of these may be returned -->
+  <descriptor id="contact" type="semantic">
+    <descriptor id="item" type="safe">
+      <doc>A link to an individual contact.</doc>
+    </descriptor>
+    <descriptor id="fullName" type="semantic" />
+    <descriptor id="email"    type="semantic" />
+    <descriptor id="phone"    type="semantic" />
+  </descriptor>
+</alps>

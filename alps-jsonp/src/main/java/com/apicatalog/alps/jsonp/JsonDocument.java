@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
@@ -15,40 +30,39 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsParserException;
-import com.apicatalog.alps.AlpsWriterException;
-import com.apicatalog.alps.dom.AlpsDocument;
-import com.apicatalog.alps.dom.AlpsVersion;
-import com.apicatalog.alps.dom.element.AlpsDescriptor;
-import com.apicatalog.alps.dom.element.AlpsDocumentation;
-import com.apicatalog.alps.dom.element.AlpsExtension;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonDocument implements AlpsDocument {
+final class JsonDocument implements Document {
 
-    private AlpsVersion version;
+    private DocumentVersion version;
     
     private URI baseUri;
     
-    private Set<AlpsDocumentation> documentation;
+    private Set<Documentation> documentation;
     
-    private Set<AlpsLink> links;
+    private Set<Link> links;
     
-    private Set<AlpsExtension> extensions;
+    private Set<Extension> extensions;
     
-    private Map<URI, AlpsDescriptor> descriptors;
+    private Map<URI, Descriptor> descriptors;
     
     public JsonDocument() {
-        this.version = AlpsVersion.VERSION_1_0;
+        this.version = DocumentVersion.VERSION_1_0;
     }
     
     @Override
-    public Optional<AlpsDescriptor> findById(URI id) {
+    public Optional<Descriptor> findById(URI id) {
         return Optional.ofNullable(descriptors.get(id));
     }
 
     @Override
-    public Set<AlpsDescriptor> findByName(final String name) {
+    public Set<Descriptor> findByName(final String name) {
         return descriptors
                     .values().stream()
                     .filter(d -> d.getName().isPresent() && name.equals(d.getName().get()))
@@ -56,12 +70,12 @@ final class JsonDocument implements AlpsDocument {
     }
 
     @Override
-    public AlpsVersion getVersion() {
+    public DocumentVersion getVersion() {
         return version;
     }
 
     @Override
-    public Set<AlpsDescriptor> getDescriptors() {
+    public Set<Descriptor> getDescriptors() {
         return descriptors
                     .values().stream()
                     .filter(d -> d.getParent().isEmpty())
@@ -70,22 +84,22 @@ final class JsonDocument implements AlpsDocument {
     }
 
     @Override
-    public Collection<AlpsDescriptor> getAllDescriptors() {
+    public Collection<Descriptor> getAllDescriptors() {
         return descriptors.values();
     }
 
     @Override
-    public Set<AlpsLink> getLinks() {
+    public Set<Link> getLinks() {
         return links;
     }
 
     @Override
-    public Set<AlpsDocumentation> getDocumentation() {
+    public Set<Documentation> getDocumentation() {
         return documentation;
     }
     
     @Override
-    public Set<AlpsExtension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
@@ -94,52 +108,52 @@ final class JsonDocument implements AlpsDocument {
         return baseUri;
     }
     
-    public static final AlpsDocument parse(final URI baseUri, final JsonObject alpsObject) throws AlpsParserException {
+    public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws InvalidDocumentException {
         
         JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;
 
         // version
-        if (alpsObject.containsKey(AlpsJsonKeys.VERSION)) {
+        if (alpsObject.containsKey(AlpsConstants.VERSION)) {
             
-            final JsonValue alpsVersion = alpsObject.get(AlpsJsonKeys.VERSION);
+            final JsonValue alpsVersion = alpsObject.get(AlpsConstants.VERSION);
             
             if (JsonUtils.isString(alpsVersion) 
-                    && AlpsJsonKeys.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
+                    && AlpsConstants.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
-                document.version = AlpsVersion.VERSION_1_0;
+                document.version = DocumentVersion.VERSION_1_0;
             }
         }
         
         // documentation
-        if (alpsObject.containsKey(AlpsJsonKeys.DOCUMENTATION)) {
-            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsJsonKeys.DOCUMENTATION));
+        if (alpsObject.containsKey(AlpsConstants.DOCUMENTATION)) {
+            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsConstants.DOCUMENTATION));
             
         } else {
             document.documentation = Collections.emptySet();
         }
         
         // links
-        if (alpsObject.containsKey(AlpsJsonKeys.LINK)) {
-            document.links = JsonLink.parse(alpsObject.get(AlpsJsonKeys.LINK));
+        if (alpsObject.containsKey(AlpsConstants.LINK)) {
+            document.links = JsonLink.parse(alpsObject.get(AlpsConstants.LINK));
             
         } else {
             document.links = Collections.emptySet();
         }
         
         // descriptors
-        if (alpsObject.containsKey(AlpsJsonKeys.DESCRIPTOR)) {
+        if (alpsObject.containsKey(AlpsConstants.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
-            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsJsonKeys.DESCRIPTOR));
+            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsConstants.DESCRIPTOR));
             
         } else {
             document.descriptors = Collections.emptyMap();
         }
         
         // extensions
-        if (alpsObject.containsKey(AlpsJsonKeys.EXTENSION)) {
-            document.extensions = JsonExtension.parse(alpsObject.get(AlpsJsonKeys.EXTENSION));
+        if (alpsObject.containsKey(AlpsConstants.EXTENSION)) {
+            document.extensions = JsonExtension.parse(alpsObject.get(AlpsConstants.EXTENSION));
             
         } else {
             document.extensions = Collections.emptySet();
@@ -148,37 +162,37 @@ final class JsonDocument implements AlpsDocument {
         return document;
     }
     
-    public static final JsonObject toJson(AlpsDocument document) throws AlpsWriterException {
+    public static final JsonObject toJson(Document document) {
         
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
         // version
-        alps.add(AlpsJsonKeys.VERSION, toJson(document.getVersion()));
+        alps.add(AlpsConstants.VERSION, toJson(document.getVersion()));
         
         // documentation
         if (isNotEmpty(document.getDocumentation())) {
-            alps.add(AlpsJsonKeys.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
+            alps.add(AlpsConstants.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
         }
         
         // links
         if (isNotEmpty(document.getLinks())) {
-            alps.add(AlpsJsonKeys.LINK, JsonLink.toJson(document.getLinks()));            
+            alps.add(AlpsConstants.LINK, JsonLink.toJson(document.getLinks()));            
         }
         
         // descriptors
         if (isNotEmpty(document.getDescriptors())) {
-            alps.add(AlpsJsonKeys.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
+            alps.add(AlpsConstants.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
         }
         
         // extensions
         if (isNotEmpty(document.getExtensions())) {
-            alps.add(AlpsJsonKeys.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
+            alps.add(AlpsConstants.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
         }
 
-        return Json.createObjectBuilder().add(AlpsJsonKeys.ROOT, alps).build();
+        return Json.createObjectBuilder().add(AlpsConstants.ROOT, alps).build();
     }
     
-    private static final JsonString toJson(AlpsVersion version) {
+    private static final JsonString toJson(DocumentVersion version) {
         return Json.createValue("1.0");        
     }
     

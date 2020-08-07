@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
@@ -11,10 +26,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsParserException;
-import com.apicatalog.alps.dom.element.AlpsExtension;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-class JsonExtension implements AlpsExtension {
+class JsonExtension implements Extension {
 
     private URI id;
     private URI href;
@@ -35,9 +51,9 @@ class JsonExtension implements AlpsExtension {
         return Optional.ofNullable(value);
     }
 
-    protected static final Set<AlpsExtension> parse(final JsonValue jsonValue) throws AlpsParserException {
+    protected static final Set<Extension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
         
-        final Set<AlpsExtension> extension = new HashSet<>();
+        final Set<Extension> extension = new HashSet<>();
         
         for (final JsonValue item : JsonUtils.toArray(jsonValue)) {
             
@@ -45,41 +61,41 @@ class JsonExtension implements AlpsExtension {
                 extension.add(parseObject(item.asJsonObject()));
                 
             } else {
-                throw new AlpsParserException("Expected JSON string or object but was " + item.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION, "Expected JSON string or object but was " + item.getValueType());
             }
         }        
         return extension;
     }
     
-    private static final AlpsExtension parseObject(final JsonObject jsonObject) throws AlpsParserException {
+    private static final Extension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
         
         // id
-        if (JsonUtils.isNotString(jsonObject.get(AlpsJsonKeys.ID))) {
-            throw new AlpsParserException("An extension must have valid 'id' property but was " + jsonObject);
+        if (JsonUtils.isNotString(jsonObject.get(AlpsConstants.ID))) {
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, "An extension must have valid 'id' property but was " + jsonObject);
         }
  
         final JsonExtension extension = new JsonExtension();
         
         try {
             
-            extension.id = URI.create(jsonObject.getString(AlpsJsonKeys.ID));
+            extension.id = URI.create(jsonObject.getString(AlpsConstants.ID));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException("An extension id must be valid URI but was " + jsonObject.getString(AlpsJsonKeys.ID));
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(AlpsConstants.ID));
         }
 
         // href
-        if (jsonObject.containsKey(AlpsJsonKeys.HREF)) {
+        if (jsonObject.containsKey(AlpsConstants.HREF)) {
             extension.href = JsonUtils.getHref(jsonObject);
         }
         
         // value
-        if (jsonObject.containsKey(AlpsJsonKeys.VALUE)) {
+        if (jsonObject.containsKey(AlpsConstants.VALUE)) {
             
-            final JsonValue value = jsonObject.get(AlpsJsonKeys.VALUE);
+            final JsonValue value = jsonObject.get(AlpsConstants.VALUE);
             
             if (JsonUtils.isNotString(value)) {
-                throw new AlpsParserException("An extension value must be represented as JSON string but was " + value);
+                throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION_VALUE, "An extension value must be represented as JSON string but was " + value);
             }
             
             extension.value = JsonUtils.getString(value);
@@ -88,7 +104,7 @@ class JsonExtension implements AlpsExtension {
         return extension;
     }
     
-    public static final JsonValue toJson(Set<AlpsExtension> extensions) {
+    public static final JsonValue toJson(Set<Extension> extensions) {
         
         if (extensions.size() == 1) {
             return toJson(extensions.iterator().next());
@@ -101,14 +117,14 @@ class JsonExtension implements AlpsExtension {
         return jsonExt.build();
     }
 
-    public static final JsonValue toJson(AlpsExtension extension) {
+    public static final JsonValue toJson(Extension extension) {
         
         final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
 
-        jsonExt.add(AlpsJsonKeys.ID, extension.getId().toString());
+        jsonExt.add(AlpsConstants.ID, extension.getId().toString());
 
-        extension.getHref().ifPresent(href -> jsonExt.add(AlpsJsonKeys.HREF, href.toString()));
-        extension.getValue().ifPresent(value -> jsonExt.add(AlpsJsonKeys.VALUE, value));
+        extension.getHref().ifPresent(href -> jsonExt.add(AlpsConstants.HREF, href.toString()));
+        extension.getValue().ifPresent(value -> jsonExt.add(AlpsConstants.VALUE, value));
         
         return jsonExt.build();
     }

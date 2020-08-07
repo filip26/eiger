@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alps version="1.0">
+	<descriptor>
+		<doc>Descriptor must have an id.</doc>
+	</descriptor>
+</alps>

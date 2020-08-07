@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
@@ -10,10 +25,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.apicatalog.alps.AlpsParserException;
-import com.apicatalog.alps.dom.element.AlpsLink;
+import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class JsonLink implements AlpsLink {
+final class JsonLink implements Link {
 
     private URI href;
     private String rel;
@@ -28,14 +44,14 @@ final class JsonLink implements AlpsLink {
         return rel;
     }
 
-    public static final Set<AlpsLink> parse(final JsonValue value) throws AlpsParserException {
+    public static final Set<Link> parse(final JsonValue value) throws InvalidDocumentException {
         
-        final Set<AlpsLink> links = new HashSet<>();
+        final Set<Link> links = new HashSet<>();
         
         for (final JsonValue item : JsonUtils.toArray(value)) {
             
             if (JsonUtils.isNotObject(item)) {
-                throw new AlpsParserException("Link property must be JSON object but was " + item.getValueType());
+                throw new InvalidDocumentException(DocumentError.INVALID_LINK, "Link property must be JSON object but was " + item.getValueType());
             }
             
             links.add(parseObject(item.asJsonObject()));
@@ -44,22 +60,22 @@ final class JsonLink implements AlpsLink {
         return links;
     }
     
-    private static final AlpsLink parseObject(final JsonObject linkObject) throws AlpsParserException {
+    private static final Link parseObject(final JsonObject linkObject) throws InvalidDocumentException {
         
         final JsonLink link = new JsonLink();
         
-        if (!linkObject.containsKey(AlpsJsonKeys.HREF)) {
-            throw new AlpsParserException("Link object must contain 'href' property");
+        if (!linkObject.containsKey(AlpsConstants.HREF)) {
+            throw new InvalidDocumentException(DocumentError.MISSING_HREF, "Link object must contain 'href' property");
         }
 
-        if (!linkObject.containsKey(AlpsJsonKeys.RELATION)) {
-            throw new AlpsParserException("Link object must contain 'rel' property");
+        if (!linkObject.containsKey(AlpsConstants.RELATION)) {
+            throw new InvalidDocumentException(DocumentError.MISSING_REL, "Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(AlpsJsonKeys.HREF);
+        final JsonValue href = linkObject.get(AlpsConstants.HREF);
         
         if (JsonUtils.isNotString(href)) {
-            throw new AlpsParserException("Link.href property must be URI but was " + href.getValueType());
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href.getValueType());
         }
         
         try {
@@ -67,13 +83,13 @@ final class JsonLink implements AlpsLink {
             link.href = URI.create(JsonUtils.getString(href));
             
         } catch (IllegalArgumentException e) {
-            throw new AlpsParserException("Link.href property must be URI but was " + href);
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href);
         }
 
-        final JsonValue rel = linkObject.get(AlpsJsonKeys.RELATION);
+        final JsonValue rel = linkObject.get(AlpsConstants.RELATION);
         
         if (JsonUtils.isNotString(href)) {
-            throw new AlpsParserException("Link.rel property must be string but was " + rel.getValueType());
+            throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + rel.getValueType());
         }
 
         link.rel = JsonUtils.getString(rel);
@@ -81,7 +97,7 @@ final class JsonLink implements AlpsLink {
         return link;
     }
     
-    public static final JsonValue toJson(Set<AlpsLink> links) {
+    public static final JsonValue toJson(Set<Link> links) {
         
         if (links.size() == 1) {
             return toJson(links.iterator().next());
@@ -94,16 +110,16 @@ final class JsonLink implements AlpsLink {
         return jsonLinks.build();
     }
 
-    public static final JsonValue toJson(AlpsLink link) {
+    public static final JsonValue toJson(Link link) {
         
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
         
         if (link.getHref() != null) {
-            jsonLink.add(AlpsJsonKeys.HREF, link.getHref().toString());
+            jsonLink.add(AlpsConstants.HREF, link.getHref().toString());
         }
         
         if (link.getRel() != null && !link.getRel().isBlank()) {
-            jsonLink.add(AlpsJsonKeys.RELATION, link.getRel());
+            jsonLink.add(AlpsConstants.RELATION, link.getRel());
         }
         
         return jsonLink.build();

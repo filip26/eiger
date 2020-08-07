@@ -13,18 +13,7 @@
     <parent>
         <groupId>com.apicatalog</groupId>
         <artifactId>alps</artifactId>
-        <version>0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>${revision}</version>
     </parent>
-
-    <properties>
-        
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>   
-    </properties>
 
 </project>
