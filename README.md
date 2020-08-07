@@ -11,14 +11,17 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 Your contribution is welcome. 
 
+### Roadmap
+
+- [x] ~0.1 JSON Parser & Writer~
+- [ ] 0.2 XML Parser & Writer
+- [ ] 0.3 CLI - validation, transformations (JSON <-> XML)
+- [ ] 0.4 Effective Document Processor
+- [ ] TBD
+
 ### Building
 
-Fork and clone the project repository:
-
-```bash
-> git clone git@github.com:REPLACE_WITH_GITHUB_ID/alps.git
-```
-
+Fork and clone the project repository.
 Compile sources:
 
 ```bash
@@ -28,13 +31,14 @@ Compile sources:
 
 ### Installation
 
+#### ALPS+JSON
+
 ```xml
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-jsonp</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 </dependency>
-
 ```
 
 Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the classpath already.
@@ -46,13 +50,16 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
     <version>1.1.6</version>
 </dependency>
 ```
-### Roadmap
+#### ALPS+XML
 
-- [x] ~0.1 JSON Parser & Writer~
-- [ ] 0.2 XML Parser & Writer
-- [ ] 0.3 Effective Document Processor
-- [ ] TBD
+```xml
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>alps-xml</artifactId>
+    <version>0.2-SNAPSHOT</version>
+</dependency>
 
+```
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
 - [alps.io homapge](http://alps.io/)
