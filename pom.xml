@@ -60,6 +60,7 @@
         <module>alps-core</module>
         <module>alps-jsonp</module>
         <module>alps-xml</module>
+        <module>alps-cli</module>
     </modules>
 
 </project>
