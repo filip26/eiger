@@ -65,7 +65,7 @@ final class TestDescription {
     }
 
     public boolean isType(final String type) {
-        return type != null && type.contains(type);
+        return this.type != null && this.type.contains(type);
     }
     
     public boolean isNegativeTest() {
