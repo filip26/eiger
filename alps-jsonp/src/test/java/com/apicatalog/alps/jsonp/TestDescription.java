@@ -71,5 +71,9 @@ final class TestDescription {
     public boolean isNegativeTest() {
         return isType("#NegativeEvaluationTest");
     }
-    
+
+    public boolean isPositiveTest() {
+        return isType("#PositiveEvaluationTest");
+    }
+
 }
