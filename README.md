@@ -61,6 +61,10 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 ## Command Line Interface
 
+### Prerequisites
+- Java 11+
+- Maven 3.5+
+
 ### Build
 
 ```bash
