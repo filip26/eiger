@@ -59,7 +59,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 ```
 
-## CLI 
+## Command Line Interface
 
 ### Build
 
