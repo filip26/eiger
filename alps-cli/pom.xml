@@ -7,6 +7,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>alps-cli</artifactId>
+    <packaging>jar</packaging>
 
     <name>ALPS Command Line Interface</name>
 
