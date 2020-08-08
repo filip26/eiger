@@ -1,9 +1,10 @@
 #!/bin/bash
 
-ALPS_JAR_NAME="alps-cli-0.2-SNAPSHOT.jar"
+ALPS_JAR_NAME="alps-cli-*.jar"
 
 if [ -z "$ALPS_HOME" ]; then
-  ALPS_HOME="."
+  echo "ALPS_HOME is not set. Please, set ALPS_HOME variable."
+  exit 1
 fi
 
 if [ -f $ALPS_HOME/alps-cli/target/$ALPS_JAR_NAME ]; then
@@ -16,7 +17,7 @@ elif [ -f $ALPS_HOME/$ALPS_JAR_NAME ]; then
   ALPS_JAR_PATH="$ALPS_HOME/$ALPS_JAR_NAME"
 
 else 
-  echo "$ALPS_JAR_NAME not found. Set ALPS_HOME variable pointing to alps directory."
+  echo "$ALPS_JAR_NAME not found. Does ALPS_HOME pointing path to alps directory?"
   exit 1
 fi
 
