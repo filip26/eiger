@@ -5,6 +5,39 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Command Line Interface
+
+### Prerequisites
+- Java 11+
+- Maven 3.5+
+
+### Build
+
+```bash
+> git clone git@github.com:filip26/alps.git
+> cd alps
+> mvn package
+> chmod +x alps-cli/bin/alps.sh
+```
+
+### Install
+Set ALPS_HOME and PATH variables.
+
+e.g.
+
+```bash
+> export ALPS_HOME=/home/filip/alps
+> export PATH=$PATH:/home/filip/alps/alps-cli/bin
+```
+
+### Run
+
+```bash
+> alps.sh validate [{-s|--source}={json|xml}] [input]
+> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]
+> alps.sh [{-h|--help}]
+```
+
 ## Contributing
 
 Your contribution is welcome. 
@@ -27,7 +60,7 @@ Compile sources:
 > mvn package install
 ```
 
-### Installation
+### Usage
 
 #### ALPS+JSON
 
@@ -58,38 +91,6 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 </dependency>
 
 ```
-
-## Command Line Interface
-
-### Prerequisites
-- Java 11+
-- Maven 3.5+
-
-### Build
-
-```bash
-> git clone git@github.com:filip26/alps.git
-> cd alps
-> mvn package
-> chmod +x alps-cli/bin/alps.sh
-```
-
-### Install
-Set ALPS_HOME and PATH variables.
-
-e.g.
-``` bash
-> export ALPS_HOME=/home/filip/alps
-> export PATH=$PATH:/home/filip/alps/alps-cli/bin
-```
-### Run
-
-```bash
-> alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]
-> alps.sh [{-h|--help}]
-```
-
 
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
