@@ -40,7 +40,17 @@ e.g.
 
 ## Contributing
 
-Your contribution is welcome. 
+Your contribution is welcome. There are many ways to motivate developers or speed up development:
+
+- develop
+  - implement a new feature
+  - fix an existing issue, implement a test case
+  - write/proofread a documentation
+- promote
+  - star, share, the project
+  - write an article
+- sponsor
+  - your requests get top priority
 
 ### Roadmap
 
