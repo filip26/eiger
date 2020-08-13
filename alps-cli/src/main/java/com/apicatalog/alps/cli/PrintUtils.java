@@ -33,9 +33,10 @@ final class PrintUtils {
             final MalformedDocumentException me = (MalformedDocumentException)e;
             
             output.println("  error: " + me.getMessage());
-            output.println("  cause: Unexpected character at line=" + me.getLineNumber() + ", column=" + me.getColumnNumber() + ".");
-            
-            
+            output.println("  location:");
+            output.println("    line: " + me.getLineNumber());
+            output.println("    column: " + me.getColumnNumber());
+
         } else if (e instanceof InvalidDocumentException) {
             
             final InvalidDocumentException ie = (InvalidDocumentException)e;
