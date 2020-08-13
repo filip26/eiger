@@ -26,6 +26,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private URI id;
     
+    private URI href;
+    
     private DescriptorType type;
     
     private URI returnValue;
@@ -40,21 +42,34 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         this.elementIndex = index;
     }
     
-    public static final XmlDescriptor create(Deque<XmlElement> stack, int index, Attributes attrs) throws DocumentException {
-    
-        String id = attrs.getValue(AlpsConstants.ID);
+    public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentException {
+
+        final XmlDescriptor descriptor = new XmlDescriptor(index);
         
-        if (id == null || id.isBlank()) {            
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index));
+        final String id = attrs.getValue(AlpsConstants.ID);
+        
+        if (id != null && !id.isBlank()) {
+            try {
+                descriptor.id = URI.create(id);
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
+            }
+        }  
+
+        final String href = attrs.getValue(AlpsConstants.HREF);
+        
+        if (href != null && !href.isBlank()) {
+            try {
+                descriptor.href = URI.create(href);
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
+            }
         }
-        
-        XmlDescriptor descriptor = new XmlDescriptor(index);
-        
-        try {
-            descriptor.id = URI.create(id);
-            
-        } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
+
+        if (descriptor.id == null && descriptor.href == null) {
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index));
         }
         
         descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
@@ -102,14 +117,13 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public URI getId() {
-        return id;
+    public Optional<URI> getId() {
+        return Optional.ofNullable(id);
     }
 
     @Override
     public Optional<URI> getHref() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(href);
     }
 
     @Override
@@ -177,10 +191,9 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             writer.writeStartElement(AlpsConstants.DESCRIPTOR);
             
             // id
-            if (descriptor.getId() == null) {
-                //TODO
+            if (descriptor.getId().isPresent()) {
+                writer.writeAttribute(AlpsConstants.ID, descriptor.getId().get().toString());
             }
-            writer.writeAttribute(AlpsConstants.ID, descriptor.getId().toString());
          
             // type
             final DescriptorType type = descriptor.getType();

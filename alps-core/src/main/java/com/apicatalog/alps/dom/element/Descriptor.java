@@ -21,7 +21,7 @@ import java.util.Set;
 
 public interface Descriptor {
     
-	URI getId();
+	Optional<URI> getId();
 	
 	Optional<URI> getHref();
 	
