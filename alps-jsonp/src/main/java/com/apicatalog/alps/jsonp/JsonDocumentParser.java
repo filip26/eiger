@@ -23,6 +23,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParsingException;
 import javax.json.stream.JsonParser.Event;
 
 import com.apicatalog.alps.DocumentParser;
@@ -30,6 +31,7 @@ import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentException;
 import com.apicatalog.alps.error.InvalidDocumentException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 
 public final class JsonDocumentParser implements DocumentParser {
 
@@ -71,28 +73,34 @@ public final class JsonDocumentParser implements DocumentParser {
     
     private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentException {
         
-        if (!parser.hasNext()) {
-            throw new DocumentException("Expected JSON object but was an empty input");
-        }
+        try {
+        
+            if (!parser.hasNext()) {
+                throw new DocumentException("Expected JSON object but was an empty input");
+            }
+                
+            final Event event = parser.next();
             
-        final Event event = parser.next();
-        
-        if (!Event.START_OBJECT.equals(event)) {
-            throw new DocumentException("Expected JSON object but was " + event);
-        }
-        
-        final JsonObject rootObject = parser.getObject();
-        
-        if (!rootObject.containsKey(AlpsConstants.ROOT)) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' is not present");
-        }
-        
-        final JsonValue alpsObject = rootObject.get(AlpsConstants.ROOT);
-        
-        if (JsonUtils.isNotObject(alpsObject)) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' does not contain JSON object");
-        }
+            if (!Event.START_OBJECT.equals(event)) {
+                throw new DocumentException("Expected JSON object but was " + event);
+            }
             
-        return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
+            final JsonObject rootObject = parser.getObject();
+            
+            if (!rootObject.containsKey(AlpsConstants.ROOT)) {
+                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' is not present");
+            }
+            
+            final JsonValue alpsObject = rootObject.get(AlpsConstants.ROOT);
+            
+            if (JsonUtils.isNotObject(alpsObject)) {
+                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' does not contain JSON object");
+            }
+                
+            return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
+            
+        } catch (JsonParsingException e) {
+            throw new MalformedDocumentException(e.getLocation().getLineNumber(), e.getLocation().getColumnNumber(), "Document is not valid JSON document.");
+        }
     }
 }

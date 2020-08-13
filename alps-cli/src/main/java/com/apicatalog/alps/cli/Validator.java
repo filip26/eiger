@@ -1,9 +1,6 @@
 package com.apicatalog.alps.cli;
 
 import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentException;
@@ -20,17 +17,16 @@ public final class Validator {
         return new Validator();
     }
 
-    public void validate(final InputStream input, final PrintStream output) {
+    public Document parse(final InputStream input) throws DocumentException {
         
-        try {
+//        try {
         
-        Document doc = (new JsonDocumentParser()).parse(null, "application/json", input);
-        output.println("TODO: validate " + doc);
+        return (new JsonDocumentParser()).parse(null, "application/json", input);
         
-        } catch (DocumentException e) {
-            System.err.println(e);
-            e.printStackTrace();
-        }
+//        } catch (DocumentException e) {
+////            System.err.println( + e.getMessage());
+////            e.printStackTrace();
+//        }
         
     }
     

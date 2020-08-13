@@ -21,4 +21,4 @@ else
   exit 1
 fi
 
-java -cp $(echo $ALPS_PATH/*.jar | tr ' ' ':'):$(echo $ALPS_PATH/lib/*.jar | tr ' ' ':') com.apicatalog.alps.cli.Command $1 $2 $3 $4
+java -cp $ALPS_PATH/classes:$(echo $ALPS_PATH/lib/*.jar | tr ' ' ':') com.apicatalog.alps.cli.Command $1 $2 $3 $4
