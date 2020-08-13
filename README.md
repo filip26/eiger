@@ -8,8 +8,8 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ## Command Line Interface
 
 ### Prerequisites
-- Java 11+
-- Maven 3.5+
+- `Java 11+`
+- `Maven 3.5+`
 
 ### Build
 
@@ -21,7 +21,7 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ```
 
 ### Install
-Set ALPS_HOME and PATH variables.
+Set `ALPS_HOME` and `PATH` variables.
 
 e.g.
 

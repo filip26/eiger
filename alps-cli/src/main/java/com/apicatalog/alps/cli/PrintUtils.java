@@ -21,7 +21,7 @@ final class PrintUtils {
 //        output.print("   alps.sh ");
 //        output.print(Constants.TRANSFORM);
 //        output.println(" [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]");
-//        output.println("   alps.sh [{-h|--help}]");
+        output.println("   alps.sh [{-h|--help}]");
     }
     
     static final void printError(PrintStream output, String path, DocumentException e) {
