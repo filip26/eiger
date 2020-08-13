@@ -8,17 +8,17 @@ if [ -z "$ALPS_HOME" ]; then
 fi
 
 if [ -f $ALPS_HOME/alps-cli/target/$ALPS_JAR_NAME ]; then
-  ALPS_JAR_PATH="$ALPS_HOME/alps-cli/target/$ALPS_JAR_NAME"
+  ALPS_PATH="$ALPS_HOME/alps-cli/target"
 
 elif [ -f $ALPS_HOME/target/$ALPS_JAR_NAME ]; then
-  ALPS_JAR_PATH="$ALPS_HOME/target/$ALPS_JAR_NAME"
+  ALPS_PATH="$ALPS_HOME/target"
 
 elif [ -f $ALPS_HOME/$ALPS_JAR_NAME ]; then
-  ALPS_JAR_PATH="$ALPS_HOME/$ALPS_JAR_NAME"
+  ALPS_PATH=$ALPS_HOME
 
 else 
   echo "$ALPS_JAR_NAME not found. Does ALPS_HOME pointing path to alps directory?"
   exit 1
 fi
 
-java -cp $ALPS_JAR_PATH com.apicatalog.alps.Command $1 $2 $3 $4
+java -cp $(echo $ALPS_PATH/*.jar | tr ' ' ':'):$(echo $ALPS_PATH/lib/*.jar | tr ' ' ':') com.apicatalog.alps.cli.Command $1 $2 $3 $4

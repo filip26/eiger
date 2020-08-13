@@ -1,5 +1,9 @@
 package com.apicatalog.alps.cli;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 
 public class Command {
@@ -56,7 +60,7 @@ public class Command {
             return;
         }
         
-        String source = null;
+        InputStream source = null;
         String sourceType = null;
         
         for (int i=1; i < args.length; i++) {
@@ -83,7 +87,11 @@ public class Command {
 
             } else if (source == null) {
                 
-                source = argument;
+                source = fileToInputStream(argument);
+                
+                if (source == null) {
+                    return;
+                }
                 
             } else {
                 printUsage(output);
@@ -91,7 +99,7 @@ public class Command {
             }
         }    
         
-        Validator.create(sourceType, source).validate(output);
+        Validator.create(sourceType).validate(source == null ? System.in : source, output);
     }
 
     private static final void transform(final PrintStream output, String...args) {
@@ -101,9 +109,9 @@ public class Command {
             return;
         }
 
-        String source = null;
+        InputStream source = null;
         String sourceType = null;
-        String target = null;
+        InputStream target = null;
         String targetType = null;
         
         for (int i=1; i < args.length; i++) {
@@ -148,11 +156,11 @@ public class Command {
 
             } else if (source == null) {
                 
-                source = argument;
+                source = fileToInputStream(argument);
                 
             } else if (target == null) {
                 
-                target = argument;
+                target = fileToInputStream(argument);
                 
             } else {
                 printUsage(output);
@@ -165,4 +173,28 @@ public class Command {
         return !"xml".equalsIgnoreCase(type) && !"json".equalsIgnoreCase(type);         
     }
 
+    private static final InputStream fileToInputStream(final String path) {
+        
+        final File file = new File(path);
+        
+        if (!file.exists()) {
+            System.err.println("File '" + path + "' does not exist.");            
+            return null;
+        }
+
+        if (!file.canRead()) {
+            System.err.println("Input file '" + path + "' is not readable.");
+            return null;
+        }
+        
+        try {
+            return new FileInputStream(file);
+            
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return null;
+    }
+    
 }
