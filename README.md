@@ -30,12 +30,18 @@ e.g.
 > export PATH=$PATH:/home/filip/alps/alps-cli/bin
 ```
 
-### Run
+### Usage
 
 ```bash
 > alps.sh validate [{-s|--source}={json|xml}] [input]
 > alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]
 > alps.sh [{-h|--help}]
+```
+
+### Examples
+
+```bash
+> wget -q -O-  https://raw.githubusercontent.com/alps-io/profiles/master/category.xml | alps.sh validate --source=xml
 ```
 
 ## Contributing
