@@ -19,27 +19,26 @@ public final class MalformedDocumentException extends DocumentException {
     
     private static final long serialVersionUID = -4042494993712747461L;
 
-    private final int columnNumber;
-    private final int lineNumber;
+    private final long columnNumber;
+    private final long lineNumber;
     
-    public MalformedDocumentException(int lineNumber, int columnNumber, String message) {
+    public MalformedDocumentException(long lineNumber, long columnNumber, String message) {
         super(message);
         this.columnNumber = columnNumber;
         this.lineNumber = lineNumber;
     }
     
-    public MalformedDocumentException(int lineNumber, int columnNumber, Throwable cause) {
+    public MalformedDocumentException(long lineNumber, long columnNumber, Throwable cause) {
         super(cause);
         this.columnNumber = columnNumber;
         this.lineNumber = lineNumber;
     }    
-
     
-    public int getColumnNumber() {
+    public long getColumnNumber() {
         return columnNumber;
     }
     
-    public int getLineNumber() {
+    public long getLineNumber() {
         return lineNumber;
     }
 }
