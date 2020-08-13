@@ -3,8 +3,10 @@ package com.apicatalog.alps.xml;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,12 +29,17 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 final class XmlDocument implements Document, XmlElement {
 
     private DocumentVersion version;
-    
+
+    private URI baseUri;
+
     private Set<Documentation> documentation;
     
-    private Set<Descriptor> descriptors;
-    
     private Set<Link> links;
+    
+    private Set<Extension> extensions;
+    
+    private Set<Descriptor> descriptors;
+
     
     public static final XmlDocument create(Attributes attrs) throws SAXException {
         
@@ -58,15 +65,53 @@ final class XmlDocument implements Document, XmlElement {
     }
     
     @Override
-    public Optional<Descriptor> findById(URI id) {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<Descriptor> findById(final URI id) {
+        return findById(descriptors, id);
     }
 
+    private static final Optional<Descriptor> findById(final Set<Descriptor> descriptors, final URI id) {
+        
+        for (final Descriptor descriptor : descriptors) {
+            
+            if (id.equals(descriptor.getId())) {
+                return Optional.of(descriptor);
+            }
+            
+            final Optional<Descriptor> result = findById(descriptor.getDescriptors(), id);
+            
+            if (result.isPresent()) {
+                return result;
+            }
+            
+        }
+        return Optional.empty();
+    }
+
+    
     @Override
-    public Set<Descriptor> findByName(String name) {
-        // TODO Auto-generated method stub
-        return null;
+    public Set<Descriptor> findByName(final String name) {
+        
+        if (descriptors.isEmpty()) {
+            return Collections.emptySet();
+        }
+        
+        final Set<Descriptor> result = new LinkedHashSet<>();
+        
+        findByName(descriptors, result, name);
+        
+        return result;
+    }
+
+    private static final void findByName(Set<Descriptor> result, Set<Descriptor> descriptors, final String name) {
+        
+        for (final Descriptor descriptor : descriptors) {
+            
+            if (descriptor.getName().filter(name::equalsIgnoreCase).isPresent()) {
+                result.add(descriptor);
+            }
+            
+            findByName(result, descriptor.getDescriptors(), name);
+        }        
     }
 
     @Override
@@ -81,8 +126,23 @@ final class XmlDocument implements Document, XmlElement {
 
     @Override
     public Collection<Descriptor> getAllDescriptors() {
-        // TODO Auto-generated method stub
-        return null;
+
+        if (descriptors.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        final Collection<Descriptor> result = new LinkedList<>();
+        
+        getAllDescriptors(result, descriptors);
+        
+        return result;
+    }
+    
+    private static final void getAllDescriptors(final Collection<Descriptor> result, final Set<Descriptor> descriptors) {
+        for (final Descriptor descriptor : descriptors) {
+            result.add(descriptor);
+            getAllDescriptors(result, descriptor.getDescriptors());
+        }
     }
 
     @Override
@@ -98,13 +158,12 @@ final class XmlDocument implements Document, XmlElement {
     @Override
     public Set<Extension> getExtensions() {
         // TODO Auto-generated method stub
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public URI getBaseUri() {
-        // TODO Auto-generated method stub
-        return null;
+        return baseUri;
     }
 
     @Override

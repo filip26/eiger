@@ -41,7 +41,12 @@ e.g.
 ### Examples
 
 ```bash
-> wget -q -O-  https://raw.githubusercontent.com/alps-io/profiles/master/category.xml | alps.sh validate --source=xml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
+Source is valid ALPS document.
+  version: 1.0
+  descriptors:
+    top_level: 2
+    total: 8
 ```
 
 ## Contributing

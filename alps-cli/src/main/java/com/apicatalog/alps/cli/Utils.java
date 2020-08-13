@@ -77,6 +77,6 @@ final class Utils {
             return new XmlDocumentParser();
         }
 
-        return null;
+        throw new IllegalArgumentException("Unsupported media type [" + mediaType + "].");
     }    
 }
