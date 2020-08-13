@@ -1,33 +1,88 @@
 package com.apicatalog.alps.cli;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 
-import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.error.DocumentException;
-import com.apicatalog.alps.jsonp.JsonDocumentParser;
 
-public final class Validator {
+final class Validator {
     
     private Validator() {
-        
-    }
-    
-    public static final Validator create(final String mediaType) {
-        
-        return new Validator();
     }
 
-    public Document parse(final InputStream input) throws DocumentException {
+    public static void validate(final PrintStream output, final String[] args) throws IOException {
         
-//        try {
+        if (args.length > 2) {
+            PrintUtils.printUsage(output);
+            return;
+        }
         
-        return (new JsonDocumentParser()).parse(null, "application/json", input);
+        String sourcePath = null;
+        String sourceType = null;
         
-//        } catch (DocumentException e) {
-////            System.err.println( + e.getMessage());
-////            e.printStackTrace();
-//        }
+        for (int i=0; i < args.length; i++) {
+
+            final String argument = args[i];
+            
+            if (sourceType == null && argument.startsWith(Constants.ARG_S)) {
+                
+                sourceType = argument.substring(Constants.ARG_S.length());
+                
+            } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
+
+                sourceType = argument.substring(Constants.ARG_SOURCE.length());
+                
+            } else if (sourcePath == null) {                
+                sourcePath = argument;
+                
+            } else {
+                PrintUtils.printUsage(output);
+                return;
+            }
+        }
         
+        validate(sourceType, sourcePath, output);
+    }
+    
+    private static final void validate(final String sourceType, final String sourcePath, final PrintStream output) throws IOException {
+        
+        final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
+        
+        if (sourceMediaType == null) {
+            PrintUtils.printUsage(output);
+            return;            
+        }
+        
+        final DocumentParser parser = Utils.getParser(sourceMediaType);
+        
+        if (parser == null) {
+            PrintUtils.printUsage(output);
+            return;
+        }
+        
+        final InputStream source;
+        
+        if (sourcePath != null) {
+            
+            source = Utils.fileToInputStream(sourcePath);
+            
+            if (source == null) {
+                return;
+            }
+            
+        } else {
+            source = System.in;
+        }
+        
+        try {
+            PrintUtils.printDocInfo(output, parser.parse(null, sourceMediaType, source));
+            
+        } catch (DocumentException e) {
+            
+            PrintUtils.printError(System.err, sourcePath, e);
+        }
     }
     
 }
