@@ -48,6 +48,7 @@ final class XmlDocument implements Document, XmlElement {
         doc.documentation = new LinkedHashSet<>();
         doc.descriptors = new LinkedHashSet<>();
         doc.links = new LinkedHashSet<>();
+        doc.extensions = new LinkedHashSet<>();
         return doc;
     }
 
@@ -157,8 +158,7 @@ final class XmlDocument implements Document, XmlElement {
 
     @Override
     public Set<Extension> getExtensions() {
-        // TODO Auto-generated method stub
-        return Collections.emptySet();
+        return extensions;
     }
 
     @Override

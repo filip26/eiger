@@ -43,12 +43,15 @@ e.g.
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
 ```
 ```yaml
---- # Valid ALPS Document
-document:
-  version: 1.0
-  descriptors:
-    top_level: 2
-    total: 8
+# Valid ALPS document
+- document: 
+    media_type: application/alps+xml
+    version: 1.0
+    statistics:
+      descriptors: 8
+      docs: 5
+      links: 1
+      extensions: 0
 ```
 
 ## Contributing

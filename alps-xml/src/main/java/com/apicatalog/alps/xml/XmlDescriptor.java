@@ -38,6 +38,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private Set<Link> links;
     
+    private Set<Extension> extensions;
+    
     private XmlDescriptor(int index) {
         this.elementIndex = index;
     }
@@ -85,6 +87,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         descriptor.descriptors = new LinkedHashSet<>();
         
         descriptor.links = new LinkedHashSet<>();
+        
+        descriptor.extensions = new LinkedHashSet<>();
         
         // TODO Auto-generated constructor stub
         return descriptor;
@@ -149,8 +153,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public Set<Extension> getExtensions() {
-        // TODO Auto-generated method stub
-        return null;
+        return extensions;
     }
 
     @Override
