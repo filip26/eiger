@@ -41,14 +41,15 @@ final class PrintUtils {
         } else if (e instanceof InvalidDocumentException) {
             
             final InvalidDocumentException ie = (InvalidDocumentException)e;
-            output.println("  error: " + ie.getMessage());
+            output.println("error:");
+            output.println("  message: " + ie.getMessage());
             
             if (ie.getPath() != null) {
                 output.println("  path:" + ie.getPath());
             }
             
         } else {
-            output.println("  error:" + e.getMessage());
+            output.println("error: " + e.getMessage());
         }
     }
     
