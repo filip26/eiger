@@ -20,9 +20,11 @@ final class AlpsConstants {
 
     public static final String RELATION = "rel";
     
-    public static final String RETURN_VALUE = "rt";
+    public static final String RETURN_TYPE = "rt";
 
     public static final String MEDIA_TYPE = "format";
+    
+    public static final String NAME = "name";
 
     private AlpsConstants() {
         

@@ -1,7 +1,6 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -9,9 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -74,7 +70,7 @@ final class XmlDocument implements Document, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            if (id.equals(descriptor.getId())) {
+            if (descriptor.getId().filter(id::equals).isPresent()) {
                 return Optional.of(descriptor);
             }
             
@@ -193,17 +189,14 @@ final class XmlDocument implements Document, XmlElement {
         links.add(link);
     }
     
-    public static void write(Document document, XMLStreamWriter writer) throws XMLStreamException, DocumentException {
+    public static void write(Document document, DocumentStreamWriter writer) throws DocumentStreamException, DocumentException {
 
-        writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
-        
-        writer.writeStartElement(AlpsConstants.DOCUMENT);
-        
         if (document.getVersion() == null) {
             throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
         }
-        writer.writeAttribute(AlpsConstants.VERSION, "1.0");
         
+        writer.startDocument(document.getVersion());
+                
         if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
             XmlDocumentation.write(document.getDocumentation(), writer);
         }
@@ -216,8 +209,7 @@ final class XmlDocument implements Document, XmlElement {
             XmlDescriptor.write(document.getDescriptors(), writer);
         }
 
-        writer.writeEndElement();
-        writer.writeEndDocument();        
+        writer.endDocument();        
     }
     
     @Override

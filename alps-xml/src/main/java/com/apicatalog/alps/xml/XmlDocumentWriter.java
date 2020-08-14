@@ -14,10 +14,11 @@ import com.apicatalog.alps.error.DocumentException;
 public class XmlDocumentWriter implements DocumentWriter {
 
     private final XMLOutputFactory factory;
+    private int indentLength;
     
     public XmlDocumentWriter() {
         this.factory = XMLOutputFactory.newDefaultFactory();
-        factory.setProperty("escapeCharacters", false);
+        factory.setProperty("escapeCharacters", false); 
     }
     
     @Override
@@ -30,7 +31,7 @@ public class XmlDocumentWriter implements DocumentWriter {
     public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
         // TODO Auto-generated method stub
         try {
-            XmlDocument.write(document, factory.createXMLStreamWriter(stream));
+            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
             
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
@@ -42,10 +43,20 @@ public class XmlDocumentWriter implements DocumentWriter {
         // TODO Auto-generated method stub
         
         try {
-            XmlDocument.write(document, factory.createXMLStreamWriter(writer));
+            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength));
             
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
         }
+    }
+
+    /**
+     * Sets indentation length for <code>values &gt; 0</code> or disables pretty print for <code>values &le; 0</code>.
+     * 
+     * @param indentLength
+     */
+    public XmlDocumentWriter prettyPrint(int indentLength) {
+        this.indentLength = indentLength;
+        return this;
     }
 }

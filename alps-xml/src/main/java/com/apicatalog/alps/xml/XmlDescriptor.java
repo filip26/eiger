@@ -6,9 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Descriptor;
@@ -28,6 +25,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private URI href;
     
+    private String name;
+    
     private DescriptorType type;
     
     private URI returnValue;
@@ -39,6 +38,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     private Set<Link> links;
     
     private Set<Extension> extensions;
+    
+    private Descriptor parent;
     
     private XmlDescriptor(int index) {
         this.elementIndex = index;
@@ -76,7 +77,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
         
-        String rt = attrs.getValue(AlpsConstants.RETURN_VALUE);
+        String rt = attrs.getValue(AlpsConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
@@ -132,8 +133,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public Optional<String> getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(name);
     }
 
     @Override
@@ -163,8 +163,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public Optional<Descriptor> getParent() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(parent);
     }
 
     @Override
@@ -182,43 +181,30 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     @Override
     public void addLink(XmlLink link) {
         links.add(link);
-        
     }
-    public static void write(Set<Descriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
+    
+    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentStreamException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
         
         for (final Descriptor descriptor : descriptors) {
             
-            writer.writeStartElement(AlpsConstants.DESCRIPTOR);
+            writer.startDescriptor(
+                        descriptor.getId().orElse(null),
+                        descriptor.getHref().orElse(null),
+                        descriptor.getType(),
+                        descriptor.getReturnType().orElse(null),
+                        descriptor.getName().orElse(null)
+                    );
             
-            // id
-            if (descriptor.getId().isPresent()) {
-                writer.writeAttribute(AlpsConstants.ID, descriptor.getId().get().toString());
-            }
-         
-            // type
-            final DescriptorType type = descriptor.getType();
-            
-            if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
-                writer.writeAttribute(AlpsConstants.TYPE, type.toString().toLowerCase());
-            }
-            
-            // return type
-            final Optional<URI> returnType = descriptor.getReturnType(); 
-            
-            if (returnType.isPresent()) {
-                writer.writeAttribute(AlpsConstants.RETURN_VALUE, returnType.get().toString());
-            }
-
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
             
             XmlLink.write(descriptor.getLinks(), writer);
             
             XmlDescriptor.write(descriptor.getDescriptors(), writer);
             
-            writer.writeEndElement();
+            writer.endDescriptor();
         }
     }
 

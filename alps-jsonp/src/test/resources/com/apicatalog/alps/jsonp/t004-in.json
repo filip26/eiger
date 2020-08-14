@@ -1,0 +1,8 @@
+{ 
+ "alps": {
+"version" : "1.0",
+  "descriptors" : {
+  	"href": "t001-in.json#search"
+  }
+}
+}

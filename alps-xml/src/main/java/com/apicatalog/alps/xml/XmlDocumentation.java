@@ -4,9 +4,6 @@ import java.net.URI;
 import java.util.Deque;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Documentation;
@@ -61,27 +58,25 @@ final class XmlDocumentation implements Documentation, XmlElement {
     public String getElementName() {
         return AlpsConstants.DOCUMENTATION;
     }
-
+    
     @Override
     public void addText(char[] ch, int start, int length) {
         //TODO strip leading and trailing spaces
         content.append(ch, start, length);
     }
 
-    public static void write(Set<Documentation> docs, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentStreamException {
+        
         if (docs == null || docs.isEmpty()) {
             return;
         }
         
         for (final Documentation doc : docs) {
-            writer.writeStartElement(AlpsConstants.DOCUMENTATION);
+            writer.startDoc(doc.getMediaType(), doc.getHref());
             
-            if (doc.getMediaType() != null && !"text".equals(doc.getMediaType()) && !"text/plain".equals(doc.getMediaType())) {
-                writer.writeAttribute(AlpsConstants.MEDIA_TYPE, doc.getMediaType());
-            }
+            writer.writeDocContent(doc.getContent());
             
-            writer.writeCharacters(doc.getContent());
-            writer.writeEndElement();
+            writer.endDoc();
         }
     }
 

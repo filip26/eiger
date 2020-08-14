@@ -4,30 +4,50 @@
         {
            "@id"    : "#t001",
            "@type"  : ["#PositiveEvaluationTest"],
-            "name"  : "Sample Works",
-            "input" : "t001-in.xml",
-            "expected" : "t001-out.xml"
+           "name"  : "Sample Works",
+           "input" : "t001-in.xml",
+           "expected" : "t001-out.xml"
         },
         {
            "@id"    : "#t002",
            "@type"  : ["#PositiveEvaluationTest"],
-            "name"  : "Contact Profile",
-            "input" : "t002-in.xml",
-            "expected" : "t002-out.xml"
+           "name"  : "Contact Profile",
+           "input" : "t002-in.xml",
+           "expected" : "t002-out.xml"
         },
         {
            "@id"    : "#t003",
            "@type"  : ["#PositiveEvaluationTest"],
-            "name"  : "HTML documentation with tags",
-            "input" : "t003-in.xml",
-            "expected" : "t003-out.xml"
-        },        
+           "name"  : "HTML documentation with tags",
+           "input" : "t003-in.xml",
+           "expected" : "t003-out.xml"
+        },
+        {
+           "@id"    : "#t004",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "User accout profile (UBER)",
+           "input" : "t004-in.xml"
+        },
+		{
+           "@id"    : "#t005",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "HTML documentation with CDATA",
+           "input" : "t005-in.xml",
+           "expected" : "t005-out.xml"
+        },
+		{
+           "@id"    : "#t006",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "HTML documentation with no tags nor entities",
+           "input" : "t006-in.xml",
+           "expected" : "t006-out.xml"
+        },                
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
-            "name"  : "Descriptor must have an id",
-            "input" : "nt001-in.xml",
-            "expectedError" : 
+           "name"  : "Descriptor must have an id",
+           "input" : "nt001-in.xml",
+           "expectedError" : 
             		{ 
 						"code": "MISSING_ID",
             			"path" : "/alps/descriptor[position()=1]"
@@ -36,9 +56,9 @@
         {
            "@id"    : "#nt002",
            "@type"  : ["#NegativeEvaluationTest"],
-            "name"  : "Invalid document",
-            "input" : "nt002-in.xml",
-            "expectedError" : 
+           "name"  : "Invalid document",
+           "input" : "nt002-in.xml",
+           "expectedError" : 
                		{ 
 						"code": "INVALID_DOCUMENT",
             			"path" : "/alps/descriptor[position()=1]"
