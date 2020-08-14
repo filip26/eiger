@@ -17,11 +17,11 @@ final class Utils {
     static final String getMediaType(final String type, final String path, final boolean input) {
         
         if ("xml".equalsIgnoreCase(type)) {
-            return "application/xml";
+            return "application/alps+xml";
         }
 
         if ("json".equalsIgnoreCase(type)) {
-            return "application/json";
+            return "application/alps+json";
         }
 
         if (type != null) {
@@ -29,11 +29,11 @@ final class Utils {
         }
         
         if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
-            return "application/xml";
+            return "application/alps+xml";
         }
 
         if (path != null && (path.toLowerCase().endsWith(".json") || path.toLowerCase().endsWith("+json"))) {
-            return "application/json";
+            return "application/alps+json";
         }
         
         if (path != null) {
@@ -69,11 +69,11 @@ final class Utils {
   
     static final DocumentParser getParser(final String mediaType) {
         
-        if ("application/json".equals(mediaType)) {
+        if ("application/alps+json".equals(mediaType)) {
             return new JsonDocumentParser();
         }
 
-        if ("application/xml".equals(mediaType)) {
+        if ("application/alps+xml".equals(mediaType)) {
             return new XmlDocumentParser();
         }
 
