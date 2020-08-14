@@ -69,18 +69,8 @@ final class XmlLink implements Link, XmlElement {
     
     public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
         
-        writer.startLink();
-        
-        if (link.getHref() != null) {
-            writer.writeHref(link.getHref());
-        }
-        
-        if (link.getRel() != null && !link.getRel().isBlank()) {
-            writer.writeRel(link.getRel());
-        }
-        
-        writer.endLink();
-
+        writer.writeLink(link.getHref(), link.getRel());
+       
     }
 
     public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {

@@ -72,15 +72,8 @@ final class XmlDocumentation implements Documentation, XmlElement {
         }
         
         for (final Documentation doc : docs) {
-            writer.startDoc();
+            writer.startDoc(doc.getMediaType(), doc.getHref());
             
-            if (doc.getMediaType() != null && !"text".equals(doc.getMediaType()) && !"text/plain".equals(doc.getMediaType())) {
-                writer.writeMediaType(doc.getMediaType());
-            }
-            if (doc.getHref() != null) {
-                writer.writeHref(doc.getHref());
-            }
-
             writer.writeDocContent(doc.getContent());
             
             writer.endDoc();

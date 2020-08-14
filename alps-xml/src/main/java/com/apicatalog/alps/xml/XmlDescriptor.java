@@ -77,7 +77,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
         
-        String rt = attrs.getValue(AlpsConstants.RETURN_VALUE);
+        String rt = attrs.getValue(AlpsConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
@@ -190,29 +190,14 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            writer.startDescriptor();
+            writer.startDescriptor(
+                        descriptor.getId().orElse(null),
+                        descriptor.getHref().orElse(null),
+                        descriptor.getType(),
+                        descriptor.getReturnType().orElse(null),
+                        descriptor.getName().orElse(null)
+                    );
             
-            final Optional<URI> id = descriptor.getId();
-            
-            // id
-            if (id.isPresent()) {
-                writer.writeId(id.get());
-            }
-         
-            // type
-            final DescriptorType type = descriptor.getType();
-            
-            if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
-                writer.writeType(type);
-            }
-            
-            // return type
-            final Optional<URI> returnType = descriptor.getReturnType(); 
-            
-            if (returnType.isPresent()) {
-                writer.writeReturnType(returnType.get());
-            }
-
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
             
             XmlLink.write(descriptor.getLinks(), writer);

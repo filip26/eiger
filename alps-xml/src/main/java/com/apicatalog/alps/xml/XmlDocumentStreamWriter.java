@@ -32,6 +32,9 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
           }
           writer.writeStartElement(AlpsConstants.DOCUMENT);
           writer.writeAttribute(AlpsConstants.VERSION, toString(version));
+          if (isPrettyPrint()) {
+              writer.writeCharacters("\n");
+          }
           
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
@@ -49,11 +52,37 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDescriptor() throws DocumentStreamException {
+    public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException {
         try {
             writeIndent();
             writer.writeStartElement(AlpsConstants.DESCRIPTOR);
+
+            if (id != null) {
+                writer.writeAttribute(AlpsConstants.ID, id.toString());
+            }
+
+            if (href != null) {
+                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+            }
+
+            if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
+                writer.writeAttribute(AlpsConstants.TYPE, type.name().toLowerCase());
+            }
+            
+            if (returnType != null) {
+                writer.writeAttribute(AlpsConstants.RETURN_TYPE, returnType.toString());
+            }
+
+            if (name != null) {
+                writer.writeAttribute(AlpsConstants.NAME, name);
+            }
+
+            if (isPrettyPrint()) {
+                writer.writeCharacters("\n");
+            }
+            
             depth++;
+            
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
         }
@@ -74,10 +103,17 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDoc() throws DocumentStreamException {
+    public void startDoc(String mediaType, URI href) throws DocumentStreamException {
         try {
             writeIndent();
             writer.writeStartElement(AlpsConstants.DOCUMENTATION);
+            
+            if (mediaType != null && !"text".equals(mediaType) && !"text/plain".equals(mediaType)) {
+                writer.writeAttribute(AlpsConstants.MEDIA_TYPE, mediaType);
+            }
+            if (href != null) {
+                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+            }
 
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
@@ -85,9 +121,18 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void writeDocContent(String content) {
-        // TODO Auto-generated method stub
-        
+    public void writeDocContent(String content) throws DocumentStreamException {
+
+        try {
+            if (content.matches(".*[<>&].*")) {
+                writer.writeCData(content);
+            } else {
+                writer.writeCharacters(content);
+            }
+            
+        } catch (XMLStreamException e) {
+            throw new DocumentStreamException(e);
+        }        
     }
 
     @Override
@@ -102,77 +147,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         }            
     }
 
-    @Override
-    public void startLink() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endLink() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void startExtension() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endExtension() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeId(URI id) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeType(DescriptorType type) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeHref(URI href) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeName(String name) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeReturnType(URI returnType) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeMediaType(String mediaType) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void writeRel(String rel) {
-        // TODO Auto-generated method stub
-        
-    }
     
     private final void writeIndent() throws XMLStreamException {
         if (!isPrettyPrint()) {
             return;
         }
-        writer.writeCharacters("x".repeat(depth*indentLength));
+        writer.writeCharacters(" ".repeat(depth*indentLength));
     }
     
     public final boolean isPrettyPrint() {
@@ -181,5 +161,31 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     
     private final static String toString(final DocumentVersion version) {
         return "1.0";
+    }
+
+    @Override
+    public void writeLink(URI href, String rel) throws DocumentStreamException {
+        
+        try {
+            writer.writeStartElement(AlpsConstants.LINK);
+            
+            if (href != null) {
+                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+            }
+            
+            if (rel != null && !rel.isBlank()) {
+                writer.writeAttribute(AlpsConstants.RELATION, rel);
+            }
+            
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            throw new DocumentStreamException(e);
+        }
+    }
+
+    @Override
+    public void writeExtension(URI id, URI href, String value) throws DocumentStreamException {
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -11,36 +11,18 @@ public interface DocumentStreamWriter {
     
     void endDocument() throws DocumentStreamException;
     
-    void startDescriptor() throws DocumentStreamException;
+    void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException;
     
     void endDescriptor() throws DocumentStreamException;
     
-    void startDoc() throws DocumentStreamException;
+    void startDoc(String mediaType, URI href) throws DocumentStreamException;
     
     void writeDocContent(String content) throws DocumentStreamException;
     
     void endDoc() throws DocumentStreamException;
     
-    void startLink() throws DocumentStreamException;
+    void writeLink(URI href, String rel) throws DocumentStreamException;
     
-    void endLink() throws DocumentStreamException;
-    
-    void startExtension() throws DocumentStreamException;
-    
-    void endExtension() throws DocumentStreamException;
-    
-    void writeId(URI id) throws DocumentStreamException;
-    
-    void writeType(DescriptorType type) throws DocumentStreamException;
-    
-    void writeHref(URI href) throws DocumentStreamException;
-    
-    void writeName(String name) throws DocumentStreamException;
-    
-    void writeReturnType(URI returnType) throws DocumentStreamException;
-    
-    void writeMediaType(String mediaType) throws DocumentStreamException;
-    
-    void writeRel(String rel) throws DocumentStreamException;
-
+    void writeExtension(URI id, URI href, String value) throws DocumentStreamException;
+            
 }

@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URI;
 import java.util.stream.Stream;
 
@@ -30,14 +29,11 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.stream.JsonParser;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -114,45 +110,30 @@ class AlpsXmlSuiteTest {
             
             (new XmlDocumentWriter()).prettyPrint(2).write("application/alps+xml", document, outputStream);
             
-            final byte[] o = outputStream.toByteArray();
-            //System.out.println(">>> " + new String(o, "UTF-8"));
-            //final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
-            final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(o));
+            final byte[] outputBytes = outputStream.toByteArray();
+
+            final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputBytes));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
             
             if (!match) {
                 
-                Transformer tr = TransformerFactory.newInstance().newTransformer();
-                tr.setOutputProperty(OutputKeys.INDENT, "yes");
-                tr.setOutputProperty(OutputKeys.METHOD, "xml");
-//                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-//                tr.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "doc");
-//                tr.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "doc");
-                tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-                              
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
                 System.out.println("Expected:");
 
-                final StringWriter writer = new StringWriter();
-  
-                writer.write(new String(expectedBytes));
-//                tr.transform(new DOMSource(expected), new StreamResult(writer));
+                System.out.println(new String(expectedBytes));
                 
-                writer.append("\n\n");
-                writer.append("Actual:\n");
+                System.out.println("\n\n");
+                System.out.println("Actual:\n");
 
-//                tr.transform(new DOMSource(output), new StreamResult(writer));
-                writer.write(new String(o));
-                System.out.print(writer.toString());
-                System.out.println();
+                System.out.println(new String(outputBytes));
                 System.out.println();
                 
                 fail("Expected output does not match.");
             }
             
-        } catch (IOException | DocumentException | TransformerException e) {
+        } catch (IOException | DocumentException e) {
             fail(e.getMessage(), e);            
         }
     }    
