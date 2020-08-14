@@ -26,13 +26,14 @@ final class PrintUtils {
     
     static final void printError(PrintStream output, String path, DocumentException e) {
         
-        output.println("Source is not valid ALPS document");
+        output.println("valid: false");
         
         if (e instanceof MalformedDocumentException) {
             
             final MalformedDocumentException me = (MalformedDocumentException)e;
             
-            output.println("  error: " + me.getMessage());
+            output.println("error:");
+            output.println("  message: " + me.getMessage());
             output.println("  location:");
             output.println("    line: " + me.getLineNumber());
             output.println("    column: " + me.getColumnNumber());
@@ -52,7 +53,8 @@ final class PrintUtils {
     }
     
     static final void printDocInfo(PrintStream output, Document document) {
-        output.println("Source is valid ALPS document.");
+        output.println("valid: true");
+        output.println("alps: ");
         output.println("  version: " + versionToString(document.getVersion()));
         output.println("  descriptors:");
         output.println("    top_level: " + document.getDescriptors().size());
