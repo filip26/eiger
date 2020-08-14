@@ -9,7 +9,7 @@ public class DocumentException extends Exception {
     }
     
     public DocumentException(Throwable cause) {
-        super(cause);
+        super(cause.getMessage(), cause);
     }
     
 }

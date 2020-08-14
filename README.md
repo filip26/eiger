@@ -5,11 +5,68 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Command Line Interface
 
+### Prerequisites
+- `Java 11+`
+- `Maven 3.5+`
+
+### Build
+
+```bash
+> git clone git@github.com:filip26/alps.git
+> cd alps
+> mvn package
+> chmod +x alps-cli/bin/alps.sh
+```
+
+### Install
+Set `ALPS_HOME` and `PATH` variables.
+
+e.g.
+
+```bash
+> export ALPS_HOME=/home/filip/alps
+> export PATH=$PATH:/home/filip/alps/alps-cli/bin
+```
+
+### Usage
+
+```bash
+> alps.sh validate [{-s|--source}={json|xml}] [input]
+> alps.sh [{-h|--help}]
+```
+
+### Examples
+
+```bash
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
+```
+```yaml
+# Valid ALPS document
+- document: 
+    media_type: application/alps+xml
+    version: 1.0
+    statistics:
+      descriptors: 8
+      docs: 5
+      links: 1
+      extensions: 0
+```
 
 ## Contributing
 
-Your contribution is welcome. 
+Your contribution is welcome. There are many ways to motivate developers or speed up development:
+
+- develop
+  - implement a new feature
+  - fix an existing issue, implement a test case
+  - write/proofread a documentation
+- promote
+  - star, share, the project
+  - write an article
+- sponsor
+  - your requests get top priority
 
 ### Roadmap
 
@@ -29,7 +86,7 @@ Compile sources:
 > mvn package install
 ```
 
-### Installation
+### Usage
 
 #### ALPS+JSON
 
@@ -60,6 +117,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 </dependency>
 
 ```
+
 ## Resources
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
 - [alps.io homapge](http://alps.io/)
