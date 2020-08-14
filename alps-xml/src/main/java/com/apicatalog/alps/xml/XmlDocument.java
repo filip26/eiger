@@ -193,17 +193,14 @@ final class XmlDocument implements Document, XmlElement {
         links.add(link);
     }
     
-    public static void write(Document document, XMLStreamWriter writer) throws XMLStreamException, DocumentException {
+    public static void write(Document document, DocumentStreamWriter writer) throws DocumentStreamException, DocumentException {
 
-        writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
-        
-        writer.writeStartElement(AlpsConstants.DOCUMENT);
-        
         if (document.getVersion() == null) {
             throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
         }
-        writer.writeAttribute(AlpsConstants.VERSION, "1.0");
         
+        writer.startDocument(document.getVersion());
+                
         if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
             XmlDocumentation.write(document.getDocumentation(), writer);
         }
@@ -216,8 +213,7 @@ final class XmlDocument implements Document, XmlElement {
             XmlDescriptor.write(document.getDescriptors(), writer);
         }
 
-        writer.writeEndElement();
-        writer.writeEndDocument();        
+        writer.endDocument();        
     }
     
     @Override

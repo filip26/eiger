@@ -6,9 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Descriptor;
@@ -182,34 +179,36 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     @Override
     public void addLink(XmlLink link) {
         links.add(link);
-        
     }
-    public static void write(Set<Descriptor> descriptors, XMLStreamWriter writer) throws XMLStreamException {
+    
+    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentStreamException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
         
         for (final Descriptor descriptor : descriptors) {
             
-            writer.writeStartElement(AlpsConstants.DESCRIPTOR);
+            writer.startDescriptor();
+            
+            final Optional<URI> id = descriptor.getId();
             
             // id
-            if (descriptor.getId().isPresent()) {
-                writer.writeAttribute(AlpsConstants.ID, descriptor.getId().get().toString());
+            if (id.isPresent()) {
+                writer.writeId(id.get());
             }
          
             // type
             final DescriptorType type = descriptor.getType();
             
             if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
-                writer.writeAttribute(AlpsConstants.TYPE, type.toString().toLowerCase());
+                writer.writeType(type);
             }
             
             // return type
             final Optional<URI> returnType = descriptor.getReturnType(); 
             
             if (returnType.isPresent()) {
-                writer.writeAttribute(AlpsConstants.RETURN_VALUE, returnType.get().toString());
+                writer.writeReturnType(returnType.get());
             }
 
             XmlDocumentation.write(descriptor.getDocumentation(), writer);
@@ -218,7 +217,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             
             XmlDescriptor.write(descriptor.getDescriptors(), writer);
             
-            writer.writeEndElement();
+            writer.endDescriptor();
         }
     }
 

@@ -103,16 +103,21 @@ class AlpsXmlSuiteTest {
             
             assertNotNull(is);
             
+            byte[] expectedBytes = is.readAllBytes();
+            
             Transformer inputTransformer = createInputTransformer();
             
-            final org.w3c.dom.Document expected = readDocument(inputTransformer, is);
+            final org.w3c.dom.Document expected = readDocument(inputTransformer, new ByteArrayInputStream(expectedBytes));
             expected.normalizeDocument();
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
-            (new XmlDocumentWriter()).write("application/xml", document, outputStream);
+            (new XmlDocumentWriter()).prettyPrint(2).write("application/alps+xml", document, outputStream);
             
-            final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
+            final byte[] o = outputStream.toByteArray();
+            //System.out.println(">>> " + new String(o, "UTF-8"));
+            //final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputStream.toByteArray()));
+            final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(o));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
@@ -122,7 +127,9 @@ class AlpsXmlSuiteTest {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();
                 tr.setOutputProperty(OutputKeys.INDENT, "yes");
                 tr.setOutputProperty(OutputKeys.METHOD, "xml");
-                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+//                tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+//                tr.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "doc");
+//                tr.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "doc");
                 tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
                               
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
@@ -130,13 +137,14 @@ class AlpsXmlSuiteTest {
 
                 final StringWriter writer = new StringWriter();
   
-                tr.transform(new DOMSource(expected), new StreamResult(writer));
+                writer.write(new String(expectedBytes));
+//                tr.transform(new DOMSource(expected), new StreamResult(writer));
                 
                 writer.append("\n\n");
                 writer.append("Actual:\n");
 
-                tr.transform(new DOMSource(output), new StreamResult(writer));
-
+//                tr.transform(new DOMSource(output), new StreamResult(writer));
+                writer.write(new String(o));
                 System.out.print(writer.toString());
                 System.out.println();
                 System.out.println();

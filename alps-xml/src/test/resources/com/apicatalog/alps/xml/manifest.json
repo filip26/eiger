@@ -27,7 +27,21 @@
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "User accout profile (UBER)",
            "input" : "t004-in.xml"
-        },        
+        },
+		{
+           "@id"    : "#t005",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "HTML documentation with CDATA",
+           "input" : "t005-in.xml",
+           "expected" : "t005-out.xml"
+        },
+		{
+           "@id"    : "#t006",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "HTML documentation with no tags nor entities",
+           "input" : "t006-in.xml",
+           "expected" : "t006-out.xml"
+        },                
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],

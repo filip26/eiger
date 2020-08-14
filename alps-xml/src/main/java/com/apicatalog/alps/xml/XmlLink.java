@@ -4,9 +4,6 @@ import java.net.URI;
 import java.util.Deque;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Link;
@@ -59,7 +56,7 @@ final class XmlLink implements Link, XmlElement {
         // TODO Auto-generated method stub
     }
 
-    public static void write(Set<Link> links, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentStreamException {
 
         if (links == null || links.isEmpty()) {
             return;
@@ -70,19 +67,19 @@ final class XmlLink implements Link, XmlElement {
         }        
     }
     
-    public static void write(final Link link, XMLStreamWriter writer) throws XMLStreamException {
+    public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
         
-        writer.writeStartElement(AlpsConstants.LINK);
+        writer.startLink();
         
         if (link.getHref() != null) {
-            writer.writeAttribute(AlpsConstants.HREF, link.getHref().toString());
+            writer.writeHref(link.getHref());
         }
         
         if (link.getRel() != null && !link.getRel().isBlank()) {
-            writer.writeAttribute(AlpsConstants.RELATION, link.getRel());
+            writer.writeRel(link.getRel());
         }
         
-        writer.writeEndElement();
+        writer.endLink();
 
     }
 
