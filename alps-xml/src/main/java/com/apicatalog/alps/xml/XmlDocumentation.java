@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.Deque;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Documentation;

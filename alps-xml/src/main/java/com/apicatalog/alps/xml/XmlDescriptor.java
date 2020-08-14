@@ -25,6 +25,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private URI href;
     
+    private String name;
+    
     private DescriptorType type;
     
     private URI returnValue;
@@ -36,6 +38,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     private Set<Link> links;
     
     private Set<Extension> extensions;
+    
+    private Descriptor parent;
     
     private XmlDescriptor(int index) {
         this.elementIndex = index;
@@ -129,8 +133,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public Optional<String> getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(name);
     }
 
     @Override
@@ -160,8 +163,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public Optional<Descriptor> getParent() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(parent);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -9,9 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -74,7 +70,7 @@ final class XmlDocument implements Document, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            if (id.equals(descriptor.getId())) {
+            if (descriptor.getId().filter(id::equals).isPresent()) {
                 return Optional.of(descriptor);
             }
             

@@ -31,10 +31,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
               writer.writeCharacters("\n");
           }
           writer.writeStartElement(AlpsConstants.DOCUMENT);
-          if (isPrettyPrint()) {
-              writer.writeCharacters("\n");
-          }
-//          writer.writeAttribute(AlpsConstants.VERSION, version);
+          writer.writeAttribute(AlpsConstants.VERSION, toString(version));
           
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
@@ -180,5 +177,9 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     
     public final boolean isPrettyPrint() {
         return indentLength > 0;
+    }
+    
+    private final static String toString(final DocumentVersion version) {
+        return "1.0";
     }
 }
