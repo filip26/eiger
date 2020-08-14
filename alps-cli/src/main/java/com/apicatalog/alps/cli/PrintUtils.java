@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.apicatalog.alps.cli;
 
 import java.io.PrintStream;
@@ -25,7 +40,7 @@ final class PrintUtils {
         output.println("   alps.sh [{-h|--help}]");
     }
     
-    static final void printError(PrintStream output, String path, DocumentException e) {
+    static final void printError(final PrintStream output, final String path, final DocumentException e, final String mediaType, final String filePath) {
 
         output.println("# Invalid ALPS document");
         output.println("- error:");
@@ -46,6 +61,14 @@ final class PrintUtils {
             if (ie.getPath() != null) {
                 output.println("  path:" + ie.getPath());
             }            
+        }
+        
+        if (mediaType != null) {
+            output.println("    media_type: " + mediaType);
+        }
+
+        if (filePath != null) {
+            output.println("    file: " + filePath);
         }
     }
     
