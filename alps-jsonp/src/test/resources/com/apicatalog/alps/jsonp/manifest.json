@@ -18,13 +18,19 @@
         {
            "@id"    : "#t003",
            "@type"  : ["#PositiveEvaluationTest"],
-           "name"  : "Spring Data ALPS example",
+           "name"  : "Spring Data ALPS - no root",
            "input" : "t003-in.json"
-        },        
+        },
+        {
+           "@id"    : "#t004",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Descriptor with href but no id",
+           "input" : "t004-in.json"
+        },                
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
-           "name"  : "Missing descriptor id",
+           "name"  : "Missing descriptor id/href",
            "input" : "nt001-in.json"
         }        
     ]
