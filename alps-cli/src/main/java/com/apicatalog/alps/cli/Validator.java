@@ -51,7 +51,6 @@ final class Validator {
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
         final DocumentParser parser = Utils.getParser(sourceMediaType);
-        
 
         final InputStream source;
         
@@ -71,8 +70,8 @@ final class Validator {
             
             PrintUtils.printDocInfo(output, parser.parse(null, sourceMediaType, source));
             
-        } catch (DocumentException e) {            
-            PrintUtils.printError(System.err, sourcePath, e);
+        } catch (DocumentException e) {
+            PrintUtils.printError(output, sourcePath, e);
         }
     }
     

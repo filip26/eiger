@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.net.URI;
 
 import javax.json.Json;
+import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
@@ -54,7 +55,13 @@ public final class JsonDocumentParser implements DocumentParser {
             throw new DocumentException("The parser does not support '" + mediaType + "'.");
         }
         
-        return parse(baseUri, Json.createParser(stream));
+        try {
+        
+            return parse(baseUri, Json.createParser(stream));
+            
+        } catch (JsonException e) {
+            throw new DocumentException(e);
+        }
     }
 
     @Override
@@ -68,7 +75,13 @@ public final class JsonDocumentParser implements DocumentParser {
             throw new DocumentException("The parser does not support '" + mediaType + "'.");
         }
         
-        return parse(baseUri, Json.createParser(reader));
+        try {
+        
+            return parse(baseUri, Json.createParser(reader));
+            
+        } catch (JsonException e) {
+            throw new DocumentException(e);
+        }
     }
     
     private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentException {

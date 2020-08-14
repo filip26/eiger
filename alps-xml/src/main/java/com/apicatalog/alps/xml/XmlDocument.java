@@ -97,7 +97,7 @@ final class XmlDocument implements Document, XmlElement {
         
         final Set<Descriptor> result = new LinkedHashSet<>();
         
-        findByName(descriptors, result, name);
+        findByName(result, descriptors, name);
         
         return result;
     }

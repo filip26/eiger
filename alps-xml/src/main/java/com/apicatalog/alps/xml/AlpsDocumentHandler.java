@@ -46,7 +46,6 @@ final class AlpsDocumentHandler extends DefaultHandler {
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        
         super.startElement(uri, localName, qName, attributes);
         
         final String elementName = getElementName(localName, qName);
@@ -83,6 +82,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 stack.push(doc);
                 
             } else if (AlpsConstants.DESCRIPTOR.equals(elementName)) {
+                
                 stack.push(stack.peek().addDescriptor(stack, attributes));
     
             } else if (AlpsConstants.LINK.equals(elementName)) {
@@ -115,8 +115,8 @@ final class AlpsDocumentHandler extends DefaultHandler {
             if (AlpsConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
 
-            } else {
-                stack.pop();            
+            } else if (stack.peek().getElementName().equals(elementName)) {
+                stack.pop();
             }
                 
             

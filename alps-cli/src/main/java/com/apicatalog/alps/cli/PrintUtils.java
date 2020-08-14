@@ -26,32 +26,36 @@ final class PrintUtils {
     
     static final void printError(PrintStream output, String path, DocumentException e) {
         
-        output.println("Source is not valid ALPS document");
+        output.println("valid: false");
         
         if (e instanceof MalformedDocumentException) {
             
             final MalformedDocumentException me = (MalformedDocumentException)e;
             
-            output.println("  error: " + me.getMessage());
-            output.println("  cause: Unexpected character at line=" + me.getLineNumber() + ", column=" + me.getColumnNumber() + ".");
-            
-            
+            output.println("error:");
+            output.println("  message: " + me.getMessage());
+            output.println("  location:");
+            output.println("    line: " + me.getLineNumber());
+            output.println("    column: " + me.getColumnNumber());
+
         } else if (e instanceof InvalidDocumentException) {
             
             final InvalidDocumentException ie = (InvalidDocumentException)e;
-            output.println("  error: " + ie.getMessage());
+            output.println("error:");
+            output.println("  message: " + ie.getMessage());
             
             if (ie.getPath() != null) {
                 output.println("  path:" + ie.getPath());
             }
             
         } else {
-            output.println("  error:" + e.getMessage());
+            output.println("error: " + e.getMessage());
         }
     }
     
     static final void printDocInfo(PrintStream output, Document document) {
-        output.println("Source is valid ALPS document.");
+        output.println("valid: true");
+        output.println("alps: ");
         output.println("  version: " + versionToString(document.getVersion()));
         output.println("  descriptors:");
         output.println("    top_level: " + document.getDescriptors().size());

@@ -66,8 +66,8 @@ final class JsonDescriptor implements Descriptor {
     }
     
     @Override
-    public URI getId() {
-        return id;
+    public Optional<URI> getId() {
+        return Optional.ofNullable(id);
     }
 
     @Override
@@ -276,7 +276,7 @@ final class JsonDescriptor implements Descriptor {
         
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
         
-        jsonDescriptor.add(AlpsConstants.ID, descriptor.getId().toString());
+        descriptor.getId().ifPresent(id -> jsonDescriptor.add(AlpsConstants.ID, id.toString()));
         
         if (descriptor.getType() != null && !DescriptorType.SEMANTIC.equals(descriptor.getType())) {
             jsonDescriptor.add(AlpsConstants.TYPE, descriptor.getType().name().toLowerCase());
