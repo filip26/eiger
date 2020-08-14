@@ -41,8 +41,9 @@ e.g.
 
 ```bash
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
+```
+```yaml
 --- # Valid ALPS Document
-valid: true
 document:
   version: 1.0
   descriptors:
