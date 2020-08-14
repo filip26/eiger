@@ -86,7 +86,7 @@ final class Validator {
             PrintUtils.printDocInfo(output, parser.parse(null, sourceMediaType, source), sourceMediaType, sourcePath);
             
         } catch (DocumentException e) {
-            PrintUtils.printError(output, sourcePath, e);
+            PrintUtils.printError(output, sourcePath, e, sourceMediaType, sourcePath);
         }
     }
     

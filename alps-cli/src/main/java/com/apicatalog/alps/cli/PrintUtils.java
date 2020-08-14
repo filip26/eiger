@@ -40,7 +40,7 @@ final class PrintUtils {
         output.println("   alps.sh [{-h|--help}]");
     }
     
-    static final void printError(PrintStream output, String path, DocumentException e) {
+    static final void printError(final PrintStream output, final String path, final DocumentException e, final String mediaType, final String filePath) {
 
         output.println("# Invalid ALPS document");
         output.println("- error:");
@@ -61,6 +61,14 @@ final class PrintUtils {
             if (ie.getPath() != null) {
                 output.println("  path:" + ie.getPath());
             }            
+        }
+        
+        if (mediaType != null) {
+            output.println("    media_type: " + mediaType);
+        }
+
+        if (filePath != null) {
+            output.println("    file: " + filePath);
         }
     }
     
