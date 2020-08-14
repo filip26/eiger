@@ -1,4 +1,5 @@
-{ 
+{
+"alps": { 
 "version" : "1.0",
   "descriptors" : [ {
     "id" : "todo-representation",
@@ -58,4 +59,5 @@
     "type" : "SAFE",
     "rt" : "#todo-representation"
   } ]
+  }
 }
