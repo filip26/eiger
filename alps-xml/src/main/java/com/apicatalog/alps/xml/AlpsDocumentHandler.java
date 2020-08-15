@@ -62,7 +62,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
         
         try { 
         
-            if (AlpsConstants.DOCUMENT.equals(elementName)) {
+            if (XmlConstants.DOCUMENT.equals(elementName)) {
                 
                 if (State.INIT.equals(state)) {
                     stack.push(XmlDocument.create(attributes));
@@ -75,20 +75,20 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 return;
             }
             
-            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
+            if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 
                 state = State.DOCUMENTATION;
                 stack.peek().addDocumentation(stack, attributes);
                 
-            } else if (AlpsConstants.DESCRIPTOR.equals(elementName)) {
+            } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
                 
                 stack.peek().addDescriptor(stack, attributes);
     
-            } else if (AlpsConstants.LINK.equals(elementName)) {
+            } else if (XmlConstants.LINK.equals(elementName)) {
                 
                 stack.peek().addLink(stack, attributes);
     
-            } else if (AlpsConstants.EXTENSION.equals(elementName)) {
+            } else if (XmlConstants.EXTENSION.equals(elementName)) {
                 
                 stack.peek().addExtension(stack, attributes);
                 
@@ -114,7 +114,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
 
         if (State.DOCUMENT.equals(state)) {
         
-            if (AlpsConstants.DOCUMENT.equals(elementName)) {
+            if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
 
             } else if (stack.peek().getElementName().equals(elementName)) {
@@ -124,7 +124,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             
         } else if (State.DOCUMENTATION.equals(state)) {
             
-            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
+            if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 state = State.DOCUMENT;
                 stack.pop();
                 

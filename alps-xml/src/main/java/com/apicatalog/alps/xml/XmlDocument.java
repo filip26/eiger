@@ -66,7 +66,7 @@ final class XmlDocument implements Document, XmlElement {
     private static final DocumentVersion readVersion(Attributes attrs) throws SAXException {
 
         // version
-        String version = attrs.getValue(AlpsConstants.VERSION);
+        String version = attrs.getValue(XmlConstants.VERSION);
 
         if (version == null || version.isBlank() || "1.0".equals(version)) {
 
@@ -179,7 +179,7 @@ final class XmlDocument implements Document, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsConstants.DOCUMENT;
+        return XmlConstants.DOCUMENT;
     }
 
     @Override

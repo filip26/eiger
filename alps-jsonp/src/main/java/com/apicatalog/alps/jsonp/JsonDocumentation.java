@@ -83,18 +83,18 @@ final class JsonDocumentation implements Documentation {
         final JsonDocumentation doc = new JsonDocumentation();
         doc.mediaType = "text/plain";
         
-        if (value.containsKey(AlpsConstants.VALUE)) {
+        if (value.containsKey(JsonConstants.VALUE)) {
 
-            final JsonValue content = value.get(AlpsConstants.VALUE);
+            final JsonValue content = value.get(JsonConstants.VALUE);
             
             if (JsonUtils.isNotString(content)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_VALUE, "doc.value property must be string but was " + content.getValueType());
             }
             doc.content = JsonUtils.getString(content);
             
-        } else if (value.containsKey(AlpsConstants.HREF)) {
+        } else if (value.containsKey(JsonConstants.HREF)) {
             
-            final JsonValue href = value.get(AlpsConstants.HREF);
+            final JsonValue href = value.get(JsonConstants.HREF);
             
             if (JsonUtils.isNotString(href)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_HREF, "'href' property must have string value but was " + href.getValueType());
@@ -112,9 +112,9 @@ final class JsonDocumentation implements Documentation {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "doc object must contain href of value property");
         }
         
-        if (value.containsKey(AlpsConstants.FORMAT)) {
+        if (value.containsKey(JsonConstants.FORMAT)) {
             
-            final JsonValue format = value.get(AlpsConstants.FORMAT);
+            final JsonValue format = value.get(JsonConstants.FORMAT);
             
             if (JsonUtils.isNotString(format)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.format property must be string but was " + format.getValueType());
@@ -152,15 +152,15 @@ final class JsonDocumentation implements Documentation {
         final JsonObjectBuilder doc = Json.createObjectBuilder();
         
         if (documentation.getHref() != null) {
-            doc.add(AlpsConstants.HREF, documentation.getHref().toString());
+            doc.add(JsonConstants.HREF, documentation.getHref().toString());
         }
         
         if (documentation.getMediaType() != null && !"text/plain".equalsIgnoreCase(documentation.getMediaType())) {
-            doc.add(AlpsConstants.FORMAT, documentation.getMediaType());
+            doc.add(JsonConstants.FORMAT, documentation.getMediaType());
         }
 
         if (documentation.getContent() != null) {
-            doc.add(AlpsConstants.VALUE, documentation.getContent());
+            doc.add(JsonConstants.VALUE, documentation.getContent());
         }
         
         return doc.build();

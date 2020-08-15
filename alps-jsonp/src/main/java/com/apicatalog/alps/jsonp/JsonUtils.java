@@ -61,7 +61,7 @@ final class JsonUtils {
     
     public static final URI getHref(final JsonObject object) throws InvalidDocumentException {
         
-        final JsonValue href = object.get(AlpsConstants.HREF);
+        final JsonValue href = object.get(JsonConstants.HREF);
         
         if (JsonUtils.isNotString(href)) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'href' property value must be URI represented as JSON string but was " + href);

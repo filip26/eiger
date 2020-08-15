@@ -38,7 +38,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
         //TODO
         XmlDocumentation doc = new XmlDocumentation(index);
         
-        doc.mediaType = attributes.getValue(AlpsConstants.MEDIA_TYPE);
+        doc.mediaType = attributes.getValue(XmlConstants.MEDIA_TYPE);
         
         if (doc.mediaType == null) {
             doc.mediaType = "text";
@@ -67,7 +67,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsConstants.DOCUMENTATION;
+        return XmlConstants.DOCUMENTATION;
     }
     
     @Override

@@ -47,7 +47,7 @@ final class XmlLink implements Link, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsConstants.LINK;
+        return XmlConstants.LINK;
     }
 
     @Override
@@ -77,7 +77,7 @@ final class XmlLink implements Link, XmlElement {
 
         final XmlLink link = new XmlLink(index);
         
-        String href = attributes.getValue(AlpsConstants.HREF);
+        String href = attributes.getValue(XmlConstants.HREF);
         
         if (href == null || href.isBlank()) {
             //TODO
@@ -85,7 +85,7 @@ final class XmlLink implements Link, XmlElement {
         
         link.href = URI.create(href);
         
-        String rel = attributes.getValue(AlpsConstants.RELATION);
+        String rel = attributes.getValue(XmlConstants.RELATION);
         
         if (rel == null || rel.isBlank()) {
             //TODO

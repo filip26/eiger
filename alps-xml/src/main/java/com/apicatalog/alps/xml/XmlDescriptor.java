@@ -64,35 +64,35 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
         final XmlDescriptor descriptor = new XmlDescriptor(index);
         
-        final String id = attrs.getValue(AlpsConstants.ID);
+        final String id = attrs.getValue(XmlConstants.ID);
         
         if (id != null && !id.isBlank()) {
             try {
                 descriptor.id = URI.create(id);
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
             }
         }  
 
-        final String href = attrs.getValue(AlpsConstants.HREF);
+        final String href = attrs.getValue(XmlConstants.HREF);
         
         if (href != null && !href.isBlank()) {
             try {
                 descriptor.href = URI.create(href);
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
             }
         }
 
         if (descriptor.id == null && descriptor.href == null) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index));
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index));
         }
         
-        descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
+        descriptor.type = parseType(attrs.getValue(XmlConstants.TYPE));
         
-        String rt = attrs.getValue(AlpsConstants.RETURN_TYPE);
+        String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
@@ -128,7 +128,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public String getElementName() {
-        return AlpsConstants.DESCRIPTOR;
+        return XmlConstants.DESCRIPTOR;
     }
 
     @Override

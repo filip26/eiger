@@ -100,14 +100,14 @@ public final class JsonDocumentParser implements DocumentParser {
             
             final JsonObject rootObject = parser.getObject();
             
-            if (!rootObject.containsKey(AlpsConstants.ROOT)) {
-                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' is not present");
+            if (!rootObject.containsKey(JsonConstants.ROOT)) {
+                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + JsonConstants.ROOT + "' is not present");
             }
             
-            final JsonValue alpsObject = rootObject.get(AlpsConstants.ROOT);
+            final JsonValue alpsObject = rootObject.get(JsonConstants.ROOT);
             
             if (JsonUtils.isNotObject(alpsObject)) {
-                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + AlpsConstants.ROOT + "' does not contain JSON object");
+                throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + JsonConstants.ROOT + "' does not contain JSON object");
             }
                 
             return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
