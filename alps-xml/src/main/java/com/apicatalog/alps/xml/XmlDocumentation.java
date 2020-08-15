@@ -22,6 +22,7 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.error.DocumentException;
 
 final class XmlDocumentation implements Documentation, XmlElement {
 
@@ -65,11 +66,6 @@ final class XmlDocumentation implements Documentation, XmlElement {
     }
 
     @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public String getElementName() {
         return AlpsConstants.DOCUMENTATION;
     }
@@ -93,18 +89,6 @@ final class XmlDocumentation implements Documentation, XmlElement {
             
             writer.endDoc();
         }
-    }
-
-    @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void addLink(XmlLink link) {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
@@ -134,5 +118,20 @@ final class XmlDocumentation implements Documentation, XmlElement {
         content.append(elementName);        
         content.append('>');
     }
-    
+
+    @Override
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    }
+
+    @Override
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    }
+
+    @Override
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    }
+
+    @Override
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    }
 }

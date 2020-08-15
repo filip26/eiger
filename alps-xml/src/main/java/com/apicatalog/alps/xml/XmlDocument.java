@@ -178,11 +178,6 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        documentation.add(doc);
-    }
-
-    @Override
     public String getElementName() {
         return AlpsConstants.DOCUMENT;
     }
@@ -193,17 +188,36 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
         descriptors.add(dsc);
-        return dsc;
+        stack.push(dsc);
     }
 
     @Override
-    public void addLink(XmlLink link) {
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
         links.add(link);
+        stack.push(link);
     }
-    
+
+    @Override
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
+        documentation.add(doc);
+        stack.push(doc);
+    }
+
+    @Override
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
+        extensions.add(ext);
+        stack.push(ext);
+    }
+
     public static void write(Document document, DocumentStreamWriter writer) throws DocumentStreamException, DocumentException {
 
         if (document.getVersion() == null) {

@@ -121,11 +121,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        documentation.add(doc);
-    }
-
-    @Override
     public void addText(char[] ch, int start, int length) {
         // TODO Auto-generated method stub
         
@@ -185,18 +180,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     public Set<Link> getLinks() {
         return links;
     }
-
-    @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
-        descriptors.add(dsc);
-        return dsc;
-    }
-
-    @Override
-    public void addLink(XmlLink link) {
-        links.add(link);
-    }
     
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentStreamException {
         if (descriptors == null || descriptors.isEmpty()) {
@@ -238,5 +221,35 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     public void endElement(String elementName) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+        descriptors.add(dsc);
+        stack.push(dsc);
+    }
+
+    @Override
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
+        links.add(link);
+        stack.push(link);
+    }
+
+    @Override
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
+        documentation.add(doc);
+        stack.push(doc);
+    }
+
+    @Override
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
+        extensions.add(ext);
+        stack.push(ext);
     }
 }
