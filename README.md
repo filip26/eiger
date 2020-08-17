@@ -74,6 +74,7 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 - [ ] 0.2 XML Parser & Writer
 - [ ] 0.3 CLI - validation, transformations (JSON <-> XML)
 - [ ] 0.4 Effective Document Processor
+- [ ] 0.5 Semantic Equivalence
 - [ ] TBD
 
 ### Building
