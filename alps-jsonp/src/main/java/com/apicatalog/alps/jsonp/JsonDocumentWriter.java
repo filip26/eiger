@@ -62,5 +62,4 @@ public final class JsonDocumentWriter implements DocumentWriter {
         jsonWriter.write(JsonDocument.toJson(document));
         jsonWriter.close();
     }
-
 }
