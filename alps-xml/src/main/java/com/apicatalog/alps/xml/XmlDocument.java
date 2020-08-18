@@ -66,7 +66,7 @@ final class XmlDocument implements Document, XmlElement {
     private static final DocumentVersion readVersion(Attributes attrs) throws SAXException {
 
         // version
-        String version = attrs.getValue(AlpsConstants.VERSION);
+        String version = attrs.getValue(XmlConstants.VERSION);
 
         if (version == null || version.isBlank() || "1.0".equals(version)) {
 
@@ -85,11 +85,11 @@ final class XmlDocument implements Document, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            if (descriptor.getId().filter(id::equals).isPresent()) {
+            if (descriptor.id().filter(id::equals).isPresent()) {
                 return Optional.of(descriptor);
             }
             
-            final Optional<Descriptor> result = findById(descriptor.getDescriptors(), id);
+            final Optional<Descriptor> result = findById(descriptor.descriptors(), id);
             
             if (result.isPresent()) {
                 return result;
@@ -118,26 +118,26 @@ final class XmlDocument implements Document, XmlElement {
         
         for (final Descriptor descriptor : descriptors) {
             
-            if (descriptor.getName().filter(name::equalsIgnoreCase).isPresent()) {
+            if (descriptor.name().filter(name::equalsIgnoreCase).isPresent()) {
                 result.add(descriptor);
             }
             
-            findByName(result, descriptor.getDescriptors(), name);
+            findByName(result, descriptor.descriptors(), name);
         }        
     }
 
     @Override
-    public DocumentVersion getVersion() {
+    public DocumentVersion version() {
         return version;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors;
     }
 
     @Override
-    public Collection<Descriptor> getAllDescriptors() {
+    public Collection<Descriptor> allDescriptors() {
 
         if (descriptors.isEmpty()) {
             return Collections.emptySet();
@@ -153,75 +153,84 @@ final class XmlDocument implements Document, XmlElement {
     private static final void getAllDescriptors(final Collection<Descriptor> result, final Set<Descriptor> descriptors) {
         for (final Descriptor descriptor : descriptors) {
             result.add(descriptor);
-            getAllDescriptors(result, descriptor.getDescriptors());
+            getAllDescriptors(result, descriptor.descriptors());
         }
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return documentation;
     }
 
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public URI getBaseUri() {
+    public URI baseUri() {
         return baseUri;
     }
 
     @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        documentation.add(doc);
-    }
-
-    @Override
     public String getElementName() {
-        return AlpsConstants.DOCUMENT;
+        return XmlConstants.DOCUMENT;
     }
 
     @Override
-    public void addText(char[] ch, int start, int length) {
-        // TODO Auto-generated method stub   
-    }
-
-    @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
         descriptors.add(dsc);
-        return dsc;
+        stack.push(dsc);
     }
 
     @Override
-    public void addLink(XmlLink link) {
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
         links.add(link);
+        stack.push(link);
     }
-    
+
+    @Override
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
+        documentation.add(doc);
+        stack.push(doc);
+    }
+
+    @Override
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
+        extensions.add(ext);
+        stack.push(ext);
+    }
+
     public static void write(Document document, DocumentStreamWriter writer) throws DocumentStreamException, DocumentException {
 
-        if (document.getVersion() == null) {
+        if (document.version() == null) {
             throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
         }
         
-        writer.startDocument(document.getVersion());
+        writer.startDocument(document.version());
                 
-        if (document.getDocumentation() != null && !document.getDocumentation().isEmpty()) {
-            XmlDocumentation.write(document.getDocumentation(), writer);
+        if (document.documentation() != null && !document.documentation().isEmpty()) {
+            XmlDocumentation.write(document.documentation(), writer);
         }
         
-        if (document.getLinks() != null && !document.getLinks().isEmpty()) {
-            XmlLink.write(document.getLinks(), writer);
+        if (document.links() != null && !document.links().isEmpty()) {
+            XmlLink.write(document.links(), writer);
         }
 
-        if (document.getDescriptors() != null && !document.getDescriptors().isEmpty()) {
-            XmlDescriptor.write(document.getDescriptors(), writer);
+        if (document.descriptors() != null && !document.descriptors().isEmpty()) {
+            XmlDescriptor.write(document.descriptors(), writer);
         }
 
         writer.endDocument();        
@@ -230,17 +239,5 @@ final class XmlDocument implements Document, XmlElement {
     @Override
     public int getElementIndex() {
         return -1;
-    }
-
-    @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
     }
 }

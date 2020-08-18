@@ -35,40 +35,24 @@ final class XmlLink implements Link, XmlElement {
     }
     
     @Override
-    public URI getHref() {
+    public URI href() {
         return href;
     }
 
     @Override
-    public String getRel() {
+    public String rel() {
         return rel;
     }
 
     @Override
     public String getElementName() {
-        return AlpsConstants.LINK;
+        return XmlConstants.LINK;
     }
 
     @Override
     public void addText(char[] ch, int start, int length) {
         // TODO Auto-generated method stub
         
-    }
-
-    @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        // TODO Auto-generated method stub        
-    }
-
-    @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void addLink(XmlLink link) {
-        // TODO Auto-generated method stub
     }
 
     public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentStreamException {
@@ -84,7 +68,7 @@ final class XmlLink implements Link, XmlElement {
     
     public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
         
-        writer.writeLink(link.getHref(), link.getRel());
+        writer.writeLink(link.href(), link.rel());
        
     }
 
@@ -92,7 +76,7 @@ final class XmlLink implements Link, XmlElement {
 
         final XmlLink link = new XmlLink(index);
         
-        String href = attributes.getValue(AlpsConstants.HREF);
+        String href = attributes.getValue(XmlConstants.HREF);
         
         if (href == null || href.isBlank()) {
             //TODO
@@ -100,7 +84,7 @@ final class XmlLink implements Link, XmlElement {
         
         link.href = URI.create(href);
         
-        String rel = attributes.getValue(AlpsConstants.RELATION);
+        String rel = attributes.getValue(XmlConstants.RELATION);
         
         if (rel == null || rel.isBlank()) {
             //TODO
@@ -114,17 +98,5 @@ final class XmlLink implements Link, XmlElement {
     @Override
     public int getElementIndex() {
         return elementIndex;
-    }
-
-    @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
     }
 }

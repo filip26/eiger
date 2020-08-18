@@ -44,34 +44,34 @@ public interface Document {
      *
      * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2.2.14">ALPS Version</a>
      * 
-     * @return ALPS document version, nevern <code>null</code>
+     * @return ALPS document version, never <code>null</code>
 	 */
-	DocumentVersion getVersion();
+	DocumentVersion version();
 
 	/**
 	 * Returns top level document descriptors.
 	 * 
-	 * @return top level document descriptors
+	 * @return top level document descriptors, never <code>null</code>
 	 */
-	Set<Descriptor> getDescriptors();
+	Set<Descriptor> descriptors();
 	
 	/**
 	 * Returns flattened document descriptors.
 	 * 
-	 * @return all descriptors present in the document
+	 * @return all descriptors present in the document, never <code>null</code>
 	 */
-	Collection<Descriptor> getAllDescriptors();
+	Collection<Descriptor> allDescriptors();
 	
-	Set<Link> getLinks();
+	Set<Link> links();
 	
-	Set<Documentation> getDocumentation();
+	Set<Documentation> documentation();
 	
-	Set<Extension> getExtensions();
+	Set<Extension> extensions();
 	
 	/**
 	 * Base {@link URI} of the ALPS document 
 	 * 
 	 * @return base {@link URI}
 	 */
-	URI getBaseUri();	
+	URI baseUri();	
 }

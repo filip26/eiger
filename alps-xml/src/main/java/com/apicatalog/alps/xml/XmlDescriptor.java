@@ -16,6 +16,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -64,35 +65,35 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
         final XmlDescriptor descriptor = new XmlDescriptor(index);
         
-        final String id = attrs.getValue(AlpsConstants.ID);
+        final String id = attrs.getValue(XmlConstants.ID);
         
         if (id != null && !id.isBlank()) {
             try {
                 descriptor.id = URI.create(id);
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
             }
         }  
 
-        final String href = attrs.getValue(AlpsConstants.HREF);
+        final String href = attrs.getValue(XmlConstants.HREF);
         
         if (href != null && !href.isBlank()) {
             try {
                 descriptor.href = URI.create(href);
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
             }
         }
 
         if (descriptor.id == null && descriptor.href == null) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, AlpsConstants.DESCRIPTOR, index));
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index));
         }
         
-        descriptor.type = parseType(attrs.getValue(AlpsConstants.TYPE));
+        descriptor.type = parseType(stack, index, attrs);
         
-        String rt = attrs.getValue(AlpsConstants.RETURN_TYPE);
+        String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
@@ -110,92 +111,75 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         return descriptor;
     }
     
-    private static DescriptorType parseType(String value) {
+    private static DescriptorType parseType(final Deque<XmlElement> stack, final int index, final Attributes attrs) throws InvalidDocumentException {
 
+        final String value = attrs.getValue(XmlConstants.TYPE);
+        
         if (value == null || value.isBlank()) {
             return DescriptorType.SEMANTIC;
         }
-        
-        //TODO check 
-        return DescriptorType.valueOf(value.toUpperCase());
-    }
-
-    @Override
-    public void addDocumentation(XmlDocumentation doc) {
-        documentation.add(doc);
-    }
-
-    @Override
-    public void addText(char[] ch, int start, int length) {
-        // TODO Auto-generated method stub
-        
+     
+        try { 
+            return DescriptorType.valueOf(value.toUpperCase());
+            
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDocumentException(DocumentError.INVALID_TYPE, XPathUtil.getPath(stack, XmlConstants.TYPE), "Expected one of " + Arrays.toString(DescriptorType.values()) + " but was " + value);
+        }
     }
 
     @Override
     public String getElementName() {
-        return AlpsConstants.DESCRIPTOR;
+        return XmlConstants.DESCRIPTOR;
     }
 
     @Override
-    public Optional<URI> getId() {
+    public Optional<URI> id() {
         return Optional.ofNullable(id);
     }
 
     @Override
-    public Optional<URI> getHref() {
+    public Optional<URI> href() {
         return Optional.ofNullable(href);
     }
 
     @Override
-    public Optional<String> getName() {
+    public Optional<String> name() {
         return Optional.ofNullable(name);
     }
 
     @Override
-    public DescriptorType getType() {
+    public DescriptorType type() {
         return type;
     }
 
     @Override
-    public Optional<URI> getReturnType() {
+    public Optional<URI> returnType() {
         return Optional.ofNullable(returnValue);
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return documentation;
     }
 
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors;
     }
 
     @Override
-    public Optional<Descriptor> getParent() {
+    public Optional<Descriptor> parent() {
         return Optional.ofNullable(parent);
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
-    }
-
-    @Override
-    public XmlDescriptor addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
-        descriptors.add(dsc);
-        return dsc;
-    }
-
-    @Override
-    public void addLink(XmlLink link) {
-        links.add(link);
     }
     
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentStreamException {
@@ -206,18 +190,18 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         for (final Descriptor descriptor : descriptors) {
             
             writer.startDescriptor(
-                        descriptor.getId().orElse(null),
-                        descriptor.getHref().orElse(null),
-                        descriptor.getType(),
-                        descriptor.getReturnType().orElse(null),
-                        descriptor.getName().orElse(null)
+                        descriptor.id().orElse(null),
+                        descriptor.href().orElse(null),
+                        descriptor.type(),
+                        descriptor.returnType().orElse(null),
+                        descriptor.name().orElse(null)
                     );
             
-            XmlDocumentation.write(descriptor.getDocumentation(), writer);
+            XmlDocumentation.write(descriptor.documentation(), writer);
             
-            XmlLink.write(descriptor.getLinks(), writer);
+            XmlLink.write(descriptor.links(), writer);
             
-            XmlDescriptor.write(descriptor.getDescriptors(), writer);
+            XmlDescriptor.write(descriptor.descriptors(), writer);
             
             writer.endDescriptor();
         }
@@ -229,14 +213,31 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+        dsc.parent = this;
+        descriptors.add(dsc);
+        stack.push(dsc);
     }
 
     @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
+        links.add(link);
+        stack.push(link);
     }
+
+    @Override
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
+        documentation.add(doc);
+        stack.push(doc);
+    }
+
+    @Override
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
+        extensions.add(ext);
+        stack.push(ext);
+    }    
 }

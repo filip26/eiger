@@ -23,6 +23,10 @@ class XPathUtil {
     public static final String getPath(Deque<XmlElement> stack) {
         return stack.stream().map(XPathUtil::getElementPath).collect(Collectors.joining());
     }
+    
+    public static final String getPath(Deque<XmlElement> stack, final String element) {
+        return getPath(stack, element, -1);
+    }
 
     public static final String getPath(Deque<XmlElement> stack, final String element, final int index) {
         return  stack.stream().map(XPathUtil::getElementPath).collect(Collectors.joining()) 

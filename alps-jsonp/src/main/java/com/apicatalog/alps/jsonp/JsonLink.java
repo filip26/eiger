@@ -35,12 +35,12 @@ final class JsonLink implements Link {
     private String rel;
     
     @Override
-    public URI getHref() {
+    public URI href() {
         return href;
     }
 
     @Override
-    public String getRel() {
+    public String rel() {
         return rel;
     }
 
@@ -64,15 +64,15 @@ final class JsonLink implements Link {
         
         final JsonLink link = new JsonLink();
         
-        if (!linkObject.containsKey(AlpsConstants.HREF)) {
+        if (!linkObject.containsKey(JsonConstants.HREF)) {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "Link object must contain 'href' property");
         }
 
-        if (!linkObject.containsKey(AlpsConstants.RELATION)) {
+        if (!linkObject.containsKey(JsonConstants.RELATION)) {
             throw new InvalidDocumentException(DocumentError.MISSING_REL, "Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(AlpsConstants.HREF);
+        final JsonValue href = linkObject.get(JsonConstants.HREF);
         
         if (JsonUtils.isNotString(href)) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href.getValueType());
@@ -86,7 +86,7 @@ final class JsonLink implements Link {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href);
         }
 
-        final JsonValue rel = linkObject.get(AlpsConstants.RELATION);
+        final JsonValue rel = linkObject.get(JsonConstants.RELATION);
         
         if (JsonUtils.isNotString(href)) {
             throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + rel.getValueType());
@@ -114,12 +114,12 @@ final class JsonLink implements Link {
         
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
         
-        if (link.getHref() != null) {
-            jsonLink.add(AlpsConstants.HREF, link.getHref().toString());
+        if (link.href() != null) {
+            jsonLink.add(JsonConstants.HREF, link.href().toString());
         }
         
-        if (link.getRel() != null && !link.getRel().isBlank()) {
-            jsonLink.add(AlpsConstants.RELATION, link.getRel());
+        if (link.rel() != null && !link.rel().isBlank()) {
+            jsonLink.add(JsonConstants.RELATION, link.rel());
         }
         
         return jsonLink.build();

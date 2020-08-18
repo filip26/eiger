@@ -16,12 +16,18 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.Optional;
 
 public interface Documentation {
 	
-	URI getHref();
-	
-	String getMediaType();
-	
-	String getContent();
+	Optional<URI> href();
+
+	Optional<Content> content();
+
+	interface Content {
+	    
+	    String type();
+	    
+	    String value();	    
+	}
 }

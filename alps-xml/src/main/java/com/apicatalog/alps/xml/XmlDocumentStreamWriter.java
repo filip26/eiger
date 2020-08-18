@@ -45,8 +45,8 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
           if (isPrettyPrint()) {
               writer.writeCharacters("\n");
           }
-          writer.writeStartElement(AlpsConstants.DOCUMENT);
-          writer.writeAttribute(AlpsConstants.VERSION, toString(version));
+          writer.writeStartElement(XmlConstants.DOCUMENT);
+          writer.writeAttribute(XmlConstants.VERSION, toString(version));
           if (isPrettyPrint()) {
               writer.writeCharacters("\n");
           }
@@ -70,26 +70,26 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException {
         try {
             writeIndent();
-            writer.writeStartElement(AlpsConstants.DESCRIPTOR);
+            writer.writeStartElement(XmlConstants.DESCRIPTOR);
 
             if (id != null) {
-                writer.writeAttribute(AlpsConstants.ID, id.toString());
+                writer.writeAttribute(XmlConstants.ID, id.toString());
             }
 
             if (href != null) {
-                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+                writer.writeAttribute(XmlConstants.HREF, href.toString());
             }
 
             if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
-                writer.writeAttribute(AlpsConstants.TYPE, type.name().toLowerCase());
+                writer.writeAttribute(XmlConstants.TYPE, type.name().toLowerCase());
             }
             
             if (returnType != null) {
-                writer.writeAttribute(AlpsConstants.RETURN_TYPE, returnType.toString());
+                writer.writeAttribute(XmlConstants.RETURN_TYPE, returnType.toString());
             }
 
             if (name != null) {
-                writer.writeAttribute(AlpsConstants.NAME, name);
+                writer.writeAttribute(XmlConstants.NAME, name);
             }
 
             if (isPrettyPrint()) {
@@ -121,13 +121,13 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void startDoc(String mediaType, URI href) throws DocumentStreamException {
         try {
             writeIndent();
-            writer.writeStartElement(AlpsConstants.DOCUMENTATION);
+            writer.writeStartElement(XmlConstants.DOCUMENTATION);
             
             if (mediaType != null && !"text".equals(mediaType) && !"text/plain".equals(mediaType)) {
-                writer.writeAttribute(AlpsConstants.MEDIA_TYPE, mediaType);
+                writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType);
             }
             if (href != null) {
-                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+                writer.writeAttribute(XmlConstants.HREF, href.toString());
             }
 
         } catch (XMLStreamException e) {
@@ -182,14 +182,14 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void writeLink(URI href, String rel) throws DocumentStreamException {
         
         try {
-            writer.writeStartElement(AlpsConstants.LINK);
+            writer.writeStartElement(XmlConstants.LINK);
             
             if (href != null) {
-                writer.writeAttribute(AlpsConstants.HREF, href.toString());
+                writer.writeAttribute(XmlConstants.HREF, href.toString());
             }
             
             if (rel != null && !rel.isBlank()) {
-                writer.writeAttribute(AlpsConstants.RELATION, rel);
+                writer.writeAttribute(XmlConstants.RELATION, rel);
             }
             
             writer.writeEndElement();

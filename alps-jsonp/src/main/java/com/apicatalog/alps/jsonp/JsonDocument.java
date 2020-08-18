@@ -65,46 +65,46 @@ final class JsonDocument implements Document {
     public Set<Descriptor> findByName(final String name) {
         return descriptors
                     .values().stream()
-                    .filter(d -> d.getName().isPresent() && name.equals(d.getName().get()))
+                    .filter(d -> d.name().isPresent() && name.equals(d.name().get()))
                     .collect(Collectors.toSet());
     }
 
     @Override
-    public DocumentVersion getVersion() {
+    public DocumentVersion version() {
         return version;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors
                     .values().stream()
-                    .filter(d -> d.getParent().isEmpty())
+                    .filter(d -> d.parent().isEmpty())
                     .collect(Collectors.toSet())
                     ;
     }
 
     @Override
-    public Collection<Descriptor> getAllDescriptors() {
+    public Collection<Descriptor> allDescriptors() {
         return descriptors.values();
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return documentation;
     }
     
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public URI getBaseUri() {
+    public URI baseUri() {
         return baseUri;
     }
     
@@ -114,46 +114,46 @@ final class JsonDocument implements Document {
         document.baseUri = baseUri;
 
         // version
-        if (alpsObject.containsKey(AlpsConstants.VERSION)) {
+        if (alpsObject.containsKey(JsonConstants.VERSION)) {
             
-            final JsonValue alpsVersion = alpsObject.get(AlpsConstants.VERSION);
+            final JsonValue alpsVersion = alpsObject.get(JsonConstants.VERSION);
             
             if (JsonUtils.isString(alpsVersion) 
-                    && AlpsConstants.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
+                    && JsonConstants.VERSION_1_0.equals(JsonUtils.getString(alpsVersion))) {
                 
                 document.version = DocumentVersion.VERSION_1_0;
             }
         }
         
         // documentation
-        if (alpsObject.containsKey(AlpsConstants.DOCUMENTATION)) {
-            document.documentation = JsonDocumentation.parse(alpsObject.get(AlpsConstants.DOCUMENTATION));
+        if (alpsObject.containsKey(JsonConstants.DOCUMENTATION)) {
+            document.documentation = JsonDocumentation.parse(alpsObject.get(JsonConstants.DOCUMENTATION));
             
         } else {
             document.documentation = Collections.emptySet();
         }
         
         // links
-        if (alpsObject.containsKey(AlpsConstants.LINK)) {
-            document.links = JsonLink.parse(alpsObject.get(AlpsConstants.LINK));
+        if (alpsObject.containsKey(JsonConstants.LINK)) {
+            document.links = JsonLink.parse(alpsObject.get(JsonConstants.LINK));
             
         } else {
             document.links = Collections.emptySet();
         }
         
         // descriptors
-        if (alpsObject.containsKey(AlpsConstants.DESCRIPTOR)) {
+        if (alpsObject.containsKey(JsonConstants.DESCRIPTOR)) {
             
             document.descriptors = new HashMap<>();
-            JsonDescriptor.parse(document.descriptors, alpsObject.get(AlpsConstants.DESCRIPTOR));
+            JsonDescriptor.parse(document.descriptors, alpsObject.get(JsonConstants.DESCRIPTOR));
             
         } else {
             document.descriptors = Collections.emptyMap();
         }
         
         // extensions
-        if (alpsObject.containsKey(AlpsConstants.EXTENSION)) {
-            document.extensions = JsonExtension.parse(alpsObject.get(AlpsConstants.EXTENSION));
+        if (alpsObject.containsKey(JsonConstants.EXTENSION)) {
+            document.extensions = JsonExtension.parse(alpsObject.get(JsonConstants.EXTENSION));
             
         } else {
             document.extensions = Collections.emptySet();
@@ -167,29 +167,27 @@ final class JsonDocument implements Document {
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
         // version
-        alps.add(AlpsConstants.VERSION, toJson(document.getVersion()));
+        alps.add(JsonConstants.VERSION, toJson(document.version()));
         
         // documentation
-        if (isNotEmpty(document.getDocumentation())) {
-            alps.add(AlpsConstants.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
-        }
+        JsonDocumentation.toJson(document.documentation()).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));
         
         // links
-        if (isNotEmpty(document.getLinks())) {
-            alps.add(AlpsConstants.LINK, JsonLink.toJson(document.getLinks()));            
+        if (isNotEmpty(document.links())) {
+            alps.add(JsonConstants.LINK, JsonLink.toJson(document.links()));            
         }
         
         // descriptors
-        if (isNotEmpty(document.getDescriptors())) {
-            alps.add(AlpsConstants.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
+        if (isNotEmpty(document.descriptors())) {
+            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptor.toJson(document.descriptors()));
         }
         
         // extensions
-        if (isNotEmpty(document.getExtensions())) {
-            alps.add(AlpsConstants.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
+        if (isNotEmpty(document.extensions())) {
+            alps.add(JsonConstants.EXTENSION, JsonExtension.toJson(document.extensions()));            
         }
 
-        return Json.createObjectBuilder().add(AlpsConstants.ROOT, alps).build();
+        return Json.createObjectBuilder().add(JsonConstants.ROOT, alps).build();
     }
     
     private static final JsonString toJson(DocumentVersion version) {

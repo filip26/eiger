@@ -21,23 +21,23 @@ import java.util.Set;
 
 public interface Descriptor {
     
-	Optional<URI> getId();
+	Optional<URI> id();
 	
-	Optional<URI> getHref();
+	Optional<URI> href();
 	
-	Optional<String> getName();
+	Optional<String> name();
 	
-	DescriptorType getType();
+	DescriptorType type();
 	
-	Optional<URI> getReturnType();
+	Optional<URI> returnType();
 	
-	Set<Documentation> getDocumentation();
+	Set<Documentation> documentation();
 	
-	Set<Extension> getExtensions();
+	Set<Extension> extensions();
 	
-	Set<Descriptor> getDescriptors();
+	Set<Descriptor> descriptors();
 	
-	Optional<Descriptor> getParent();
+	Optional<Descriptor> parent();
 	
-	Set<Link> getLinks();
+	Set<Link> links();
 }

@@ -46,6 +46,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
     
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        
         super.startElement(uri, localName, qName, attributes);
         
         final String elementName = getElementName(localName, qName);
@@ -55,13 +56,12 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
 
         if (State.DOCUMENTATION.equals(state)) {
-            stack.peek().startElement(elementName, attributes);
             return;
         }
         
         try { 
         
-            if (AlpsConstants.DOCUMENT.equals(elementName)) {
+            if (XmlConstants.DOCUMENT.equals(elementName)) {
                 
                 if (State.INIT.equals(state)) {
                     stack.push(XmlDocument.create(attributes));
@@ -74,26 +74,24 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 return;
             }
             
-            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
+            if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 
+                stack.peek().addDocumentation(stack, attributes);
                 state = State.DOCUMENTATION;
-                XmlDocumentation doc = XmlDocumentation.create(stack, -1, attributes);//FIXME
-                stack.peek().addDocumentation(doc);
-                stack.push(doc);
                 
-            } else if (AlpsConstants.DESCRIPTOR.equals(elementName)) {
+            } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
                 
-                stack.push(stack.peek().addDescriptor(stack, attributes));
+                stack.peek().addDescriptor(stack, attributes);
     
-            } else if (AlpsConstants.LINK.equals(elementName)) {
-                XmlLink link = XmlLink.create(stack, -1, attributes);   //FIXME
-                stack.peek().addLink(link);
-                stack.push(link);
+            } else if (XmlConstants.LINK.equals(elementName)) {
+                
+                stack.peek().addLink(stack, attributes);
     
-            } else {
-                //TODO
-    
+            } else if (XmlConstants.EXTENSION.equals(elementName)) {
+                
+                stack.peek().addExtension(stack, attributes);                    
             }
+
         } catch (DocumentException e) {
             throw new SAXException(e);
         }
@@ -111,25 +109,23 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
 
         if (State.DOCUMENT.equals(state)) {
-        
-            if (AlpsConstants.DOCUMENT.equals(elementName)) {
+                    
+            if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
+                stack.peek();
 
             } else if (stack.peek().getElementName().equals(elementName)) {
                 stack.pop();
             }
-                
             
         } else if (State.DOCUMENTATION.equals(state)) {
             
-            if (AlpsConstants.DOCUMENTATION.equals(elementName)) {
+            if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 state = State.DOCUMENT;
-                stack.pop();
-                
-            } else {
-                stack.peek().endElement(elementName);
+                stack.pop();                
             }
         }
+
     }
     
     @Override
@@ -141,7 +137,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             stack.peek().addText(ch, start, length);
         }
     }
-    
+
     public Document getDocument() throws DocumentException {
         
         if (State.INIT.equals(state)) {
@@ -152,7 +148,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             throw new DocumentException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
-        return (Document)stack.pop();
+        return (Document)stack.peek();
     }
 
     private static final String getElementName(String localName, String qName) {
