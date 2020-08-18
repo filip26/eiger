@@ -40,6 +40,8 @@ e.g.
 
 ### Examples
 
+#### Validation
+
 ```bash
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
 ```
@@ -53,6 +55,12 @@ e.g.
       docs: 5
       links: 1
       extensions: 0
+```
+
+#### Transformation
+
+```bash
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh transform --source=xml --target=json --pretty
 ```
 
 ## Contributing
