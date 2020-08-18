@@ -61,6 +61,7 @@ public final class JsonDocumentWriter implements DocumentWriter {
 
     private void write(Document document, JsonWriter jsonWriter) throws IOException, DocumentException {
         jsonWriter.write(JsonDocument.toJson(document));
+        jsonWriter.close();
     }
 
 }

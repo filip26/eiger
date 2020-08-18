@@ -61,6 +61,8 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         try {
             writer.writeEndElement();
             writer.writeEndDocument();
+            writer.flush();
+            
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
         }        

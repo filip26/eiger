@@ -44,7 +44,9 @@ public class XmlDocumentWriter implements DocumentWriter {
     @Override
     public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
         try {
+            
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
+            
             
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
