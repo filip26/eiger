@@ -18,6 +18,7 @@ package com.apicatalog.alps.xml;
 import java.net.URI;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.Set;
 
 import org.xml.sax.Attributes;
 
@@ -62,11 +63,56 @@ final class XmlExtension implements Extension, XmlElement {
         return Optional.ofNullable(value);
     }
 
-    public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attrs) {
+    public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) {
         
         final XmlExtension ext = new XmlExtension(elementIndex);
+
+        final String id = attributes.getValue(XmlConstants.ID);
         
-        // TODO Auto-generated method stub
+        if (id != null && !id.isBlank()) {
+            
+            try {
+                ext.id = URI.create(id);
+            } catch (IllegalArgumentException e) {
+                //TODO
+            }
+            
+        } else {
+            //TODO error
+        }
+
+        final String href = attributes.getValue(XmlConstants.HREF);
+        
+        if (href != null && !href.isBlank()) {
+            try {
+                ext.href = URI.create(href);
+            } catch (IllegalArgumentException e) {
+                //TODO
+            }
+        }
+        
+        final String value = attributes.getValue(XmlConstants.VALUE);
+        
+        if (value != null && !value.isBlank()) {
+            ext.value = value;
+        }
+
         return ext;
     }
+    
+    public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentStreamException {
+
+        if (extensions == null || extensions.isEmpty()) {
+            return;
+        }
+        
+        for (final Extension extension : extensions) {
+            write(extension, writer);
+        }        
+    }
+    
+    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentStreamException {
+        writer.writeExtension(extension.id(), extension.href().orElse(null), extension.value().orElse(null));       
+    }
+
 }

@@ -208,7 +208,7 @@ final class XmlDocument implements Document, XmlElement {
 
     @Override
     public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
+        final XmlExtension ext = XmlExtension.create(stack, extensions.size(), attrs);
         extensions.add(ext);
         stack.push(ext);
     }
@@ -221,17 +221,13 @@ final class XmlDocument implements Document, XmlElement {
         
         writer.startDocument(document.version());
                 
-        if (document.documentation() != null && !document.documentation().isEmpty()) {
-            XmlDocumentation.write(document.documentation(), writer);
-        }
+        XmlDocumentation.write(document.documentation(), writer);
         
-        if (document.links() != null && !document.links().isEmpty()) {
-            XmlLink.write(document.links(), writer);
-        }
+        XmlLink.write(document.links(), writer);
 
-        if (document.descriptors() != null && !document.descriptors().isEmpty()) {
-            XmlDescriptor.write(document.descriptors(), writer);
-        }
+        XmlDescriptor.write(document.descriptors(), writer);
+        
+        XmlExtension.write(document.extensions(), writer);
 
         writer.endDocument();        
     }

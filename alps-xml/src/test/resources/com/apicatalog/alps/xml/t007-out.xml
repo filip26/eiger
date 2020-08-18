@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alps version="1.0">
+  <ext id="directions" href="http://alps.io/ext/directions" value="north south east west" />
+</alps>

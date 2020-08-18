@@ -41,7 +41,21 @@
            "name"  : "HTML documentation with no tags nor entities",
            "input" : "t006-in.xml",
            "expected" : "t006-out.xml"
-        },                
+        },
+		{
+           "@id"    : "#t007",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Document level extension",
+           "input" : "t007-in.xml",
+           "expected" : "t007-out.xml"
+        },
+		{
+           "@id"    : "#t008",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Descriptor level extension",
+           "input" : "t008-in.xml",
+           "expected" : "t008-out.xml"
+        },        
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
