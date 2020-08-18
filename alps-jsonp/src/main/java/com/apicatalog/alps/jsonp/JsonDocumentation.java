@@ -17,9 +17,12 @@ package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -33,22 +36,16 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 final class JsonDocumentation implements Documentation {
 
     private URI href;
-    private String mediaType;
-    private String content;
+    private Content content;
     
     @Override
-    public URI getHref() {
-        return href;
+    public Optional<URI> href() {
+        return Optional.ofNullable(href);
     }
 
     @Override
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    @Override
-    public String getContent() {
-        return content;
+    public Optional<Content> content() {
+        return Optional.ofNullable(content);
     }
 
     public static Set<Documentation> parse(final JsonValue jsonValue) throws InvalidDocumentException {
@@ -72,25 +69,36 @@ final class JsonDocumentation implements Documentation {
     }
     
     private static Documentation parseString(final JsonString value) {
+        
         final JsonDocumentation doc = new JsonDocumentation();
-        doc.content = value.getString();
-        doc.mediaType = "text/plain";
+
+        final JsonContent content =  doc.new JsonContent();
+        content.value = value.getString();
+        content.type = "text/plain";
+        
+        doc.content = content;
+        
         return doc;
     }
 
     private static Documentation parseObject(final JsonObject value) throws InvalidDocumentException {
         
         final JsonDocumentation doc = new JsonDocumentation();
-        doc.mediaType = "text/plain";
+        
+        final JsonContent content = doc.new JsonContent();
+        content.type = "text/plain";
         
         if (value.containsKey(JsonConstants.VALUE)) {
 
-            final JsonValue content = value.get(JsonConstants.VALUE);
+            final JsonValue contentValue = value.get(JsonConstants.VALUE);
             
-            if (JsonUtils.isNotString(content)) {
-                throw new InvalidDocumentException(DocumentError.INVALID_DOC_VALUE, "doc.value property must be string but was " + content.getValueType());
+            if (JsonUtils.isNotString(contentValue)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_DOC_VALUE, "doc.value property must be string but was " + contentValue.getValueType());
             }
-            doc.content = JsonUtils.getString(content);
+            
+            content.value = JsonUtils.getString(contentValue);
+            
+            doc.content = content;
             
         } else if (value.containsKey(JsonConstants.HREF)) {
             
@@ -120,13 +128,17 @@ final class JsonDocumentation implements Documentation {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.format property must be string but was " + format.getValueType());
             }
 
-            doc.mediaType = JsonUtils.getString(format);
+            content.type = JsonUtils.getString(format);
         }
-                
+        
         return doc;
     }
     
-    public static final JsonValue toJson(Set<Documentation> documentation) {
+    public static final Optional<JsonValue> toJson(final Set<Documentation> documentation) {
+        
+        if (documentation == null || documentation.isEmpty()) {
+            return Optional.empty();
+        }
         
         if (documentation.size() == 1) {
             return toJson(documentation.iterator().next());
@@ -134,35 +146,64 @@ final class JsonDocumentation implements Documentation {
         
         final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
         
-        documentation.stream().map(JsonDocumentation::toJson).forEach(jsonDocs::add);
+        documentation.stream().map(JsonDocumentation::toJson).flatMap(Optional::stream).forEach(jsonDocs::add);
         
-        return jsonDocs.build();
+        final JsonArray array = jsonDocs.build();
+        
+        return array.isEmpty() ? Optional.empty() : Optional.of(array);
     }
 
-    public static final JsonValue toJson(Documentation documentation) {
+    public static final Optional<JsonValue> toJson(final Documentation documentation) {
         
-        if (documentation.getHref() == null 
-                && (documentation.getMediaType() == null
-                    || "text/plain".equals(documentation.getMediaType())
-                        )) {
-            
-            return Json.createValue(documentation.getContent());
+        if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
+            return Optional.empty();
         }
         
+        final Optional<Content> content = documentation.content();
+        
+        if (documentation.href().isEmpty()
+                && content.isPresent()
+                && content
+                       .map(Documentation.Content::type)
+                       .filter(Predicate.isEqual("text/plain").or(Predicate.isEqual("test")))
+                       .isPresent()
+                ) {
+
+            return Optional.of(Json.createValue(content.get().value()));            
+        }
+                     
         final JsonObjectBuilder doc = Json.createObjectBuilder();
         
-        if (documentation.getHref() != null) {
-            doc.add(JsonConstants.HREF, documentation.getHref().toString());
-        }
+        documentation.href().ifPresent(href -> doc.add(JsonConstants.HREF, href.toString()));
+
+        content
+            .map(Documentation.Content::type)
+            .filter(Predicate.isEqual("text/plain").negate().and(Predicate.isEqual("text").negate()))
+            .ifPresent(type -> doc.add(JsonConstants.FORMAT, type));
+    
+        content
+            .map(Documentation.Content::value)
+            .ifPresent(value -> doc.add(JsonConstants.VALUE, value));
         
-        if (documentation.getMediaType() != null && !"text/plain".equalsIgnoreCase(documentation.getMediaType())) {
-            doc.add(JsonConstants.FORMAT, documentation.getMediaType());
+        final JsonObject jsonDoc = doc.build();
+        
+        return jsonDoc.isEmpty() ? Optional.empty() : Optional.of(jsonDoc);
+    }
+    
+    class JsonContent implements Content {
+        
+        private String type;
+        private String value;
+        
+        @Override
+        public String type() {
+            return type;
         }
 
-        if (documentation.getContent() != null) {
-            doc.add(JsonConstants.VALUE, documentation.getContent());
+        @Override
+        public String value() {
+            return value;
         }
-        
-        return doc.build();
     }
+    
 }

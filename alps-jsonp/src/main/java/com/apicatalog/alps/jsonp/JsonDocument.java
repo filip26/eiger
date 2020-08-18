@@ -65,46 +65,46 @@ final class JsonDocument implements Document {
     public Set<Descriptor> findByName(final String name) {
         return descriptors
                     .values().stream()
-                    .filter(d -> d.getName().isPresent() && name.equals(d.getName().get()))
+                    .filter(d -> d.name().isPresent() && name.equals(d.name().get()))
                     .collect(Collectors.toSet());
     }
 
     @Override
-    public DocumentVersion getVersion() {
+    public DocumentVersion version() {
         return version;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors
                     .values().stream()
-                    .filter(d -> d.getParent().isEmpty())
+                    .filter(d -> d.parent().isEmpty())
                     .collect(Collectors.toSet())
                     ;
     }
 
     @Override
-    public Collection<Descriptor> getAllDescriptors() {
+    public Collection<Descriptor> allDescriptors() {
         return descriptors.values();
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return documentation;
     }
     
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public URI getBaseUri() {
+    public URI baseUri() {
         return baseUri;
     }
     
@@ -167,26 +167,24 @@ final class JsonDocument implements Document {
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
         // version
-        alps.add(JsonConstants.VERSION, toJson(document.getVersion()));
+        alps.add(JsonConstants.VERSION, toJson(document.version()));
         
         // documentation
-        if (isNotEmpty(document.getDocumentation())) {
-            alps.add(JsonConstants.DOCUMENTATION, JsonDocumentation.toJson(document.getDocumentation()));
-        }
+        JsonDocumentation.toJson(document.documentation()).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));
         
         // links
-        if (isNotEmpty(document.getLinks())) {
-            alps.add(JsonConstants.LINK, JsonLink.toJson(document.getLinks()));            
+        if (isNotEmpty(document.links())) {
+            alps.add(JsonConstants.LINK, JsonLink.toJson(document.links()));            
         }
         
         // descriptors
-        if (isNotEmpty(document.getDescriptors())) {
-            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptor.toJson(document.getDescriptors()));
+        if (isNotEmpty(document.descriptors())) {
+            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptor.toJson(document.descriptors()));
         }
         
         // extensions
-        if (isNotEmpty(document.getExtensions())) {
-            alps.add(JsonConstants.EXTENSION, JsonExtension.toJson(document.getExtensions()));            
+        if (isNotEmpty(document.extensions())) {
+            alps.add(JsonConstants.EXTENSION, JsonExtension.toJson(document.extensions()));            
         }
 
         return Json.createObjectBuilder().add(JsonConstants.ROOT, alps).build();

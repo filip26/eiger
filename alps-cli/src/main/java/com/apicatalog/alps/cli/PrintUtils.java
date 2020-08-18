@@ -84,7 +84,7 @@ final class PrintUtils {
             output.println("    file: " + filePath);
         }
         
-        output.println("    version: " + versionToString(document.getVersion()));
+        output.println("    version: " + versionToString(document.version()));
         output.println("    statistics:");
         
         final DocumentStatistics stats = DocumentStatistics.of(document);

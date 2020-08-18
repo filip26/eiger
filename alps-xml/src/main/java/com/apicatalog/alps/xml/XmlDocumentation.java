@@ -17,52 +17,52 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.util.Deque;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Documentation;
-import com.apicatalog.alps.error.DocumentException;
 
 final class XmlDocumentation implements Documentation, XmlElement {
 
     private final int elementIndex;
-    private StringBuilder content;
-    private String mediaType;
+    
+    private URI href;
+    private XmlContent content;
     
     private XmlDocumentation(int index) {
         this.elementIndex = index;
     }
     
-    public static final XmlDocumentation create(Deque<XmlElement> stack, int index, Attributes attributes) {
+    public static final XmlDocumentation create(final Deque<XmlElement> stack, final int index, final Attributes attributes) {
         //TODO
-        XmlDocumentation doc = new XmlDocumentation(index);
         
-        doc.mediaType = attributes.getValue(XmlConstants.MEDIA_TYPE);
+        final XmlDocumentation doc = new XmlDocumentation(index);
         
-        if (doc.mediaType == null) {
-            doc.mediaType = "text";
+        final XmlContent content = doc.new XmlContent();
+        
+        content.type = attributes.getValue(XmlConstants.MEDIA_TYPE);
+        
+        if (content.type == null || content.type.isBlank()) {
+            content.type = "text/plain";
         }
         
-        doc.content = new StringBuilder();
+        content.value = new StringBuilder();
         
+        doc.content = content;
         return doc; 
     }
 
     @Override
-    public URI getHref() {
-        // TODO Auto-generated method stub
-        return null;
+    public Optional<URI> href() {
+        return Optional.ofNullable(href);
     }
 
     @Override
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    @Override
-    public String getContent() {
-        return content.toString();
+    public Optional<Content> content() {
+        return Optional.ofNullable(content);
     }
 
     @Override
@@ -72,8 +72,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
     
     @Override
     public void addText(char[] ch, int start, int length) {
-        //TODO strip leading and trailing spaces
-        content.append(ch, start, length);
+        content.value.append(ch, start, length);
     }
 
     public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentStreamException {
@@ -83,9 +82,18 @@ final class XmlDocumentation implements Documentation, XmlElement {
         }
         
         for (final Documentation doc : docs) {
-            writer.startDoc(doc.getMediaType(), doc.getHref());
             
-            writer.writeDocContent(doc.getContent());
+            if (doc.content().isEmpty() && doc.href().isEmpty()) {
+                continue;
+            }
+            
+            writer.startDoc(doc.content().map(Content::type).orElse(null), doc.href().orElse(null));
+            
+            Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
+            
+            if (value.isPresent()) {
+                writer.writeDocContent(value.get());
+            }
             
             writer.endDoc();
         }
@@ -95,43 +103,20 @@ final class XmlDocumentation implements Documentation, XmlElement {
     public int getElementIndex() {
         return elementIndex;
     }
-
-    @Override
-    public void startElement(String elementName, Attributes attributes) {
-        content.append('<');
-        content.append(elementName);
+    
+    class XmlContent implements Content {
         
-        for (int i=0; i < attributes.getLength(); i++) {
-            content.append(' ');
-            content.append(attributes.getLocalName(i));
-            content.append("=\"");
-            content.append(attributes.getValue(i));
-            content.append('"');
+        private StringBuilder value;
+        private String type;
+
+        @Override
+        public String type() {
+            return type;
         }
-
-        content.append('>');
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        content.append("</");
-        content.append(elementName);        
-        content.append('>');
-    }
-
-    @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-    }
-
-    @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-    }
-
-    @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-    }
-
-    @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+        
+        @Override
+        public String value() {
+            return value.toString();
+        } 
     }
 }

@@ -27,17 +27,13 @@ interface XmlElement {
     
     int getElementIndex();
 
-    void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException;
+    default void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
     
-    void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException;
+    default void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
 
-    void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException;
+    default void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
     
-    void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException;
-
-    void startElement(String elementName, Attributes attributes);
-
-    void endElement(String elementName);
+    default void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
     
-    void addText(char[] ch, int start, int length);
+    default void addText(char[] ch, int start, int length) {} 
 }

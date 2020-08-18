@@ -132,52 +132,52 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public Optional<URI> getId() {
+    public Optional<URI> id() {
         return Optional.ofNullable(id);
     }
 
     @Override
-    public Optional<URI> getHref() {
+    public Optional<URI> href() {
         return Optional.ofNullable(href);
     }
 
     @Override
-    public Optional<String> getName() {
+    public Optional<String> name() {
         return Optional.ofNullable(name);
     }
 
     @Override
-    public DescriptorType getType() {
+    public DescriptorType type() {
         return type;
     }
 
     @Override
-    public Optional<URI> getReturnType() {
+    public Optional<URI> returnType() {
         return Optional.ofNullable(returnValue);
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return documentation;
     }
 
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors;
     }
 
     @Override
-    public Optional<Descriptor> getParent() {
+    public Optional<Descriptor> parent() {
         return Optional.ofNullable(parent);
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
     }
     
@@ -189,18 +189,18 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         for (final Descriptor descriptor : descriptors) {
             
             writer.startDescriptor(
-                        descriptor.getId().orElse(null),
-                        descriptor.getHref().orElse(null),
-                        descriptor.getType(),
-                        descriptor.getReturnType().orElse(null),
-                        descriptor.getName().orElse(null)
+                        descriptor.id().orElse(null),
+                        descriptor.href().orElse(null),
+                        descriptor.type(),
+                        descriptor.returnType().orElse(null),
+                        descriptor.name().orElse(null)
                     );
             
-            XmlDocumentation.write(descriptor.getDocumentation(), writer);
+            XmlDocumentation.write(descriptor.documentation(), writer);
             
-            XmlLink.write(descriptor.getLinks(), writer);
+            XmlLink.write(descriptor.links(), writer);
             
-            XmlDescriptor.write(descriptor.getDescriptors(), writer);
+            XmlDescriptor.write(descriptor.descriptors(), writer);
             
             writer.endDescriptor();
         }
@@ -212,27 +212,15 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
         XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
+        dsc.parent = this;
         descriptors.add(dsc);
         stack.push(dsc);
     }
 
     @Override
     public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        
         final XmlLink link = XmlLink.create(stack, links.size(), attrs);
         links.add(link);
         stack.push(link);
@@ -240,7 +228,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
 
     @Override
     public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        
         final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
         documentation.add(doc);
         stack.push(doc);
@@ -251,5 +238,5 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
         extensions.add(ext);
         stack.push(ext);
-    }
+    }    
 }

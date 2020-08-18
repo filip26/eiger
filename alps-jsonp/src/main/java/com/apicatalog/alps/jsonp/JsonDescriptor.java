@@ -66,52 +66,52 @@ final class JsonDescriptor implements Descriptor {
     }
     
     @Override
-    public Optional<URI> getId() {
+    public Optional<URI> id() {
         return Optional.ofNullable(id);
     }
 
     @Override
-    public Optional<URI> getHref() {
+    public Optional<URI> href() {
         return Optional.ofNullable(href);
     }
 
     @Override
-    public Optional<String> getName() {
+    public Optional<String> name() {
         return Optional.ofNullable(name);
     }
 
     @Override
-    public DescriptorType getType() {
+    public DescriptorType type() {
         return type;
     }
 
     @Override
-    public Optional<URI> getReturnType() {
+    public Optional<URI> returnType() {
         return Optional.ofNullable(returnType);
     }
 
     @Override
-    public Set<Documentation> getDocumentation() {
+    public Set<Documentation> documentation() {
         return doc;
     }
 
     @Override
-    public Set<Extension> getExtensions() {
+    public Set<Extension> extensions() {
         return extensions;
     }
 
     @Override
-    public Set<Descriptor> getDescriptors() {
+    public Set<Descriptor> descriptors() {
         return descriptors;
     }
 
     @Override
-    public Set<Link> getLinks() {
+    public Set<Link> links() {
         return links;
     }
     
     @Override
-    public Optional<Descriptor> getParent() {
+    public Optional<Descriptor> parent() {
         return Optional.ofNullable(parent);
     }
 
@@ -276,34 +276,32 @@ final class JsonDescriptor implements Descriptor {
         
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
         
-        descriptor.getId().ifPresent(id -> jsonDescriptor.add(JsonConstants.ID, id.toString()));
+        descriptor.id().ifPresent(id -> jsonDescriptor.add(JsonConstants.ID, id.toString()));
         
-        if (descriptor.getType() != null && !DescriptorType.SEMANTIC.equals(descriptor.getType())) {
-            jsonDescriptor.add(JsonConstants.TYPE, descriptor.getType().name().toLowerCase());
+        if (descriptor.type() != null && !DescriptorType.SEMANTIC.equals(descriptor.type())) {
+            jsonDescriptor.add(JsonConstants.TYPE, descriptor.type().name().toLowerCase());
         }
         
-        descriptor.getHref().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
-        descriptor.getName().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
-        descriptor.getReturnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
+        descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
+        descriptor.name().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
+        descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 
         // documentation
-        if (JsonDocument.isNotEmpty(descriptor.getDocumentation())) {
-            jsonDescriptor.add(JsonConstants.DOCUMENTATION, JsonDocumentation.toJson(descriptor.getDocumentation()));
-        }
+        JsonDocumentation.toJson(descriptor.documentation()).ifPresent(doc -> jsonDescriptor.add(JsonConstants.DOCUMENTATION, doc));
         
         // descriptors
-        if (JsonDocument.isNotEmpty(descriptor.getDescriptors())) {
-            jsonDescriptor.add(JsonConstants.DESCRIPTOR, toJson(descriptor.getDescriptors()));
+        if (JsonDocument.isNotEmpty(descriptor.descriptors())) {
+            jsonDescriptor.add(JsonConstants.DESCRIPTOR, toJson(descriptor.descriptors()));
         }
 
         // links
-        if (JsonDocument.isNotEmpty(descriptor.getLinks())) {
-            jsonDescriptor.add(JsonConstants.LINK, JsonLink.toJson(descriptor.getLinks()));
+        if (JsonDocument.isNotEmpty(descriptor.links())) {
+            jsonDescriptor.add(JsonConstants.LINK, JsonLink.toJson(descriptor.links()));
         }
 
         // extensions
-        if (JsonDocument.isNotEmpty(descriptor.getExtensions())) {
-            jsonDescriptor.add(JsonConstants.EXTENSION, JsonExtension.toJson(descriptor.getExtensions()));
+        if (JsonDocument.isNotEmpty(descriptor.extensions())) {
+            jsonDescriptor.add(JsonConstants.EXTENSION, JsonExtension.toJson(descriptor.extensions()));
         }
 
         return jsonDescriptor.build();

@@ -22,7 +22,6 @@ import java.util.Optional;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Extension;
-import com.apicatalog.alps.error.DocumentException;
 
 final class XmlExtension implements Extension, XmlElement {
 
@@ -49,57 +48,17 @@ final class XmlExtension implements Extension, XmlElement {
     }
 
     @Override
-    public void addText(char[] ch, int start, int length) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public Optional<URI> getHref() {
+    public Optional<URI> href() {
         return Optional.ofNullable(href);
     }
 
     @Override
-    public URI getId() {
+    public URI id() {
         return id;
     }
 
     @Override
-    public Optional<String> getValue() {
+    public Optional<String> value() {
         return Optional.ofNullable(value);
     }
 
@@ -109,5 +68,5 @@ final class XmlExtension implements Extension, XmlElement {
         
         // TODO Auto-generated method stub
         return ext;
-    }  
+    }
 }

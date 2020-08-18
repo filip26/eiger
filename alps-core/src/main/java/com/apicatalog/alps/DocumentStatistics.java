@@ -38,18 +38,18 @@ public final class DocumentStatistics {
         
         final DocumentStatistics stats = new DocumentStatistics();
      
-        final Collection<Descriptor> descriptors = document.getAllDescriptors(); 
+        final Collection<Descriptor> descriptors = document.allDescriptors(); 
         
         stats.descriptors = descriptors.size();
-        stats.docs = document.getDocumentation().size();
-        stats.links = document.getLinks().size();
-        stats.extensions = document.getExtensions().size();
+        stats.docs = document.documentation().size();
+        stats.links = document.links().size();
+        stats.extensions = document.extensions().size();
         
         for (final Descriptor descriptor : descriptors) {
             
-            stats.docs += descriptor.getDocumentation().size();
-            stats.links += descriptor.getLinks().size();
-            stats.extensions += descriptor.getExtensions().size();
+            stats.docs += descriptor.documentation().size();
+            stats.links += descriptor.links().size();
+            stats.extensions += descriptor.extensions().size();
         }
         
         return stats;

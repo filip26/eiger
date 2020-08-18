@@ -20,14 +20,14 @@ import java.util.Optional;
 
 public interface Extension  {
 
+    URI id();
+    
 	/**
 	 * {@link URI} pointing to an external document which provides the definition of the extension
 	 *  
 	 * @return {@link URI} of an external document
 	 */
-	Optional<URI> getHref();
+	Optional<URI> href();
 	
-	URI getId();
-	
-	Optional<String> getValue();
+	Optional<String> value();
 }

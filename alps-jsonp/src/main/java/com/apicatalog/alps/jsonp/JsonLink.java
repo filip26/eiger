@@ -35,12 +35,12 @@ final class JsonLink implements Link {
     private String rel;
     
     @Override
-    public URI getHref() {
+    public URI href() {
         return href;
     }
 
     @Override
-    public String getRel() {
+    public String rel() {
         return rel;
     }
 
@@ -114,12 +114,12 @@ final class JsonLink implements Link {
         
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
         
-        if (link.getHref() != null) {
-            jsonLink.add(JsonConstants.HREF, link.getHref().toString());
+        if (link.href() != null) {
+            jsonLink.add(JsonConstants.HREF, link.href().toString());
         }
         
-        if (link.getRel() != null && !link.getRel().isBlank()) {
-            jsonLink.add(JsonConstants.RELATION, link.getRel());
+        if (link.rel() != null && !link.rel().isBlank()) {
+            jsonLink.add(JsonConstants.RELATION, link.rel());
         }
         
         return jsonLink.build();

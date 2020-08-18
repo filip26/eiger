@@ -56,7 +56,6 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
 
         if (State.DOCUMENTATION.equals(state)) {
-            stack.peek().startElement(elementName, attributes);
             return;
         }
         
@@ -77,8 +76,8 @@ final class AlpsDocumentHandler extends DefaultHandler {
             
             if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 
-                state = State.DOCUMENTATION;
                 stack.peek().addDocumentation(stack, attributes);
+                state = State.DOCUMENTATION;
                 
             } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
                 
@@ -90,12 +89,9 @@ final class AlpsDocumentHandler extends DefaultHandler {
     
             } else if (XmlConstants.EXTENSION.equals(elementName)) {
                 
-                stack.peek().addExtension(stack, attributes);
-                
-            } else {
-                //TODO
-    
+                stack.peek().addExtension(stack, attributes);                    
             }
+
         } catch (DocumentException e) {
             throw new SAXException(e);
         }
@@ -113,25 +109,23 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
 
         if (State.DOCUMENT.equals(state)) {
-        
+                    
             if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
+                stack.peek();
 
             } else if (stack.peek().getElementName().equals(elementName)) {
                 stack.pop();
             }
-                
             
         } else if (State.DOCUMENTATION.equals(state)) {
             
             if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 state = State.DOCUMENT;
-                stack.pop();
-                
-            } else {
-                stack.peek().endElement(elementName);
+                stack.pop();                
             }
         }
+
     }
     
     @Override
@@ -143,7 +137,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             stack.peek().addText(ch, start, length);
         }
     }
-    
+
     public Document getDocument() throws DocumentException {
         
         if (State.INIT.equals(state)) {
@@ -154,7 +148,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
             throw new DocumentException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
-        return (Document)stack.pop();
+        return (Document)stack.peek();
     }
 
     private static final String getElementName(String localName, String qName) {

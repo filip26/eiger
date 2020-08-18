@@ -22,7 +22,6 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Link;
-import com.apicatalog.alps.error.DocumentException;
 
 final class XmlLink implements Link, XmlElement {
 
@@ -36,12 +35,12 @@ final class XmlLink implements Link, XmlElement {
     }
     
     @Override
-    public URI getHref() {
+    public URI href() {
         return href;
     }
 
     @Override
-    public String getRel() {
+    public String rel() {
         return rel;
     }
 
@@ -69,7 +68,7 @@ final class XmlLink implements Link, XmlElement {
     
     public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
         
-        writer.writeLink(link.getHref(), link.getRel());
+        writer.writeLink(link.href(), link.rel());
        
     }
 
@@ -99,40 +98,5 @@ final class XmlLink implements Link, XmlElement {
     @Override
     public int getElementIndex() {
         return elementIndex;
-    }
-
-    @Override
-    public void startElement(String elementName, Attributes attributes) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endElement(String elementName) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
-        // TODO Auto-generated method stub    
     }
 }

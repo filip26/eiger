@@ -37,17 +37,17 @@ class JsonExtension implements Extension {
     private String value;
     
     @Override
-    public Optional<URI> getHref() {
+    public Optional<URI> href() {
         return Optional.ofNullable(href);
     }
 
     @Override
-    public URI getId() {
+    public URI id() {
         return id;
     }
 
     @Override
-    public Optional<String> getValue() {
+    public Optional<String> value() {
         return Optional.ofNullable(value);
     }
 
@@ -121,10 +121,10 @@ class JsonExtension implements Extension {
         
         final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
 
-        jsonExt.add(JsonConstants.ID, extension.getId().toString());
+        jsonExt.add(JsonConstants.ID, extension.id().toString());
 
-        extension.getHref().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
-        extension.getValue().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
+        extension.href().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
+        extension.value().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
         
         return jsonExt.build();
     }
