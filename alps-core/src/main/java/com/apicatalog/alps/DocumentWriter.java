@@ -30,4 +30,11 @@ public interface DocumentWriter {
     
     void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException;
     
+
+    /**
+     * Sets indentation length for <code>values &gt; 0</code> or disables pretty print for <code>values &le; 0</code>.
+     * 
+     * @param indentLength
+     */
+    DocumentWriter prettyPrint(int indentLength);
 }

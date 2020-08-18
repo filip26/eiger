@@ -37,9 +37,9 @@ public class AlpsCommand {
                 Validator.validate(output, Arrays.copyOfRange(args, 1, args.length));
                 break;
                 
-//            case Constants.TRANSFORM:
-//                transform(output, Arrays.copyOfRange(args, 1, args.length));
-//                break;
+            case Constants.TRANSFORM:
+                Transformer.transform(Arrays.copyOfRange(args, 1, args.length));
+                break;
                 
             default:
                 PrintUtils.printUsage(output);

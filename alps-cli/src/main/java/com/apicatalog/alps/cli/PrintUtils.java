@@ -34,9 +34,9 @@ final class PrintUtils {
         output.print("   alps.sh ");
         output.print(Constants.VALIDATE);
         output.println(" [{-s|--source}={json|xml}] [input]");
-//        output.print("   alps.sh ");
-//        output.print(Constants.TRANSFORM);
-//        output.println(" [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]");
+        output.print("   alps.sh ");
+        output.print(Constants.TRANSFORM);
+        output.println(" [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]");
         output.println("   alps.sh [{-h|--help}]");
     }
     

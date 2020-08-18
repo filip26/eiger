@@ -17,12 +17,17 @@ package com.apicatalog.alps.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.apicatalog.alps.DocumentParser;
+import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.jsonp.JsonDocumentParser;
+import com.apicatalog.alps.jsonp.JsonDocumentWriter;
 import com.apicatalog.alps.xml.XmlDocumentParser;
+import com.apicatalog.alps.xml.XmlDocumentWriter;
 
 final class Utils {
 
@@ -81,7 +86,26 @@ final class Utils {
         
         return null;
     }
-  
+
+    static final OutputStream fileToOutputStream(final String path) {
+        
+        final File file = new File(path);
+        
+        if (!file.canWrite()) {
+            System.err.println("Input file '" + path + "' is not writeable.");
+            return null;
+        }
+        
+        try {
+            return new FileOutputStream(file);
+            
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return null;
+    }
+
     static final DocumentParser getParser(final String mediaType) {
         
         if ("application/alps+json".equals(mediaType)) {
@@ -92,6 +116,20 @@ final class Utils {
             return new XmlDocumentParser();
         }
 
-        throw new IllegalArgumentException("Unsupported media type [" + mediaType + "].");
+        throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
+    }
+    
+    static final DocumentWriter getWriter(final String mediaType) {
+        
+        if ("application/alps+json".equals(mediaType)) {
+            return new JsonDocumentWriter();
+        }
+
+        if ("application/alps+xml".equals(mediaType)) {
+            return new XmlDocumentWriter();
+        }
+
+        throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");
     }    
+
 }

@@ -33,13 +33,16 @@ public class XmlDocumentWriter implements DocumentWriter {
     
     public XmlDocumentWriter() {
         this.factory = XMLOutputFactory.newDefaultFactory();
-        factory.setProperty("escapeCharacters", false); 
+        factory.setProperty("escapeCharacters", false);
+        this.indentLength = -1;
     }
     
     @Override
     public boolean canWrite(String mediaType) {
-        // TODO Auto-generated method stub
-        return false;
+        return mediaType != null
+                && ("application/xml".equalsIgnoreCase(mediaType)
+                    || mediaType.toLowerCase().endsWith("+xml")
+                    );
     }
 
     @Override
@@ -65,11 +68,7 @@ public class XmlDocumentWriter implements DocumentWriter {
         }
     }
 
-    /**
-     * Sets indentation length for <code>values &gt; 0</code> or disables pretty print for <code>values &le; 0</code>.
-     * 
-     * @param indentLength
-     */
+    @Override
     public XmlDocumentWriter prettyPrint(int indentLength) {
         this.indentLength = indentLength;
         return this;

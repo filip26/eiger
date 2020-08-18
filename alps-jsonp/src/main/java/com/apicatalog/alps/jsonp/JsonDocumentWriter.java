@@ -28,6 +28,12 @@ import com.apicatalog.alps.error.DocumentException;
 
 public final class JsonDocumentWriter implements DocumentWriter {
 
+    private int indentLength;
+    
+    public JsonDocumentWriter() {
+        this.indentLength = -1;
+    }
+    
     @Override
     public boolean canWrite(String mediaType) {
         return mediaType != null
@@ -54,5 +60,11 @@ public final class JsonDocumentWriter implements DocumentWriter {
 
     private void write(Document document, JsonWriter jsonWriter) throws IOException, DocumentException {
         jsonWriter.write(JsonDocument.toJson(document));
+    }
+
+    @Override
+    public DocumentWriter prettyPrint(int indentLength) {
+        this.indentLength = indentLength;
+        return this;
     }
 }

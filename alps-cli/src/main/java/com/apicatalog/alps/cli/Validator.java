@@ -80,7 +80,7 @@ final class Validator {
         } else {
             source = System.in;
         }
-        
+
         try {
             
             PrintUtils.printDocInfo(output, parser.parse(null, sourceMediaType, source), sourceMediaType, sourcePath);
