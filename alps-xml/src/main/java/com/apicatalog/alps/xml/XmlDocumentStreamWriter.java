@@ -187,6 +187,8 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void writeLink(URI href, String rel) throws DocumentWriterException {
         
         try {
+            writeIndent();
+            
             writer.writeEmptyElement(XmlConstants.LINK);
             
             if (href != null) {
@@ -196,7 +198,11 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             if (rel != null && !rel.isBlank()) {
                 writer.writeAttribute(XmlConstants.RELATION, rel);
             }
-            
+
+            if (isPrettyPrint()) {
+                writer.writeCharacters("\n");
+            }
+
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);
         }
