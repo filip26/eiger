@@ -42,14 +42,6 @@ public class XmlDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public boolean canWrite(String mediaType) {
-        return mediaType != null
-                && ("application/xml".equalsIgnoreCase(mediaType)
-                    || mediaType.toLowerCase().endsWith("+xml")
-                    );
-    }
-
-    @Override
     public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
         // TODO Auto-generated method stub
         try {

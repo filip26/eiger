@@ -41,19 +41,12 @@ public final class JsonDocumentWriter implements DocumentWriter {
     public static final DocumentWriter create(boolean prettyPrint) {
 
         final Map<String, Object> properties = new HashMap<>(1);
+        
         if (prettyPrint) {
             properties.put(JsonGenerator.PRETTY_PRINTING, true);
         }
 
         return new JsonDocumentWriter(Json.createWriterFactory(properties));
-    }
-    
-    @Override
-    public boolean canWrite(String mediaType) {
-        return mediaType != null
-                && ("application/json".equalsIgnoreCase(mediaType)
-                    || mediaType.toLowerCase().endsWith("+json")
-                    );
     }
     
     @Override
