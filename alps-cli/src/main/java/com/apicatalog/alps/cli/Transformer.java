@@ -53,11 +53,11 @@ final class Transformer {
 
                 sourceType = argument.substring(Constants.ARG_SOURCE.length());
 
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_T)) {
+            } else if (targetType == null && argument.startsWith(Constants.ARG_T)) {
                 
                 targetType = argument.substring(Constants.ARG_T.length());
                 
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_TARGET)) {
+            } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET)) {
 
                 targetType = argument.substring(Constants.ARG_TARGET.length());
                 
