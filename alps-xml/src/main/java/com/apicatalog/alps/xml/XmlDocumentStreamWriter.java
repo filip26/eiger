@@ -109,6 +109,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             depth--;
             writeIndent();
             writer.writeEndElement();
+            
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
             }
@@ -182,7 +183,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void writeLink(URI href, String rel) throws DocumentStreamException {
         
         try {
-            writer.writeStartElement(XmlConstants.LINK);
+            writer.writeEmptyElement(XmlConstants.LINK);
             
             if (href != null) {
                 writer.writeAttribute(XmlConstants.HREF, href.toString());
@@ -192,7 +193,6 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeAttribute(XmlConstants.RELATION, rel);
             }
             
-            writer.writeEndElement();
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
         }
@@ -200,7 +200,30 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
 
     @Override
     public void writeExtension(URI id, URI href, String value) throws DocumentStreamException {
-        // TODO Auto-generated method stub
         
+        try {
+            writeIndent();
+            
+            writer.writeEmptyElement(XmlConstants.EXTENSION);
+
+            if (id != null) {
+                writer.writeAttribute(XmlConstants.ID, id.toString());
+            }
+
+            if (href != null) {
+                writer.writeAttribute(XmlConstants.HREF, href.toString());
+            }
+            
+            if (value != null && !value.isBlank()) {
+                writer.writeAttribute(XmlConstants.VALUE, value);
+            }
+
+            if (isPrettyPrint()) {
+                writer.writeCharacters("\n");
+            }
+
+        } catch (XMLStreamException e) {
+            throw new DocumentStreamException(e);
+        }        
     }
 }

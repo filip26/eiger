@@ -49,12 +49,6 @@ final class XmlLink implements Link, XmlElement {
         return XmlConstants.LINK;
     }
 
-    @Override
-    public void addText(char[] ch, int start, int length) {
-        // TODO Auto-generated method stub
-        
-    }
-
     public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentStreamException {
 
         if (links == null || links.isEmpty()) {
@@ -67,9 +61,7 @@ final class XmlLink implements Link, XmlElement {
     }
     
     public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
-        
-        writer.writeLink(link.href(), link.rel());
-       
+        writer.writeLink(link.href(), link.rel());       
     }
 
     public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {

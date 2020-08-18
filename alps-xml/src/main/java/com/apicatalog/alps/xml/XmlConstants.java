@@ -43,6 +43,8 @@ final class XmlConstants {
 
     public static final String EXTENSION = "ext";
     
+    public static final String VALUE = "value";
+    
     private XmlConstants() {
         
     }

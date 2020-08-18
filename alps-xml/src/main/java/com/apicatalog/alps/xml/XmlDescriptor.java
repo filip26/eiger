@@ -107,7 +107,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         descriptor.extensions = new LinkedHashSet<>();
         
-        // TODO Auto-generated constructor stub
         return descriptor;
     }
     
@@ -202,6 +201,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             XmlLink.write(descriptor.links(), writer);
             
             XmlDescriptor.write(descriptor.descriptors(), writer);
+            
+            XmlExtension.write(descriptor.extensions(), writer);
             
             writer.endDescriptor();
         }
