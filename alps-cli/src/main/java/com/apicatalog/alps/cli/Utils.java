@@ -92,7 +92,7 @@ final class Utils {
         final File file = new File(path);
         
         if (!file.canWrite()) {
-            System.err.println("Input file '" + path + "' is not writeable.");
+            System.err.println("Output file '" + path + "' is not writeable.");
             return null;
         }
         
@@ -119,14 +119,14 @@ final class Utils {
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
     }
     
-    static final DocumentWriter getWriter(final String mediaType) {
+    static final DocumentWriter getWriter(final String mediaType, boolean prettyPrint) {
         
         if ("application/alps+json".equals(mediaType)) {
-            return new JsonDocumentWriter();
+            return JsonDocumentWriter.create(prettyPrint);
         }
 
         if ("application/alps+xml".equals(mediaType)) {
-            return new XmlDocumentWriter();
+            return XmlDocumentWriter.create(prettyPrint);
         }
 
         throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");

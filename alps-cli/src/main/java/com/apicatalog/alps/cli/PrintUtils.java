@@ -29,19 +29,21 @@ final class PrintUtils {
     private PrintUtils() {
     }
     
-    static void printUsage(final PrintStream output) {
-        output.println("Usage:");
-        output.print("   alps.sh ");
-        output.print(Constants.VALIDATE);
-        output.println(" [{-s|--source}={json|xml}] [input]");
-        output.print("   alps.sh ");
-        output.print(Constants.TRANSFORM);
-        output.println(" [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [output]");
-        output.println("   alps.sh [{-h|--help}]");
+    static void printUsage() {
+        System.out.println("Usage:");
+        System.out.print("   alps.sh ");
+        System.out.print(Constants.VALIDATE);
+        System.out.println(" [{-s|--source}={json|xml}] [input]");
+        System.out.print("   alps.sh ");
+        System.out.print(Constants.TRANSFORM);
+        System.out.println(" [{-s|--source}={json|xml}] [input] [{-t|--target}={json|xml}] [{-p|--pretty}] [output]");
+        System.out.println("   alps.sh [{-h|--help}]");
     }
     
-    static final void printError(final PrintStream output, final String path, final DocumentException e, final String mediaType, final String filePath) {
+    static final void printError(final String path, final DocumentException e, final String mediaType, final String filePath) {
 
+        final PrintStream output = System.err;
+        
         output.println("# Invalid ALPS document");
         output.println("- error:");
         output.println("    message: " + e.getMessage());
@@ -72,27 +74,27 @@ final class PrintUtils {
         }
     }
     
-    static final void printDocInfo(final PrintStream output, final Document document, final String mediaType, final String filePath) {
-        output.println("# Valid ALPS document");
-        output.println("- document: ");
+    static final void printDocInfo(final Document document, final String mediaType, final String filePath) {
+        System.out.println("# Valid ALPS document");
+        System.out.println("- document: ");
 
         if (mediaType != null) {
-            output.println("    media_type: " + mediaType);
+            System.out.println("    media_type: " + mediaType);
         }
 
         if (filePath != null) {
-            output.println("    file: " + filePath);
+            System.out.println("    file: " + filePath);
         }
         
-        output.println("    version: " + versionToString(document.version()));
-        output.println("    statistics:");
+        System.out.println("    version: " + versionToString(document.version()));
+        System.out.println("    statistics:");
         
         final DocumentStatistics stats = DocumentStatistics.of(document);
         
-        output.println("      descriptors: " + stats.getDescriptors());
-        output.println("      docs: " + stats.getDocs());
-        output.println("      links: " + stats.getLinks());
-        output.println("      extensions: " + stats.getExtensions());
+        System.out.println("      descriptors: " + stats.getDescriptors());
+        System.out.println("      docs: " + stats.getDocs());
+        System.out.println("      links: " + stats.getLinks());
+        System.out.println("      extensions: " + stats.getExtensions());
     }
     
     private static final String versionToString(DocumentVersion version) {

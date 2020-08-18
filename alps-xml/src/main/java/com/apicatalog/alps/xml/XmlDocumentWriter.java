@@ -31,10 +31,14 @@ public class XmlDocumentWriter implements DocumentWriter {
     private final XMLOutputFactory factory;
     private int indentLength;
     
-    public XmlDocumentWriter() {
+    public XmlDocumentWriter(int indentLength) {
         this.factory = XMLOutputFactory.newDefaultFactory();
         factory.setProperty("escapeCharacters", false);
-        this.indentLength = -1;
+        this.indentLength = indentLength;
+    }
+    
+    public static final DocumentWriter create(boolean prettyPrint) {
+        return new XmlDocumentWriter(prettyPrint ? 4 : -1);
     }
     
     @Override
@@ -66,11 +70,5 @@ public class XmlDocumentWriter implements DocumentWriter {
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
         }
-    }
-
-    @Override
-    public XmlDocumentWriter prettyPrint(int indentLength) {
-        this.indentLength = indentLength;
-        return this;
     }
 }

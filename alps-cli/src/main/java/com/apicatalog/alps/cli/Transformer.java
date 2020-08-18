@@ -28,8 +28,8 @@ final class Transformer {
 
     public static final void transform(String...args) throws IOException {
 
-        if (args.length > 4) {
-            PrintUtils.printUsage(System.out);
+        if (args.length > 5) {
+            PrintUtils.printUsage();
             return;
         }
 
@@ -38,6 +38,8 @@ final class Transformer {
         
         String targetPath = null;
         String targetType = null;
+        
+        boolean prettyPrint = false;
         
         for (int i=0; i < args.length; i++) {
 
@@ -58,7 +60,11 @@ final class Transformer {
             } else if (sourceType == null && argument.startsWith(Constants.ARG_TARGET)) {
 
                 targetType = argument.substring(Constants.ARG_TARGET.length());
+                
+            } else if (argument.startsWith(Constants.ARG_P) || argument.startsWith(Constants.ARG_PRETTY)) {
 
+                prettyPrint = true;
+                
             } else if (sourcePath == null) {                
                 sourcePath = argument;
 
@@ -66,15 +72,15 @@ final class Transformer {
                 targetPath = argument;
 
             } else {
-                PrintUtils.printUsage(System.out);
+                PrintUtils.printUsage();
                 return;
             }
 
         }
-        transform(sourceType, sourcePath, targetType, targetPath);
+        transform(sourceType, sourcePath, targetType, targetPath, prettyPrint);
     }
     
-    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final String targetPath) throws IOException {
+    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final String targetPath, final boolean prettyPrint) throws IOException {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
@@ -96,13 +102,13 @@ final class Transformer {
         
         final String targetMediaType = Utils.getMediaType(targetType, targetPath, false);
         
-        final DocumentWriter writer = Utils.getWriter(targetMediaType);
+        final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint);
 
         final OutputStream target;
         
         if (targetPath != null) {
             
-            target = Utils.fileToOutputStream(targetMediaType);
+            target = Utils.fileToOutputStream(targetPath);
             
             if (source == null) {
                 return;
@@ -112,8 +118,6 @@ final class Transformer {
             target = System.out;
         }
         
-        writer.prettyPrint(2);
-
         try {
             
             Document document = parser.parse(null, sourceMediaType, source);
@@ -121,7 +125,7 @@ final class Transformer {
             writer.write(targetMediaType, document, target);
             
         } catch (DocumentException e) {
-            PrintUtils.printError(System.err, sourcePath, e, sourceMediaType, sourcePath);
+            PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
         }
 
     } 
