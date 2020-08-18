@@ -57,7 +57,7 @@ class AlpsXmlSuiteTest {
             
             assertNotNull(is);
             
-            document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), "application/xml", is);
+            document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), is);
             
         } catch (DocumentException e) {
 
@@ -108,7 +108,7 @@ class AlpsXmlSuiteTest {
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
-            (new XmlDocumentWriter()).prettyPrint(2).write("application/alps+xml", document, outputStream);
+            XmlDocumentWriter.create(true).write(document, outputStream);
             
             final byte[] outputBytes = outputStream.toByteArray();
 

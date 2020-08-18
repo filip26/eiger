@@ -27,6 +27,9 @@ final class Constants {
     static final String ARG_T = "-t=";
     static final String ARG_TARGET = "--target=";
 
+    static final String ARG_P = "-p";
+    static final String ARG_PRETTY = "--pretty";
+
     private Constants() {
     }
 }

@@ -17,7 +17,6 @@ package com.apicatalog.alps.cli;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.error.DocumentException;
@@ -27,10 +26,10 @@ final class Validator {
     private Validator() {
     }
 
-    public static void validate(final PrintStream output, final String[] args) throws IOException {
+    public static void validate(final String[] args) throws IOException {
         
         if (args.length > 2) {
-            PrintUtils.printUsage(output);
+            PrintUtils.printUsage();
             return;
         }
         
@@ -53,15 +52,15 @@ final class Validator {
                 sourcePath = argument;
                 
             } else {
-                PrintUtils.printUsage(output);
+                PrintUtils.printUsage();
                 return;
             }
         }
         
-        validate(sourceType, sourcePath, output);
+        validate(sourceType, sourcePath);
     }
     
-    private static final void validate(final String sourceType, final String sourcePath, final PrintStream output) throws IOException {
+    private static final void validate(final String sourceType, final String sourcePath) throws IOException {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
@@ -80,13 +79,13 @@ final class Validator {
         } else {
             source = System.in;
         }
-        
+
         try {
             
-            PrintUtils.printDocInfo(output, parser.parse(null, sourceMediaType, source), sourceMediaType, sourcePath);
+            PrintUtils.printDocInfo(parser.parse(null, source), sourceMediaType, sourcePath);
             
         } catch (DocumentException e) {
-            PrintUtils.printError(output, sourcePath, e, sourceMediaType, sourcePath);
+            PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
         }
     }
     

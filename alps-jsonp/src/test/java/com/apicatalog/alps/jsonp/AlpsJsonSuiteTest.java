@@ -56,7 +56,7 @@ class AlpsJsonSuiteTest {
             
             assertNotNull(is);
             
-            document = (new JsonDocumentParser()).parse(URI.create("http://example.com"), "application/json", is);
+            document = (new JsonDocumentParser()).parse(URI.create("http://example.com"), is);
             
             assertTrue(testCase.isPositiveTest());
             

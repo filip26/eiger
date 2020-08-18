@@ -31,22 +31,22 @@ public class XmlDocumentWriter implements DocumentWriter {
     private final XMLOutputFactory factory;
     private int indentLength;
     
-    public XmlDocumentWriter() {
+    public XmlDocumentWriter(int indentLength) {
         this.factory = XMLOutputFactory.newDefaultFactory();
-        factory.setProperty("escapeCharacters", false); 
+        factory.setProperty("escapeCharacters", false);
+        this.indentLength = indentLength;
+    }
+    
+    public static final DocumentWriter create(boolean prettyPrint) {
+        return new XmlDocumentWriter(prettyPrint ? 4 : -1);
     }
     
     @Override
-    public boolean canWrite(String mediaType) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
-        // TODO Auto-generated method stub
+    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
         try {
+            
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
+            
             
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
@@ -54,24 +54,12 @@ public class XmlDocumentWriter implements DocumentWriter {
     }
 
     @Override
-    public void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException {
-        // TODO Auto-generated method stub
-        
+    public void write(final Document document, final Writer writer) throws IOException, DocumentException {        
         try {
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength));
             
         } catch (XMLStreamException e) {
             throw new DocumentException(e);
         }
-    }
-
-    /**
-     * Sets indentation length for <code>values &gt; 0</code> or disables pretty print for <code>values &le; 0</code>.
-     * 
-     * @param indentLength
-     */
-    public XmlDocumentWriter prettyPrint(int indentLength) {
-        this.indentLength = indentLength;
-        return this;
     }
 }

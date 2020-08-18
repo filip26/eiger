@@ -15,80 +15,119 @@
  */
 package com.apicatalog.alps.cli;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.OutputStream;
+
+import com.apicatalog.alps.DocumentParser;
+import com.apicatalog.alps.DocumentWriter;
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentException;
 
 final class Transformer {
 
-    private static final void transform(final PrintStream output, String...args) {
+    public static final void transform(String...args) throws IOException {
 
         if (args.length > 5) {
-            PrintUtils.printUsage(output);
+            PrintUtils.printUsage();
             return;
         }
 
-        InputStream source = null;
+        String sourcePath = null;
         String sourceType = null;
-        InputStream target = null;
+        
+        String targetPath = null;
         String targetType = null;
         
-        for (int i=1; i < args.length; i++) {
+        boolean prettyPrint = false;
+        
+        for (int i=0; i < args.length; i++) {
 
             final String argument = args[i];
             
-            if (argument.startsWith(Constants.ARG_S)) {
+            if (sourceType == null && argument.startsWith(Constants.ARG_S)) {
                 
                 sourceType = argument.substring(Constants.ARG_S.length());
                 
-                if (isNotValidMediaType(sourceType)) {
-                    PrintUtils.printUsage(output);
-                    return;
-                }
-
-            } else if (argument.startsWith(Constants.ARG_SOURCE)) {
+            } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
 
                 sourceType = argument.substring(Constants.ARG_SOURCE.length());
-                
-                if (isNotValidMediaType(sourceType)) {
-                    PrintUtils.printUsage(output);
-                    return;
-                }
 
-            } else if (argument.startsWith(Constants.ARG_T)) {
+            } else if (sourceType == null && argument.startsWith(Constants.ARG_T)) {
                 
                 targetType = argument.substring(Constants.ARG_T.length());
                 
-                if (isNotValidMediaType(sourceType)) {
-                    PrintUtils.printUsage(output);
-                    return;
-                }
-
-            } else if (argument.startsWith(Constants.ARG_TARGET)) {
+            } else if (sourceType == null && argument.startsWith(Constants.ARG_TARGET)) {
 
                 targetType = argument.substring(Constants.ARG_TARGET.length());
                 
-                if (isNotValidMediaType(sourceType)) {
-                    PrintUtils.printUsage(output);
-                    return;
-                }
+            } else if (argument.startsWith(Constants.ARG_P) || argument.startsWith(Constants.ARG_PRETTY)) {
 
-            } else if (source == null) {
+                prettyPrint = true;
                 
-                source = Utils.fileToInputStream(argument);
-                
-            } else if (target == null) {
-                
-                target = Utils.fileToInputStream(argument);
-                
+            } else if (sourcePath == null) {                
+                sourcePath = argument;
+
+            } else if (targetPath == null) {                
+                targetPath = argument;
+
             } else {
-                PrintUtils.printUsage(output);
+                PrintUtils.printUsage();
                 return;
             }
+
         }
+        transform(sourceType, sourcePath, targetType, targetPath, prettyPrint);
     }
     
-    @Deprecated
-    private static final boolean isNotValidMediaType(final String type) {
-        return !"xml".equalsIgnoreCase(type) && !"json".equalsIgnoreCase(type);         
-    }
+    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final String targetPath, final boolean prettyPrint) throws IOException {
+        
+        final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
+        
+        final DocumentParser parser = Utils.getParser(sourceMediaType);
+
+        final InputStream source;
+        
+        if (sourcePath != null) {
+            
+            source = Utils.fileToInputStream(sourcePath);
+            
+            if (source == null) {
+                return;
+            }
+            
+        } else {
+            source = System.in;
+        }
+        
+        final String targetMediaType = Utils.getMediaType(targetType, targetPath, false);
+        
+        final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint);
+
+        final OutputStream target;
+        
+        if (targetPath != null) {
+            
+            target = Utils.fileToOutputStream(targetPath);
+            
+            if (source == null) {
+                return;
+            }
+            
+        } else {
+            target = System.out;
+        }
+        
+        try {
+            
+            Document document = parser.parse(null, source);
+            
+            writer.write(document, target);
+            
+        } catch (DocumentException e) {
+            
+            PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
+        }
+
+    } 
 }

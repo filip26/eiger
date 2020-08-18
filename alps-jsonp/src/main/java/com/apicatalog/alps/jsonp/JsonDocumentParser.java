@@ -37,22 +37,10 @@ import com.apicatalog.alps.error.MalformedDocumentException;
 public final class JsonDocumentParser implements DocumentParser {
 
     @Override
-    public boolean canParse(final String mediaType) {
-        return mediaType != null
-                && ("application/json".equalsIgnoreCase(mediaType)
-                    || mediaType.toLowerCase().endsWith("+json")
-                    );
-    }
-
-    @Override
-    public Document parse(final URI baseUri, final String mediaType, final InputStream stream) throws DocumentException {
+    public Document parse(final URI baseUri, final InputStream stream) throws DocumentException {
 
         if (stream == null) {
             throw new IllegalArgumentException();
-        }
-        
-        if (!canParse(mediaType)) {
-            throw new DocumentException("The parser does not support '" + mediaType + "'.");
         }
         
         try {
@@ -65,14 +53,10 @@ public final class JsonDocumentParser implements DocumentParser {
     }
 
     @Override
-    public Document parse(final URI baseUri, final String mediaType, final Reader reader) throws DocumentException {
+    public Document parse(final URI baseUri, final Reader reader) throws DocumentException {
 
         if (reader == null) {
             throw new IllegalArgumentException();
-        }
-        
-        if (!canParse(mediaType)) {
-            throw new DocumentException("The parser does not support '" + mediaType + "'.");
         }
         
         try {

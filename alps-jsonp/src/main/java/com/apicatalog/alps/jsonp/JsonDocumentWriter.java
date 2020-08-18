@@ -18,9 +18,13 @@ package com.apicatalog.alps.jsonp;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonWriter;
+import javax.json.JsonWriterFactory;
+import javax.json.stream.JsonGenerator;
 
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
@@ -28,31 +32,36 @@ import com.apicatalog.alps.error.DocumentException;
 
 public final class JsonDocumentWriter implements DocumentWriter {
 
-    @Override
-    public boolean canWrite(String mediaType) {
-        return mediaType != null
-                && ("application/json".equalsIgnoreCase(mediaType)
-                    || mediaType.toLowerCase().endsWith("+json")
-                    );
+    private final JsonWriterFactory writerFactory;
+    
+    public JsonDocumentWriter(JsonWriterFactory writerFactory) {
+        this.writerFactory = writerFactory;
+    }
+    
+    public static final DocumentWriter create(boolean prettyPrint) {
+
+        final Map<String, Object> properties = new HashMap<>(1);
+        
+        if (prettyPrint) {
+            properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        }
+
+        return new JsonDocumentWriter(Json.createWriterFactory(properties));
     }
     
     @Override
-    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
-        
-        //TODO check media type and arguments
-        
-        write(document, Json.createWriter(stream));
+    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
+        write(document, writerFactory.createWriter(stream));
     }
 
     @Override
-    public void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException {
-
-        //TODO check media type and arguments
-
-        write(document, Json.createWriter(writer));
+    public void write(final Document document, final Writer writer) throws IOException, DocumentException {
+        write(document, writerFactory.createWriter(writer));
     }
 
     private void write(Document document, JsonWriter jsonWriter) throws IOException, DocumentException {
         jsonWriter.write(JsonDocument.toJson(document));
+        jsonWriter.close();
     }
+
 }

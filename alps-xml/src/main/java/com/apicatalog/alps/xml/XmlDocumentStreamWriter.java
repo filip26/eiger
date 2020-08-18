@@ -61,6 +61,8 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         try {
             writer.writeEndElement();
             writer.writeEndDocument();
+            writer.flush();
+            
         } catch (XMLStreamException e) {
             throw new DocumentStreamException(e);
         }        
@@ -70,6 +72,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException {
         try {
             writeIndent();
+            
             writer.writeStartElement(XmlConstants.DESCRIPTOR);
 
             if (id != null) {
