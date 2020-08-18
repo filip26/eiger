@@ -16,6 +16,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -90,7 +91,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index));
         }
         
-        descriptor.type = parseType(attrs.getValue(XmlConstants.TYPE));
+        descriptor.type = parseType(stack, index, attrs);
         
         String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
@@ -110,20 +111,20 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         return descriptor;
     }
     
-    private static DescriptorType parseType(String value) {
+    private static DescriptorType parseType(final Deque<XmlElement> stack, final int index, final Attributes attrs) throws InvalidDocumentException {
 
+        final String value = attrs.getValue(XmlConstants.TYPE);
+        
         if (value == null || value.isBlank()) {
             return DescriptorType.SEMANTIC;
         }
-        
-        //TODO check 
-        return DescriptorType.valueOf(value.toUpperCase());
-    }
-
-    @Override
-    public void addText(char[] ch, int start, int length) {
-        // TODO Auto-generated method stub
-        
+     
+        try { 
+            return DescriptorType.valueOf(value.toUpperCase());
+            
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDocumentException(DocumentError.INVALID_TYPE, XPathUtil.getPath(stack, XmlConstants.TYPE), "Expected one of " + Arrays.toString(DescriptorType.values()) + " but was " + value);
+        }
     }
 
     @Override

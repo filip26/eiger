@@ -37,7 +37,6 @@ final class XmlDocumentation implements Documentation, XmlElement {
     }
     
     public static final XmlDocumentation create(final Deque<XmlElement> stack, final int index, final Attributes attributes) {
-        //TODO
         
         final XmlDocumentation doc = new XmlDocumentation(index);
         
@@ -89,7 +88,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
             
             writer.startDoc(doc.content().map(Content::type).orElse(null), doc.href().orElse(null));
             
-            Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
+            final Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
             
             if (value.isPresent()) {
                 writer.writeDocContent(value.get());
