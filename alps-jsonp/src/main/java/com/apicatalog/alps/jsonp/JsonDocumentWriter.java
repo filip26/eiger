@@ -41,7 +41,9 @@ public final class JsonDocumentWriter implements DocumentWriter {
     public static final DocumentWriter create(boolean prettyPrint) {
 
         final Map<String, Object> properties = new HashMap<>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, prettyPrint);
+        if (prettyPrint) {
+            properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        }
 
         return new JsonDocumentWriter(Json.createWriterFactory(properties));
     }
