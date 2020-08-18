@@ -120,11 +120,12 @@ final class Transformer {
         
         try {
             
-            Document document = parser.parse(null, sourceMediaType, source);
+            Document document = parser.parse(null, source);
             
-            writer.write(targetMediaType, document, target);
+            writer.write(document, target);
             
         } catch (DocumentException e) {
+            
             PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
         }
 

@@ -42,8 +42,7 @@ public class XmlDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
-        // TODO Auto-generated method stub
+    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
         try {
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
             
@@ -53,9 +52,7 @@ public class XmlDocumentWriter implements DocumentWriter {
     }
 
     @Override
-    public void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException {
-        // TODO Auto-generated method stub
-        
+    public void write(final Document document, final Writer writer) throws IOException, DocumentException {        
         try {
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength));
             

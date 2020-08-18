@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -40,27 +41,27 @@ public class XmlDocumentParser implements DocumentParser {
         this(SAXParserFactory.newDefaultInstance());
     }
 
-    public XmlDocumentParser(SAXParserFactory factory) {
+    public XmlDocumentParser(final SAXParserFactory factory) {
         this.factory = factory;
     }
 
     @Override
-    public boolean canParse(String mediaType) {
-        // TODO Auto-generated method stub
-        return false;
+    public Document parse(final URI baseUri, final InputStream stream) throws IOException, DocumentException {
+        return parse(baseUri, new InputSource(stream));
     }
 
     @Override
-    public Document parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException {
-
-        // TODO check media and arguments
-
+    public Document parse(final URI baseUri, final Reader reader) throws DocumentException, IOException {
+        return parse(baseUri, new InputSource(reader));
+    }    
+    
+    private Document parse(final URI baseUri, final InputSource soure) throws DocumentException, IOException {
         try {
             final SAXParser parser = factory.newSAXParser();
 
             final AlpsDocumentHandler handler = new AlpsDocumentHandler();
             
-            parser.parse(stream, handler);
+            parser.parse(soure, handler);
           
             // TODO
             return handler.getDocument();
@@ -78,13 +79,8 @@ public class XmlDocumentParser implements DocumentParser {
                 throw (DocumentException)e.getCause();
             }
                         
-            throw new DocumentException(e);
+            throw new DocumentException(e);            
         }        
-    }
-
-    @Override
-    public Document parse(URI baseUri, String mediaType, Reader reader) throws DocumentException {
-        // TODO Auto-generated method stub
-        return null;
     }    
+
 }

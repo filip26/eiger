@@ -25,15 +25,8 @@ import com.apicatalog.alps.error.DocumentException;
 
 public interface DocumentParser {
 
-    /**
-     * Indicates where the media type can be parsed by the parser instance.
-     * 
-     * @return <code>true</code> if the parser supports the given media type, otherwise false.
-     */
-    boolean canParse(String mediaType);
+    Document parse(URI baseUri, InputStream stream) throws IOException, DocumentException;
     
-    Document parse(URI baseUri, String mediaType, InputStream stream) throws IOException, DocumentException;
-    
-    Document parse(URI baseUri, String mediaType, Reader reader) throws IOException, DocumentException;
+    Document parse(URI baseUri, Reader reader) throws IOException, DocumentException;
 
 }

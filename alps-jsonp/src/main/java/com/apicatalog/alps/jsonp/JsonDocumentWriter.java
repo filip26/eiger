@@ -50,18 +50,12 @@ public final class JsonDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException {
-        
-        //TODO check media type and arguments
-    
+    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
         write(document, writerFactory.createWriter(stream));
     }
 
     @Override
-    public void write(final String mediaType, final Document document, final Writer writer) throws IOException, DocumentException {
-
-        //TODO check media type and arguments
-
+    public void write(final Document document, final Writer writer) throws IOException, DocumentException {
         write(document, writerFactory.createWriter(writer));
     }
 

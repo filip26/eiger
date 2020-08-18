@@ -24,7 +24,7 @@ import com.apicatalog.alps.error.DocumentException;
 
 public interface DocumentWriter {
 
-    void write(String mediaType, Document document, OutputStream stream) throws IOException, DocumentException;
+    void write(Document document, OutputStream stream) throws IOException, DocumentException;
     
-    void write(String mediaType, Document document, Writer writer) throws IOException, DocumentException;    
+    void write(Document document, Writer writer) throws IOException, DocumentException;    
 }
