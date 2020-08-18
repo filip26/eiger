@@ -22,10 +22,13 @@ import java.io.OutputStream;
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class Transformer {
 
+    private Transformer() {}
+    
     public static final void transform(String...args) throws IOException {
 
         if (args.length > 5) {
@@ -53,11 +56,11 @@ final class Transformer {
 
                 sourceType = argument.substring(Constants.ARG_SOURCE.length());
 
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_T)) {
+            } else if (targetType == null && argument.startsWith(Constants.ARG_T)) {
                 
                 targetType = argument.substring(Constants.ARG_T.length());
                 
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_TARGET)) {
+            } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET)) {
 
                 targetType = argument.substring(Constants.ARG_TARGET.length());
                 
@@ -124,9 +127,13 @@ final class Transformer {
             
             writer.write(document, target);
             
-        } catch (DocumentException e) {
+        } catch (DocumentParserException e) {
             
             PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
+            
+        } catch (DocumentWriterException e) {
+
+            System.err.println(e.getMessage());
         }
 
     } 

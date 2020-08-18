@@ -19,7 +19,7 @@ import java.util.Deque;
 
 import org.xml.sax.Attributes;
 
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 interface XmlElement {
 
@@ -27,13 +27,13 @@ interface XmlElement {
     
     int getElementIndex();
 
-    default void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
+    default void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
-    default void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
+    default void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
 
-    default void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
+    default void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
-    default void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {}
+    default void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
     default void addText(char[] ch, int start, int length) {} 
 }

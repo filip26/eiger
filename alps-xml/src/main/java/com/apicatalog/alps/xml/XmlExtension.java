@@ -23,6 +23,9 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.error.DocumentError;
+import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
 final class XmlExtension implements Extension, XmlElement {
 
@@ -63,7 +66,7 @@ final class XmlExtension implements Extension, XmlElement {
         return Optional.ofNullable(value);
     }
 
-    public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) {
+    public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) throws InvalidDocumentException {
         
         final XmlExtension ext = new XmlExtension(elementIndex);
 
@@ -74,11 +77,11 @@ final class XmlExtension implements Extension, XmlElement {
             try {
                 ext.id = URI.create(id);
             } catch (IllegalArgumentException e) {
-                //TODO
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension id must be valid URI but was " + id);
             }
             
         } else {
-            //TODO error
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex));
         }
 
         final String href = attributes.getValue(XmlConstants.HREF);
@@ -87,7 +90,7 @@ final class XmlExtension implements Extension, XmlElement {
             try {
                 ext.href = URI.create(href);
             } catch (IllegalArgumentException e) {
-                //TODO
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension href must be valid URI but was " + href);
             }
         }
         
@@ -100,7 +103,7 @@ final class XmlExtension implements Extension, XmlElement {
         return ext;
     }
     
-    public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (extensions == null || extensions.isEmpty()) {
             return;
@@ -111,7 +114,7 @@ final class XmlExtension implements Extension, XmlElement {
         }        
     }
     
-    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentWriterException {
         writer.writeExtension(extension.id(), extension.href().orElse(null), extension.value().orElse(null));       
     }
 

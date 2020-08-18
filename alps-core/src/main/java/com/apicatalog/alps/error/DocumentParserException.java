@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.xml;
+package com.apicatalog.alps.error;
 
-import com.apicatalog.alps.error.DocumentException;
+public class DocumentParserException extends Exception {
+    
+    private static final long serialVersionUID = -1277283759805773786L;
 
-public class DocumentStreamException extends DocumentException {
-
-    private static final long serialVersionUID = 6156917040010056385L;
-
-    public DocumentStreamException(Throwable cause) {
-        super(cause);
+    public DocumentParserException(String message) {
+        super(message);
     }
+    
+    public DocumentParserException(Throwable cause) {
+        super(cause.getMessage(), cause);
+    }
+    
 }

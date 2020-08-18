@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.apicatalog.alps.DocumentParser;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 final class Validator {
     
@@ -84,7 +84,7 @@ final class Validator {
             
             PrintUtils.printDocInfo(parser.parse(null, source), sourceMediaType, sourcePath);
             
-        } catch (DocumentException e) {
+        } catch (DocumentParserException e) {
             PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
         }
     }

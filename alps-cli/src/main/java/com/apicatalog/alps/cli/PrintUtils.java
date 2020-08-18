@@ -20,7 +20,7 @@ import java.io.PrintStream;
 import com.apicatalog.alps.DocumentStatistics;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.error.MalformedDocumentException;
 
@@ -40,7 +40,7 @@ final class PrintUtils {
         System.out.println("   alps.sh [{-h|--help}]");
     }
     
-    static final void printError(final String path, final DocumentException e, final String mediaType, final String filePath) {
+    static final void printError(final String path, final DocumentParserException e, final String mediaType, final String filePath) {
 
         final PrintStream output = System.err;
         
@@ -73,7 +73,7 @@ final class PrintUtils {
             output.println("    file: " + filePath);
         }
     }
-    
+
     static final void printDocInfo(final Document document, final String mediaType, final String filePath) {
         System.out.println("# Valid ALPS document");
         System.out.println("- document: ");

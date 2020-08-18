@@ -19,25 +19,26 @@ import java.net.URI;
 
 import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 public interface DocumentStreamWriter {
 
-    void startDocument(DocumentVersion version) throws DocumentStreamException;
+    void startDocument(DocumentVersion version) throws DocumentWriterException;
     
-    void endDocument() throws DocumentStreamException;
+    void endDocument() throws DocumentWriterException;
     
-    void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException;
+    void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentWriterException;
     
-    void endDescriptor() throws DocumentStreamException;
+    void endDescriptor() throws DocumentWriterException;
     
-    void startDoc(String mediaType, URI href) throws DocumentStreamException;
+    void startDoc(String mediaType, URI href) throws DocumentWriterException;
     
-    void writeDocContent(String content) throws DocumentStreamException;
+    void writeDocContent(String content) throws DocumentWriterException;
     
-    void endDoc() throws DocumentStreamException;
+    void endDoc() throws DocumentWriterException;
     
-    void writeLink(URI href, String rel) throws DocumentStreamException;
+    void writeLink(URI href, String rel) throws DocumentWriterException;
     
-    void writeExtension(URI id, URI href, String value) throws DocumentStreamException;
+    void writeExtension(URI id, URI href, String value) throws DocumentWriterException;
             
 }

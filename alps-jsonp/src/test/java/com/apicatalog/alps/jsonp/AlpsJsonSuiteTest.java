@@ -39,7 +39,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 class AlpsJsonSuiteTest {
 
@@ -60,7 +60,7 @@ class AlpsJsonSuiteTest {
             
             assertTrue(testCase.isPositiveTest());
             
-        } catch (DocumentException e) {
+        } catch (DocumentParserException e) {
             
             if (testCase.isNegativeTest()) {
                 return;

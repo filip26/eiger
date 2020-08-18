@@ -30,7 +30,7 @@ import org.xml.sax.SAXParseException;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.MalformedDocumentException;
 
 public class XmlDocumentParser implements DocumentParser {
@@ -46,16 +46,16 @@ public class XmlDocumentParser implements DocumentParser {
     }
 
     @Override
-    public Document parse(final URI baseUri, final InputStream stream) throws IOException, DocumentException {
+    public Document parse(final URI baseUri, final InputStream stream) throws IOException, DocumentParserException {
         return parse(baseUri, new InputSource(stream));
     }
 
     @Override
-    public Document parse(final URI baseUri, final Reader reader) throws DocumentException, IOException {
+    public Document parse(final URI baseUri, final Reader reader) throws DocumentParserException, IOException {
         return parse(baseUri, new InputSource(reader));
     }    
     
-    private Document parse(final URI baseUri, final InputSource soure) throws DocumentException, IOException {
+    private Document parse(final URI baseUri, final InputSource soure) throws DocumentParserException, IOException {
         try {
             final SAXParser parser = factory.newSAXParser();
 
@@ -63,7 +63,6 @@ public class XmlDocumentParser implements DocumentParser {
             
             parser.parse(soure, handler);
           
-            // TODO
             return handler.getDocument();
             
         } catch (SAXParseException e) {
@@ -71,15 +70,15 @@ public class XmlDocumentParser implements DocumentParser {
 
         } catch (ParserConfigurationException e) {     
             
-            throw new DocumentException(e);
+            throw new DocumentParserException(e);
             
         } catch (SAXException e) {
             
-            if (e.getCause() instanceof DocumentException) {
-                throw (DocumentException)e.getCause();
+            if (e.getCause() instanceof DocumentParserException) {
+                throw (DocumentParserException)e.getCause();
             }
                         
-            throw new DocumentException(e);            
+            throw new DocumentParserException(e);            
         }        
     }    
 

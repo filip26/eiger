@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamException;
 
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 public class XmlDocumentWriter implements DocumentWriter {
 
@@ -42,24 +42,24 @@ public class XmlDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
+    public void write(final Document document, final OutputStream stream) throws IOException, DocumentWriterException {
         try {
             
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
             
             
         } catch (XMLStreamException e) {
-            throw new DocumentException(e);
+            throw new DocumentWriterException(e);
         }        
     }
 
     @Override
-    public void write(final Document document, final Writer writer) throws IOException, DocumentException {        
+    public void write(final Document document, final Writer writer) throws IOException, DocumentWriterException {        
         try {
             XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength));
             
         } catch (XMLStreamException e) {
-            throw new DocumentException(e);
+            throw new DocumentWriterException(e);
         }
     }
 }

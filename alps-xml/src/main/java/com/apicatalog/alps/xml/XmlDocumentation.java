@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlDocumentation implements Documentation, XmlElement {
 
@@ -74,7 +75,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
         content.value.append(ch, start, length);
     }
 
-    public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentWriterException {
         
         if (docs == null || docs.isEmpty()) {
             return;

@@ -30,7 +30,8 @@ import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentError;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
 public class XmlDescriptor implements Descriptor, XmlElement {
@@ -61,7 +62,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         this.elementIndex = index;
     }
     
-    public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentException {
+    public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentParserException {
 
         final XmlDescriptor descriptor = new XmlDescriptor(index);
         
@@ -181,7 +182,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         return links;
     }
     
-    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentWriterException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
@@ -214,7 +215,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
         dsc.parent = this;
         descriptors.add(dsc);
@@ -222,21 +223,21 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlLink link = XmlLink.create(stack, links.size(), attrs);
         links.add(link);
         stack.push(link);
     }
 
     @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
         documentation.add(doc);
         stack.push(doc);
     }
 
     @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
         extensions.add(ext);
         stack.push(ext);

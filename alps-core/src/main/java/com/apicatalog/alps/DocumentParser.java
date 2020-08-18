@@ -21,12 +21,12 @@ import java.io.Reader;
 import java.net.URI;
 
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 public interface DocumentParser {
 
-    Document parse(URI baseUri, InputStream stream) throws IOException, DocumentException;
+    Document parse(URI baseUri, InputStream stream) throws IOException, DocumentParserException;
     
-    Document parse(URI baseUri, Reader reader) throws IOException, DocumentException;
+    Document parse(URI baseUri, Reader reader) throws IOException, DocumentParserException;
 
 }
