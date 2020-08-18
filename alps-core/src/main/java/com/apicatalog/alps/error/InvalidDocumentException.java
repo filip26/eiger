@@ -15,7 +15,7 @@
  */
 package com.apicatalog.alps.error;
 
-public final class InvalidDocumentException extends DocumentException {
+public final class InvalidDocumentException extends DocumentParserException {
     
     private static final long serialVersionUID = -7523514970503251586L;
 

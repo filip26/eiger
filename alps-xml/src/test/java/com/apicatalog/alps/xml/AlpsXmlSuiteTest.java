@@ -40,7 +40,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 class AlpsXmlSuiteTest {
 
@@ -59,7 +60,7 @@ class AlpsXmlSuiteTest {
             
             document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), is);
             
-        } catch (DocumentException e) {
+        } catch (DocumentParserException e) {
 
             if (testCase.isNegativeTest()) {
                 return;
@@ -133,7 +134,7 @@ class AlpsXmlSuiteTest {
                 fail("Expected output does not match.");
             }
             
-        } catch (IOException | DocumentException e) {
+        } catch (IOException | DocumentWriterException e) {
             fail(e.getMessage(), e);            
         }
     }    

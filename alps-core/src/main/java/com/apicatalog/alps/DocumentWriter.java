@@ -20,11 +20,11 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 public interface DocumentWriter {
 
-    void write(Document document, OutputStream stream) throws IOException, DocumentException;
+    void write(Document document, OutputStream stream) throws IOException, DocumentWriterException;
     
-    void write(Document document, Writer writer) throws IOException, DocumentException;    
+    void write(Document document, Writer writer) throws IOException, DocumentWriterException;    
 }

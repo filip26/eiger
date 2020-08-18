@@ -33,9 +33,8 @@ import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
-import com.apicatalog.alps.error.DocumentError;
-import com.apicatalog.alps.error.DocumentException;
-import com.apicatalog.alps.error.InvalidDocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlDocument implements Document, XmlElement {
 
@@ -183,7 +182,7 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         
         final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
         descriptors.add(dsc);
@@ -191,7 +190,7 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         
         final XmlLink link = XmlLink.create(stack, links.size(), attrs);
         links.add(link);
@@ -199,7 +198,7 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         
         final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
         documentation.add(doc);
@@ -207,18 +206,14 @@ final class XmlDocument implements Document, XmlElement {
     }
 
     @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentException {
+    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlExtension ext = XmlExtension.create(stack, extensions.size(), attrs);
         extensions.add(ext);
         stack.push(ext);
     }
 
-    public static void write(Document document, DocumentStreamWriter writer) throws DocumentStreamException, DocumentException {
+    public static void write(Document document, DocumentStreamWriter writer) throws DocumentWriterException {
 
-        if (document.version() == null) {
-            throw new InvalidDocumentException(DocumentError.MISSING_VERSION, "The document version is not defined.");
-        }
-        
         writer.startDocument(document.version());
                 
         XmlDocumentation.write(document.documentation(), writer);

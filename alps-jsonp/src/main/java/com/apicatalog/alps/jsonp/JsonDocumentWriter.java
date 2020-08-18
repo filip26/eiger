@@ -28,7 +28,6 @@ import javax.json.stream.JsonGenerator;
 
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
 
 public final class JsonDocumentWriter implements DocumentWriter {
 
@@ -50,16 +49,16 @@ public final class JsonDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public void write(final Document document, final OutputStream stream) throws IOException, DocumentException {
+    public void write(final Document document, final OutputStream stream) throws IOException {
         write(document, writerFactory.createWriter(stream));
     }
 
     @Override
-    public void write(final Document document, final Writer writer) throws IOException, DocumentException {
+    public void write(final Document document, final Writer writer) throws IOException {
         write(document, writerFactory.createWriter(writer));
     }
 
-    private void write(Document document, JsonWriter jsonWriter) throws IOException, DocumentException {
+    private static final void write(Document document, JsonWriter jsonWriter) throws IOException {
         jsonWriter.write(JsonDocument.toJson(document));
         jsonWriter.close();
     }

@@ -22,6 +22,7 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Link;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlLink implements Link, XmlElement {
 
@@ -49,7 +50,7 @@ final class XmlLink implements Link, XmlElement {
         return XmlConstants.LINK;
     }
 
-    public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (links == null || links.isEmpty()) {
             return;
@@ -60,7 +61,7 @@ final class XmlLink implements Link, XmlElement {
         }        
     }
     
-    public static void write(final Link link, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(final Link link, DocumentStreamWriter writer) throws DocumentWriterException {
         writer.writeLink(link.href(), link.rel());       
     }
 

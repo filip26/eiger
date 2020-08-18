@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.apicatalog.alps.dom.Document;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 final class AlpsDocumentHandler extends DefaultHandler {
 
@@ -92,7 +92,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
                 stack.peek().addExtension(stack, attributes);                    
             }
 
-        } catch (DocumentException e) {
+        } catch (DocumentParserException e) {
             throw new SAXException(e);
         }
     }
@@ -138,14 +138,14 @@ final class AlpsDocumentHandler extends DefaultHandler {
         }
     }
 
-    public Document getDocument() throws DocumentException {
+    public Document getDocument() throws DocumentParserException {
         
         if (State.INIT.equals(state)) {
-            throw new DocumentException("The document does not contain ALPS declaration.");
+            throw new DocumentParserException("The document does not contain ALPS declaration.");
         }
         
         if (!State.DONE.equals(state))  {
-            throw new DocumentException("The ALPS document declaration is unenclosed, expected " + stack.peek());
+            throw new DocumentParserException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
         return (Document)stack.peek();

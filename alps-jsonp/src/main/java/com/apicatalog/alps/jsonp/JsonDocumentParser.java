@@ -30,14 +30,14 @@ import javax.json.stream.JsonParser.Event;
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentError;
-import com.apicatalog.alps.error.DocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.error.MalformedDocumentException;
 
 public final class JsonDocumentParser implements DocumentParser {
 
     @Override
-    public Document parse(final URI baseUri, final InputStream stream) throws DocumentException {
+    public Document parse(final URI baseUri, final InputStream stream) throws DocumentParserException {
 
         if (stream == null) {
             throw new IllegalArgumentException();
@@ -48,12 +48,12 @@ public final class JsonDocumentParser implements DocumentParser {
             return parse(baseUri, Json.createParser(stream));
             
         } catch (JsonException e) {
-            throw new DocumentException(e);
+            throw new DocumentParserException(e);
         }
     }
 
     @Override
-    public Document parse(final URI baseUri, final Reader reader) throws DocumentException {
+    public Document parse(final URI baseUri, final Reader reader) throws DocumentParserException {
 
         if (reader == null) {
             throw new IllegalArgumentException();
@@ -64,22 +64,22 @@ public final class JsonDocumentParser implements DocumentParser {
             return parse(baseUri, Json.createParser(reader));
             
         } catch (JsonException e) {
-            throw new DocumentException(e);
+            throw new DocumentParserException(e);
         }
     }
     
-    private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentException {
+    private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentParserException {
         
         try {
         
             if (!parser.hasNext()) {
-                throw new DocumentException("Expected JSON object but was an empty input");
+                throw new DocumentParserException("Expected JSON object but was an empty input");
             }
                 
             final Event event = parser.next();
             
             if (!Event.START_OBJECT.equals(event)) {
-                throw new DocumentException("Expected JSON object but was " + event);
+                throw new DocumentParserException("Expected JSON object but was " + event);
             }
             
             final JsonObject rootObject = parser.getObject();

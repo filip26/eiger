@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlDocumentStreamWriter implements DocumentStreamWriter {
 
@@ -38,7 +39,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDocument(DocumentVersion version) throws DocumentStreamException {
+    public void startDocument(DocumentVersion version) throws DocumentWriterException {
         try {
             
           writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
@@ -52,24 +53,24 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
           }
           
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }
     }
 
     @Override
-    public void endDocument() throws DocumentStreamException {
+    public void endDocument() throws DocumentWriterException {
         try {
             writer.writeEndElement();
             writer.writeEndDocument();
             writer.flush();
             
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }        
     }
 
     @Override
-    public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentStreamException {
+    public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentWriterException {
         try {
             writeIndent();
             
@@ -102,12 +103,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             depth++;
             
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }
     }
 
     @Override
-    public void endDescriptor() throws DocumentStreamException {
+    public void endDescriptor() throws DocumentWriterException {
         try {
             depth--;
             writeIndent();
@@ -117,12 +118,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeCharacters("\n");
             }
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }            
     }
 
     @Override
-    public void startDoc(String mediaType, URI href) throws DocumentStreamException {
+    public void startDoc(String mediaType, URI href) throws DocumentWriterException {
         try {
             writeIndent();
             writer.writeStartElement(XmlConstants.DOCUMENTATION);
@@ -135,12 +136,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             }
 
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }
     }
 
     @Override
-    public void writeDocContent(String content) throws DocumentStreamException {
+    public void writeDocContent(String content) throws DocumentWriterException {
 
         try {
             if (content.matches(".*[<>&].*")) {
@@ -150,19 +151,19 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             }
             
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }        
     }
 
     @Override
-    public void endDoc() throws DocumentStreamException {
+    public void endDoc() throws DocumentWriterException {
         try {
             writer.writeEndElement();
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
             }
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }            
     }
 
@@ -183,7 +184,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void writeLink(URI href, String rel) throws DocumentStreamException {
+    public void writeLink(URI href, String rel) throws DocumentWriterException {
         
         try {
             writer.writeEmptyElement(XmlConstants.LINK);
@@ -197,12 +198,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             }
             
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }
     }
 
     @Override
-    public void writeExtension(URI id, URI href, String value) throws DocumentStreamException {
+    public void writeExtension(URI id, URI href, String value) throws DocumentWriterException {
         
         try {
             writeIndent();
@@ -226,7 +227,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             }
 
         } catch (XMLStreamException e) {
-            throw new DocumentStreamException(e);
+            throw new DocumentWriterException(e);
         }        
     }
 }

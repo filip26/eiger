@@ -23,6 +23,7 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlExtension implements Extension, XmlElement {
 
@@ -100,7 +101,7 @@ final class XmlExtension implements Extension, XmlElement {
         return ext;
     }
     
-    public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (extensions == null || extensions.isEmpty()) {
             return;
@@ -111,7 +112,7 @@ final class XmlExtension implements Extension, XmlElement {
         }        
     }
     
-    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentStreamException {
+    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentWriterException {
         writer.writeExtension(extension.id(), extension.href().orElse(null), extension.value().orElse(null));       
     }
 
