@@ -36,7 +36,7 @@ import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
-import com.apicatalog.alps.error.InvalidDocumentException;
+import com.apicatalog.alps.error.DocumentParserException;
 
 final class JsonDocument implements Document {
 
@@ -108,7 +108,7 @@ final class JsonDocument implements Document {
         return baseUri;
     }
     
-    public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws InvalidDocumentException {
+    public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws DocumentParserException {
         
         JsonDocument document = new JsonDocument();
         document.baseUri = baseUri;

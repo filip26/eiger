@@ -94,10 +94,16 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         descriptor.type = parseType(stack, index, attrs);
         
-        String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
+        final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
+        }
+        
+        final String name = attrs.getValue(XmlConstants.NAME);
+        
+        if (name != null && !name.isBlank()) {
+            descriptor.name = name;
         }
 
         descriptor.documentation = new LinkedHashSet<>();

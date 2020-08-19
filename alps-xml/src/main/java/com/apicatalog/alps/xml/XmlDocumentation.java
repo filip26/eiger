@@ -71,7 +71,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
     }
     
     @Override
-    public void addText(char[] ch, int start, int length) {
+    public void addText(char[] ch, int start, int length) {        
         content.value.append(ch, start, length);
     }
 
