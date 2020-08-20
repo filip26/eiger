@@ -110,12 +110,12 @@ final class XmlExtension implements Extension, XmlElement {
         }
         
         for (final Extension extension : extensions) {
-            write(extension, writer);
+            writer.writeExtension(extension);
         }        
     }
     
     public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentWriterException {
-        writer.writeExtension(extension.id(), extension.href().orElse(null), extension.value().orElse(null));       
+       
     }
 
 }

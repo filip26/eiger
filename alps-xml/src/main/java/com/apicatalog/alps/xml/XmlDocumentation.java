@@ -87,7 +87,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
                 continue;
             }
             
-            writer.startDoc(doc.content().map(Content::type).orElse(null), doc.href().orElse(null));
+            writer.startDoc(doc, doc.content().isEmpty());
             
             final Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
             

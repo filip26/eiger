@@ -17,12 +17,19 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Documentation.Content;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlDocumentStreamWriter implements DocumentStreamWriter {
@@ -70,37 +77,55 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentWriterException {
+    public void startDescriptor(final Descriptor descriptor, final boolean selfClose) throws DocumentWriterException {
         try {
             writeIndent();
             
-            writer.writeStartElement(XmlConstants.DESCRIPTOR);
-
-            if (id != null) {
-                writer.writeAttribute(XmlConstants.ID, id.toString());
+            if (selfClose) {
+                
+                writer.writeEmptyElement(XmlConstants.DESCRIPTOR);
+                
+            } else {
+                writer.writeStartElement(XmlConstants.DESCRIPTOR);
             }
 
-            if (href != null) {
-                writer.writeAttribute(XmlConstants.HREF, href.toString());
+            final Optional<URI> id = descriptor.id();
+            
+            if (id.isPresent()) {
+                writer.writeAttribute(XmlConstants.ID, id.get().toString());
             }
 
+            final Optional<URI> href = descriptor.href();
+            
+            if (href.isPresent()) {
+                writer.writeAttribute(XmlConstants.HREF, href.get().toString());
+            }
+
+            final Optional<String> name = descriptor.name();
+            
+            if (name.isPresent()) {
+                writer.writeAttribute(XmlConstants.NAME, name.get());
+            }
+            
+            final DescriptorType type = descriptor.type();
+            
             if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
                 writer.writeAttribute(XmlConstants.TYPE, type.name().toLowerCase());
             }
             
-            if (returnType != null) {
-                writer.writeAttribute(XmlConstants.RETURN_TYPE, returnType.toString());
-            }
-
-            if (name != null) {
-                writer.writeAttribute(XmlConstants.NAME, name);
+            final Optional<URI> returnType = descriptor.returnType();
+            
+            if (returnType.isPresent()) {
+                writer.writeAttribute(XmlConstants.RETURN_TYPE, returnType.get().toString());
             }
 
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
             }
-            
-            depth++;
+
+            if (!selfClose) {
+                depth++;
+            }
             
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);
@@ -111,6 +136,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void endDescriptor() throws DocumentWriterException {
         try {
             depth--;
+            
             writeIndent();
             writer.writeEndElement();
             
@@ -123,16 +149,27 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDoc(String mediaType, URI href) throws DocumentWriterException {
+    public void startDoc(final Documentation doc, final boolean selfClose) throws DocumentWriterException {
         try {
             writeIndent();
-            writer.writeStartElement(XmlConstants.DOCUMENTATION);
             
-            if (mediaType != null && !"text".equals(mediaType) && !"text/plain".equals(mediaType)) {
-                writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType);
+            if (selfClose) {
+                writer.writeEmptyElement(XmlConstants.DOCUMENTATION);
+                
+            } else {
+                writer.writeStartElement(XmlConstants.DOCUMENTATION);
             }
-            if (href != null) {
-                writer.writeAttribute(XmlConstants.HREF, href.toString());
+            
+            final Optional<String> mediaType = doc.content().map(Content::type).filter(Predicate.not(Predicate.isEqual("text").or(Predicate.isEqual("text/plain"))));
+            
+            if (mediaType.isPresent()) {
+                writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType.get());
+            }
+            
+            final Optional<URI> href = doc.href();
+            
+            if (href.isPresent()) {
+                writer.writeAttribute(XmlConstants.HREF, href.get().toString());
             }
 
         } catch (XMLStreamException e) {
@@ -184,16 +221,20 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void writeLink(URI href, String rel) throws DocumentWriterException {
+    public void writeLink(final Link link) throws DocumentWriterException {
         
         try {
             writeIndent();
             
             writer.writeEmptyElement(XmlConstants.LINK);
             
+            final URI href = link.href();
+            
             if (href != null) {
                 writer.writeAttribute(XmlConstants.HREF, href.toString());
             }
+            
+            final String rel = link.rel();
             
             if (rel != null && !rel.isBlank()) {
                 writer.writeAttribute(XmlConstants.RELATION, rel);
@@ -209,23 +250,29 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void writeExtension(URI id, URI href, String value) throws DocumentWriterException {
+    public void writeExtension(final Extension extension) throws DocumentWriterException {
         
         try {
             writeIndent();
             
             writer.writeEmptyElement(XmlConstants.EXTENSION);
 
+            final URI id = extension.id();
+            
             if (id != null) {
                 writer.writeAttribute(XmlConstants.ID, id.toString());
             }
 
-            if (href != null) {
-                writer.writeAttribute(XmlConstants.HREF, href.toString());
+            final Optional<URI> href = extension.href();
+            
+            if (href.isPresent()) {
+                writer.writeAttribute(XmlConstants.HREF, href.get().toString());
             }
             
-            if (value != null && !value.isBlank()) {
-                writer.writeAttribute(XmlConstants.VALUE, value);
+            final Optional<String> value = extension.value().filter(Predicate.not(String::isBlank));
+            
+            if (value.isPresent()) {
+                writer.writeAttribute(XmlConstants.VALUE, value.get());
             }
 
             if (isPrettyPrint()) {

@@ -57,14 +57,10 @@ final class XmlLink implements Link, XmlElement {
         }
         
         for (final Link link : links) {
-            write(link, writer);
+            writer.writeLink(link);
         }        
     }
     
-    public static void write(final Link link, DocumentStreamWriter writer) throws DocumentWriterException {
-        writer.writeLink(link.href(), link.rel());       
-    }
-
     public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {
 
         final XmlLink link = new XmlLink(index);
