@@ -35,5 +35,7 @@ interface XmlElement {
     
     default void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
-    default void addText(char[] ch, int start, int length) {} 
+    default void addText(char[] ch, int start, int length) {}
+    
+    default void complete() {}
 }

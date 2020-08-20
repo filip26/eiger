@@ -15,10 +15,11 @@
  */
 package com.apicatalog.alps.xml;
 
-import java.net.URI;
-
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.dom.element.Descriptor;
+import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
 public interface DocumentStreamWriter {
@@ -27,18 +28,18 @@ public interface DocumentStreamWriter {
     
     void endDocument() throws DocumentWriterException;
     
-    void startDescriptor(URI id, URI href, DescriptorType type, URI returnType, String name) throws DocumentWriterException;
+    void startDescriptor(Descriptor descriptor, final boolean selfClose) throws DocumentWriterException;
     
     void endDescriptor() throws DocumentWriterException;
     
-    void startDoc(String mediaType, URI href) throws DocumentWriterException;
+    void startDoc(Documentation doc, final boolean selfClose) throws DocumentWriterException;
     
     void writeDocContent(String content) throws DocumentWriterException;
     
     void endDoc() throws DocumentWriterException;
     
-    void writeLink(URI href, String rel) throws DocumentWriterException;
+    void writeLink(Link link) throws DocumentWriterException;
     
-    void writeExtension(URI id, URI href, String value) throws DocumentWriterException;
+    void writeExtension(Extension extension) throws DocumentWriterException;
             
 }

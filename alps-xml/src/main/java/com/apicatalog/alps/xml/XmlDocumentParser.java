@@ -59,13 +59,14 @@ public class XmlDocumentParser implements DocumentParser {
         try {
             final SAXParser parser = factory.newSAXParser();
 
-            final AlpsDocumentHandler handler = new AlpsDocumentHandler();
+            final DocumentHandler handler = new DocumentHandler();
             
             parser.parse(soure, handler);
           
             return handler.getDocument();
             
         } catch (SAXParseException e) {
+
             throw new MalformedDocumentException(e.getLineNumber(), e.getColumnNumber(), e.getMessage());
 
         } catch (ParserConfigurationException e) {     

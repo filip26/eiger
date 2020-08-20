@@ -151,29 +151,36 @@ final class JsonDescriptor implements Descriptor {
         final JsonDescriptor descriptor = new JsonDescriptor();
         descriptor.parent = parent;
 
+        if (!jsonObject.containsKey(JsonConstants.ID) && !jsonObject.containsKey(JsonConstants.HREF)) {
+            throw new InvalidDocumentException(DocumentError.MISSING_ID, "Descriptor must define valid 'id' or 'href' property");            
+        }
+        
         // id
-        if (!jsonObject.containsKey(JsonConstants.ID) || JsonUtils.isNull(jsonObject.get(JsonConstants.ID))) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, "The 'id' property value must be valid URI represented as JSON string");            
+        if (jsonObject.containsKey(JsonConstants.ID)) {
+            if (JsonUtils.isNotString(jsonObject.get(JsonConstants.ID))) {
+                throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(JsonConstants.ID));
+            }
+            
+            try {
+                descriptor.id = URI.create(jsonObject.getString(JsonConstants.ID));
+                        
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
+            }
+            
+            // check id conflict
+            if (index.containsKey(descriptor.id)) {
+                throw new InvalidDocumentException(DocumentError.DUPLICATED_ID, "Duplicate 'id' property value " + descriptor.id);
+            }
+            
+            index.put(descriptor.id, descriptor);
         }
-        
-        if (JsonUtils.isNotString(jsonObject.get(JsonConstants.ID))) {
-            throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(JsonConstants.ID));
-        }
-        
-        try {
-            descriptor.id = URI.create(jsonObject.getString(JsonConstants.ID));
-                    
-        } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
-        }
-        
-        // check id conflict
-        if (index.containsKey(descriptor.id)) {
-            throw new InvalidDocumentException(DocumentError.DUPLICATED_ID, "Duplicate 'id' property value " + descriptor.id);
-        }
-        
-        index.put(descriptor.id, descriptor);
 
+        // href
+        if (jsonObject.containsKey(JsonConstants.HREF)) {
+            descriptor.href = JsonUtils.getHref(jsonObject);
+        }
+        
         // name
         if (jsonObject.containsKey(JsonConstants.NAME)) {
             final JsonValue name = jsonObject.get(JsonConstants.NAME);
@@ -218,11 +225,6 @@ final class JsonDescriptor implements Descriptor {
             descriptor.links = Collections.emptySet();
         }
         
-        // href
-        if (jsonObject.containsKey(JsonConstants.HREF)) {
-            descriptor.href = JsonUtils.getHref(jsonObject);
-        }
-
         // return type
         if (jsonObject.containsKey(JsonConstants.RETURN_TYPE)) {
             

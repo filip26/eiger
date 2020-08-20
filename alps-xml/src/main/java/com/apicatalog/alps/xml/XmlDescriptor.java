@@ -94,10 +94,16 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         descriptor.type = parseType(stack, index, attrs);
         
-        String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
+        final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
             descriptor.returnValue = URI.create(rt);
+        }
+        
+        final String name = attrs.getValue(XmlConstants.NAME);
+        
+        if (name != null && !name.isBlank()) {
+            descriptor.name = name;
         }
 
         descriptor.documentation = new LinkedHashSet<>();
@@ -188,24 +194,25 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         }
         
         for (final Descriptor descriptor : descriptors) {
+
+            final boolean selfClose = descriptor.descriptors().isEmpty()
+                    && descriptor.documentation().isEmpty()
+                    && descriptor.links().isEmpty()
+                    && descriptor.extensions().isEmpty();
             
-            writer.startDescriptor(
-                        descriptor.id().orElse(null),
-                        descriptor.href().orElse(null),
-                        descriptor.type(),
-                        descriptor.returnType().orElse(null),
-                        descriptor.name().orElse(null)
-                    );
+            writer.startDescriptor(descriptor, selfClose);
             
-            XmlDocumentation.write(descriptor.documentation(), writer);
-            
-            XmlLink.write(descriptor.links(), writer);
-            
-            XmlDescriptor.write(descriptor.descriptors(), writer);
-            
-            XmlExtension.write(descriptor.extensions(), writer);
-            
-            writer.endDescriptor();
+            if (!selfClose) {
+                XmlDocumentation.write(descriptor.documentation(), writer);
+                
+                XmlLink.write(descriptor.links(), writer);
+                
+                XmlDescriptor.write(descriptor.descriptors(), writer);
+                
+                XmlExtension.write(descriptor.extensions(), writer);
+                
+                writer.endDescriptor();
+            }
         }
     }
 

@@ -25,7 +25,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 
-final class AlpsDocumentHandler extends DefaultHandler {
+final class DocumentHandler extends DefaultHandler {
 
     private enum State { INIT, DOCUMENT, DOCUMENTATION, DONE }
     
@@ -33,7 +33,7 @@ final class AlpsDocumentHandler extends DefaultHandler {
     
     private Deque<XmlElement> stack;
 
-    public AlpsDocumentHandler() {
+    public DocumentHandler() {
         this.stack = new ArrayDeque<>(10);
     }
     
@@ -112,20 +112,17 @@ final class AlpsDocumentHandler extends DefaultHandler {
                     
             if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
-                stack.peek();
+                stack.peek().complete();
 
             } else if (stack.peek().getElementName().equals(elementName)) {
-                stack.pop();
+                stack.pop().complete();
             }
             
-        } else if (State.DOCUMENTATION.equals(state)) {
+        } else if (State.DOCUMENTATION.equals(state) && XmlConstants.DOCUMENTATION.equals(elementName)) {
             
-            if (XmlConstants.DOCUMENTATION.equals(elementName)) {
-                state = State.DOCUMENT;
-                stack.pop();                
-            }
+            state = State.DOCUMENT;
+            stack.pop().complete();             
         }
-
     }
     
     @Override
