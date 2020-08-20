@@ -113,9 +113,4 @@ final class XmlExtension implements Extension, XmlElement {
             writer.writeExtension(extension);
         }        
     }
-    
-    public static void write(final Extension extension, DocumentStreamWriter writer) throws DocumentWriterException {
-       
-    }
-
 }

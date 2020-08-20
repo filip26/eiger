@@ -216,7 +216,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         return indentLength > 0;
     }
     
-    private final static String toString(final DocumentVersion version) {
+    private static final String toString(final DocumentVersion version) {
         return "1.0";
     }
 

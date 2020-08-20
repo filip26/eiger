@@ -33,8 +33,11 @@ final class XmlDocumentation implements Documentation, XmlElement {
     private URI href;
     private XmlContent content;
     
+    private StringBuilder contentValue;
+    
     private XmlDocumentation(int index) {
         this.elementIndex = index;
+        this.contentValue = new StringBuilder();
     }
     
     public static final XmlDocumentation create(final Deque<XmlElement> stack, final int index, final Attributes attributes) {
@@ -49,9 +52,8 @@ final class XmlDocumentation implements Documentation, XmlElement {
             content.type = "text/plain";
         }
         
-        content.value = new StringBuilder();
-        
         doc.content = content;
+        
         return doc; 
     }
 
@@ -72,9 +74,18 @@ final class XmlDocumentation implements Documentation, XmlElement {
     
     @Override
     public void addText(char[] ch, int start, int length) {        
-        content.value.append(ch, start, length);
+        contentValue.append(ch, start, length);
     }
 
+    @Override
+    public void complete() {
+        content.value = contentValue.toString().strip();
+        
+        if (content.value.isBlank()) {
+            content = null;
+        }
+    }
+    
     public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentWriterException {
         
         if (docs == null || docs.isEmpty()) {
@@ -106,7 +117,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
     
     class XmlContent implements Content {
         
-        private StringBuilder value;
+        private String value;
         private String type;
 
         @Override
@@ -116,7 +127,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
         
         @Override
         public String value() {
-            return value.toString();
+            return value;
         } 
     }
 }
