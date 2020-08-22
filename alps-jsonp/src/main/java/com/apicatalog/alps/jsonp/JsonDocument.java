@@ -162,7 +162,7 @@ final class JsonDocument implements Document {
         return document;
     }
     
-    public static final JsonObject toJson(Document document) {
+    public static final JsonObject toJson(final Document document, final boolean verbose) {
         
         final JsonObjectBuilder alps = Json.createObjectBuilder();
         
@@ -170,16 +170,16 @@ final class JsonDocument implements Document {
         alps.add(JsonConstants.VERSION, toJson(document.version()));
         
         // documentation
-        JsonDocumentation.toJson(document.documentation()).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));
+        JsonDocumentation.toJson(document.documentation(), verbose).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));
         
         // links
         if (isNotEmpty(document.links())) {
-            alps.add(JsonConstants.LINK, JsonLink.toJson(document.links()));            
+            alps.add(JsonConstants.LINK, JsonLink.toJson(document.links()));
         }
         
         // descriptors
         if (isNotEmpty(document.descriptors())) {
-            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptor.toJson(document.descriptors()));
+            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptor.toJson(document.descriptors(), verbose));
         }
         
         // extensions

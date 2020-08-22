@@ -98,14 +98,14 @@ final class Utils {
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
     }
     
-    static final DocumentWriter getWriter(final String mediaType, boolean prettyPrint) {
+    static final DocumentWriter getWriter(final String mediaType, final boolean prettyPrint, final boolean verbose) {
         
         if ("application/alps+json".equals(mediaType)) {
-            return JsonDocumentWriter.create(prettyPrint);
+            return JsonDocumentWriter.create(prettyPrint, verbose);
         }
 
         if ("application/alps+xml".equals(mediaType)) {
-            return XmlDocumentWriter.create(prettyPrint);
+            return XmlDocumentWriter.create(prettyPrint, verbose);
         }
 
         throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");

@@ -188,7 +188,7 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         return links;
     }
     
-    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer) throws DocumentWriterException {
+    public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer, final boolean verbose) throws DocumentWriterException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
@@ -200,14 +200,14 @@ public class XmlDescriptor implements Descriptor, XmlElement {
                     && descriptor.links().isEmpty()
                     && descriptor.extensions().isEmpty();
             
-            writer.startDescriptor(descriptor, selfClose);
+            writer.startDescriptor(descriptor, selfClose, verbose);
             
             if (!selfClose) {
-                XmlDocumentation.write(descriptor.documentation(), writer);
+                XmlDocumentation.write(descriptor.documentation(), writer, verbose);
                 
                 XmlLink.write(descriptor.links(), writer);
                 
-                XmlDescriptor.write(descriptor.descriptors(), writer);
+                XmlDescriptor.write(descriptor.descriptors(), writer, verbose);
                 
                 XmlExtension.write(descriptor.extensions(), writer);
                 

@@ -109,7 +109,7 @@ class AlpsXmlSuiteTest {
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
-            XmlDocumentWriter.create(true).write(document, outputStream);
+            XmlDocumentWriter.create(true, false).write(document, outputStream);
             
             final byte[] outputBytes = outputStream.toByteArray();
 

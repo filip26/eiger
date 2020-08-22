@@ -106,7 +106,7 @@ class AlpsJsonSuiteTest {
             
             final JsonObject expectedObject = expectedParser.getObject();
 
-            final JsonObject outputObject = JsonDocument.toJson(document);
+            final JsonObject outputObject = JsonDocument.toJson(document, false);
 
             final boolean match = JsonComparison.equals(expectedObject, outputObject); 
             

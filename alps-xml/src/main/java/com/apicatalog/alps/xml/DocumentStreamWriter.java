@@ -28,11 +28,11 @@ public interface DocumentStreamWriter {
     
     void endDocument() throws DocumentWriterException;
     
-    void startDescriptor(Descriptor descriptor, final boolean selfClose) throws DocumentWriterException;
+    void startDescriptor(Descriptor descriptor, boolean selfClose, boolean verbose) throws DocumentWriterException;
     
     void endDescriptor() throws DocumentWriterException;
     
-    void startDoc(Documentation doc, final boolean selfClose) throws DocumentWriterException;
+    void startDoc(Documentation doc, boolean selfClose, boolean verbose) throws DocumentWriterException;
     
     void writeDocContent(String content) throws DocumentWriterException;
     

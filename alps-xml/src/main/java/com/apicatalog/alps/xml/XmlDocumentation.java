@@ -86,7 +86,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
         }
     }
     
-    public static void write(Set<Documentation> docs, DocumentStreamWriter writer) throws DocumentWriterException {
+    public static void write(final Set<Documentation> docs, final DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
         
         if (docs == null || docs.isEmpty()) {
             return;
@@ -98,7 +98,7 @@ final class XmlDocumentation implements Documentation, XmlElement {
                 continue;
             }
             
-            writer.startDoc(doc, doc.content().isEmpty());
+            writer.startDoc(doc, doc.content().isEmpty(), verbose);
             
             final Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
             

@@ -34,7 +34,7 @@ e.g.
 
 ```bash
 > alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [{-p|--pretty}]
+> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [{-p|--pretty}] [{-v|--verbose}]
 > alps.sh [{-h|--help}]
 ```
 

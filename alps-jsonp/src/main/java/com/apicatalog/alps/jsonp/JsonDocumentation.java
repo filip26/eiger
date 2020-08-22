@@ -134,26 +134,26 @@ final class JsonDocumentation implements Documentation {
         return doc;
     }
     
-    public static final Optional<JsonValue> toJson(final Set<Documentation> documentation) {
+    public static final Optional<JsonValue> toJson(final Set<Documentation> documentation, final boolean verbose) {
         
         if (documentation == null || documentation.isEmpty()) {
             return Optional.empty();
         }
         
         if (documentation.size() == 1) {
-            return toJson(documentation.iterator().next());
+            return toJson(documentation.iterator().next(), verbose);
         }
         
         final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
         
-        documentation.stream().map(JsonDocumentation::toJson).flatMap(Optional::stream).forEach(jsonDocs::add);
+        documentation.stream().map(d -> JsonDocumentation.toJson(d, verbose)).flatMap(Optional::stream).forEach(jsonDocs::add);
         
         final JsonArray array = jsonDocs.build();
         
         return array.isEmpty() ? Optional.empty() : Optional.of(array);
     }
 
-    public static final Optional<JsonValue> toJson(final Documentation documentation) {
+    public static final Optional<JsonValue> toJson(final Documentation documentation, final boolean verbose) {
         
         if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
             return Optional.empty();
@@ -176,10 +176,19 @@ final class JsonDocumentation implements Documentation {
         
         documentation.href().ifPresent(href -> doc.add(JsonConstants.HREF, href.toString()));
 
-        content
-            .map(Documentation.Content::type)
-            .filter(Predicate.isEqual("text/plain").negate().and(Predicate.isEqual("text").negate()))
-            .ifPresent(type -> doc.add(JsonConstants.FORMAT, type));
+        if (verbose) {
+            content
+                .map(Documentation.Content::type)
+                .ifPresentOrElse(
+                        t -> doc.add(JsonConstants.FORMAT, t), 
+                        () -> doc.add(JsonConstants.FORMAT, "plain")
+                        );
+        } else {
+            content
+                .map(Documentation.Content::type)
+                .filter(Predicate.isEqual("text/plain").negate().and(Predicate.isEqual("text").negate()))
+                .ifPresent(type -> doc.add(JsonConstants.FORMAT, type));            
+        }
     
         content
             .map(Documentation.Content::value)
