@@ -39,7 +39,6 @@ final class Transformer {
         String sourcePath = null;
         String sourceType = null;
         
-        String targetPath = null;
         String targetType = null;
         
         boolean prettyPrint = false;
@@ -71,19 +70,16 @@ final class Transformer {
             } else if (sourcePath == null) {                
                 sourcePath = argument;
 
-            } else if (targetPath == null) {                
-                targetPath = argument;
-
             } else {
                 PrintUtils.printUsage();
                 return;
             }
-
         }
-        transform(sourceType, sourcePath, targetType, targetPath, prettyPrint);
+                
+        transform(sourceType, sourcePath, targetType, prettyPrint);
     }
     
-    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final String targetPath, final boolean prettyPrint) throws IOException {
+    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final boolean prettyPrint) throws IOException {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
@@ -103,23 +99,11 @@ final class Transformer {
             source = System.in;
         }
         
-        final String targetMediaType = Utils.getMediaType(targetType, targetPath, false);
+        final String targetMediaType = Utils.getMediaType(targetType, null, false);
         
         final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint);
 
-        final OutputStream target;
-        
-        if (targetPath != null) {
-            
-            target = Utils.fileToOutputStream(targetPath);
-            
-            if (source == null) {
-                return;
-            }
-            
-        } else {
-            target = System.out;
-        }
+        final OutputStream target = System.out;
         
         try {
             

@@ -45,7 +45,7 @@ final class Utils {
         }
 
         if (type != null) {
-            throw new IllegalArgumentException("Unknown file type [" + type + "], expected [xml] or [json].");
+            throw new IllegalArgumentException("Unknown type [" + type + "], expected [xml] or [json].");
         }
         
         if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
@@ -68,7 +68,7 @@ final class Utils {
         final File file = new File(path);
         
         if (!file.exists()) {
-            System.err.println("File '" + path + "' does not exist.");            
+            System.err.println("Input file '" + path + "' does not exist.");            
             return null;
         }
 
@@ -91,7 +91,7 @@ final class Utils {
         
         final File file = new File(path);
         
-        if (!file.canWrite()) {
+        if (file.exists() && !file.canWrite()) {
             System.err.println("Output file '" + path + "' is not writeable.");
             return null;
         }
