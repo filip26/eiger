@@ -17,10 +17,8 @@ package com.apicatalog.alps.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.DocumentWriter;
@@ -45,7 +43,7 @@ final class Utils {
         }
 
         if (type != null) {
-            throw new IllegalArgumentException("Unknown file type [" + type + "], expected [xml] or [json].");
+            throw new IllegalArgumentException("Unknown type [" + type + "], expected [xml] or [json].");
         }
         
         if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
@@ -68,7 +66,7 @@ final class Utils {
         final File file = new File(path);
         
         if (!file.exists()) {
-            System.err.println("File '" + path + "' does not exist.");            
+            System.err.println("Input file '" + path + "' does not exist.");            
             return null;
         }
 
@@ -79,25 +77,6 @@ final class Utils {
         
         try {
             return new FileInputStream(file);
-            
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        
-        return null;
-    }
-
-    static final OutputStream fileToOutputStream(final String path) {
-        
-        final File file = new File(path);
-        
-        if (!file.canWrite()) {
-            System.err.println("Output file '" + path + "' is not writeable.");
-            return null;
-        }
-        
-        try {
-            return new FileOutputStream(file);
             
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -119,14 +98,14 @@ final class Utils {
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
     }
     
-    static final DocumentWriter getWriter(final String mediaType, boolean prettyPrint) {
+    static final DocumentWriter getWriter(final String mediaType, final boolean prettyPrint, final boolean verbose) {
         
         if ("application/alps+json".equals(mediaType)) {
-            return JsonDocumentWriter.create(prettyPrint);
+            return JsonDocumentWriter.create(prettyPrint, verbose);
         }
 
         if ("application/alps+xml".equals(mediaType)) {
-            return XmlDocumentWriter.create(prettyPrint);
+            return XmlDocumentWriter.create(prettyPrint, verbose);
         }
 
         throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");

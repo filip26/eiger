@@ -23,5 +23,7 @@ public enum DescriptorType {
 	
 	IDEMPOTENT,
 	
-	UNSAFE
+	UNSAFE,
+	
+	GROUP
 }

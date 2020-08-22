@@ -261,20 +261,20 @@ final class JsonDescriptor implements Descriptor {
         return descriptor;
     }
     
-    public static final JsonValue toJson(final Set<Descriptor> descriptors) {
+    public static final JsonValue toJson(final Set<Descriptor> descriptors, final boolean verbose) {
         
         if (descriptors.size() == 1) {
-            return toJson(descriptors.iterator().next());
+            return toJson(descriptors.iterator().next(), verbose);
         }
         
         final JsonArrayBuilder jsonDescriptors = Json.createArrayBuilder();
         
-        descriptors.stream().map(JsonDescriptor::toJson).forEach(jsonDescriptors::add);
+        descriptors.stream().map(d -> JsonDescriptor.toJson(d, verbose)).forEach(jsonDescriptors::add);
         
         return jsonDescriptors.build();
     }
 
-    public static final JsonValue toJson(final Descriptor descriptor) {
+    public static final JsonValue toJson(final Descriptor descriptor, final boolean verbose) {
         
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
         
@@ -282,6 +282,9 @@ final class JsonDescriptor implements Descriptor {
         
         if (descriptor.type() != null && !DescriptorType.SEMANTIC.equals(descriptor.type())) {
             jsonDescriptor.add(JsonConstants.TYPE, descriptor.type().name().toLowerCase());
+            
+        } else if (verbose) {
+            jsonDescriptor.add(JsonConstants.TYPE, DescriptorType.SEMANTIC.name().toLowerCase());
         }
         
         descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
@@ -289,11 +292,11 @@ final class JsonDescriptor implements Descriptor {
         descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 
         // documentation
-        JsonDocumentation.toJson(descriptor.documentation()).ifPresent(doc -> jsonDescriptor.add(JsonConstants.DOCUMENTATION, doc));
+        JsonDocumentation.toJson(descriptor.documentation(), verbose).ifPresent(doc -> jsonDescriptor.add(JsonConstants.DOCUMENTATION, doc));
         
         // descriptors
         if (JsonDocument.isNotEmpty(descriptor.descriptors())) {
-            jsonDescriptor.add(JsonConstants.DESCRIPTOR, toJson(descriptor.descriptors()));
+            jsonDescriptor.add(JsonConstants.DESCRIPTOR, toJson(descriptor.descriptors(), verbose));
         }
 
         // links

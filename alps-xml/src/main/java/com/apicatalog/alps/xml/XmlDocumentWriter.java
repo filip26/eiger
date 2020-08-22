@@ -29,24 +29,25 @@ import com.apicatalog.alps.error.DocumentWriterException;
 public class XmlDocumentWriter implements DocumentWriter {
 
     private final XMLOutputFactory factory;
-    private int indentLength;
+    private final int indentLength;
+    private final boolean verbose;
     
-    public XmlDocumentWriter(int indentLength) {
+    public XmlDocumentWriter(final int indentLength, final boolean verbose) {
         this.factory = XMLOutputFactory.newDefaultFactory();
-        factory.setProperty("escapeCharacters", false);
+        this.factory.setProperty("escapeCharacters", false);
         this.indentLength = indentLength;
+        this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(boolean prettyPrint) {
-        return new XmlDocumentWriter(prettyPrint ? 4 : -1);
+    public static final DocumentWriter create(final boolean prettyPrint, final boolean verbose) {
+        return new XmlDocumentWriter(prettyPrint ? 4 : -1, verbose);
     }
     
     @Override
     public void write(final Document document, final OutputStream stream) throws IOException, DocumentWriterException {
         try {
             
-            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength));
-            
+            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength), verbose);
             
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);
@@ -56,7 +57,7 @@ public class XmlDocumentWriter implements DocumentWriter {
     @Override
     public void write(final Document document, final Writer writer) throws IOException, DocumentWriterException {        
         try {
-            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength));
+            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength), verbose);
             
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);

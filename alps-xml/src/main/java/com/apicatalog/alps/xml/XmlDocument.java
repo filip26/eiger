@@ -212,15 +212,15 @@ final class XmlDocument implements Document, XmlElement {
         stack.push(ext);
     }
 
-    public static void write(Document document, DocumentStreamWriter writer) throws DocumentWriterException {
+    public static void write(Document document, DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
 
         writer.startDocument(document.version());
                 
-        XmlDocumentation.write(document.documentation(), writer);
+        XmlDocumentation.write(document.documentation(), writer, verbose);
         
         XmlLink.write(document.links(), writer);
 
-        XmlDescriptor.write(document.descriptors(), writer);
+        XmlDescriptor.write(document.descriptors(), writer, verbose);
         
         XmlExtension.write(document.extensions(), writer);
 

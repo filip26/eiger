@@ -32,12 +32,14 @@ import com.apicatalog.alps.dom.Document;
 public final class JsonDocumentWriter implements DocumentWriter {
 
     private final JsonWriterFactory writerFactory;
+    private final boolean verbose;
     
-    public JsonDocumentWriter(JsonWriterFactory writerFactory) {
+    public JsonDocumentWriter(JsonWriterFactory writerFactory, boolean verbose) {
         this.writerFactory = writerFactory;
+        this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(boolean prettyPrint) {
+    public static final DocumentWriter create(boolean prettyPrint, boolean verbose) {
 
         final Map<String, Object> properties = new HashMap<>(1);
         
@@ -45,7 +47,7 @@ public final class JsonDocumentWriter implements DocumentWriter {
             properties.put(JsonGenerator.PRETTY_PRINTING, true);
         }
 
-        return new JsonDocumentWriter(Json.createWriterFactory(properties));
+        return new JsonDocumentWriter(Json.createWriterFactory(properties), verbose);
     }
     
     @Override
@@ -58,8 +60,8 @@ public final class JsonDocumentWriter implements DocumentWriter {
         write(document, writerFactory.createWriter(writer));
     }
 
-    private static final void write(Document document, JsonWriter jsonWriter) throws IOException {
-        jsonWriter.write(JsonDocument.toJson(document));
+    private final void write(Document document, JsonWriter jsonWriter) throws IOException {
+        jsonWriter.write(JsonDocument.toJson(document, verbose));
         jsonWriter.close();
     }
 }

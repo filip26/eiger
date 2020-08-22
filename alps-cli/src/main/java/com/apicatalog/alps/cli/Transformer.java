@@ -39,10 +39,10 @@ final class Transformer {
         String sourcePath = null;
         String sourceType = null;
         
-        String targetPath = null;
         String targetType = null;
         
         boolean prettyPrint = false;
+        boolean verbose = false;
         
         for (int i=0; i < args.length; i++) {
 
@@ -67,23 +67,24 @@ final class Transformer {
             } else if (argument.startsWith(Constants.ARG_P) || argument.startsWith(Constants.ARG_PRETTY)) {
 
                 prettyPrint = true;
-                
+
+            } else if (argument.startsWith(Constants.ARG_V) || argument.startsWith(Constants.ARG_VERBOSE)) {
+
+                verbose = true;
+
             } else if (sourcePath == null) {                
                 sourcePath = argument;
-
-            } else if (targetPath == null) {                
-                targetPath = argument;
 
             } else {
                 PrintUtils.printUsage();
                 return;
             }
-
         }
-        transform(sourceType, sourcePath, targetType, targetPath, prettyPrint);
+                
+        transform(sourceType, sourcePath, targetType, prettyPrint, verbose);
     }
     
-    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final String targetPath, final boolean prettyPrint) throws IOException {
+    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final boolean prettyPrint, final boolean verbose) throws IOException {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
@@ -103,23 +104,11 @@ final class Transformer {
             source = System.in;
         }
         
-        final String targetMediaType = Utils.getMediaType(targetType, targetPath, false);
+        final String targetMediaType = Utils.getMediaType(targetType, null, false);
         
-        final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint);
+        final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint, verbose);
 
-        final OutputStream target;
-        
-        if (targetPath != null) {
-            
-            target = Utils.fileToOutputStream(targetPath);
-            
-            if (source == null) {
-                return;
-            }
-            
-        } else {
-            target = System.out;
-        }
+        final OutputStream target = System.out;
         
         try {
             

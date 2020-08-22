@@ -30,6 +30,9 @@ final class Constants {
     static final String ARG_P = "-p";
     static final String ARG_PRETTY = "--pretty";
 
+    static final String ARG_V = "-v";
+    static final String ARG_VERBOSE = "--verbose";
+
     private Constants() {
     }
 }

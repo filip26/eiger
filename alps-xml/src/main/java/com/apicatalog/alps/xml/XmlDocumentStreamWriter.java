@@ -77,7 +77,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDescriptor(final Descriptor descriptor, final boolean selfClose) throws DocumentWriterException {
+    public void startDescriptor(final Descriptor descriptor, final boolean selfClose, final boolean verbose) throws DocumentWriterException {
         try {
             writeIndent();
             
@@ -111,6 +111,9 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             
             if (type != null && !DescriptorType.SEMANTIC.equals(type)) {
                 writer.writeAttribute(XmlConstants.TYPE, type.name().toLowerCase());
+                
+            } else if (verbose) {
+                writer.writeAttribute(XmlConstants.TYPE, DescriptorType.SEMANTIC.name().toLowerCase());
             }
             
             final Optional<URI> returnType = descriptor.returnType();
@@ -149,7 +152,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDoc(final Documentation doc, final boolean selfClose) throws DocumentWriterException {
+    public void startDoc(final Documentation doc, final boolean selfClose, final boolean verbose) throws DocumentWriterException {
         try {
             writeIndent();
             
@@ -164,6 +167,9 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             
             if (mediaType.isPresent()) {
                 writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType.get());
+                
+            } else if (verbose) {
+                writer.writeAttribute(XmlConstants.MEDIA_TYPE, "plain");
             }
             
             final Optional<URI> href = doc.href();
