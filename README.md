@@ -43,7 +43,7 @@ e.g.
 #### Validation
 
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh validate --source=xml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh validate --source=xml
 ```
 ```yaml
 # Valid ALPS document
@@ -60,7 +60,7 @@ e.g.
 #### Transformation
 
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/contacts.xml | alps.sh transform --source=xml --target=json --pretty
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=json --pretty
 ```
 
 ## Contributing
