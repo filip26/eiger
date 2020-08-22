@@ -17,10 +17,8 @@ package com.apicatalog.alps.cli;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.DocumentWriter;
@@ -79,25 +77,6 @@ final class Utils {
         
         try {
             return new FileInputStream(file);
-            
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        
-        return null;
-    }
-
-    static final OutputStream fileToOutputStream(final String path) {
-        
-        final File file = new File(path);
-        
-        if (file.exists() && !file.canWrite()) {
-            System.err.println("Output file '" + path + "' is not writeable.");
-            return null;
-        }
-        
-        try {
-            return new FileOutputStream(file);
             
         } catch (IOException e) {
             System.err.println(e.getMessage());
