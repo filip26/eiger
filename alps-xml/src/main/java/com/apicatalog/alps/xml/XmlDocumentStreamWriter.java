@@ -169,7 +169,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType.get());
                 
             } else if (verbose) {
-                writer.writeAttribute(XmlConstants.MEDIA_TYPE, "plain");
+                writer.writeAttribute(XmlConstants.MEDIA_TYPE, "text");
             }
             
             final Optional<URI> href = doc.href();

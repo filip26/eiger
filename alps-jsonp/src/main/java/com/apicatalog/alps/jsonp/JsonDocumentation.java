@@ -165,7 +165,7 @@ final class JsonDocumentation implements Documentation {
                 && content.isPresent()
                 && content
                        .map(Documentation.Content::type)
-                       .filter(Predicate.isEqual("text/plain").or(Predicate.isEqual("test")))
+                       .filter(Predicate.isEqual("text/plain").or(Predicate.isEqual("text")))
                        .isPresent()
                 ) {
 
@@ -181,7 +181,7 @@ final class JsonDocumentation implements Documentation {
                 .map(Documentation.Content::type)
                 .ifPresentOrElse(
                         t -> doc.add(JsonConstants.FORMAT, t), 
-                        () -> doc.add(JsonConstants.FORMAT, "plain")
+                        () -> doc.add(JsonConstants.FORMAT, "text")
                         );
         } else {
             content
