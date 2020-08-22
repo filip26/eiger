@@ -80,7 +80,7 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 ### Roadmap
 
 - [x] ~0.1 JSON Parser & Writer~
-- [ ] 0.2 XML Parser & Writer
+- [x] ~0.2 XML Parser & Writer~
 - [ ] 0.3 YAML Parser & Writer
 - [ ] 0.4 CLI - validation, transformations (JSON <-> XML <-> YAML)
 - [ ] 0.5 Effective Document Processor
