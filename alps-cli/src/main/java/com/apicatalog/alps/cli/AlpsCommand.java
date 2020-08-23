@@ -30,11 +30,11 @@ public class AlpsCommand {
         try {
             
             switch (args[0]) {
-            case Constants.VALIDATE:
+            case Constants.ARG_VALIDATE:
                 Validator.validate(Arrays.copyOfRange(args, 1, args.length));
                 break;
                 
-            case Constants.TRANSFORM:
+            case Constants.ARG_TRANSFORM:
                 Transformer.transform(Arrays.copyOfRange(args, 1, args.length));
                 break;
                 

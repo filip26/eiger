@@ -15,7 +15,6 @@
  */
 package com.apicatalog.alps.jsonp;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public final class JsonDocumentWriter implements DocumentWriter {
         this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(boolean prettyPrint, boolean verbose) {
+    public static final DocumentWriter create(final boolean prettyPrint, final boolean verbose) {
 
         final Map<String, Object> properties = new HashMap<>(1);
         
@@ -51,16 +50,16 @@ public final class JsonDocumentWriter implements DocumentWriter {
     }
     
     @Override
-    public void write(final Document document, final OutputStream stream) throws IOException {
+    public void write(final Document document, final OutputStream stream) {
         write(document, writerFactory.createWriter(stream));
     }
 
     @Override
-    public void write(final Document document, final Writer writer) throws IOException {
+    public void write(final Document document, final Writer writer) {
         write(document, writerFactory.createWriter(writer));
     }
 
-    private final void write(Document document, JsonWriter jsonWriter) throws IOException {
+    private final void write(final Document document, final JsonWriter jsonWriter) {
         jsonWriter.write(JsonDocument.toJson(document, verbose));
         jsonWriter.close();
     }

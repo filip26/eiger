@@ -39,22 +39,25 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     
     private int depth;
     
-    public XmlDocumentStreamWriter(XMLStreamWriter writer, int indentLength) {
+    public XmlDocumentStreamWriter(final XMLStreamWriter writer, final int indentLength) {
         this.writer = writer;
         this.indentLength = indentLength;
         this.depth = 1;
     }
 
     @Override
-    public void startDocument(DocumentVersion version) throws DocumentWriterException {
+    public void startDocument(final DocumentVersion version) throws DocumentWriterException {
         try {
             
           writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
+          
           if (isPrettyPrint()) {
               writer.writeCharacters("\n");
           }
+          
           writer.writeStartElement(XmlConstants.DOCUMENT);
-          writer.writeAttribute(XmlConstants.VERSION, toString(version));
+          writer.writeAttribute(XmlConstants.VERSION, XmlConstants.VERSION_1_0);
+          
           if (isPrettyPrint()) {
               writer.writeCharacters("\n");
           }
@@ -184,7 +187,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void writeDocContent(String content) throws DocumentWriterException {
+    public void writeDocContent(final String content) throws DocumentWriterException {
 
         try {
             if (content.matches(".*[<>&].*")) {
@@ -222,10 +225,6 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         return indentLength > 0;
     }
     
-    private static final String toString(final DocumentVersion version) {
-        return "1.0";
-    }
-
     @Override
     public void writeLink(final Link link) throws DocumentWriterException {
         

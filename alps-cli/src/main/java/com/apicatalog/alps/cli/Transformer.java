@@ -48,27 +48,27 @@ final class Transformer {
 
             final String argument = args[i];
             
-            if (sourceType == null && argument.startsWith(Constants.ARG_S)) {
+            if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE_SHORT)) {
                 
-                sourceType = argument.substring(Constants.ARG_S.length());
+                sourceType = argument.substring(Constants.ARG_SOURCE_SHORT.length());
                 
             } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
 
                 sourceType = argument.substring(Constants.ARG_SOURCE.length());
 
-            } else if (targetType == null && argument.startsWith(Constants.ARG_T)) {
+            } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET_SHORT)) {
                 
-                targetType = argument.substring(Constants.ARG_T.length());
+                targetType = argument.substring(Constants.ARG_TARGET_SHORT.length());
                 
             } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET)) {
 
                 targetType = argument.substring(Constants.ARG_TARGET.length());
                 
-            } else if (argument.startsWith(Constants.ARG_P) || argument.startsWith(Constants.ARG_PRETTY)) {
+            } else if (argument.startsWith(Constants.ARG_PRETTY_SHORT) || argument.startsWith(Constants.ARG_PRETTY)) {
 
                 prettyPrint = true;
 
-            } else if (argument.startsWith(Constants.ARG_V) || argument.startsWith(Constants.ARG_VERBOSE)) {
+            } else if (argument.startsWith(Constants.ARG_VERBOSE_SHORT) || argument.startsWith(Constants.ARG_VERBOSE)) {
 
                 verbose = true;
 
@@ -118,7 +118,7 @@ final class Transformer {
             
         } catch (DocumentParserException e) {
             
-            PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
+            PrintUtils.printError(e, sourceMediaType, sourcePath);
             
         } catch (DocumentWriterException e) {
 

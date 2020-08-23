@@ -40,9 +40,9 @@ final class Validator {
 
             final String argument = args[i];
             
-            if (sourceType == null && argument.startsWith(Constants.ARG_S)) {
+            if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE_SHORT)) {
                 
-                sourceType = argument.substring(Constants.ARG_S.length());
+                sourceType = argument.substring(Constants.ARG_SOURCE_SHORT.length());
                 
             } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
 
@@ -85,7 +85,7 @@ final class Validator {
             PrintUtils.printDocInfo(parser.parse(null, source), sourceMediaType, sourcePath);
             
         } catch (DocumentParserException e) {
-            PrintUtils.printError(sourcePath, e, sourceMediaType, sourcePath);
+            PrintUtils.printError(e, sourceMediaType, sourcePath);
         }
     }
     
