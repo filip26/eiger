@@ -34,12 +34,12 @@ final class Utils {
     
     static final String getMediaType(final String type, final String path, final boolean input) {
         
-        if ("xml".equalsIgnoreCase(type)) {
-            return "application/alps+xml";
+        if (Constants.ARG_PARAM_XML.equalsIgnoreCase(type)) {
+            return Constants.MEDIA_TYPE_ALPS_XML;
         }
 
-        if ("json".equalsIgnoreCase(type)) {
-            return "application/alps+json";
+        if (Constants.ARG_PARAM_JSON.equalsIgnoreCase(type)) {
+            return Constants.MEDIA_TYPE_ALPS_JSON;
         }
 
         if (type != null) {
@@ -47,11 +47,11 @@ final class Utils {
         }
         
         if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
-            return "application/alps+xml";
+            return Constants.MEDIA_TYPE_ALPS_XML;
         }
 
         if (path != null && (path.toLowerCase().endsWith(".json") || path.toLowerCase().endsWith("+json"))) {
-            return "application/alps+json";
+            return Constants.MEDIA_TYPE_ALPS_JSON;
         }
         
         if (path != null) {

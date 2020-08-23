@@ -24,6 +24,8 @@ final class XmlConstants {
     public static final String DESCRIPTOR = "descriptor";
 
     public static final String VERSION = "version";
+    
+    public static final String VERSION_1_0 = "1.0";
 
     public static final String ID = "id";
 

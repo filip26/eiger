@@ -74,7 +74,7 @@ final class JsonDocumentation implements Documentation {
 
         final JsonContent content =  doc.new JsonContent();
         content.value = value.getString();
-        content.type = "text/plain";
+        content.type = JsonConstants.MEDIA_TYPE_TEXT_PLAIN;
         
         doc.content = content;
         
@@ -86,7 +86,7 @@ final class JsonDocumentation implements Documentation {
         final JsonDocumentation doc = new JsonDocumentation();
         
         final JsonContent content = doc.new JsonContent();
-        content.type = "text/plain";
+        content.type = JsonConstants.MEDIA_TYPE_TEXT_PLAIN;
         
         if (value.containsKey(JsonConstants.VALUE)) {
 
@@ -165,7 +165,7 @@ final class JsonDocumentation implements Documentation {
                 && content.isPresent()
                 && content
                        .map(Documentation.Content::type)
-                       .filter(Predicate.isEqual("text/plain").or(Predicate.isEqual("text")))
+                       .filter(Predicate.isEqual(JsonConstants.MEDIA_TYPE_TEXT_PLAIN).or(Predicate.isEqual("text")))
                        .isPresent()
                 ) {
 
@@ -186,7 +186,7 @@ final class JsonDocumentation implements Documentation {
         } else {
             content
                 .map(Documentation.Content::type)
-                .filter(Predicate.isEqual("text/plain").negate().and(Predicate.isEqual("text").negate()))
+                .filter(Predicate.isEqual(JsonConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
                 .ifPresent(type -> doc.add(JsonConstants.FORMAT, type));            
         }
     

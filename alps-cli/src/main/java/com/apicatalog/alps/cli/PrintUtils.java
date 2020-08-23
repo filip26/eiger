@@ -32,15 +32,15 @@ final class PrintUtils {
     static void printUsage() {
         System.out.println("Usage:");
         System.out.print("   alps.sh ");
-        System.out.print(Constants.VALIDATE);
+        System.out.print(Constants.ARG_VALIDATE);
         System.out.println(" [{-s|--source}={json|xml}] [input]");
         System.out.print("   alps.sh ");
-        System.out.print(Constants.TRANSFORM);
+        System.out.print(Constants.ARG_TRANSFORM);
         System.out.println(" [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [{-p|--pretty}] [{-v|--verbose}]");
         System.out.println("   alps.sh [{-h|--help}]");
     }
     
-    static final void printError(final String path, final DocumentParserException e, final String mediaType, final String filePath) {
+    static final void printError(final DocumentParserException e, final String mediaType, final String filePath) {
 
         final PrintStream output = System.err;
         

@@ -57,7 +57,7 @@ final class JsonDocument implements Document {
     }
     
     @Override
-    public Optional<Descriptor> findById(URI id) {
+    public Optional<Descriptor> findById(final URI id) {
         return Optional.ofNullable(descriptors.get(id));
     }
 
@@ -190,11 +190,11 @@ final class JsonDocument implements Document {
         return Json.createObjectBuilder().add(JsonConstants.ROOT, alps).build();
     }
     
-    private static final JsonString toJson(DocumentVersion version) {
-        return Json.createValue("1.0");        
+    private static final JsonString toJson(final DocumentVersion version) {
+        return Json.createValue(JsonConstants.VERSION_1_0);
     }
     
-    protected static final boolean isNotEmpty(Collection<?> collection) {
+    protected static final boolean isNotEmpty(final Collection<?> collection) {
         return collection != null && !collection.isEmpty();
     }
 }

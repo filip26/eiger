@@ -47,6 +47,8 @@ final class JsonConstants {
     
     public static final String EXTENSION = "ext";
     
+    public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
+    
     private JsonConstants() {
     }
 }

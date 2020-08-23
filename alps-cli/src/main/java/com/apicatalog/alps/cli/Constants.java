@@ -17,22 +17,28 @@ package com.apicatalog.alps.cli;
 
 final class Constants {
 
-    static final String VALIDATE = "validate";
+    static final String ARG_VALIDATE = "validate";
     
-    static final String TRANSFORM = "transform";
+    static final String ARG_TRANSFORM = "transform";
     
-    static final String ARG_S = "-s=";
+    static final String ARG_SOURCE_SHORT = "-s=";
     static final String ARG_SOURCE = "--source=";
 
-    static final String ARG_T = "-t=";
+    static final String ARG_TARGET_SHORT = "-t=";
     static final String ARG_TARGET = "--target=";
 
-    static final String ARG_P = "-p";
+    static final String ARG_PRETTY_SHORT = "-p";
     static final String ARG_PRETTY = "--pretty";
 
-    static final String ARG_V = "-v";
+    static final String ARG_VERBOSE_SHORT = "-v";
     static final String ARG_VERBOSE = "--verbose";
+    
+    static final String ARG_PARAM_JSON = "json";
+    static final String ARG_PARAM_XML = "xml";
 
+    static final String MEDIA_TYPE_ALPS_JSON = "application/alps+json";
+    static final String MEDIA_TYPE_ALPS_XML = "application/alps+xml";
+    
     private Constants() {
     }
 }
