@@ -85,5 +85,36 @@ final class JsonUtils {
     public static boolean isNotNull(JsonValue jsonValue) {
         return jsonValue != null && !ValueType.NULL.equals(jsonValue.getValueType());
     }
+    
+    public static boolean isScalar(final JsonValue value) {
+        return isNotObject(value) && isNotArray(value);
+    }
 
+    public static final boolean isNotArray(final JsonValue value) {
+        return value == null || !ValueType.ARRAY.equals(value.getValueType());
+    }
+    
+    public static final JsonValue toValue(final String value) {
+        if (value == null) {
+            return JsonValue.NULL;
+        }
+        
+        if ("true".equalsIgnoreCase(value)) {
+            return JsonValue.TRUE;
+        }
+        
+        if ("false".equalsIgnoreCase(value)) {
+            return JsonValue.FALSE;
+        }
+        
+        try {
+            return Json.createValue(Double.parseDouble(value));
+        } catch (NumberFormatException e) {/*ignored*/}
+        
+        try {
+            return Json.createValue(Long.parseLong(value));
+        } catch (NumberFormatException e) {/*ignored*/}
+        
+        return Json.createValue(value);
+    }
 }

@@ -17,6 +17,7 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -278,6 +279,10 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             
             if (value.isPresent()) {
                 writer.writeAttribute(XmlConstants.VALUE, value.get());
+            }
+            
+            for (Map.Entry<String, String> attr : extension.attributes().entrySet()) {
+                writer.writeAttribute(attr.getKey(), attr.getValue());
             }
 
             if (isPrettyPrint()) {

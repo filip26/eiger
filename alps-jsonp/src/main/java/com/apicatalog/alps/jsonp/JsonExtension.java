@@ -17,6 +17,8 @@ package com.apicatalog.alps.jsonp;
 
 import java.net.URI;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +38,8 @@ class JsonExtension implements Extension {
     private URI href;
     private String value;
     
+    private Map<String, String> attributes;
+    
     @Override
     public Optional<URI> href() {
         return Optional.ofNullable(href);
@@ -49,6 +53,11 @@ class JsonExtension implements Extension {
     @Override
     public Optional<String> value() {
         return Optional.ofNullable(value);
+    }
+    
+    @Override
+    public Map<String, String> attributes() {
+        return attributes;
     }
 
     protected static final Set<Extension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
@@ -101,6 +110,35 @@ class JsonExtension implements Extension {
             extension.value = JsonUtils.getString(value);
         }
         
+        // custom attributes
+        final Map<String, String> attributes = new LinkedHashMap<>();
+        
+        for (Map.Entry<String, JsonValue> attr : jsonObject.entrySet()) {
+            
+            if (JsonConstants.HREF.equalsIgnoreCase(attr.getKey()) 
+                    || JsonConstants.VALUE.equalsIgnoreCase(attr.getKey()) 
+                    || JsonConstants.ID.equalsIgnoreCase(attr.getKey())) {
+                continue;
+            }
+
+            if (JsonUtils.isScalar(attr.getValue())) {
+                
+                final String value;
+                
+                if (JsonUtils.isString(attr.getValue())) {
+
+                    value = JsonUtils.getString(attr.getValue());
+                    
+                } else {
+                    value = attr.toString();
+                }
+                
+                attributes.put(attr.getKey(), value);
+            }
+        }
+        
+        extension.attributes = attributes;
+        
         return extension;
     }
     
@@ -125,6 +163,11 @@ class JsonExtension implements Extension {
 
         extension.href().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
         extension.value().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
+        
+        // custom attributes
+        extension
+                .attributes()
+                .forEach((name, value) -> jsonExt.add(name, JsonUtils.toValue(value)));
         
         return jsonExt.build();
     }

@@ -55,7 +55,14 @@
            "name"  : "Descriptor level extension",
            "input" : "t008-in.xml",
            "expected" : "t008-out.xml"
-        },        
+        },
+		{
+           "@id"    : "#t009",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Custom attributes on extension",
+           "input" : "t009-in.xml",
+           "expected" : "t009-in.xml"
+        },                
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],

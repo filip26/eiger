@@ -17,6 +17,8 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,6 +36,8 @@ final class XmlExtension implements Extension, XmlElement {
     private URI href;
     
     private String value;
+    
+    private Map<String, String> attributes;
     
     private int elementIndex;
     
@@ -64,6 +68,11 @@ final class XmlExtension implements Extension, XmlElement {
     @Override
     public Optional<String> value() {
         return Optional.ofNullable(value);
+    }
+    
+    @Override
+    public Map<String, String> attributes() {
+        return attributes;
     }
 
     public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) throws InvalidDocumentException {
@@ -99,6 +108,24 @@ final class XmlExtension implements Extension, XmlElement {
         if (value != null && !value.isBlank()) {
             ext.value = value;
         }
+        
+        final Map<String, String> custom = new LinkedHashMap<>();
+        
+        // custom attributes
+        for (int i=0; i < attributes.getLength(); i++) {
+            
+            String attrName = attributes.getLocalName(i);
+            
+            if (XmlConstants.HREF.equalsIgnoreCase(attrName) 
+                    || XmlConstants.VALUE.equalsIgnoreCase(attrName) 
+                    || XmlConstants.ID.equalsIgnoreCase(attrName)) {
+                continue;
+            }
+
+            custom.put(attrName, attributes.getValue(i));
+        }
+        
+        ext.attributes = custom;
 
         return ext;
     }
