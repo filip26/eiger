@@ -16,6 +16,8 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public interface Extension  {
@@ -27,7 +29,20 @@ public interface Extension  {
 	 *  
 	 * @return {@link URI} of an external document
 	 */
-	Optional<URI> href();
+	default Optional<URI> href() {
+	    return Optional.empty();
+	}
 	
-	Optional<String> value();
+	default Optional<String> value() {
+	    return Optional.empty();
+	}
+	
+	/**
+	 * A map of custom attributes that are not specified by the ALPS specification.
+     *
+	 * @return {@link Map} of custom attributes
+	 */
+	default Map<String, String> attributes() {
+	    return Collections.emptyMap();
+	}
 }

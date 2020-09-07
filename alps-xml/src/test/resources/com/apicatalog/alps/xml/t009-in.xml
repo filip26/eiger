@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alps version="1.0">
+	<descriptor id="custom-attrs">
+	 	<ext id="ext-1" attr1="value1" attr2="value2"/>
+	 </descriptor>
+</alps>

@@ -26,6 +26,13 @@
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "Descriptor with href but no id",
            "input" : "t004-in.json"
+        },
+		{
+           "@id"    : "#t005",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Custom attributes on 'ext'",
+           "input" : "t005-in.json",
+           "output" : "t005-in.json"
         },                
         {
            "@id"    : "#nt001",

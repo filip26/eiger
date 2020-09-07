@@ -1,0 +1,14 @@
+{ 
+ "alps": {
+	"version" : "1.0",
+    "ext": [
+			{
+		        "id": "title",
+		        "intValue": 123,
+		        "doubleValue": 0.123,
+		        "boolValue": true,
+		        "stringValue": "metadata"
+			}
+	    ]
+	}
+}
