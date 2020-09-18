@@ -41,6 +41,8 @@
         </developer>
     </developers>
 
+    <inceptionYear>2020</inceptionYear>
+
     <properties>
 		<revision>0.2-SNAPSHOT</revision>
          
