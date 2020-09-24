@@ -138,9 +138,10 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 ```
 
 ## Resources
-- [alps.io group](https://groups.google.com/g/alps-io)
+- [ALPS Specification Documents](https://github.com/alps-io/spec)
 - [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
 - [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
+- [alps.io group](https://groups.google.com/g/alps-io)
 - [alps.io homapge](http://alps.io/)
 
 ## Commercial Support
