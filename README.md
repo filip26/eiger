@@ -9,25 +9,23 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ### Prerequisites
 - `Java 11+`
-- `Maven 3.5+`
-
-### Build
-
-```bash
-> git clone git@github.com:filip26/alps.git
-> cd alps
-> mvn package
-> chmod +x alps-cli/bin/alps.sh
-```
 
 ### Install
+
+Download the latest [alps-cli-0.3.zip](https://github.com/filip26/alps/releases/download/0.3/alps-cli-0.3.zip). Extract the zip content and make `alps.sh` executable.
+
+```bash
+> cd alps-cli-0.3
+> chmod +x bin/alps.sh
+```
+
 Set `ALPS_HOME` and `PATH` variables.
 
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps
-> export PATH=$PATH:/home/filip/alps/alps-cli/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.3
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.3/bin
 ```
 
 ### Usage
