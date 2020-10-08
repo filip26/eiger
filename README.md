@@ -10,7 +10,7 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ### Prerequisites
 - `Java 11+`
 
-### Install
+### Installation
 
 Download the latest [alps-cli-0.3.zip](https://github.com/filip26/alps/releases/download/0.3/alps-cli-0.3.zip). Extract the zip content and make `alps.sh` executable.
 
