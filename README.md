@@ -89,7 +89,7 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 
 - [x] ~0.1 JSON Parser & Writer~
 - [x] ~0.2 XML Parser & Writer~
-- [ ] 0.3 CLI - validation, transformations (JSON <-> XML)
+- [x] ~0.3 CLI - validation, transformations (JSON <-> XML)~
 - [ ] 0.4 YAML Parser (+ YAML-> JSON/XML)
 - [ ] 0.5 Effective Document Processor
 - [ ] 0.6 Semantic Equivalence
