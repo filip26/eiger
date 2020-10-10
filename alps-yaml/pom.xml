@@ -69,4 +69,15 @@
     	</plugins>
 	</build>
 	
+	<repositories>
+		<repository>
+      		<id>github-filip26</id>
+      		<layout>default</layout>
+      		<name>GitHub Packages Repo</name>
+      		<releases><enabled>true</enabled></releases>
+      		<snapshots><enabled>false</enabled></snapshots>
+      		<url>https://maven.pkg.github.com/filip26/hydrogen-yaml</url>
+		</repository>
+	</repositories>
+	
 </project>
