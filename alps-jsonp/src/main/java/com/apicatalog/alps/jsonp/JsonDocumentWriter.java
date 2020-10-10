@@ -59,8 +59,12 @@ public final class JsonDocumentWriter implements DocumentWriter {
         write(document, writerFactory.createWriter(writer));
     }
 
-    private final void write(final Document document, final JsonWriter jsonWriter) {
-        jsonWriter.write(JsonDocument.toJson(document, verbose));
-        jsonWriter.close();
+    private final void write(final Document document, final JsonWriter jsonWriter) {        
+        try {
+            jsonWriter.write(JsonDocument.toJson(document, verbose));
+            
+        } finally {
+            jsonWriter.close();             
+        }
     }
 }

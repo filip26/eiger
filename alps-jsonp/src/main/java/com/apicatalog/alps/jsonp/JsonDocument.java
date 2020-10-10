@@ -165,7 +165,7 @@ final class JsonDocument implements Document {
     public static final JsonObject toJson(final Document document, final boolean verbose) {
         
         final JsonObjectBuilder alps = Json.createObjectBuilder();
-        
+
         // version
         alps.add(JsonConstants.VERSION, toJson(document.version()));
         

@@ -35,9 +35,11 @@ final class Constants {
     
     static final String ARG_PARAM_JSON = "json";
     static final String ARG_PARAM_XML = "xml";
+    static final String ARG_PARAM_YAML = "yaml";
 
     static final String MEDIA_TYPE_ALPS_JSON = "application/alps+json";
     static final String MEDIA_TYPE_ALPS_XML = "application/alps+xml";
+    static final String MEDIA_TYPE_ALPS_YAML = "application/alps+yaml";
     
     private Constants() {
     }

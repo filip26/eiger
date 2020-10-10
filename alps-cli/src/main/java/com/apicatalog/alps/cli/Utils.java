@@ -26,6 +26,7 @@ import com.apicatalog.alps.jsonp.JsonDocumentParser;
 import com.apicatalog.alps.jsonp.JsonDocumentWriter;
 import com.apicatalog.alps.xml.XmlDocumentParser;
 import com.apicatalog.alps.xml.XmlDocumentWriter;
+import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 final class Utils {
 
@@ -42,8 +43,12 @@ final class Utils {
             return Constants.MEDIA_TYPE_ALPS_JSON;
         }
 
+        if (Constants.ARG_PARAM_YAML.equalsIgnoreCase(type)) {
+            return Constants.MEDIA_TYPE_ALPS_YAML;
+        }
+
         if (type != null) {
-            throw new IllegalArgumentException("Unknown type [" + type + "], expected [xml] or [json].");
+            throw new IllegalArgumentException("Unknown type [" + type + "], expected xml, json or yaml.");
         }
         
         if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
@@ -54,11 +59,15 @@ final class Utils {
             return Constants.MEDIA_TYPE_ALPS_JSON;
         }
         
+        if (path != null && (path.toLowerCase().endsWith(".yaml") || path.toLowerCase().endsWith(".yml") || path.toLowerCase().endsWith("+yaml"))) {
+            return Constants.MEDIA_TYPE_ALPS_YAML;
+        }
+        
         if (path != null) {
-            throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " file type [" + path + "], please add --" + (input ? "source" : "target")  + "=(json|xml) argument.");
+            throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " file type [" + path + "], please add --" + (input ? "source" : "target")  + "=(json|xml|yaml) argument.");
         }
 
-        throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " type, please add --" + (input ? "source" : "target")  + "=(json|xml) argument.");
+        throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " type, please add --" + (input ? "source" : "target")  + "=(json|xml|yaml) argument.");
     }
 
     static final InputStream fileToInputStream(final String path) {
@@ -106,6 +115,10 @@ final class Utils {
 
         if ("application/alps+xml".equals(mediaType)) {
             return XmlDocumentWriter.create(prettyPrint, verbose);
+        }
+        
+        if (Constants.MEDIA_TYPE_ALPS_YAML.equals(mediaType)) {
+            return YamlDocumentWriter.create(verbose);
         }
 
         throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");

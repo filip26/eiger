@@ -1,0 +1,12 @@
+{
+    "description": "ALPS test suite to test the ability of ALPS parser to process ALSP+YAML",
+    "sequence": [    
+        {
+           "@id"    : "#t001",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "Sample Works",
+           "input" : "t001-in.xml",
+           "expected" : "t001-out.xml"
+        }        
+    ]
+}
