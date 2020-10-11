@@ -71,7 +71,7 @@
 	
 	<repositories>
 		<repository>
-      		<id>github-filip26</id>
+      		<id>github</id>
       		<name>GitHub Packages Repo</name>
       		<url>https://maven.pkg.github.com/filip26/hydrogen-yaml</url>
 		</repository>
