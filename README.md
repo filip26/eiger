@@ -111,7 +111,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-jsonp</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3</version>
 </dependency>
 ```
 
@@ -130,7 +130,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3</version>
 </dependency>
 
 ```
