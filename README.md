@@ -58,7 +58,7 @@ e.g.
 #### Transformation
 
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml --pretty
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml
 ```
 
 ## Contributing
