@@ -8,18 +8,18 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>alps-yaml</artifactId>
 
-    <name>ALPS+YAML Document</name>
+    <name>ALPS+YAML Document (Hydrogen YAML)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
         <artifactId>alps</artifactId>
-		<version>${revision}</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-core</artifactId>
+            <artifactId>alps-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

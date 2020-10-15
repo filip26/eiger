@@ -6,9 +6,9 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-core</artifactId>
+    <artifactId>alps-api</artifactId>
     
-    <name>ALPS Core</name>
+    <name>ALPS API</name>
 
     <parent>
         <groupId>com.apicatalog</groupId>

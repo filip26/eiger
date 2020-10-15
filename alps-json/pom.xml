@@ -6,7 +6,7 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-jsonp</artifactId>
+    <artifactId>alps-json</artifactId>
 
     <name>ALPS+JSON Document (JSON-P)</name>
 
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-core</artifactId>
+            <artifactId>alps-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         

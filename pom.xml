@@ -59,10 +59,10 @@
     </properties>
 
     <modules>
-        <module>alps-core</module>
-        <module>alps-jsonp</module>
-        <module>alps-xml</module>
+        <module>alps-api</module>
+        <module>alps-json</module>
         <module>alps-yaml</module>
+        <module>alps-xml</module>
         <module>alps-cli</module>
     </modules>
 
