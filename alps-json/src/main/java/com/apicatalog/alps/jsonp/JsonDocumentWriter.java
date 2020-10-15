@@ -30,15 +30,15 @@ import com.apicatalog.alps.dom.Document;
 
 public final class JsonDocumentWriter implements DocumentWriter {
 
-    private final JsonWriterFactory writerFactory;
+    private final JsonWriter writer;
     private final boolean verbose;
     
-    public JsonDocumentWriter(JsonWriterFactory writerFactory, boolean verbose) {
-        this.writerFactory = writerFactory;
+    public JsonDocumentWriter(JsonWriter writer, boolean verbose) {
+        this.writer = writer;
         this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(final boolean prettyPrint, final boolean verbose) {
+    public static final DocumentWriter create(final Writer writer, final boolean prettyPrint, final boolean verbose) {
 
         final Map<String, Object> properties = new HashMap<>(1);
         
@@ -46,25 +46,16 @@ public final class JsonDocumentWriter implements DocumentWriter {
             properties.put(JsonGenerator.PRETTY_PRINTING, true);
         }
 
-        return new JsonDocumentWriter(Json.createWriterFactory(properties), verbose);
-    }
-    
-    @Override
-    public void write(final Document document, final OutputStream stream) {
-        write(document, writerFactory.createWriter(stream));
+        return new JsonDocumentWriter(Json.createWriterFactory(properties).createWriter(writer), verbose);
     }
 
     @Override
-    public void write(final Document document, final Writer writer) {
-        write(document, writerFactory.createWriter(writer));
-    }
-
-    private final void write(final Document document, final JsonWriter jsonWriter) {        
+    public void write(final Document document) {
         try {
-            jsonWriter.write(JsonDocument.toJson(document, verbose));
+            writer.write(JsonDocument.toJson(document, verbose));
             
         } finally {
-            jsonWriter.close();             
+            writer.close();             
         }
     }
 }

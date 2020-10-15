@@ -16,7 +16,6 @@
 package com.apicatalog.alps.yaml;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 
 import com.apicatalog.alps.DocumentWriter;
@@ -28,38 +27,27 @@ import com.apicatalog.yaml.writer.YamlWriter;
 
 public final class YamlDocumentWriter implements DocumentWriter {
 
+    private final YamlWriter writer;
     private final boolean verbose;
     
-    public YamlDocumentWriter(boolean verbose) {
+    public YamlDocumentWriter(YamlWriter writer, boolean verbose) {
+        this.writer = writer;
         this.verbose = verbose;
     }
 
-    public static final DocumentWriter create(final boolean verbose) {
-        return new YamlDocumentWriter(verbose);
+    public static final DocumentWriter create(final Writer writer, final boolean verbose) {
+        return new YamlDocumentWriter(Yaml.createWriter(writer).build(), verbose);
     }
     
     @Override
-    public void write(Document document, OutputStream stream) throws IOException, DocumentWriterException {
+    public void write(Document document) throws IOException, DocumentWriterException {
 
-        try (final YamlWriter yamlWriter = Yaml.createWriter(stream).build()) {
-            
-            yamlWriter.write(YamlDocument.toYaml(document, verbose));
-            
-        } catch (YamlException e) {
-            throw new DocumentWriterException(e);
-        }        
-    }
+        try {
 
-    @Override
-    public void write(Document document, Writer writer) throws IOException, DocumentWriterException {
-
-        try (final YamlWriter yamlWriter = Yaml.createWriter(writer).build()) {
-            
-            yamlWriter.write(YamlDocument.toYaml(document, verbose));
+            writer.write(YamlDocument.toYaml(document, verbose));
             
         } catch (YamlException e) {
             throw new DocumentWriterException(e);
         }
     }
-
 }

@@ -17,7 +17,7 @@ package com.apicatalog.alps.cli;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.DocumentWriter;
@@ -106,15 +106,13 @@ final class Transformer {
         
         final String targetMediaType = Utils.getMediaType(targetType, null, false);
         
-        final DocumentWriter writer = Utils.getWriter(targetMediaType, prettyPrint, verbose);
-
-        final OutputStream target = System.out;
-        
         try {
             
-            Document document = parser.parse(null, source);
+            final Document document = parser.parse(null, source);
             
-            writer.write(document, target);
+            final DocumentWriter writer = Utils.getWriter(new OutputStreamWriter(System.out), targetMediaType, prettyPrint, verbose);
+                        
+            writer.write(document);
             
         } catch (DocumentParserException e) {
             

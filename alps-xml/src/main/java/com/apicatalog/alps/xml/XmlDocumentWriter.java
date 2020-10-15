@@ -16,11 +16,11 @@
 package com.apicatalog.alps.xml;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
@@ -28,39 +28,31 @@ import com.apicatalog.alps.error.DocumentWriterException;
 
 public class XmlDocumentWriter implements DocumentWriter {
 
-    private final XMLOutputFactory factory;
+    private final XMLStreamWriter writer;
     private final int indentLength;
     private final boolean verbose;
     
-    public XmlDocumentWriter(final int indentLength, final boolean verbose) {
-        this.factory = XMLOutputFactory.newDefaultFactory();
-        this.factory.setProperty("escapeCharacters", false);
+    public XmlDocumentWriter(final XMLStreamWriter writer, final int indentLength, final boolean verbose) {
+        this.writer = writer;
         this.indentLength = indentLength;
         this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(final boolean prettyPrint, final boolean verbose) {
-        return new XmlDocumentWriter(prettyPrint ? 4 : -1, verbose);
-    }
-    
-    @Override
-    public void write(final Document document, final OutputStream stream) throws IOException, DocumentWriterException {
-        try {
-            
-            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(stream), indentLength), verbose);
-            
-        } catch (XMLStreamException e) {
-            throw new DocumentWriterException(e);
-        }        
-    }
+    public static final DocumentWriter create(final Writer writer, final boolean prettyPrint, final boolean verbose) throws DocumentWriterException {
+        
+        final XMLOutputFactory factory = XMLOutputFactory.newDefaultFactory();
+        factory.setProperty("escapeCharacters", false);
 
-    @Override
-    public void write(final Document document, final Writer writer) throws IOException, DocumentWriterException {        
         try {
-            XmlDocument.write(document, new XmlDocumentStreamWriter(factory.createXMLStreamWriter(writer), indentLength), verbose);
+            return new XmlDocumentWriter(factory.createXMLStreamWriter(writer), prettyPrint ? 4 : -1, verbose);
             
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);
         }
     }
+    
+    @Override
+    public void write(Document document) throws IOException, DocumentWriterException {
+        XmlDocument.write(document, new XmlDocumentStreamWriter(writer, indentLength), verbose);        
+    }    
 }
