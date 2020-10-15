@@ -12,10 +12,10 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ### Installation
 
-Download the latest [alps-cli-0.3.zip](https://github.com/filip26/alps/releases/download/0.3/alps-cli-0.3.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest [alps-cli-0.3.1.zip](https://github.com/filip26/alps/releases/download/0.3.1/alps-cli-0.3.1.zip). Extract the zip content and make `alps.sh` executable.
 
 ```bash
-> cd alps-cli-0.3
+> cd alps-cli-0.3.1
 > chmod +x bin/alps.sh
 ```
 
@@ -24,15 +24,15 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.3.1
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.1/bin
 ```
 
 ### Usage
 
 ```bash
 > alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml} [{-p|--pretty}] [{-v|--verbose}]
+> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
 > alps.sh [{-h|--help}]
 ```
 
@@ -58,7 +58,7 @@ e.g.
 #### Transformation
 
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=json --pretty
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml --pretty
 ```
 
 ## Contributing
@@ -105,13 +105,24 @@ Compile sources:
 
 ### Usage
 
+#### ALPS+YAML
+
+```xml
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>alps-yaml</artifactId>
+    <version>0.3.1</version>
+</dependency>
+
+```
+
 #### ALPS+JSON
 
 ```xml
 <dependency>
     <groupId>com.apicatalog</groupId>
-    <artifactId>alps-jsonp</artifactId>
-    <version>0.3</version>
+    <artifactId>alps-json</artifactId>
+    <version>0.3.1</version>
 </dependency>
 ```
 
@@ -130,7 +141,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.3</version>
+    <version>0.3.1</version>
 </dependency>
 
 ```
