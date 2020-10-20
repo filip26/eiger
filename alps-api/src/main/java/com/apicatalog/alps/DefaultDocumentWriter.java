@@ -1,12 +1,15 @@
 package com.apicatalog.alps;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Documentation.Content;
+import com.apicatalog.alps.dom.element.Extension;
+import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
 public class DefaultDocumentWriter implements DocumentWriter {
@@ -28,38 +31,116 @@ public class DefaultDocumentWriter implements DocumentWriter {
         
         printer.beginDocument(document.version());
         
-        write(document.documentation());
-        
-//        XmlLink.write(document.links(), writer);
+        writeDocs(document.documentation());
+        writeLinks(document.links());        
 //
 //        XmlDescriptor.write(document.descriptors(), writer, verbose);
-//        
-//        XmlExtension.write(document.extensions(), writer);
+
+        writeExts(document.extensions());
 
         printer.endDocument();        
     }
     
-    protected void write(final Set<Documentation> docs)  throws IOException, DocumentWriterException { 
+    protected void writeDocs(final Set<Documentation> docs)  throws IOException, DocumentWriterException { 
         
         if (docs == null || docs.isEmpty()) {
             return;
         }
         
         for (final Documentation doc : docs) {
-            
-            if (doc.content().isEmpty() && doc.href().isEmpty()) {
-                continue;
-            }
-
-            printer.beginDocumentation();
-
-//            writer.startDoc(doc, doc.content().isEmpty(), verbose);            
-            doc.content()
-                    .map(Content::value)
-                    .filter(Predicate.not(String::isBlank))
-                    .ifPresent(value -> printer.printDocContent(doc.content().get().type(), value));
-            
-            printer.endDocumentation();
+            write(doc);
         }        
+    }
+    
+    protected void write(final Documentation documentation)  throws IOException, DocumentWriterException { 
+        
+        if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
+            return;
+        }
+
+        printer.beginDocumentation();
+
+        final Optional<Content> content = documentation.content();
+        
+        if (documentation.href().isEmpty()
+                && content.isPresent()
+                && content
+                       .map(Documentation.Content::type)
+                       .filter(Predicate.isEqual("text/plain").or(Predicate.isEqual("text")))
+                       .isPresent()
+                ) {
+
+            printer.printText(content.get().value());
+            return ;            
+        }
+                     
+        documentation.href().ifPresent(printer::printHref);
+
+        if (verbose) {
+            content
+                .map(Documentation.Content::type)
+                .ifPresentOrElse(
+                        printer::printMedia, 
+                        () -> printer.printMedia("text")
+                        );
+        } else {
+            content
+                .map(Documentation.Content::type)
+                .filter(Predicate.isEqual("text/plain").negate().and(Predicate.isEqual("text").negate()))
+                .ifPresent(printer::printMedia);            
+        }
+    
+        content
+            .map(Documentation.Content::value)
+            .ifPresent(printer::printValue);
+        
+        printer.endDocumentation();
+    }        
+    
+    protected void writeLinks(final Set<Link> links) throws IOException, DocumentWriterException {
+
+        if (links == null || links.isEmpty()) {
+            return;
+        }
+        
+        for (final Link link : links) {
+
+            printer.beginLink();
+            
+            if (link.href() != null) {
+                printer.printHref(link.href());
+            }
+            
+            if (link.rel() != null && !link.rel().isBlank()) {
+                printer.printRel(link.rel());
+            }
+            
+            printer.endLink();
+        } 
+    }
+
+
+    protected void writeExts(final Set<Extension> exts) throws IOException, DocumentWriterException {
+
+        if (exts == null || exts.isEmpty()) {
+            return;
+        }
+        
+        for (final Extension extension : exts) {
+            
+            printer.beginExtension();
+            
+            printer.printId(extension.id());
+            
+            extension.href().ifPresent(printer::printHref);
+            extension.value().ifPresent(printer::printValue);
+            
+            // custom attributes
+            extension
+                    .attributes()
+                    .forEach(printer::printAttribute);
+
+            printer.endExtension();
+        }
     }
 }

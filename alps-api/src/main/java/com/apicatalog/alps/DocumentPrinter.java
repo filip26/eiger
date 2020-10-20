@@ -28,9 +28,10 @@ public interface DocumentPrinter {
     void printName(String name);
     void printReturnType(URI returnType);
     void printRel(String name);
+    void printMedia(String mediaType);
     
-    void printDocContent(String type, String content);
+    void printText(String content);
     
-    void printExtValue(String value);
-    void printExtAttribute(String name, String value);
+    void printValue(String value);
+    void printAttribute(String name, String value);
 }
