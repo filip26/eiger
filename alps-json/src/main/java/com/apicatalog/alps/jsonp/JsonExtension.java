@@ -22,15 +22,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonValue;
 
 class JsonExtension implements Extension {
 
