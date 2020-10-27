@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 
-import javax.json.JsonObject;
-
 import com.apicatalog.alps.error.DocumentError;
+
+import jakarta.json.JsonObject;
 
 class ExpectedError {
 
