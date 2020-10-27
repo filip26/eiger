@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.stream.Stream;
 
@@ -110,7 +111,7 @@ class AlpsXmlSuiteTest {
             
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             
-            XmlDocumentWriter.create(true, false).write(document, outputStream);
+            XmlDocumentWriter.create(new OutputStreamWriter(outputStream), true, false).write(document);
             
             final byte[] outputBytes = outputStream.toByteArray();
 

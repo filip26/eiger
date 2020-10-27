@@ -16,18 +16,11 @@
 package com.apicatalog.alps;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
 
 public interface DocumentWriter {
 
-    default void write(Document document, OutputStream stream) throws IOException, DocumentWriterException {
-        write(document, new OutputStreamWriter(stream));
-    }
-    
-    void write(Document document, Writer writer) throws IOException, DocumentWriterException;    
+    void write(Document document) throws IOException, DocumentWriterException;    
 }
