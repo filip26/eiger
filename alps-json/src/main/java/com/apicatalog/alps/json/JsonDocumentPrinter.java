@@ -1,4 +1,4 @@
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 import java.io.Writer;
 import java.net.URI;
