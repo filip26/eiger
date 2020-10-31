@@ -32,8 +32,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
-import com.apicatalog.alps.json.JsonDocument;
-import com.apicatalog.alps.json.JsonDocumentParser;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
