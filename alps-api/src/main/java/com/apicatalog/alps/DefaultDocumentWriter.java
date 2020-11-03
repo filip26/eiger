@@ -28,7 +28,7 @@ public class DefaultDocumentWriter implements DocumentWriter {
         if (document == null) {
             throw new IllegalArgumentException();
         }
-        
+
         printer.beginDocument(document.version());
         
         writeDocs(document.documentation());
@@ -38,7 +38,7 @@ public class DefaultDocumentWriter implements DocumentWriter {
 
         writeExts(document.extensions());
 
-        printer.endDocument();        
+        printer.endDocument();
     }
     
     protected void writeDocs(final Set<Documentation> docs)  throws IOException, DocumentWriterException { 
@@ -46,10 +46,23 @@ public class DefaultDocumentWriter implements DocumentWriter {
         if (docs == null || docs.isEmpty()) {
             return;
         }
+
+        printer.beginDocumentation(docs.size() == 1);
+        
+        boolean next = false;
         
         for (final Documentation doc : docs) {
+            
+            if (next) {
+                printer.next();
+            }
+            
             write(doc);
-        }        
+            
+            next = true;
+        }
+
+        printer.endDocumentation();
     }
     
     protected void write(final Documentation documentation)  throws IOException, DocumentWriterException { 
@@ -57,8 +70,6 @@ public class DefaultDocumentWriter implements DocumentWriter {
         if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
             return;
         }
-
-        printer.beginDocumentation();
 
         final Optional<Content> content = documentation.content();
         
@@ -93,8 +104,6 @@ public class DefaultDocumentWriter implements DocumentWriter {
         content
             .map(Documentation.Content::value)
             .ifPresent(printer::printValue);
-        
-        printer.endDocumentation();
     }        
     
     protected void writeLinks(final Set<Link> links) throws IOException, DocumentWriterException {
@@ -102,10 +111,16 @@ public class DefaultDocumentWriter implements DocumentWriter {
         if (links == null || links.isEmpty()) {
             return;
         }
+
+        printer.beginLinks(links.size() == 1);
+        
+        boolean next = false;
         
         for (final Link link : links) {
 
-            printer.beginLink();
+            if (next) {
+                printer.next();
+            }
             
             if (link.href() != null) {
                 printer.printHref(link.href());
@@ -115,8 +130,10 @@ public class DefaultDocumentWriter implements DocumentWriter {
                 printer.printRel(link.rel());
             }
             
-            printer.endLink();
-        } 
+            next = true;            
+        }
+
+        printer.endLinks();
     }
 
 
@@ -126,9 +143,15 @@ public class DefaultDocumentWriter implements DocumentWriter {
             return;
         }
         
+        printer.beginExtensions(exts.size() == 1);
+
+        boolean next = false;
+        
         for (final Extension extension : exts) {
             
-            printer.beginExtension();
+            if (next) {
+                printer.next();
+            }
             
             printer.printId(extension.id());
             
@@ -139,8 +162,10 @@ public class DefaultDocumentWriter implements DocumentWriter {
             extension
                     .attributes()
                     .forEach(printer::printAttribute);
-
-            printer.endExtension();
+            
+            next = true;
         }
+        
+        printer.endExtensions();
     }
 }

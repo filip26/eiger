@@ -1,10 +1,11 @@
 package com.apicatalog.alps.cli;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class TransfomerTest {
     @Test
     void testXml2Json() throws IOException, DocumentParserException, DocumentWriterException {
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
         
         try (final InputStream is = TransfomerTest.class.getResourceAsStream("contacts.min.xml")) {
         
@@ -26,7 +27,7 @@ class TransfomerTest {
         
         try (final InputStream is = TransfomerTest.class.getResourceAsStream("contacts.min.json")) {
         
-            assertArrayEquals(IOUtils.toByteArray(is), out.toByteArray());
+            assertEquals(IOUtils.toString(is, Charset.defaultCharset()), out.toString());
             
         }        
     }

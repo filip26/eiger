@@ -7,60 +7,76 @@ import com.apicatalog.alps.DocumentPrinter;
 import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.dom.element.DescriptorType;
 
+import jakarta.json.Json;
+import jakarta.json.stream.JsonGenerator;
+
 public final class JsonDocumentPrinter implements DocumentPrinter {
 
-    private final Writer writer;
+    //private final Writer writer;
+    private final JsonGenerator generator;
     private final boolean pretty;
     
     public JsonDocumentPrinter(final Writer writer, final boolean pretty) {
-        this.writer = writer;
+        //this.writer = writer;
+        this.generator = Json.createGenerator(writer);  //TODO pretty
         this.pretty = pretty;
     }
     
     @Override
     public void beginDocument(DocumentVersion version) {
-        // TODO Auto-generated method stub
-        
+        generator.writeStartObject();
+        generator.writeKey(JsonConstants.ROOT);
+        generator.writeStartObject();
+        generator.writeKey(JsonConstants.VERSION);
+        generator.write("1.0");
     }
+
 
     @Override
     public void endDocument() {
+        generator.writeEnd();
+        generator.writeEnd();
+        generator.flush();
+    }
+
+    @Override
+    public void beginDescriptors(boolean oneItem) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void beginDescriptor(DescriptorType type) {
+    public void endDescriptors() {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void endDescriptor() {
+    public void beginLinks(boolean oneItem) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void beginLink() {
+    public void endLinks() {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void endLink() {
+    public void beginExtensions(boolean oneItem) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void beginDocumentation() {
+    public void endExtensions() {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void beginDocumentation(String value) {
+    public void beginDocumentation(boolean oneItem) {
         // TODO Auto-generated method stub
         
     }
@@ -72,13 +88,7 @@ public final class JsonDocumentPrinter implements DocumentPrinter {
     }
 
     @Override
-    public void beginExtension() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void endExtension() {
+    public void next() {
         // TODO Auto-generated method stub
         
     }
@@ -120,6 +130,12 @@ public final class JsonDocumentPrinter implements DocumentPrinter {
     }
 
     @Override
+    public void printType(DescriptorType type) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public void printText(String content) {
         // TODO Auto-generated method stub
         
@@ -136,5 +152,4 @@ public final class JsonDocumentPrinter implements DocumentPrinter {
         // TODO Auto-generated method stub
         
     }
-
 }

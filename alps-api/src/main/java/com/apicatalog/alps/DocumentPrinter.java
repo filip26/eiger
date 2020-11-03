@@ -10,18 +10,19 @@ public interface DocumentPrinter {
     void beginDocument(DocumentVersion version);
     void endDocument();
     
-    void beginDescriptor(DescriptorType type);
-    void endDescriptor();
+    void beginDescriptors(boolean oneItem);
+    void endDescriptors();
     
-    void beginLink();
-    void endLink();
+    void beginLinks(boolean oneItem);
+    void endLinks();
     
-    void beginDocumentation();
-    void beginDocumentation(String value);
+    void beginExtensions(boolean oneItem);
+    void endExtensions();
+    
+    void beginDocumentation(boolean oneItem);
     void endDocumentation();
-    
-    void beginExtension();
-    void endExtension();
+
+    void next();
     
     void printId(URI id);
     void printHref(URI href);
@@ -29,9 +30,9 @@ public interface DocumentPrinter {
     void printReturnType(URI returnType);
     void printRel(String name);
     void printMedia(String mediaType);
-    
+    void printType(DescriptorType type);
     void printText(String content);
-    
     void printValue(String value);
+    
     void printAttribute(String name, String value);
 }
