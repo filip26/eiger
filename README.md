@@ -12,10 +12,10 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ### Installation
 
-Download the latest [alps-cli-0.3.1.zip](https://github.com/filip26/alps/releases/download/0.3.1/alps-cli-0.3.1.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest [alps-cli-0.3.2.zip](https://github.com/filip26/alps/releases/download/0.3.2/alps-cli-0.3.2.zip). Extract the zip content and make `alps.sh` executable.
 
 ```bash
-> cd alps-cli-0.3.1
+> cd alps-cli-0.3.2
 > chmod +x bin/alps.sh
 ```
 
@@ -24,8 +24,8 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3.1
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.1/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.3.2
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.2/bin
 ```
 
 ### Usage
@@ -88,9 +88,11 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 - [x] ~0.1 JSON Parser & Writer~
 - [x] ~0.2 XML Parser & Writer~
 - [x] ~0.3 CLI - validation, transformations (JSON <-> XML)~
-- [ ] 0.4 YAML Parser (+ YAML-> JSON/XML)
-- [ ] 0.5 Effective Document Processor
-- [ ] 0.6 Semantic Equivalence
+  - [x] ~0.3.1 YAML Writer (JSON/XML -> YAML)~
+- [ ] 0.4 YAML Parser (YAML-> JSON/XML)
+- [ ] 0.5 OpenAPI Specification (OAS) -> ALPS 
+- [ ] 0.6 Effective Document Processor
+- [ ] 0.7 Semantic Equivalence
 - [ ] TBD
 
 ### Building
@@ -111,7 +113,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 
 ```
@@ -122,7 +124,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
@@ -141,7 +143,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 
 ```
