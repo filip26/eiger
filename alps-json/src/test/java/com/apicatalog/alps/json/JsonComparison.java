@@ -18,9 +18,6 @@ package com.apicatalog.alps.json;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
-import com.apicatalog.alps.json.JsonUtils;
-
 import java.util.Objects;
 
 import jakarta.json.JsonArray;

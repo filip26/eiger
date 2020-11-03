@@ -15,7 +15,6 @@
  */
 package com.apicatalog.alps.json;
 
-import java.io.OutputStream;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,6 @@ import com.apicatalog.alps.dom.Document;
 
 import jakarta.json.Json;
 import jakarta.json.JsonWriter;
-import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
 
 public final class JsonDocumentWriter implements DocumentWriter {
