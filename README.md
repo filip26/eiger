@@ -89,8 +89,8 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 - [x] ~0.2 XML Parser & Writer~
 - [x] ~0.3 CLI - validation, transformations (JSON <-> XML)~
   - [x] ~0.3.1 YAML Writer (JSON/XML -> YAML)~
-- [ ] 0.4 YAML Parser (YAML-> JSON/XML)
-- [ ] 0.5 OpenAPI Specification (OAS) -> ALPS 
+- [ ] 0.4 OpenAPI Specification (OAS) -> ALPS
+- [ ] 0.5 YAML Parser (YAML-> JSON/XML)
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
 - [ ] TBD
