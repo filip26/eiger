@@ -7,6 +7,15 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ## Command Line Interface
 
+Transform and/or validate ALPS documents.
+
+### Features
+
+ Mode | ALPS+XML | ALPS+JSON | ALPS+YAML 
+ --- | --- | --- | --- 
+ read |   :heavy_check_mark:  |  :heavy_check_mark:  |  
+ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  
+
 ### Prerequisites
 - `Java 11+`
 
