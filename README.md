@@ -24,8 +24,8 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3.2
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.2/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.3.1
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.1/bin
 ```
 
 ### Usage
@@ -134,7 +134,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>jakarta.json</artifactId>
-    <version>1.1.6</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 #### ALPS+XML
