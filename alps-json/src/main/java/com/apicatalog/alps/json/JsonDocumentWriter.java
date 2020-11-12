@@ -19,8 +19,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.io.DocumentWriter;
 
 import jakarta.json.Json;
 import jakarta.json.JsonWriter;

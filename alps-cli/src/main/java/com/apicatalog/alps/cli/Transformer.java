@@ -20,11 +20,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import com.apicatalog.alps.DocumentParser;
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.io.DocumentParser;
+import com.apicatalog.alps.io.DocumentWriter;
 
 final class Transformer {
 

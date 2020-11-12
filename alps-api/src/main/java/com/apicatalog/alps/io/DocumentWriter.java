@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps;
+package com.apicatalog.alps.io;
 
 import java.io.IOException;
 

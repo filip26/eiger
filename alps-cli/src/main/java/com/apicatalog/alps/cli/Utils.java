@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 
-import com.apicatalog.alps.DocumentParser;
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.io.DocumentParser;
+import com.apicatalog.alps.io.DocumentWriter;
 import com.apicatalog.alps.json.JsonDocumentParser;
 import com.apicatalog.alps.json.JsonDocumentWriter;
-import com.apicatalog.alps.oas.OpenAPI2ALPSAdapter;
+import com.apicatalog.alps.oas.OpenAPI2AlpsAdapter;
 import com.apicatalog.alps.xml.XmlDocumentParser;
 import com.apicatalog.alps.xml.XmlDocumentWriter;
 import com.apicatalog.alps.yaml.YamlDocumentWriter;
@@ -112,7 +112,7 @@ final class Utils {
         }
         
         if (Constants.MEDIA_TYPE_OPEN_API.equals(mediaType)) {
-            return new OpenAPI2ALPSAdapter();
+            return new OpenAPI2AlpsAdapter();
         }
 
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");

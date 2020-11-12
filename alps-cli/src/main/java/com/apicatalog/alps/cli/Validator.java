@@ -18,8 +18,8 @@ package com.apicatalog.alps.cli;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.io.DocumentParser;
 
 final class Validator {
     
