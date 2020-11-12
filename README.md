@@ -11,10 +11,10 @@ Transform and/or validate ALPS documents.
 
 ### Features
 
- Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
- --- | --- | --- | --- | --- 
- read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
- write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
+Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
+--- | :---: | :---: | :---: | :---:
+read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
+write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
 ### Prerequisites
 - `Java 11+`
@@ -109,6 +109,7 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
 - [ ] TBD
+
 
 ### Building
 
