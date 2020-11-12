@@ -25,7 +25,6 @@ public interface Link {
 	 *  
 	 * @return {@link URI} of an external document
 	 */
-
 	URI href();
 	
 	String rel();

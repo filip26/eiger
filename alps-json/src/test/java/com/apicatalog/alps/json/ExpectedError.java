@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 
-import javax.json.JsonObject;
-
 import com.apicatalog.alps.error.DocumentError;
+
+import jakarta.json.JsonObject;
 
 class ExpectedError {
 

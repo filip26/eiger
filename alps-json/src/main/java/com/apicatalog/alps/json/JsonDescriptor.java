@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -24,12 +24,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
-
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
 import com.apicatalog.alps.dom.element.Documentation;
@@ -38,11 +32,19 @@ import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonValue;
+
 final class JsonDescriptor implements Descriptor {
 
     private URI id;
     
     private URI href;
+    
+    private URI definition;
     
     private String name;
     
@@ -114,6 +116,11 @@ final class JsonDescriptor implements Descriptor {
     public Optional<Descriptor> parent() {
         return Optional.ofNullable(parent);
     }
+    
+    @Override
+    public Optional<URI> definition() {
+        return Optional.ofNullable(definition);
+    }
 
     public static Set<Descriptor> parse(Map<URI, Descriptor> index, JsonValue jsonValue) throws InvalidDocumentException {
         return parse(index, null, jsonValue);
@@ -180,7 +187,11 @@ final class JsonDescriptor implements Descriptor {
         if (jsonObject.containsKey(JsonConstants.HREF)) {
             descriptor.href = JsonUtils.getHref(jsonObject);
         }
-        
+
+        if (jsonObject.containsKey(JsonConstants.DEFINITION)) {
+            descriptor.href = JsonUtils.getDefinition(jsonObject);
+        }
+
         // name
         if (jsonObject.containsKey(JsonConstants.NAME)) {
             final JsonValue name = jsonObject.get(JsonConstants.NAME);
@@ -288,6 +299,7 @@ final class JsonDescriptor implements Descriptor {
         }
         
         descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
+        descriptor.definition().ifPresent(def -> jsonDescriptor.add(JsonConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
         descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 

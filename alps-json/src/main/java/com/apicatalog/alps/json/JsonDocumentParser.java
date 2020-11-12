@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
-
-import javax.json.Json;
-import javax.json.JsonException;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParsingException;
-import javax.json.stream.JsonParser.Event;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
@@ -33,6 +25,14 @@ import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.error.MalformedDocumentException;
+
+import jakarta.json.Json;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import jakarta.json.stream.JsonParser;
+import jakarta.json.stream.JsonParser.Event;
+import jakarta.json.stream.JsonParsingException;
 
 public final class JsonDocumentParser implements DocumentParser {
 

@@ -105,6 +105,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeAttribute(XmlConstants.HREF, href.get().toString());
             }
 
+            final Optional<URI> definition = descriptor.definition();
+            
+            if (definition.isPresent()) {
+                writer.writeAttribute(XmlConstants.DEFINITION, definition.get().toString());
+            }
+
             final Optional<String> name = descriptor.name();
             
             if (name.isPresent()) {

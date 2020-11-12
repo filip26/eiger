@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
-import java.io.OutputStream;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonWriter;
-import javax.json.JsonWriterFactory;
-import javax.json.stream.JsonGenerator;
-
 import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 
+import jakarta.json.Json;
+import jakarta.json.JsonWriter;
+import jakarta.json.stream.JsonGenerator;
+
 public final class JsonDocumentWriter implements DocumentWriter {
 
-    private final JsonWriterFactory writerFactory;
+    private final JsonWriter writer;
     private final boolean verbose;
     
-    public JsonDocumentWriter(JsonWriterFactory writerFactory, boolean verbose) {
-        this.writerFactory = writerFactory;
+    public JsonDocumentWriter(JsonWriter writer, boolean verbose) {
+        this.writer = writer;
         this.verbose = verbose;
     }
     
-    public static final DocumentWriter create(final boolean prettyPrint, final boolean verbose) {
+    public static final DocumentWriter create(final Writer writer, final boolean prettyPrint, final boolean verbose) {
 
         final Map<String, Object> properties = new HashMap<>(1);
         
@@ -46,25 +44,16 @@ public final class JsonDocumentWriter implements DocumentWriter {
             properties.put(JsonGenerator.PRETTY_PRINTING, true);
         }
 
-        return new JsonDocumentWriter(Json.createWriterFactory(properties), verbose);
-    }
-    
-    @Override
-    public void write(final Document document, final OutputStream stream) {
-        write(document, writerFactory.createWriter(stream));
+        return new JsonDocumentWriter(Json.createWriterFactory(properties).createWriter(writer), verbose);
     }
 
     @Override
-    public void write(final Document document, final Writer writer) {
-        write(document, writerFactory.createWriter(writer));
-    }
-
-    private final void write(final Document document, final JsonWriter jsonWriter) {        
+    public void write(final Document document) {
         try {
-            jsonWriter.write(JsonDocument.toJson(document, verbose));
+            writer.write(JsonDocument.toJson(document, verbose));
             
         } finally {
-            jsonWriter.close();             
+            writer.close();             
         }
     }
 }

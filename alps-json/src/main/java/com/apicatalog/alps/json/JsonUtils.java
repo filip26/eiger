@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 import java.net.URI;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.json.JsonValue.ValueType;
-
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
+
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
+import jakarta.json.JsonValue.ValueType;
 
 final class JsonUtils {
 
@@ -72,6 +72,22 @@ final class JsonUtils {
             
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'href' property value must be URI represented as JSON string but was " + href);
+        }
+    }
+
+    public static final URI getDefinition(final JsonObject object) throws InvalidDocumentException {
+        
+        final JsonValue definition = object.get(JsonConstants.DEFINITION);
+        
+        if (JsonUtils.isNotString(definition)) {
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'def' property value must be IRI represented as JSON string but was " + definition);
+        }
+
+        try {
+            return URI.create(JsonUtils.getString(definition));
+            
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'def' property value must be IRI represented as JSON string but was " + definition);
         }
     }
 

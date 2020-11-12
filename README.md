@@ -24,8 +24,8 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3.1
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.1/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.3.2
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.2/bin
 ```
 
 ### Usage
@@ -113,7 +113,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 
 ```
@@ -124,7 +124,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
@@ -143,7 +143,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 
 ```

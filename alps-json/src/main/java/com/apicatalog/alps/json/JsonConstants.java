@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.jsonp;
+package com.apicatalog.alps.json;
 
 final class JsonConstants {
 
@@ -26,6 +26,8 @@ final class JsonConstants {
     public static final String DOCUMENTATION = "doc";
 
     public static final String HREF = "href";
+    
+    public static final String DEFINITION = "def";
     
     public static final String RELATION = "rel";
     

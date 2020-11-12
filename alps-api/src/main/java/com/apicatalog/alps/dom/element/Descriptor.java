@@ -25,6 +25,8 @@ public interface Descriptor {
 	
 	Optional<URI> href();
 	
+	Optional<URI> definition();
+	
 	Optional<String> name();
 	
 	DescriptorType type();

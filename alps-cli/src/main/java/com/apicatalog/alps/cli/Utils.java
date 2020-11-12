@@ -19,11 +19,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 
 import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.DocumentWriter;
-import com.apicatalog.alps.jsonp.JsonDocumentParser;
-import com.apicatalog.alps.jsonp.JsonDocumentWriter;
+import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.json.JsonDocumentParser;
+import com.apicatalog.alps.json.JsonDocumentWriter;
 import com.apicatalog.alps.xml.XmlDocumentParser;
 import com.apicatalog.alps.xml.XmlDocumentWriter;
 import com.apicatalog.alps.yaml.YamlDocumentWriter;
@@ -107,18 +109,16 @@ final class Utils {
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
     }
     
-    static final DocumentWriter getWriter(final String mediaType, final boolean prettyPrint, final boolean verbose) {
+    static final DocumentWriter getWriter(final Writer writer, final String mediaType, final boolean prettyPrint, final boolean verbose) throws DocumentWriterException {
         
         if ("application/alps+json".equals(mediaType)) {
-            return JsonDocumentWriter.create(prettyPrint, verbose);
-        }
+            return JsonDocumentWriter.create(writer, prettyPrint, verbose);            
 
-        if ("application/alps+xml".equals(mediaType)) {
-            return XmlDocumentWriter.create(prettyPrint, verbose);
-        }
-        
-        if (Constants.MEDIA_TYPE_ALPS_YAML.equals(mediaType)) {
-            return YamlDocumentWriter.create(verbose);
+        } else if ("application/alps+xml".equals(mediaType)) {
+            return XmlDocumentWriter.create(writer, prettyPrint, verbose);
+            
+        } else if (Constants.MEDIA_TYPE_ALPS_YAML.equals(mediaType)) {
+            return YamlDocumentWriter.create(writer, verbose);    
         }
 
         throw new IllegalArgumentException("Unsupported target media type [" + mediaType + "].");
