@@ -11,10 +11,10 @@ Transform and/or validate ALPS documents.
 
 ### Features
 
- Mode | ALPS+XML | ALPS+JSON | ALPS+YAML 
- --- | --- | --- | --- 
- read |   :heavy_check_mark:  |  :heavy_check_mark:  |  
- write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  
+ Mode | ALPS+XML | ALPS+JSON | ALPS+YAML | OpenAPI 3.0
+ --- | --- | --- | --- | --- 
+ read |   :heavy_check_mark:  |  :heavy_check_mark:  | | work in progress  
+ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
 ### Prerequisites
 - `Java 11+`
