@@ -12,10 +12,10 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ### Installation
 
-Download the latest [alps-cli-0.3.2.zip](https://github.com/filip26/alps/releases/download/0.3.2/alps-cli-0.3.2.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest [alps-cli-0.3.1.zip](https://github.com/filip26/alps/releases/download/0.3.1/alps-cli-0.3.1.zip). Extract the zip content and make `alps.sh` executable.
 
 ```bash
-> cd alps-cli-0.3.2
+> cd alps-cli-0.3.1
 > chmod +x bin/alps.sh
 ```
 

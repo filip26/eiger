@@ -75,6 +75,22 @@ final class JsonUtils {
         }
     }
 
+    public static final URI getDefinition(final JsonObject object) throws InvalidDocumentException {
+        
+        final JsonValue definition = object.get(JsonConstants.DEFINITION);
+        
+        if (JsonUtils.isNotString(definition)) {
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'def' property value must be IRI represented as JSON string but was " + definition);
+        }
+
+        try {
+            return URI.create(JsonUtils.getString(definition));
+            
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'def' property value must be IRI represented as JSON string but was " + definition);
+        }
+    }
+
     private JsonUtils() {
     }
 

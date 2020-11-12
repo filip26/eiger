@@ -42,6 +42,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private URI href;
     
+    private URI definition;
+    
     private String name;
     
     private DescriptorType type;
@@ -84,14 +86,25 @@ public class XmlDescriptor implements Descriptor, XmlElement {
                 descriptor.href = URI.create(href);
                 
             } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href must be valid URI but was " + href);
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
             }
         }
 
         if (descriptor.id == null && descriptor.href == null) {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index));
         }
+
+        final String definition = attrs.getValue(XmlConstants.DEFINITION);
         
+        if (definition != null && !definition.isBlank()) {
+            try {
+                descriptor.definition = URI.create(definition);
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + href);
+            }
+        }
+
         descriptor.type = parseType(stack, index, attrs);
         
         final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
@@ -186,6 +199,11 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     @Override
     public Set<Link> links() {
         return links;
+    }
+    
+    @Override
+    public Optional<URI> definition() {
+        return Optional.ofNullable(definition);
     }
     
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer, final boolean verbose) throws DocumentWriterException {

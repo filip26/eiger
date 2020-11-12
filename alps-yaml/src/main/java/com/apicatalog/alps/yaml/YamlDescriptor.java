@@ -35,6 +35,8 @@ final class YamlDescriptor implements Descriptor {
     
     private URI href;
     
+    private URI definition;
+    
     private String name;
     
     private DescriptorType type;
@@ -106,6 +108,11 @@ final class YamlDescriptor implements Descriptor {
         return Optional.ofNullable(parent);
     }
 
+    @Override
+    public Optional<URI> definition() {
+        return Optional.ofNullable(definition);
+    }
+    
     public static final YamlNode toYaml(final Set<Descriptor> descriptors, final boolean verbose) {
         
         if (descriptors.size() == 1) {
@@ -133,6 +140,7 @@ final class YamlDescriptor implements Descriptor {
         }
         
         descriptor.href().ifPresent(href -> yamlDescriptor.add(YamlConstants.HREF, href.toString()));
+        descriptor.definition().ifPresent(def -> yamlDescriptor.add(YamlConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> yamlDescriptor.add(YamlConstants.NAME, name));
         descriptor.returnType().ifPresent(rt -> yamlDescriptor.add(YamlConstants.RETURN_TYPE, rt.toString()));
 

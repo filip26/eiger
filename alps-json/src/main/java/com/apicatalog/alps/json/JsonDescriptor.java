@@ -44,6 +44,8 @@ final class JsonDescriptor implements Descriptor {
     
     private URI href;
     
+    private URI definition;
+    
     private String name;
     
     private DescriptorType type;
@@ -114,6 +116,11 @@ final class JsonDescriptor implements Descriptor {
     public Optional<Descriptor> parent() {
         return Optional.ofNullable(parent);
     }
+    
+    @Override
+    public Optional<URI> definition() {
+        return Optional.ofNullable(definition);
+    }
 
     public static Set<Descriptor> parse(Map<URI, Descriptor> index, JsonValue jsonValue) throws InvalidDocumentException {
         return parse(index, null, jsonValue);
@@ -180,7 +187,11 @@ final class JsonDescriptor implements Descriptor {
         if (jsonObject.containsKey(JsonConstants.HREF)) {
             descriptor.href = JsonUtils.getHref(jsonObject);
         }
-        
+
+        if (jsonObject.containsKey(JsonConstants.DEFINITION)) {
+            descriptor.href = JsonUtils.getDefinition(jsonObject);
+        }
+
         // name
         if (jsonObject.containsKey(JsonConstants.NAME)) {
             final JsonValue name = jsonObject.get(JsonConstants.NAME);
@@ -288,6 +299,7 @@ final class JsonDescriptor implements Descriptor {
         }
         
         descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
+        descriptor.definition().ifPresent(def -> jsonDescriptor.add(JsonConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
         descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 

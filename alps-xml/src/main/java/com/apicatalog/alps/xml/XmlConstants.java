@@ -34,6 +34,8 @@ final class XmlConstants {
     public static final String LINK = "link";
 
     public static final String HREF = "href";
+    
+    public static final String DEFINITION = "definition";
 
     public static final String RELATION = "rel";
     

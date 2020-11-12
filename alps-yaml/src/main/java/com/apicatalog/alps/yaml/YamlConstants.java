@@ -27,6 +27,8 @@ final class YamlConstants {
 
     public static final String HREF = "href";
     
+    public static final String DEFINITION = "def";
+    
     public static final String RELATION = "rel";
     
     public static final String VALUE = "value";
