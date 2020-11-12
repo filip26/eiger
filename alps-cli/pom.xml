@@ -43,6 +43,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps-oas</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
             <version>${jakarta.json-p.version}</version>        

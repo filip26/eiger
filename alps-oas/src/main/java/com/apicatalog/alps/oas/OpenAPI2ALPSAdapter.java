@@ -16,7 +16,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
-public final class OpenAPI2ALPS implements DocumentParser {
+public final class OpenAPI2ALPSAdapter implements DocumentParser {
 
     @Override
     public Document parse(URI baseUri, InputStream stream) throws IOException, DocumentParserException {

@@ -26,6 +26,7 @@ import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.json.JsonDocumentParser;
 import com.apicatalog.alps.json.JsonDocumentWriter;
+import com.apicatalog.alps.oas.OpenAPI2ALPSAdapter;
 import com.apicatalog.alps.xml.XmlDocumentParser;
 import com.apicatalog.alps.xml.XmlDocumentWriter;
 import com.apicatalog.alps.yaml.YamlDocumentWriter;
@@ -47,6 +48,10 @@ final class Utils {
 
         if (Constants.ARG_PARAM_YAML.equalsIgnoreCase(type)) {
             return Constants.MEDIA_TYPE_ALPS_YAML;
+        }
+
+        if (Constants.ARG_PARAM_OPEN_API.equalsIgnoreCase(type)) {
+            return Constants.MEDIA_TYPE_OPEN_API;
         }
 
         if (type != null) {
@@ -98,12 +103,16 @@ final class Utils {
 
     static final DocumentParser getParser(final String mediaType) {
         
-        if ("application/alps+json".equals(mediaType)) {
+        if (Constants.MEDIA_TYPE_ALPS_JSON.equals(mediaType)) {
             return new JsonDocumentParser();
         }
 
-        if ("application/alps+xml".equals(mediaType)) {
+        if (Constants.MEDIA_TYPE_ALPS_XML.equals(mediaType)) {
             return new XmlDocumentParser();
+        }
+        
+        if (Constants.MEDIA_TYPE_OPEN_API.equals(mediaType)) {
+            return new OpenAPI2ALPSAdapter();
         }
 
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
