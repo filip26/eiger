@@ -12,7 +12,7 @@ Transform and/or validate ALPS documents.
 ### Features
 
  Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
- --- | --- | --- | --- | --- 
+ --- | :---: | :---: | :---: | :---: 
  read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :running:
  write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
