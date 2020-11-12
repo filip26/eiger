@@ -11,7 +11,7 @@ Transform and/or validate ALPS documents.
 
 ### Features
 
- Mode | ALPS+XML | ALPS+JSON | ALPS+YAML | OpenAPI 3.0
+ Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
  --- | --- | --- | --- | --- 
  read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
  write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
@@ -66,6 +66,12 @@ e.g.
 
 #### Transformation
 
+`OpenAPI` :arrow_right: `ALPS+YAML`
+```bash
+> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps.sh transform --source=oas --target=yaml
+```
+
+`ALPS+XML` :arrow_right: `ALPS+YAML`
 ```bash
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml
 ```
@@ -94,12 +100,12 @@ Your contribution is welcome. There are many ways to motivate developers or spee
 
 ### Roadmap
 
-- [x] ~0.1 JSON Parser & Writer~
-- [x] ~0.2 XML Parser & Writer~
-- [x] ~0.3 CLI - validation, transformations (JSON <-> XML)~
-  - [x] ~0.3.1 YAML Writer (JSON/XML -> YAML)~
-- [ ] 0.4 OpenAPI Specification (OAS) -> ALPS
-- [ ] 0.5 YAML Parser (YAML-> JSON/XML)
+- [x] ~0.1 `JsonParser` & `JsonWriter`~
+- [x] ~0.2 `XmlParser` & `XmlWriter`~
+- [x] ~0.3 CLI - validation, transformations (`ALPS+JSON` :left_right_arrow: `ALPS+XML`)~
+  - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
+- [ ] 0.4 OpenAPI Specification (OAS :arrow_right: `ALPS`)
+- [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
 - [ ] TBD
