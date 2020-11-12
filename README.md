@@ -7,15 +7,24 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ## Command Line Interface
 
+Transform and/or validate ALPS documents.
+
+### Features
+
+ Mode | ALPS+XML | ALPS+JSON | ALPS+YAML | OpenAPI 3.0
+ --- | --- | --- | --- | --- 
+ read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
+ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
+
 ### Prerequisites
 - `Java 11+`
 
 ### Installation
 
-Download the latest [alps-cli-0.3.1.zip](https://github.com/filip26/alps/releases/download/0.3.1/alps-cli-0.3.1.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest [alps-cli-0.4.zip](https://github.com/filip26/alps/releases/download/0.4/alps-cli-0.4.zip). Extract the zip content and make `alps.sh` executable.
 
 ```bash
-> cd alps-cli-0.3.1
+> cd alps-cli-0.4
 > chmod +x bin/alps.sh
 ```
 
@@ -24,15 +33,15 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3.2
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.2/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.4
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.4/bin
 ```
 
 ### Usage
 
 ```bash
 > alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
+> alps.sh transform [{-s|--source}={json|xml|oas}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
 > alps.sh [{-h|--help}]
 ```
 
@@ -113,7 +122,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
 
 ```
@@ -124,7 +133,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
 ```
 
@@ -134,7 +143,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>jakarta.json</artifactId>
-    <version>1.1.6</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 #### ALPS+XML
@@ -143,7 +152,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
 
 ```
