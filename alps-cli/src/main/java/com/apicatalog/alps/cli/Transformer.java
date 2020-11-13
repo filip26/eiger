@@ -22,7 +22,6 @@ import java.io.OutputStreamWriter;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
-import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
 

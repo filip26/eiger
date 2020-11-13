@@ -55,22 +55,22 @@ final class Utils {
         }
 
         if (type != null) {
-            throw new IllegalArgumentException("Unknown type [" + type + "], expected xml, json or yaml.");
-        }
-        
-        if (path != null && (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml"))) {
-            return Constants.MEDIA_TYPE_ALPS_XML;
-        }
-
-        if (path != null && (path.toLowerCase().endsWith(".json") || path.toLowerCase().endsWith("+json"))) {
-            return Constants.MEDIA_TYPE_ALPS_JSON;
-        }
-        
-        if (path != null && (path.toLowerCase().endsWith(".yaml") || path.toLowerCase().endsWith(".yml") || path.toLowerCase().endsWith("+yaml"))) {
-            return Constants.MEDIA_TYPE_ALPS_YAML;
+            throw new IllegalArgumentException("Unknown type [" + type + "], expected xml, json, yaml or oas.");
         }
         
         if (path != null) {
+            if (path.toLowerCase().endsWith(".xml") || path.toLowerCase().endsWith("+xml")) {
+                return Constants.MEDIA_TYPE_ALPS_XML;
+            }
+
+            if (path.toLowerCase().endsWith(".json") || path.toLowerCase().endsWith("+json")) {
+                return Constants.MEDIA_TYPE_ALPS_JSON;
+            }
+            
+            if (path.toLowerCase().endsWith(".yaml") || path.toLowerCase().endsWith(".yml") || path.toLowerCase().endsWith("+yaml")) {
+                return Constants.MEDIA_TYPE_ALPS_YAML;
+            }
+            
             throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " file type [" + path + "], please add --" + (input ? "source" : "target")  + "=(json|xml|yaml) argument.");
         }
 
