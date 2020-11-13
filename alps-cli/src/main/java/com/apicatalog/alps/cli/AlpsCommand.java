@@ -45,6 +45,10 @@ public class AlpsCommand {
             
         } catch (IllegalArgumentException | IOException e) {
             System.err.println(e.getMessage());
+            
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace(System.err);
         }
     }
 }

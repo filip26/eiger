@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.apicatalog.alps.Alps;
@@ -16,6 +18,8 @@ import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.io.DocumentParser;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
@@ -45,10 +49,28 @@ public final class OpenAPI2AlpsAdapter implements DocumentParser {
 
         final DocumentBuilder document = Alps.createDocument(DocumentVersion.VERSION_1_0);
         
+        // parse info
+        Optional.ofNullable(oas.getInfo()).ifPresent(info -> parseInfo(info, document));
+
+        // parse servers
+        Optional.ofNullable(oas.getServers())
+                .orElse(Collections.emptyList())
+                .forEach(server -> parseServer(server, document));
         
         //TODO
         
         return document.build();
     }
+
+    private static final  void parseInfo(final Info info, final DocumentBuilder document) {
+        if (info.getTitle() != null && !info.getTitle().isBlank()) {
+            document.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
+        }
+    }
     
+    private static final void parseServer(final Server server, final DocumentBuilder document) {
+        
+        Optional.ofNullable(server.getUrl()).ifPresent(url -> document.add(Alps.createLink(URI.create(url), "server")));
+        
+    }
 }

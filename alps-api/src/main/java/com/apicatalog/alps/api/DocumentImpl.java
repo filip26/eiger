@@ -14,7 +14,14 @@ import com.apicatalog.alps.dom.element.Link;
 
 class DocumentImpl implements Document {
 
-    DocumentVersion version;
+    final DocumentVersion version;
+    
+    Set<Documentation> docs;
+    Set<Link> links;
+    
+    public DocumentImpl(DocumentVersion version) {
+        this.version = version;
+    }
     
     @Override
     public Optional<Descriptor> findById(URI id) {
@@ -47,14 +54,12 @@ class DocumentImpl implements Document {
 
     @Override
     public Set<Link> links() {
-        // TODO Auto-generated method stub
-        return null;
+        return links;
     }
 
     @Override
     public Set<Documentation> documentation() {
-        // TODO Auto-generated method stub
-        return null;
+        return docs;
     }
 
     @Override

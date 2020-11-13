@@ -15,13 +15,13 @@
  */
 package com.apicatalog.alps.cli;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
 
@@ -29,7 +29,7 @@ final class Transformer {
 
     private Transformer() {}
     
-    public static final void transform(String...args) throws IOException {
+    public static final void transform(String...args) throws Exception {
 
         if (args.length > 5) {
             PrintUtils.printUsage();
@@ -84,7 +84,7 @@ final class Transformer {
         transform(sourceType, sourcePath, targetType, prettyPrint, verbose);
     }
     
-    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final boolean prettyPrint, final boolean verbose) throws IOException {
+    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final boolean prettyPrint, final boolean verbose) throws Exception {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
@@ -110,7 +110,7 @@ final class Transformer {
         } catch (DocumentParserException e) {
             PrintUtils.printError(e, sourceMediaType, sourcePath);
             
-        } catch (Exception e) {
+        } catch (DocumentWriterException e) {
             System.err.println(e.getMessage());
             
         }
