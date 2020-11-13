@@ -40,8 +40,11 @@ public final class OpenAPI2AlpsAdapter implements DocumentParser {
         
         final SwaggerParseResult result = new OpenAPIV3Parser().readContents(content);
         //TODO errors?
+        
+        final OpenAPI oas = result.getOpenAPI();
 
         final DocumentBuilder document = Alps.createDocument(DocumentVersion.VERSION_1_0);
+        
         
         //TODO
         

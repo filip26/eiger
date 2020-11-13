@@ -79,4 +79,10 @@ class DescriptorImpl implements Descriptor {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public Optional<String> title() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

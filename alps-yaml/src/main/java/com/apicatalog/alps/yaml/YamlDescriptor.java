@@ -43,6 +43,8 @@ final class YamlDescriptor implements Descriptor {
     
     private URI returnType;
     
+    private String title;
+    
     private Set<Documentation> doc;
     
     private Set<Descriptor> descriptors;
@@ -83,6 +85,11 @@ final class YamlDescriptor implements Descriptor {
         return Optional.ofNullable(returnType);
     }
 
+    @Override
+    public Optional<String> title() {
+        return Optional.ofNullable(title);
+    }
+    
     @Override
     public Set<Documentation> documentation() {
         return doc;
@@ -143,7 +150,8 @@ final class YamlDescriptor implements Descriptor {
         descriptor.definition().ifPresent(def -> yamlDescriptor.add(YamlConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> yamlDescriptor.add(YamlConstants.NAME, name));
         descriptor.returnType().ifPresent(rt -> yamlDescriptor.add(YamlConstants.RETURN_TYPE, rt.toString()));
-
+        descriptor.title().ifPresent(title -> yamlDescriptor.add(YamlConstants.TITLE, title));
+        
         // documentation
         YamlDocumentation.toYaml(descriptor.documentation(), verbose).ifPresent(doc -> yamlDescriptor.add(YamlConstants.DOCUMENTATION, doc));
         

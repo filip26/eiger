@@ -39,6 +39,8 @@ public enum DocumentError {
     
     INVALID_NAME,
     
+    INVALID_TITLE,
+    
     INVALID_TYPE,
     
     INVALID_RT,

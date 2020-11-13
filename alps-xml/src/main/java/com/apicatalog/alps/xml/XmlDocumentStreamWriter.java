@@ -132,6 +132,12 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeAttribute(XmlConstants.RETURN_TYPE, returnType.get().toString());
             }
 
+            final Optional<String> title = descriptor.title();
+            
+            if (title.isPresent()) {
+                writer.writeAttribute(XmlConstants.TITLE, title.get());
+            }
+
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
             }
