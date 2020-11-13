@@ -7,18 +7,29 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.api.DescriptorBuilder;
 import com.apicatalog.alps.api.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.DescriptorType;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.io.DocumentParser;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.PathItem.HttpMethod;
+import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
@@ -49,17 +60,89 @@ public final class OpenAPI2AlpsAdapter implements DocumentParser {
 
         final DocumentBuilder document = Alps.createDocument(DocumentVersion.VERSION_1_0);
         
-        // parse info
+        // OAS info
         Optional.ofNullable(oas.getInfo()).ifPresent(info -> parseInfo(info, document));
 
-        // parse servers
+        // OAS servers
         Optional.ofNullable(oas.getServers())
                 .orElse(Collections.emptyList())
                 .forEach(server -> parseServer(server, document));
         
+        // OAS paths
+        Optional.ofNullable(oas.getPaths())
+                .map(Paths::entrySet)
+                .orElse(Collections.emptySet())
+                .forEach(e -> parsePath(e.getKey(), e.getValue(), document));
+
+        // OAS components
+        Optional.ofNullable(oas.getComponents())
+                .map(Components::getSchemas)
+                .map(Map::entrySet)
+                .orElse(Collections.emptySet())
+                .forEach(e -> parseSchema(e.getKey(), e.getValue(), document));
+
         //TODO
         
         return document.build();
+    }
+
+    private static final DescriptorBuilder parseSchema(String key, String name, Schema<?> value) {
+
+        final DescriptorBuilder descriptor = Alps.createDescriptor(DescriptorType.SEMANTIC);
+        
+        if (value.get$ref() != null) {
+            descriptor.href(toHref(value.get$ref()));
+                    
+        } else {
+            descriptor.id(URI.create(key));
+        }
+        descriptor.name(name);
+
+        
+        if ("object".equals(value.getType()) && value.getProperties() != null) {
+        
+            for (Entry<String, Schema> e : value.getProperties().entrySet()) {
+                descriptor.add(parseSchema(key + "-" + e.getKey().toLowerCase(), e.getKey(), e.getValue()));
+            }
+            
+        } else if ("array".equals(value.getType())) {
+            
+            final Schema<?> items = ((ArraySchema)value).getItems(); 
+            
+            if (items != null) {
+                descriptor.add(parseSchema(key + "-items", null, items));
+            }
+        }
+        
+        return descriptor;
+    }
+    
+    private static final void parseSchema(String key, Schema<?> value, DocumentBuilder document) {
+        document.add(parseSchema("schema" + "-" + key.toLowerCase(), key, value));
+    }
+    
+    private static final URI toHref(String ref) {
+        if (ref.startsWith("#/components/schemas/")) {
+            return URI.create("#schema-" + ref.substring("#/components/schemas/".length()).replace("/", "-").toLowerCase());
+        }
+        return URI.create(ref);
+    }
+
+    private static final void parsePath(String path, PathItem item, DocumentBuilder document) {
+
+        for (final Map.Entry<HttpMethod, Operation> op : item.readOperationsMap().entrySet()) {
+            
+            final DescriptorBuilder descriptor = Alps.createDescriptor(parseMethod(op.getKey()));
+            
+            Optional.ofNullable(op.getValue().getOperationId())
+                    .map(URI::create)
+                    .ifPresent(descriptor::id);
+
+            Optional.ofNullable(op.getValue().getSummary())
+                    .ifPresent(descriptor::title);
+
+            document.add(descriptor);
+        }
     }
 
     private static final  void parseInfo(final Info info, final DocumentBuilder document) {
@@ -69,8 +152,27 @@ public final class OpenAPI2AlpsAdapter implements DocumentParser {
     }
     
     private static final void parseServer(final Server server, final DocumentBuilder document) {
+
+        Optional.ofNullable(server.getUrl())
+                .map(URI::create)
+                .ifPresent(uri -> document.add(Alps.createLink(uri, "server")));
         
-        Optional.ofNullable(server.getUrl()).ifPresent(url -> document.add(Alps.createLink(URI.create(url), "server")));
+    }
+    
+    private static final DescriptorType parseMethod(HttpMethod method) {
         
+        switch (method.name().toUpperCase()) {
+        case "GET":
+        case "HEAD":
+            return DescriptorType.SAFE;
+            
+        case "PUT":
+        case "OPTIONS":
+        case "DELETE":
+            return DescriptorType.IDEMPOTENT;
+            
+        default:
+            return DescriptorType.UNSAFE;
+        }
     }
 }

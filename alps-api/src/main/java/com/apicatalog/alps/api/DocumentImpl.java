@@ -18,6 +18,7 @@ class DocumentImpl implements Document {
     
     Set<Documentation> docs;
     Set<Link> links;
+    Set<Descriptor> descriptors;
     
     public DocumentImpl(DocumentVersion version) {
         this.version = version;
@@ -42,8 +43,7 @@ class DocumentImpl implements Document {
 
     @Override
     public Set<Descriptor> descriptors() {
-        // TODO Auto-generated method stub
-        return null;
+        return descriptors;
     }
 
     @Override

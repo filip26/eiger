@@ -18,13 +18,12 @@ public final class Alps {
     }
     
     public static final DescriptorBuilder createDescriptor(DescriptorType type) {
-        //TODO
-        return new DescriptorBuilder();
+        return new DescriptorBuilder(type);
     }
 
     public static final DescriptorBuilder createDescriptor(Descriptor descriptor) {
         //TODO
-        return new DescriptorBuilder();        
+        throw new UnsupportedOperationException();
     }
 
     public static final DocumentationBuilder createDocumentation(String mediaType) {

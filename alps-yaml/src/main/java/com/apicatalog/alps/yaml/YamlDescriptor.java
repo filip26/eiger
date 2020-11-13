@@ -16,6 +16,7 @@
 package com.apicatalog.alps.yaml;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -122,18 +123,22 @@ final class YamlDescriptor implements Descriptor {
     
     public static final YamlNode toYaml(final Set<Descriptor> descriptors, final boolean verbose) {
         
-        if (descriptors.size() == 1) {
+        if (descriptors.size() == 1) {            
             return toYaml(descriptors.iterator().next(), verbose);
         }
         
         final YamlSequenceBuilder yamlDescriptors = Yaml.createSequenceBuilder();
         
-        descriptors.stream().map(d -> YamlDescriptor.toYaml(d, verbose)).forEach(yamlDescriptors::add);
+        descriptors.stream().filter(Objects::nonNull).map(d -> YamlDescriptor.toYaml(d, verbose)).forEach(yamlDescriptors::add);
         
         return yamlDescriptors.build();
     }
 
     public static final YamlNode toYaml(final Descriptor descriptor, final boolean verbose) {
+        
+        if (descriptor == null) {
+            throw new IllegalArgumentException("The 'descriptor' parameter cannot be null.");
+        }
         
         final YamlMappingBuilder yamlDescriptor = Yaml.createMappingBuilder();
         

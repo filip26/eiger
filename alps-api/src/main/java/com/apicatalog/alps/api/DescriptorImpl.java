@@ -1,6 +1,7 @@
 package com.apicatalog.alps.api;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,77 +13,78 @@ import com.apicatalog.alps.dom.element.Link;
 
 class DescriptorImpl implements Descriptor {
 
+    final DescriptorType type;
+    URI id;
+    URI href;
+    URI definition;
+    URI returnType;
+    String name;
+    String title;
     
+    Set<Descriptor> descriptors;
+    
+    public DescriptorImpl(final DescriptorType type) {
+        this.type = type;
+    }
     
     @Override
     public Optional<URI> id() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(id);
     }
 
     @Override
     public Optional<URI> href() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(href);
     }
 
     @Override
     public Optional<URI> definition() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(definition);
     }
 
     @Override
     public Optional<String> name() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(name);
     }
 
     @Override
     public DescriptorType type() {
-        // TODO Auto-generated method stub
-        return null;
+        return type;
     }
 
     @Override
     public Optional<URI> returnType() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(returnType);
     }
 
     @Override
     public Set<Documentation> documentation() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public Set<Extension> extensions() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
     public Set<Descriptor> descriptors() {
-        // TODO Auto-generated method stub
-        return null;
+        return descriptors;
     }
 
     @Override
     public Optional<Descriptor> parent() {
         // TODO Auto-generated method stub
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public Set<Link> links() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.emptySet();
     }
     
     @Override
     public Optional<String> title() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(title);
     }
 }

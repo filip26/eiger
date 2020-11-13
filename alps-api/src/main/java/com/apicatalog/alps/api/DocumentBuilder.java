@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Link;
 
@@ -23,8 +24,29 @@ public final class DocumentBuilder {
         if (document.docs == null) {
             document.docs = Collections.emptySet();
         }
+        if (document.links == null) {
+            document.docs = Collections.emptySet();
+        }
+        if (document.descriptors == null) {
+            document.descriptors = Collections.emptySet();
+        }
         
         return document;
+    }
+
+    public DocumentBuilder add(Descriptor descriptor) {
+        
+        if (document.descriptors == null) {
+            document.descriptors = new LinkedHashSet<>();
+        }
+        
+        document.descriptors.add(descriptor);
+        
+        return this;
+    }
+    
+    public DocumentBuilder add(DescriptorBuilder descriptor) {
+        return add(descriptor.build());
     }
     
     public DocumentBuilder add(Documentation documentation) {
