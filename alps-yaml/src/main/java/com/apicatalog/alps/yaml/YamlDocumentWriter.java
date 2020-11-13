@@ -42,6 +42,10 @@ public final class YamlDocumentWriter implements DocumentWriter {
     @Override
     public void write(Document document) throws IOException, DocumentWriterException {
 
+        if (document == null) {
+            throw new IllegalArgumentException("The 'document' must not be null.");
+        }
+
         try {
 
             writer.write(YamlDocument.toYaml(document, verbose));
