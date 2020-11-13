@@ -54,5 +54,10 @@ public class XmlDocumentWriter implements DocumentWriter {
     @Override
     public void write(Document document) throws IOException, DocumentWriterException {
         XmlDocument.write(document, new XmlDocumentStreamWriter(writer, indentLength), verbose);        
-    }    
+    }   
+    
+    @Override
+    public void close() throws Exception {
+        //ignored
+    }
 }

@@ -9,8 +9,7 @@ import com.apicatalog.alps.dom.element.DescriptorType;
 public final class Alps {
 
     public static final DocumentBuilder createDocument(DocumentVersion version) {
-        //TODO
-        return new DocumentBuilder();
+        return new DocumentBuilder(version);
     }
     
     public static final DescriptorBuilder createDescriptor(DescriptorType type) {

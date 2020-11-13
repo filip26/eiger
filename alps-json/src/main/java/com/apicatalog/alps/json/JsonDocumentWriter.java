@@ -49,11 +49,11 @@ public final class JsonDocumentWriter implements DocumentWriter {
 
     @Override
     public void write(final Document document) {
-        try {
-            writer.write(JsonDocument.toJson(document, verbose));
-            
-        } finally {
-            writer.close();             
-        }
+        writer.write(JsonDocument.toJson(document, verbose));            
+    }
+    
+    @Override
+    public void close() throws Exception {
+        writer.close();
     }
 }

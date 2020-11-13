@@ -109,23 +109,27 @@ final class Transformer {
             transform(sourceMediaType, source, targetMediaType, System.out, prettyPrint, verbose);
             
         } catch (DocumentParserException e) {
-            
             PrintUtils.printError(e, sourceMediaType, sourcePath);
             
-        } catch (DocumentWriterException e) {
-
+        } catch (Exception e) {
             System.err.println(e.getMessage());
+            
         }
     }
     
-    protected static final void transform(final String sourceMediaType, final InputStream source, final String targetMediaType, final OutputStream target, boolean prettyPrint, boolean verbose) throws IOException, DocumentParserException, DocumentWriterException {
+    protected static final void transform(final String sourceMediaType, final InputStream source, final String targetMediaType, final OutputStream target, boolean prettyPrint, boolean verbose) throws Exception {
         
         final DocumentParser parser = Utils.getParser(sourceMediaType);
         
         final Document document = parser.parse(null, source);
         
         final DocumentWriter writer = Utils.getWriter(new OutputStreamWriter(target), targetMediaType, prettyPrint, verbose);
-                    
-        writer.write(document);            
+
+        try {
+            writer.write(document);
+            
+        } finally {
+            writer.close();
+        }
     }
 }

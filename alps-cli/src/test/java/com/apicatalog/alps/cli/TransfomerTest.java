@@ -3,20 +3,16 @@ package com.apicatalog.alps.cli;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
-import com.apicatalog.alps.error.DocumentParserException;
-import com.apicatalog.alps.error.DocumentWriterException;
-
 class TransfomerTest {
 
     @Test
-    void testXml2Json() throws IOException, DocumentParserException, DocumentWriterException {
+    void testXml2Json() throws Exception {
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         

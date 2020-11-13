@@ -47,11 +47,15 @@ public final class YamlDocumentWriter implements DocumentWriter {
         }
 
         try {
-
             writer.write(YamlDocument.toYaml(document, verbose));
             
         } catch (YamlException e) {
             throw new DocumentWriterException(e);
         }
+    }
+    
+    @Override
+    public void close() throws Exception {
+        writer.close();
     }
 }

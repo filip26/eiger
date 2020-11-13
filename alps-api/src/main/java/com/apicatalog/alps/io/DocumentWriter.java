@@ -20,7 +20,10 @@ import java.io.IOException;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-public interface DocumentWriter {
+public interface DocumentWriter extends AutoCloseable {
 
-    void write(Document document) throws IOException, DocumentWriterException;    
+    void write(Document document) throws IOException, DocumentWriterException;
+    
+    @Override
+    void close() throws Exception;
 }
