@@ -5,16 +5,23 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Command Line Interface
+## Table of Contents  
+- [Features](#features)
+- [Command Line Interface](#command-line-interface)
+- [Contributing](#contributing)  
+- [Resources](#resources)  
+- [Commercial Support](#commercial-support)
 
-Transform and/or validate ALPS documents.
-
-### Features
+## Features
 
 Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
 --- | :---: | :---: | :---: | :---:
 read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
 write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
+
+## Command Line Interface
+
+Transform and/or validate ALPS documents.
 
 ### Prerequisites
 - `Java 11+`
@@ -78,7 +85,7 @@ e.g.
 
 ## Contributing
 
-Your contribution is welcome. There are many ways to motivate developers or speed up development:
+Your contribution is welcome! There are many ways to motivate developers or speed up development:
 
 - develop
   - implement a new feature 
