@@ -30,11 +30,12 @@ import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
-public final class OpenAPI2AlpsAdapter implements DocumentParser {
+public final class OpenApiReader implements DocumentParser {
 
     @Override
     public Document parse(URI baseUri, InputStream stream) throws IOException, DocumentParserException {
@@ -141,10 +142,25 @@ public final class OpenAPI2AlpsAdapter implements DocumentParser {
             Optional.ofNullable(op.getValue().getSummary())
                     .ifPresent(descriptor::title);
 
+            Optional.ofNullable(op.getValue().getParameters())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .map(OpenApiReader::parseParameter)
+                    .forEach(descriptor::add);
+            
             document.add(descriptor);
         }
     }
 
+    private static final DescriptorBuilder parseParameter(final Parameter parameter) {
+        
+        final DescriptorBuilder descriptor = Alps.createDescriptor(DescriptorType.SEMANTIC);
+
+        descriptor.name(parameter.getName());
+        
+        return descriptor;
+    }
+    
     private static final  void parseInfo(final Info info, final DocumentBuilder document) {
         if (info.getTitle() != null && !info.getTitle().isBlank()) {
             document.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
