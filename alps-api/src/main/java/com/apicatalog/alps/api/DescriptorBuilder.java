@@ -67,13 +67,13 @@ public final class DescriptorBuilder {
         return this;
     }
     
-    public final DescriptorBuilder definition(URI def) {
-        //TODO
+    public final DescriptorBuilder definition(URI definition) {
+        descriptor.definition = definition;
         return this;
     }
     
-    public final DescriptorBuilder returnType(String URI) {
-        //TODO
+    public final DescriptorBuilder returnType(URI returnType) {
+        descriptor.returnType = returnType;
         return this;        
     }
 

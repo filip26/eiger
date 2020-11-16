@@ -29,8 +29,10 @@ import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
@@ -148,10 +150,36 @@ public final class OpenApiReader implements DocumentParser {
                     .map(OpenApiReader::parseParameter)
                     .forEach(descriptor::add);
             
+            Optional.ofNullable(op.getValue().getResponses())
+                    .map(OpenApiReader::parseResponses)
+                    .ifPresent(descriptor::returnType);
+            
+            
             document.add(descriptor);
         }
     }
 
+    private static final URI parseResponses(final ApiResponses responses) {
+        
+        if (responses.containsKey("200")) {
+            
+            for (Map.Entry<String, MediaType> mediaType : responses.get("200").getContent().entrySet()) {
+
+                if (mediaType.getValue().getSchema() != null && mediaType.getValue().getSchema().get$ref() != null) {
+             
+                    try {
+                        return toHref(mediaType.getValue().getSchema().get$ref());
+                        
+                    } catch (IllegalArgumentException e) {
+                        
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+    
     private static final DescriptorBuilder parseParameter(final Parameter parameter) {
         
         final DescriptorBuilder descriptor = Alps.createDescriptor(DescriptorType.SEMANTIC);
