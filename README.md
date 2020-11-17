@@ -24,7 +24,7 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 Transform and/or validate ALPS documents.
 
 ### Prerequisites
-- `Java 11+`
+- [`Java 11+`](https://www.oracle.com/java/technologies/javase-downloads.html)
 
 ### Installation
 
