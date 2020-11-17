@@ -121,12 +121,12 @@ public final class OpenApiReader implements DocumentParser {
     }
     
     private static final void parseSchema(String key, Schema<?> value, DocumentBuilder document) {
-        document.add(parseSchema("schema" + "-" + key.toLowerCase(), key, value));
+        document.add(parseSchema("model" + "-" + key.toLowerCase(), key, value));
     }
     
     private static final URI toHref(String ref) {
         if (ref.startsWith("#/components/schemas/")) {
-            return URI.create("#schema-" + ref.substring("#/components/schemas/".length()).replace("/", "-").toLowerCase());
+            return URI.create("#model-" + ref.substring("#/components/schemas/".length()).replace("/", "-").toLowerCase());
         }
         return URI.create(ref);
     }
@@ -174,6 +174,8 @@ public final class OpenApiReader implements DocumentParser {
                         
                     }
                 }
+                
+//                mediaType.getValue().getExamples()
             }
         }
 
@@ -193,14 +195,23 @@ public final class OpenApiReader implements DocumentParser {
         if (info.getTitle() != null && !info.getTitle().isBlank()) {
             document.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
         }
+        System.out.println(">>>> " + info.getDescription());
+        if (info.getDescription() != null && !info.getDescription().isBlank()) {
+            document.add(Alps.createDocumentation("text/plain").append(info.getDescription()));
+        }
     }
     
     private static final void parseServer(final Server server, final DocumentBuilder document) {
 
-        Optional.ofNullable(server.getUrl())
-                .map(URI::create)
-                .ifPresent(uri -> document.add(Alps.createLink(uri, "server")));
+        try {
         
+            Optional.ofNullable(server.getUrl())
+                    .map(URI::create)
+                    .ifPresent(uri -> document.add(Alps.createLink(uri, "server")));
+                
+        } catch (IllegalArgumentException e) {
+            
+        }
     }
     
     private static final DescriptorType parseMethod(HttpMethod method) {

@@ -25,7 +25,7 @@ public final class DocumentBuilder {
             document.docs = Collections.emptySet();
         }
         if (document.links == null) {
-            document.docs = Collections.emptySet();
+            document.links = Collections.emptySet();
         }
         if (document.descriptors == null) {
             document.descriptors = Collections.emptySet();
