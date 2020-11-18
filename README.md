@@ -121,7 +121,7 @@ Compile sources:
 
 ```bash
 > cd alps
-> mvn package install
+> ./mvnw clean package install
 ```
 
 ### Usage
