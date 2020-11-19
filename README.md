@@ -111,7 +111,7 @@ Your contribution is welcome! There are many ways to motivate developers or spee
 - [x] ~0.2 `XmlParser` & `XmlWriter`~
 - [x] ~0.3 CLI - validation, transformations (`ALPS+JSON` :left_right_arrow: `ALPS+XML`)~
   - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
-- [ ] 0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)
+- [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
 - [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
