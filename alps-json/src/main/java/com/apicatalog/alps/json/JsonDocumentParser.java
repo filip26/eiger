@@ -19,12 +19,12 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.error.MalformedDocumentException;
+import com.apicatalog.alps.io.DocumentParser;
 
 import jakarta.json.Json;
 import jakarta.json.JsonException;

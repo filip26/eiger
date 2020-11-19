@@ -50,6 +50,8 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private URI returnValue;
     
+    private String title;
+    
     private Set<Documentation> documentation;
     
     private Set<Descriptor> descriptors;
@@ -119,6 +121,12 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             descriptor.name = name;
         }
 
+        final String title = attrs.getValue(XmlConstants.TITLE);
+        
+        if (title != null && !title.isBlank()) {
+            descriptor.title = title;
+        }
+
         descriptor.documentation = new LinkedHashSet<>();
         
         descriptor.descriptors = new LinkedHashSet<>();
@@ -174,6 +182,11 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     @Override
     public Optional<URI> returnType() {
         return Optional.ofNullable(returnValue);
+    }
+    
+    @Override
+    public Optional<String> title() {
+        return Optional.ofNullable(title);
     }
 
     @Override

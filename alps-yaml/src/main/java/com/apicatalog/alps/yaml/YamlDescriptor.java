@@ -16,6 +16,7 @@
 package com.apicatalog.alps.yaml;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,6 +43,8 @@ final class YamlDescriptor implements Descriptor {
     private DescriptorType type;
     
     private URI returnType;
+    
+    private String title;
     
     private Set<Documentation> doc;
     
@@ -84,6 +87,11 @@ final class YamlDescriptor implements Descriptor {
     }
 
     @Override
+    public Optional<String> title() {
+        return Optional.ofNullable(title);
+    }
+    
+    @Override
     public Set<Documentation> documentation() {
         return doc;
     }
@@ -115,18 +123,22 @@ final class YamlDescriptor implements Descriptor {
     
     public static final YamlNode toYaml(final Set<Descriptor> descriptors, final boolean verbose) {
         
-        if (descriptors.size() == 1) {
+        if (descriptors.size() == 1) {            
             return toYaml(descriptors.iterator().next(), verbose);
         }
         
         final YamlSequenceBuilder yamlDescriptors = Yaml.createSequenceBuilder();
         
-        descriptors.stream().map(d -> YamlDescriptor.toYaml(d, verbose)).forEach(yamlDescriptors::add);
+        descriptors.stream().filter(Objects::nonNull).map(d -> YamlDescriptor.toYaml(d, verbose)).forEach(yamlDescriptors::add);
         
         return yamlDescriptors.build();
     }
 
     public static final YamlNode toYaml(final Descriptor descriptor, final boolean verbose) {
+        
+        if (descriptor == null) {
+            throw new IllegalArgumentException("The 'descriptor' parameter cannot be null.");
+        }
         
         final YamlMappingBuilder yamlDescriptor = Yaml.createMappingBuilder();
         
@@ -143,7 +155,8 @@ final class YamlDescriptor implements Descriptor {
         descriptor.definition().ifPresent(def -> yamlDescriptor.add(YamlConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> yamlDescriptor.add(YamlConstants.NAME, name));
         descriptor.returnType().ifPresent(rt -> yamlDescriptor.add(YamlConstants.RETURN_TYPE, rt.toString()));
-
+        descriptor.title().ifPresent(title -> yamlDescriptor.add(YamlConstants.TITLE, title));
+        
         // documentation
         YamlDocumentation.toYaml(descriptor.documentation(), verbose).ifPresent(doc -> yamlDescriptor.add(YamlConstants.DOCUMENTATION, doc));
         

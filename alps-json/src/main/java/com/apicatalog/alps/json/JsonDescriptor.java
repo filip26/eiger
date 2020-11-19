@@ -52,6 +52,8 @@ final class JsonDescriptor implements Descriptor {
     
     private URI returnType;
     
+    private String title;
+    
     private Set<Documentation> doc;
     
     private Set<Descriptor> descriptors;
@@ -90,6 +92,11 @@ final class JsonDescriptor implements Descriptor {
     @Override
     public Optional<URI> returnType() {
         return Optional.ofNullable(returnType);
+    }
+    
+    @Override
+    public Optional<String> title() {
+        return Optional.ofNullable(title);
     }
 
     @Override
@@ -203,6 +210,17 @@ final class JsonDescriptor implements Descriptor {
             descriptor.name = JsonUtils.getString(name);
         }
 
+        // title
+        if (jsonObject.containsKey(JsonConstants.TITLE)) {
+            final JsonValue title = jsonObject.get(JsonConstants.TITLE);
+            
+            if (JsonUtils.isNotString(title)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_TITLE, "The 'title' property value must be JSON string but was " + title);
+            }
+            
+            descriptor.title = JsonUtils.getString(title);
+        }
+
         // type
         if (jsonObject.containsKey(JsonConstants.TYPE)) {
             
@@ -301,6 +319,7 @@ final class JsonDescriptor implements Descriptor {
         descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
         descriptor.definition().ifPresent(def -> jsonDescriptor.add(JsonConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
+        descriptor.title().ifPresent(title -> jsonDescriptor.add(JsonConstants.TITLE, title));
         descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 
         // documentation

@@ -28,10 +28,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.apicatalog.alps.DocumentParser;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.MalformedDocumentException;
+import com.apicatalog.alps.io.DocumentParser;
 
 public class XmlDocumentParser implements DocumentParser {
 

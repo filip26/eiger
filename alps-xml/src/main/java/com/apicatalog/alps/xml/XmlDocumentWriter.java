@@ -22,9 +22,9 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.io.DocumentWriter;
 
 public class XmlDocumentWriter implements DocumentWriter {
 
@@ -54,5 +54,10 @@ public class XmlDocumentWriter implements DocumentWriter {
     @Override
     public void write(Document document) throws IOException, DocumentWriterException {
         XmlDocument.write(document, new XmlDocumentStreamWriter(writer, indentLength), verbose);        
-    }    
+    }   
+    
+    @Override
+    public void close() throws Exception {
+        //ignored
+    }
 }

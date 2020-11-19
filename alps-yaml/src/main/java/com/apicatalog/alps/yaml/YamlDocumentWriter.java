@@ -18,9 +18,9 @@ package com.apicatalog.alps.yaml;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.io.DocumentWriter;
 import com.apicatalog.yaml.Yaml;
 import com.apicatalog.yaml.YamlException;
 import com.apicatalog.yaml.writer.YamlWriter;
@@ -42,12 +42,20 @@ public final class YamlDocumentWriter implements DocumentWriter {
     @Override
     public void write(Document document) throws IOException, DocumentWriterException {
 
-        try {
+        if (document == null) {
+            throw new IllegalArgumentException("The 'document' must not be null.");
+        }
 
+        try {
             writer.write(YamlDocument.toYaml(document, verbose));
             
         } catch (YamlException e) {
             throw new DocumentWriterException(e);
         }
+    }
+    
+    @Override
+    public void close() throws Exception {
+        writer.close();
     }
 }

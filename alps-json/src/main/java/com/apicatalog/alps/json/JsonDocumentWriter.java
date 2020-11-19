@@ -19,8 +19,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.apicatalog.alps.DocumentWriter;
 import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.io.DocumentWriter;
 
 import jakarta.json.Json;
 import jakarta.json.JsonWriter;
@@ -49,11 +49,11 @@ public final class JsonDocumentWriter implements DocumentWriter {
 
     @Override
     public void write(final Document document) {
-        try {
-            writer.write(JsonDocument.toJson(document, verbose));
-            
-        } finally {
-            writer.close();             
-        }
+        writer.write(JsonDocument.toJson(document, verbose));            
+    }
+    
+    @Override
+    public void close() throws Exception {
+        writer.close();
     }
 }

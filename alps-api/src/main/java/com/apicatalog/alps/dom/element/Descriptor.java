@@ -33,6 +33,8 @@ public interface Descriptor {
 	
 	Optional<URI> returnType();
 	
+	Optional<String> title();
+	
 	Set<Documentation> documentation();
 	
 	Set<Extension> extensions();

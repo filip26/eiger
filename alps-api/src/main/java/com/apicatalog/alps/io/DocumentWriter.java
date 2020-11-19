@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps;
+package com.apicatalog.alps.io;
 
 import java.io.IOException;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-public interface DocumentWriter {
+public interface DocumentWriter extends AutoCloseable {
 
-    void write(Document document) throws IOException, DocumentWriterException;    
+    void write(Document document) throws IOException, DocumentWriterException;
+    
+    @Override
+    void close() throws Exception;
 }

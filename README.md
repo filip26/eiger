@@ -14,10 +14,10 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ## Features
 
- Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
- --- | :---: | :---: | :---: | :---: 
- read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :running:
- write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
+Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
+--- | :---: | :---: | :---: | :---:
+read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
+write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
 ## Command Line Interface
 
@@ -28,10 +28,10 @@ Transform and/or validate ALPS documents.
 
 ### Installation
 
-Download the latest [alps-cli-0.3.1.zip](https://github.com/filip26/alps/releases/download/0.3.1/alps-cli-0.3.1.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest [alps-cli-0.4.zip](https://github.com/filip26/alps/releases/download/0.4/alps-cli-0.4.zip). Extract the zip content and make `alps.sh` executable.
 
 ```bash
-> cd alps-cli-0.3.1
+> cd alps-cli-0.4
 > chmod +x bin/alps.sh
 ```
 
@@ -40,15 +40,15 @@ Set `ALPS_HOME` and `PATH` variables.
 e.g.
 
 ```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.3.1
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.3.1/bin
+> export ALPS_HOME=/home/filip/alps-cli-0.4
+> export PATH=$PATH:/home/filip/alps/alps-cli-0.4/bin
 ```
 
 ### Usage
 
 ```bash
 > alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
+> alps.sh transform [{-s|--source}={json|xml|oas}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
 > alps.sh [{-h|--help}]
 ```
 
@@ -73,8 +73,12 @@ e.g.
 
 #### Transformation
 
-`ALPS+XML` :arrow_right: `ALPS+YAML`
+`OpenAPI` :arrow_right: `ALPS+YAML`
+```bash
+> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps.sh transform --source=oas --target=yaml
+```
 
+`ALPS+XML` :arrow_right: `ALPS+YAML`
 ```bash
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml
 ```
@@ -132,7 +136,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
 
 ```
@@ -143,7 +147,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
 ```
 
@@ -156,16 +160,27 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
     <version>2.0.0</version>
 </dependency>
 ```
+
 #### ALPS+XML
 
 ```xml
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.3.2</version>
+    <version>0.4</version>
 </dependency>
-
 ```
+
+#### OpenAPI
+
+```xml
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>alps-oas</artifactId>
+    <version>0.4</version>
+</dependency>
+```
+
 
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)
