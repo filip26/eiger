@@ -54,7 +54,7 @@ public final class OpenApiReader implements DocumentParser {
         return parseContent(content);
     }
 
-    private Document parseContent(final String content) {
+    private static final Document parseContent(final String content) {
         
         final SwaggerParseResult result = new OpenAPIV3Parser().readContents(content);
         //TODO errors?
@@ -151,31 +151,41 @@ public final class OpenApiReader implements DocumentParser {
                     .forEach(descriptor::add);
             
             Optional.ofNullable(op.getValue().getResponses())
-                    .map(OpenApiReader::parseResponses)
+                    .map(r -> OpenApiReader.parseResponses(r, document))
                     .ifPresent(descriptor::returnType);
-            
             
             document.add(descriptor);
         }
     }
 
-    private static final URI parseResponses(final ApiResponses responses) {
+    private static final URI parseResponses(final ApiResponses responses, final DocumentBuilder document) {
         
         if (responses.containsKey("200")) {
             
             for (Map.Entry<String, MediaType> mediaType : responses.get("200").getContent().entrySet()) {
 
-                if (mediaType.getValue().getSchema() != null && mediaType.getValue().getSchema().get$ref() != null) {
+                if (mediaType.getValue().getSchema() == null) {
+                    continue;
+                }
+                
+                if (mediaType.getValue().getSchema().get$ref() != null) {
              
                     try {
                         return toHref(mediaType.getValue().getSchema().get$ref());
                         
                     } catch (IllegalArgumentException e) {
-                        
+                        //TODO ignored, print warning
                     }
+                    
+                } else if (mediaType.getValue().getSchema().getType() != null) {
+                    
+                    //TODO
+                    
+                } else if (mediaType.getValue().getExamples() != null) {
+                    
+                    //TODO
+                    
                 }
-                
-//                mediaType.getValue().getExamples()
             }
         }
 
@@ -195,7 +205,7 @@ public final class OpenApiReader implements DocumentParser {
         if (info.getTitle() != null && !info.getTitle().isBlank()) {
             document.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
         }
-        System.out.println(">>>> " + info.getDescription());
+
         if (info.getDescription() != null && !info.getDescription().isBlank()) {
             document.add(Alps.createDocumentation("text/plain").append(info.getDescription()));
         }
@@ -210,6 +220,7 @@ public final class OpenApiReader implements DocumentParser {
                     .ifPresent(uri -> document.add(Alps.createLink(uri, "server")));
                 
         } catch (IllegalArgumentException e) {
+            //TODO ignored, print warning
             
         }
     }
