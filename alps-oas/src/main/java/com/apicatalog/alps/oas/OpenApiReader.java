@@ -61,6 +61,10 @@ public final class OpenApiReader implements DocumentParser {
         
         final OpenAPI oas = result.getOpenAPI();
 
+        if (oas == null) {
+            return null;
+        }
+        
         final DocumentBuilder document = Alps.createDocument(DocumentVersion.VERSION_1_0);
         
         // OAS info
