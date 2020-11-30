@@ -18,6 +18,7 @@ package com.apicatalog.alps.cli;
 import java.io.IOException;
 import java.util.Arrays;
 
+@Deprecated
 public class AlpsCommand {
 
     public static void main(String...args) {

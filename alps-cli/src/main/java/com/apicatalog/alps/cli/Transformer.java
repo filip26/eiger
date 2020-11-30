@@ -33,7 +33,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
-        name = "transform",
+        name = "Transform",
         mixinStandardHelpOptions = false,
         sortOptions = false,
         description =  "transform ALPS document representation",

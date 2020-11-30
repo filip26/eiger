@@ -29,7 +29,7 @@ import picocli.CommandLine.Parameters;
 @Command(
         name = "validate",
         mixinStandardHelpOptions = false,
-        description =  "validate ALPS document",
+        description =  "Validate ALPS document",
         sortOptions = false,
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
@@ -42,8 +42,8 @@ final class Validator implements Runnable {
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(json|xml)")
     Source source = null;
 
-    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
-    boolean help = false;
+//    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
+//    boolean help = false;
 
     @Parameters(index = "0", arity = "0..1") 
     File input;
