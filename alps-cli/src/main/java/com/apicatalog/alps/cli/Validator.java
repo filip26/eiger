@@ -15,13 +15,44 @@
  */
 package com.apicatalog.alps.cli;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.io.DocumentParser;
 
-final class Validator {
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+
+@Command(
+        name = "validate",
+        mixinStandardHelpOptions = false,
+        description =  "validate ALPS document",
+        sortOptions = false,
+        descriptionHeading = "%n",
+        parameterListHeading = "%nParameters:%n",
+        optionListHeading = "%nOptions:%n"
+        )
+final class Validator implements Runnable {
+    
+    enum Source { XML, JSON };
+    
+    @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(json|xml)")
+    Source source = null;
+
+    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
+    boolean help = false;
+
+    @Parameters(index = "0", arity = "0..1") 
+    File input;
+
+    @Option(names = { "-p", "--pretty" }, description = "print pretty JSON|XML")
+    boolean pretty = false;
+
+    @Option(names = { "-v", "--verbose" }, description = "include default values")
+    boolean verbose = false;
     
     private Validator() {
     }
@@ -87,6 +118,12 @@ final class Validator {
         } catch (DocumentParserException e) {
             PrintUtils.printError(e, sourceMediaType, sourcePath);
         }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("validate: " + input.exists());
+        
     }
     
 }

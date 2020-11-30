@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.cli;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -25,9 +26,47 @@ import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
 
-final class Transformer {
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
-    private Transformer() {}
+@Command(
+        name = "transform",
+        mixinStandardHelpOptions = false,
+        sortOptions = false,
+        description =  "transform ALPS document representation",
+        descriptionHeading = "%n",
+        parameterListHeading = "%nParameters:%n",
+        optionListHeading = "%nOptions:%n"
+        )
+final class Transformer implements Runnable {
+
+    enum Source { XML, JSON, OAS };
+    enum Target { XML, JSON, YAML };
+        
+    @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(xml|json|oas)")
+    Source source = null;
+
+    @Option(names = { "-t", "--target" },  description = "target media type, e.g. --source=yaml for alps+yaml", paramLabel = "(xml|json|yaml)")
+    Target target = null;
+
+    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
+    boolean help = false;
+
+    @Parameters(index = "0", arity = "0..1") 
+    File input;
+
+    @Option(names = { "-p", "--pretty" }, description = "print pretty JSON|XML")
+    boolean pretty = false;
+
+    @Option(names = { "-v", "--verbose" }, description = "include default values")
+    boolean verbose = false;
+
+    @Spec CommandSpec spec;
+    
+    Transformer() {}
     
     public static final void transform(String...args) throws Exception {
 
@@ -130,5 +169,11 @@ final class Transformer {
         } finally {
             writer.close();
         }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("RUN !!! ");
+        
     }
 }
