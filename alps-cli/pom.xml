@@ -53,6 +53,12 @@
             <artifactId>jakarta.json</artifactId>
             <version>${jakarta.json-p.version}</version>        
         </dependency>
+        
+        <dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picoli.version}</version>
+		</dependency>
           
         <!--  Tests  -->      
         <dependency>
