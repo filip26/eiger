@@ -42,18 +42,12 @@ final class Validator implements Runnable {
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(json|xml)")
     Source source = null;
 
-//    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
-//    boolean help = false;
+    @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
+    boolean help = false;
 
     @Parameters(index = "0", arity = "0..1") 
     File input;
 
-    @Option(names = { "-p", "--pretty" }, description = "print pretty JSON|XML")
-    boolean pretty = false;
-
-    @Option(names = { "-v", "--verbose" }, description = "include default values")
-    boolean verbose = false;
-    
     private Validator() {
     }
 

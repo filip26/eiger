@@ -33,10 +33,10 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 @Command(
-        name = "Transform",
+        name = "transform",
         mixinStandardHelpOptions = false,
         sortOptions = false,
-        description =  "transform ALPS document representation",
+        description =  "Transform documents into ALPS.",
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
@@ -46,10 +46,10 @@ final class Transformer implements Runnable {
     enum Source { XML, JSON, OAS };
     enum Target { XML, JSON, YAML };
         
-    @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(xml|json|oas)")
+    @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=oas for OpenAPI", paramLabel = "(xml|json|oas)")
     Source source = null;
 
-    @Option(names = { "-t", "--target" },  description = "target media type, e.g. --source=yaml for alps+yaml", paramLabel = "(xml|json|yaml)")
+    @Option(names = { "-t", "--target" },  description = "target media type, e.g. --target=yaml for alps+yaml", paramLabel = "(xml|json|yaml)")
     Target target = null;
 
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
@@ -174,6 +174,8 @@ final class Transformer implements Runnable {
     @Override
     public void run() {
         System.out.println("RUN !!! ");
+        
+        
         
     }
 }

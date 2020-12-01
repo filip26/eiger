@@ -22,23 +22,30 @@ public final class App {
     boolean help = false;
     
     public static void main(String[] args) {
-        
-        final CommandLine commandLine = new CommandLine(new App());
-        
-        final ParseResult result = commandLine.parseArgs(args);
-        
-        if (commandLine.isUsageHelpRequested()) {
 
-            if (result.subcommand() != null) {
-                result.subcommand().commandSpec().commandLine().usage(System.out);
+        final CommandLine cli = new CommandLine(new App());
+        cli.setCaseInsensitiveEnumValuesAllowed(true);
+        
+        try {
+            
+            final ParseResult result = cli.parseArgs(args);
+            
+            if (cli.isUsageHelpRequested()) {
+    
+                if (result.subcommand() != null) {
+                    result.subcommand().commandSpec().commandLine().usage(cli.getOut());
+                    return;
+                }
+                
+                cli.usage(cli.getOut());
                 return;
             }
-            
-            commandLine.usage(System.out);
-            
-            return;
-        }
+    
+            cli.execute(args);
 
-        commandLine.execute(args);
+        } catch (Exception ex) {
+            ex.printStackTrace(cli.getErr());
+            System.exit(cli.getCommandSpec().exitCodeOnExecutionException());
+        }
     }
 }
