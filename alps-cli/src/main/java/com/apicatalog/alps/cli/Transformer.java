@@ -36,7 +36,7 @@ import picocli.CommandLine.Spec;
         name = "transform",
         mixinStandardHelpOptions = false,
         sortOptions = false,
-        description =  "Transform documents into ALPS.",
+        description =  "Transform documents into ALPS",
         descriptionHeading = "%n",
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"

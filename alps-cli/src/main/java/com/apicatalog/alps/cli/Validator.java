@@ -116,7 +116,7 @@ final class Validator implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("validate: " + input.exists());
+        System.out.println("validate: " + (input != null ? input.exists() : "n/a"));
         
     }
     
