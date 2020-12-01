@@ -26,4 +26,10 @@ jobs:
       - name: 'Install Native Image Plugin'
         run: |
           gu install native-image    
-      - run: java -version
+      - name: 'Build Native Image'
+        run: ./mvnw package -P native-image
+      - name: 'Upload'
+        uses: actions/upload-artifact@v2
+        with:
+          name: alps
+          path: ./alps-cli/target/alps
