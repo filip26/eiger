@@ -47,10 +47,51 @@ e.g.
 
 ### Usage
 
+
 ```bash
-> alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml|oas}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
-> alps.sh [{-h|--help}]
+> alps -h
+Usage: alps [-h] [COMMAND]
+
+Transform and validate ALPS documents
+
+Options:
+  -h, --help   display a help message
+
+Commands:
+  validate   Validate ALPS document
+  transform  Transform documents into ALPS
+```
+
+```bash
+> alps -h transform
+Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<input>]
+
+Transform documents into ALPS.
+
+Parameters:
+      [<input>]
+
+Options:
+  -s, --source=(xml|json|oas)
+                  source media type, e.g. --source=oas for OpenAPI
+  -t, --target=(xml|json|yaml)
+                  target media type, e.g. --target=yaml for alps+yaml
+  -p, --pretty    print pretty JSON|XML
+  -v, --verbose   include default values
+
+```
+
+```bash
+> alps -h validate
+Usage: alps validate [-s=(json|xml)] [<input>]
+
+Validate ALPS document
+
+Parameters:
+      [<input>]
+
+Options:
+  -s, --source=(json|xml)   source media type, e.g. --source=json for alps+json
 ```
 
 ### Examples
