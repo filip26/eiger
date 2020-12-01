@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: 11
       - name: 'Setup GraalVM Environment'
-        uses: DeLaGuardo/setup-graalvm@2.0
+        uses: DeLaGuardo/setup-graalvm@3.0
         with:
           graalvm-version: '20.3.0.java11'
       - name: 'Install Native Image Plugin'
