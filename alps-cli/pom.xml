@@ -108,6 +108,20 @@
 
 	<build>
     	<plugins>
+<!--            <plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-help-plugin</artifactId> -->
+<!--                 <version>3.2.0</version> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <id>show-profiles</id> -->
+<!--                         <phase>compile</phase> -->
+<!--                         <goals> -->
+<!--                             <goal>active-profiles</goal> -->
+<!--                         </goals> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin> -->
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-compiler-plugin</artifactId>
@@ -126,26 +140,6 @@
 			      <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
 			    </compilerArgs>
 			  </configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.graalvm.nativeimage</groupId>
-				<artifactId>native-image-maven-plugin</artifactId>
-				<version>${graal.version}</version>
-				<configuration>
-					<imageName>${command.name}</imageName>
-					<mainClass>${mainClass}</mainClass>
-<!-- 					<buildArgs>${buildArgs}</buildArgs> -->
-<!-- 					<buildArgs>no-server -H:+ReportUnsupportedElementsAtRuntime &#45;&#45;allow-incomplete-classpath</buildArgs> -->
-					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath -H:+ReportExceptionStackTraces</buildArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>native-image</goal>
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
 			</plugin>			        	
      		<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -169,22 +163,6 @@
 <!--                     </archive> -->
 <!--                 </configuration> -->
             </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<finalName>${project.artifactId}-${project.version}</finalName>
-				</configuration>
-			</plugin>
 <!--    			<plugin> -->
 <!--                 <groupId>org.apache.maven.plugins</groupId> -->
 <!--                 <artifactId>maven-assembly-plugin</artifactId> -->
@@ -231,5 +209,57 @@
         	</plugin>
     	</plugins>
 	</build>
+
+<profiles>
+  <profile>
+    <id>native-image</id>
+    <activation>
+      <activeByDefault>false</activeByDefault>
+    </activation>
+    
+    <build>
+    	<plugins>
+    	
+    				<plugin>
+				<groupId>org.graalvm.nativeimage</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>${graal.version}</version>
+				<configuration>
+					<imageName>${command.name}</imageName>
+					<mainClass>${mainClass}</mainClass>
+<!-- 					<buildArgs>${buildArgs}</buildArgs> -->
+<!-- 					<buildArgs>no-server -H:+ReportUnsupportedElementsAtRuntime &#45;&#45;allow-incomplete-classpath</buildArgs> -->
+					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath -H:+ReportExceptionStackTraces</buildArgs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+			</plugin>
+    	</plugins>
+    </build>
+    
+  </profile>
+</profiles>
 
 </project>
