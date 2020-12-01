@@ -31,24 +31,13 @@ Transform and/or validate ALPS documents.
 
 Download the latest [alps-cli-0.4.zip](https://github.com/filip26/alps/releases/download/0.4/alps-cli-0.4.zip). Extract the zip content and make `alps.sh` executable.
 
-```bash
-> cd alps-cli-0.4
-> chmod +x bin/alps.sh
-```
-
-Set `ALPS_HOME` and `PATH` variables.
-
-e.g.
-
-```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.4
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.4/bin
-```
+TBD - use native executables
+TBD - list of images
 
 ### Usage
 
 
-```bash
+```ShellSession
 > alps -h
 Usage: alps [-h] [COMMAND]
 
@@ -62,7 +51,7 @@ Commands:
   transform  Transform documents into ALPS
 ```
 
-```bash
+```ShellSession
 > alps -h transform
 Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<input>]
 
@@ -81,7 +70,7 @@ Options:
 
 ```
 
-```bash
+```ShellSession
 > alps -h validate
 Usage: alps validate [-s=(json|xml)] [<input>]
 
@@ -98,10 +87,11 @@ Options:
 
 #### Validation
 
-```bash
+```ShellSession
 > wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh validate --source=xml
 ```
-```yaml
+
+```YAML
 # Valid ALPS document
 - document: 
     media_type: application/alps+xml
@@ -165,7 +155,7 @@ Your contribution is welcome! There are many ways to motivate developers or spee
 Fork and clone the project repository.
 Compile sources:
 
-```bash
+```ShellSession
 > cd alps
 > ./mvnw clean package install
 ```
@@ -174,7 +164,7 @@ Compile sources:
 
 #### ALPS+YAML
 
-```xml
+```XML
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
@@ -185,7 +175,7 @@ Compile sources:
 
 #### ALPS+JSON
 
-```xml
+```XML
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
@@ -195,7 +185,7 @@ Compile sources:
 
 Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the classpath already.
 
-```xml
+```XML
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>jakarta.json</artifactId>
@@ -205,7 +195,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 #### ALPS+XML
 
-```xml
+```XML
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
@@ -215,7 +205,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 
 #### OpenAPI
 
-```xml
+```XML
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-oas</artifactId>
