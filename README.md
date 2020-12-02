@@ -1,4 +1,4 @@
-# Application-Level Profile Semantics
+# ALPS Processor & API
 
 An implementation of [Application-Level Profile Semantics](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02).
 
