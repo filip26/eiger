@@ -9,7 +9,7 @@
 
     <artifactId>alps-yaml</artifactId>
 
-    <name>ALPS+YAML Document (Hydrogen YAML)</name>
+    <name>ALPS+YAML Document (hydrogen.yaml)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
