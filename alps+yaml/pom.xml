@@ -6,9 +6,10 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-oas</artifactId>
 
-    <name>OpenAPI into ALPS</name>
+    <artifactId>alps-yaml</artifactId>
+
+    <name>ALPS+YAML Document (Hydrogen YAML)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
@@ -19,16 +20,16 @@
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-api</artifactId>
+            <artifactId>alps.api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.swagger.parser.v3</groupId>
-            <artifactId>swagger-parser</artifactId>
-            <version>2.0.23</version>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>hydrogen-yaml</artifactId>
+            <version>0.2</version>
         </dependency>
-
+        
         <!--  Test -->
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -61,5 +62,13 @@
         	</plugin>
     	</plugins>
 	</build>
+	
+	<repositories>
+		<repository>
+      		<id>github</id>
+      		<name>GitHub Packages Repo</name>
+      		<url>https://maven.pkg.github.com/filip26/hydrogen-yaml</url>
+		</repository>
+	</repositories>
 	
 </project>

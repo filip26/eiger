@@ -6,28 +6,29 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-yaml</artifactId>
+    <artifactId>alps-json</artifactId>
 
-    <name>ALPS+YAML Document (Hydrogen YAML)</name>
+    <name>ALPS+JSON Document (JSON-P)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
         <artifactId>alps</artifactId>
-        <version>${revision}</version>
+		<version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-api</artifactId>
+            <artifactId>alps.api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        
         <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>hydrogen-yaml</artifactId>
-            <version>0.2</version>
-        </dependency>
+			<groupId>jakarta.json</groupId>
+    		<artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta.json-p.version}</version>
+            <scope>provided</scope>
+        </dependency>        
         
         <!--  Test -->
         <dependency>
@@ -36,7 +37,7 @@
             <version>${jakarta.json-p.version}</version>
             <scope>test</scope>        
         </dependency>
-
+        
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -61,13 +62,5 @@
         	</plugin>
     	</plugins>
 	</build>
-	
-	<repositories>
-		<repository>
-      		<id>github</id>
-      		<name>GitHub Packages Repo</name>
-      		<url>https://maven.pkg.github.com/filip26/hydrogen-yaml</url>
-		</repository>
-	</repositories>
 	
 </project>

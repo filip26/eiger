@@ -6,7 +6,8 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-cli</artifactId>
+    
+    <artifactId>alps.cli</artifactId>
     <packaging>jar</packaging>
 
     <name>ALPS Command Line Interface</name>
@@ -30,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-api</artifactId>
+            <artifactId>alps.api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -54,7 +55,7 @@
 
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-oas</artifactId>
+            <artifactId>alps.oas</artifactId>
             <version>${project.version}</version>
         </dependency>
 

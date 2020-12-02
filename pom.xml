@@ -59,12 +59,12 @@
     </properties>
 
     <modules>
-        <module>alps-api</module>
-        <module>alps-json</module>
-        <module>alps-yaml</module>
-        <module>alps-xml</module>
-        <module>alps-oas</module>
-        <module>alps-cli</module>
+        <module>api</module>
+        <module>alps+json</module>
+        <module>alps+yaml</module>
+        <module>alps+xml</module>
+        <module>oas</module>
+        <module>cli</module>
     </modules>
 
 </project>
