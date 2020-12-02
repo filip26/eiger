@@ -44,7 +44,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: alps-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
-          path: ./alps-cli/target/alps
+          path: |
+            alps-cli/target/alps
+            LICENSE
+          if-no-files-found: error
 
   get-version:
     name: 'Get Build Version'
