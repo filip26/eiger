@@ -11,7 +11,10 @@ on:
 jobs:
   build-linux-image:
     name: 'Build Linux Image'
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
@@ -31,5 +34,5 @@ jobs:
       - name: 'Upload'
         uses: actions/upload-artifact@v2
         with:
-          name: alps
+          name: alps-cli-${{ matrix.os }}
           path: ./alps-cli/target/alps
