@@ -10,7 +10,7 @@
 	<groupId>com.apicatalog</groupId>
 	<artifactId>alps</artifactId>
 
-    <name>Application-Level Profile Semantics</name>
+    <name>Application-Level Profile Semantics Processor &amp; API</name>
 
     <url>https://github.com/filip26/alps</url>
     
