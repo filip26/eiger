@@ -29,16 +29,21 @@ Transform and/or validate ALPS documents.
 
 ### Installation
 
-Download the latest [alps-cli-0.4.zip](https://github.com/filip26/alps/releases/download/0.4/alps-cli-0.4.zip). Extract the zip content and make `alps.sh` executable.
+Download the latest package:
 
-TBD - use native executables
-TBD - list of images
+- [alps-cli-0.4.1-ubuntu-20.04.zip](https://github.com/filip26/alps/suites/1598565863/artifacts/29118802)
+- [alps-cli-0.4.1-macos-11.0.zip](https://github.com/filip26/alps/suites/1598565863/artifacts/29118801)
+
+Extract the zip content and make `alps` command executable.
+
+```ShellSession
+> chmod +x alps
+```
 
 ### Usage
 
-
 ```ShellSession
-> alps -h
+> ./alps -h
 Usage: alps [-h] [COMMAND]
 
 Transform and validate ALPS documents
@@ -52,7 +57,7 @@ Commands:
 ```
 
 ```ShellSession
-> alps -h transform
+> ./alps -h transform
 Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<input>]
 
 Transform documents into ALPS.
@@ -71,7 +76,7 @@ Options:
 ```
 
 ```ShellSession
-> alps -h validate
+> ./alps -h validate
 Usage: alps validate [-s=(json|xml)] [<input>]
 
 Validate ALPS document
@@ -88,7 +93,7 @@ Options:
 #### Validation
 
 ```ShellSession
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh validate --source=xml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps validate --source=xml
 ```
 
 ```YAML
@@ -107,12 +112,12 @@ Options:
 
 `OpenAPI` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps.sh transform --source=oas --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps transform --source=oas --target=yaml
 ```
 
 `ALPS+XML` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps transform --source=xml --target=yaml
 ```
 
 ## Contributing
