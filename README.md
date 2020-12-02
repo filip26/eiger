@@ -24,9 +24,6 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 Transform and/or validate ALPS documents.
 
-### Prerequisites
-- [`Java 11+`](https://www.oracle.com/java/technologies/javase-downloads.html)
-
 ### Installation
 
 Download the latest package:
@@ -149,6 +146,7 @@ Your contribution is welcome! There are many ways to motivate developers or spee
 - [x] ~0.3 CLI - validation, transformations (`ALPS+JSON` :left_right_arrow: `ALPS+XML`)~
   - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
 - [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
+  - [ ] 0.4.1 Native Executables (Ubuntu, MacOS) 
 - [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
@@ -165,7 +163,7 @@ Compile sources:
 > ./mvnw clean package install
 ```
 
-### Usage
+### Artefacts
 
 #### ALPS+YAML
 
@@ -173,7 +171,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-yaml</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 
 ```
@@ -184,7 +182,7 @@ Compile sources:
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-json</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 
@@ -204,7 +202,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-xml</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 
@@ -214,7 +212,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 <dependency>
     <groupId>com.apicatalog</groupId>
     <artifactId>alps-oas</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 
