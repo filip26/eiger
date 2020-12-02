@@ -50,8 +50,13 @@ jobs:
     name: 'Get Build Version'
     runs-on: ubuntu-latest
     outputs:
-      BUILD_VERSION: ${{ steps.step1.outputs.BUILD_VERSION }}
+      BUILD_VERSION: ${{ steps.extraction.outputs.BUILD_VERSION }}
     steps:
-      - id: step1
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+        id: checkout
+
+      - id: extraction
+        name: 'Extract Version'
         run: |
           echo "::set-output name=BUILD_VERSION::$( grep '<revision>' pom.xml | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
