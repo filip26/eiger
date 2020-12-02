@@ -9,8 +9,9 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-linux-image:
-    name: 'Build Linux Image'
+  build-image:
+    name: 'Build Native Image'
+    needs: get-version
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -42,5 +43,15 @@ jobs:
       - name: 'Upload'
         uses: actions/upload-artifact@v2
         with:
-          name: alps-cli-${{ matrix.os }}
+          name: alps-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
           path: ./alps-cli/target/alps
+
+  get-version:
+    name: 'Get Build Version'
+    runs-on: ubuntu-latest
+    outputs:
+      BUILD_VERSION: ${{ steps.step1.outputs.BUILD_VERSION }}
+    steps:
+      - id: step1
+        run: |
+          echo "::set-output name=BUILD_VERSION::$( grep '<revision>' pom.xml | sed 's/[[:alpha:]|<|>|/|[:space:]]//g' | awk -F- '{print $1}')"
