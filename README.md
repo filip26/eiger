@@ -1,6 +1,6 @@
-# Application-Level Profile Semantics
+# ALPS CLI
 
-An implementation of [Application-Level Profile Semantics](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02).
+Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02) documents.
 
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
 ![CodeQL](https://github.com/filip26/alps/workflows/CodeQL/badge.svg)
@@ -8,7 +8,8 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ## Table of Contents  
 - [Features](#features)
-- [Command Line Interface](#command-line-interface)
+- [Installation](#installation)
+- [Usage](#usage)
 - [Contributing](#contributing)  
 - [Resources](#resources)  
 - [Commercial Support](#commercial-support)
@@ -20,11 +21,7 @@ Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
 read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
 write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
-## Command Line Interface
-
-Transform and/or validate ALPS documents.
-
-### Installation
+## Installation
 
 Download the latest package:
 
@@ -37,7 +34,7 @@ Extract the zip content and make `alps` command executable.
 > chmod +x alps
 ```
 
-### Usage
+## Usage
 
 ```ShellSession
 > ./alps -h
@@ -162,71 +159,6 @@ Compile sources:
 > cd alps
 > ./mvnw clean package install
 ```
-
-### Artefacts
-
-#### API
-
-```XML
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps.api</artifactId>
-    <version>0.4.1</version>
-</dependency>
-
-```
-
-#### ALPS+YAML
-
-```XML
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-yaml</artifactId>
-    <version>0.4.1</version>
-</dependency>
-
-```
-
-#### ALPS+JSON
-
-```XML
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-json</artifactId>
-    <version>0.4.1</version>
-</dependency>
-```
-
-Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the classpath already.
-
-```XML
-<dependency>
-    <groupId>org.glassfish</groupId>
-    <artifactId>jakarta.json</artifactId>
-    <version>2.0.0</version>
-</dependency>
-```
-
-#### ALPS+XML
-
-```XML
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-xml</artifactId>
-    <version>0.4.1</version>
-</dependency>
-```
-
-#### OpenAPI
-
-```XML
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps.oas</artifactId>
-    <version>0.4.1</version>
-</dependency>
-```
-
 
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)
