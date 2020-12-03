@@ -165,6 +165,17 @@ Compile sources:
 
 ### Artefacts
 
+#### API
+
+```XML
+<dependency>
+    <groupId>com.apicatalog</groupId>
+    <artifactId>alps.api</artifactId>
+    <version>0.4.1</version>
+</dependency>
+
+```
+
 #### ALPS+YAML
 
 ```XML
@@ -211,7 +222,7 @@ Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the clas
 ```XML
 <dependency>
     <groupId>com.apicatalog</groupId>
-    <artifactId>alps-oas</artifactId>
+    <artifactId>alps.oas</artifactId>
     <version>0.4.1</version>
 </dependency>
 ```
