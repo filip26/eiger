@@ -164,13 +164,13 @@ final class Transformer implements Callable<Integer> {
     
     private final DocumentWriter getWriter(final Writer writer) throws DocumentWriterException {
 
-        if (Source.JSON.equals(source)) {
+        if (Target.JSON.equals(target)) {
             return JsonDocumentWriter.create(writer, pretty, verbose);
             
-        } else if (Source.XML.equals(source)) {
+        } else if (Target.XML.equals(target)) {
             return XmlDocumentWriter.create(writer, pretty, verbose);
             
-        } else if (Source.OAS.equals(source)) {
+        } else if (Target.YAML.equals(target)) {
             return YamlDocumentWriter.create(writer, verbose);
         }
 
