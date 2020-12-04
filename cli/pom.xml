@@ -229,8 +229,9 @@
 					<imageName>${command.name}</imageName>
 					<mainClass>${mainClass}</mainClass>
 <!-- 					<buildArgs>${buildArgs}</buildArgs> -->
+<!--  					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback</buildArgs> -->
 <!-- 					<buildArgs>no-server -H:+ReportUnsupportedElementsAtRuntime &#45;&#45;allow-incomplete-classpath</buildArgs> -->
-					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath -H:+ReportExceptionStackTraces</buildArgs>
+ 					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
 				</configuration>
 				<executions>
 					<execution>

@@ -150,6 +150,10 @@ final class Transformer implements Callable<Integer> {
         
         final Document document = parser.parse(null, source);
         
+        if (document == null) {
+            return spec.exitCodeOnInvalidInput();
+        }
+        
         try (final DocumentWriter writer = getWriter(target)) {
             writer.write(document);            
         }
