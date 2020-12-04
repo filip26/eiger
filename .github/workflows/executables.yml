@@ -45,7 +45,7 @@ jobs:
         with:
           name: alps-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
           path: |
-            alps-cli/target/alps
+            cli/target/alps
           if-no-files-found: error
 
   get-version:
