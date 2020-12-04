@@ -15,89 +15,14 @@
  */
 package com.apicatalog.alps.cli;
 
-import java.io.PrintStream;
-
-import com.apicatalog.alps.DocumentStatistics;
-import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.error.DocumentParserException;
-import com.apicatalog.alps.error.InvalidDocumentException;
-import com.apicatalog.alps.error.MalformedDocumentException;
 
 final class PrintUtils {
 
     private PrintUtils() {
     }
-    
-    static void printUsage() {
-        System.out.println("Usage:");
-        System.out.print("   alps.sh ");
-        System.out.print(Constants.ARG_VALIDATE);
-        System.out.println(" [{-s|--source}={json|xml}] [input]");
-        System.out.print("   alps.sh ");
-        System.out.print(Constants.ARG_TRANSFORM);
-        System.out.println(" [{-s|--source}={json|xml|oas}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]");
-        System.out.println("   alps.sh [{-h|--help}]");
-    }
-    
-    static final void printError(final DocumentParserException e, final String mediaType, final String filePath) {
-
-        final PrintStream output = System.err;
         
-        output.println("# Invalid ALPS document");
-        output.println("- error:");
-        output.println("    message: " + e.getMessage());
-
-        if (e instanceof MalformedDocumentException) {
-            
-            final MalformedDocumentException me = (MalformedDocumentException)e;
-            
-            output.println("    location:");
-            output.println("      line: " + me.getLineNumber());
-            output.println("      column: " + me.getColumnNumber());
-
-        } else if (e instanceof InvalidDocumentException) {
-            
-            final InvalidDocumentException ie = (InvalidDocumentException)e;
-            
-            if (ie.getPath() != null) {
-                output.println("  path:" + ie.getPath());
-            }            
-        }
-        
-        if (mediaType != null) {
-            output.println("    media_type: " + mediaType);
-        }
-
-        if (filePath != null) {
-            output.println("    file: " + filePath);
-        }
-    }
-
-    static final void printDocInfo(final Document document, final String mediaType, final String filePath) {
-        System.out.println("# Valid ALPS document");
-        System.out.println("- document: ");
-
-        if (mediaType != null) {
-            System.out.println("    media_type: " + mediaType);
-        }
-
-        if (filePath != null) {
-            System.out.println("    file: " + filePath);
-        }
-        
-        System.out.println("    version: " + versionToString(document.version()));
-        System.out.println("    statistics:");
-        
-        final DocumentStatistics stats = DocumentStatistics.of(document);
-        
-        System.out.println("      descriptors: " + stats.getDescriptors());
-        System.out.println("      docs: " + stats.getDocs());
-        System.out.println("      links: " + stats.getLinks());
-        System.out.println("      extensions: " + stats.getExtensions());
-    }
-    
-    private static final String versionToString(DocumentVersion version) {
+    public static final String versionToString(DocumentVersion version) {
         if (version != null) {
             
             if (DocumentVersion.VERSION_1_0.equals(version)) {

@@ -49,7 +49,7 @@ final class Transformer implements Runnable {
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=oas for OpenAPI", paramLabel = "(xml|json|oas)")
     Source source = null;
 
-    @Option(names = { "-t", "--target" },  description = "target media type, e.g. --target=yaml for alps+yaml", paramLabel = "(xml|json|yaml)")
+    @Option(names = { "-t", "--target" },  description = "target media type, e.g. --target=yaml for alps+yaml", paramLabel = "(xml|json|yaml)", required = true)
     Target target = null;
 
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
@@ -71,7 +71,7 @@ final class Transformer implements Runnable {
     public static final void transform(String...args) throws Exception {
 
         if (args.length > 5) {
-            PrintUtils.printUsage();
+//            PrintUtils.printUsage();
             return;
         }
 
@@ -115,7 +115,7 @@ final class Transformer implements Runnable {
                 sourcePath = argument;
 
             } else {
-                PrintUtils.printUsage();
+//                PrintUtils.printUsage();
                 return;
             }
         }
@@ -127,15 +127,15 @@ final class Transformer implements Runnable {
         
         final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
         
-        final InputStream source;
+        InputStream source = null;
         
         if (sourcePath != null) {
             
-            source = Utils.fileToInputStream(sourcePath);
+//            source = Utils.fileToInputStream(sourcePath);
             
-            if (source == null) {
-                return;
-            }
+//            if (source == null) {
+//                return;
+//            }
             
         } else {
             source = System.in;
@@ -147,7 +147,7 @@ final class Transformer implements Runnable {
             transform(sourceMediaType, source, targetMediaType, System.out, prettyPrint, verbose);
             
         } catch (DocumentParserException e) {
-            PrintUtils.printError(e, sourceMediaType, sourcePath);
+//            PrintUtils.printError(e, sourceMediaType, sourcePath);
             
         } catch (DocumentWriterException e) {
             System.err.println(e.getMessage());

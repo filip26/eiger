@@ -18,13 +18,21 @@ package com.apicatalog.alps.cli;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.concurrent.Callable;
 
+import com.apicatalog.alps.DocumentStatistics;
+import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.InvalidDocumentException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 import com.apicatalog.alps.io.DocumentParser;
 
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
 @Command(
         name = "validate",
@@ -35,7 +43,7 @@ import picocli.CommandLine.Parameters;
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class Validator implements Runnable {
+final class Validator implements Callable<Integer> {
     
     enum Source { XML, JSON };
     
@@ -46,78 +54,131 @@ final class Validator implements Runnable {
     boolean help = false;
 
     @Parameters(index = "0", arity = "0..1") 
-    File input;
+    File file;
+    
+    @Spec CommandSpec spec;
 
     private Validator() {
     }
 
-    public static void validate(final String[] args) throws IOException {
-        
-        if (args.length > 2) {
-            PrintUtils.printUsage();
-            return;
+    public int validate() throws IOException {
+                
+        String sourceMediaType = null;
+     
+        if (Source.JSON.equals(source)) {
+            sourceMediaType = Constants.MEDIA_TYPE_ALPS_JSON;
+            
+        } else if (Source.XML.equals(source)) {
+            sourceMediaType = Constants.MEDIA_TYPE_ALPS_XML;
         }
         
-        String sourcePath = null;
-        String sourceType = null;
-        
-        for (int i=0; i < args.length; i++) {
-
-            final String argument = args[i];
+        if (file != null) {
             
-            if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE_SHORT)) {
-                
-                sourceType = argument.substring(Constants.ARG_SOURCE_SHORT.length());
-                
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
+            if (!file.exists()) {
+                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");            
+                return spec.exitCodeOnInvalidInput();
+            }
 
-                sourceType = argument.substring(Constants.ARG_SOURCE.length());
-                
-            } else if (sourcePath == null) {                
-                sourcePath = argument;
-                
-            } else {
-                PrintUtils.printUsage();
-                return;
+            if (!file.canRead()) {
+                spec.commandLine().getErr().println("Input file '" + file + "' is not readable.");
+                return spec.exitCodeOnInvalidInput();
+            }
+
+            if (sourceMediaType == null) {
+                sourceMediaType = Utils.detectMediaType(file);
             }
         }
         
-        validate(sourceType, sourcePath);
+        if (sourceMediaType == null) {
+            spec.commandLine().getErr().println("Missing '--source' option.");
+            spec.commandLine().usage(spec.commandLine().getErr());
+            return spec.exitCodeOnInvalidInput();
+        }
+
+        return validate(sourceMediaType);        
     }
     
-    private static final void validate(final String sourceType, final String sourcePath) throws IOException {
-        
-        final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
+    private final int validate(final String sourceMediaType) throws IOException {
         
         final DocumentParser parser = Utils.getParser(sourceMediaType);
 
-        final InputStream source;
+        InputStream inputStream = null;
         
-        if (sourcePath != null) {
-            
-            source = Utils.fileToInputStream(sourcePath);
-            
-            if (source == null) {
-                return;
-            }
-            
-        } else {
-            source = System.in;
+        if (file != null) {
+            inputStream = Utils.fileToInputStream(file);
+        }
+        
+        if (inputStream == null) {
+            inputStream = System.in;
         }
 
         try {
-            
-            PrintUtils.printDocInfo(parser.parse(null, source), sourceMediaType, sourcePath);
-            
+            printDocInfo(spec.commandLine().getOut(), parser.parse(null, inputStream), sourceMediaType);
+                        
         } catch (DocumentParserException e) {
-            PrintUtils.printError(e, sourceMediaType, sourcePath);
+            printError(spec.commandLine().getErr(), e, sourceMediaType);
         }
+        
+        return spec.exitCodeOnSuccess();
     }
 
     @Override
-    public void run() {
-        System.out.println("validate: " + (input != null ? input.exists() : "n/a"));
-        
+    public Integer call() throws Exception {
+        return validate();
     }
     
+    private final void printDocInfo(final PrintWriter out, final Document document, final String mediaType) {
+        out.println("# Valid ALPS document");
+        out.println("- document: ");
+
+        if (mediaType != null) {
+            out.println("    media_type: " + mediaType);
+        }
+
+        if (file != null) {
+            out.println("    file: " + file);
+        }
+        
+        out.println("    version: " + PrintUtils.versionToString(document.version()));
+        out.println("    statistics:");
+        
+        final DocumentStatistics stats = DocumentStatistics.of(document);
+        
+        out.println("      descriptors: " + stats.getDescriptors());
+        out.println("      docs: " + stats.getDocs());
+        out.println("      links: " + stats.getLinks());
+        out.println("      extensions: " + stats.getExtensions());
+    }
+
+    private final void printError(final PrintWriter err, final DocumentParserException e, final String mediaType) {
+
+        err.println("# Invalid ALPS document");
+        err.println("- error:");
+        err.println("    message: " + e.getMessage());
+
+        if (e instanceof MalformedDocumentException) {
+            
+            final MalformedDocumentException me = (MalformedDocumentException)e;
+            
+            err.println("    location:");
+            err.println("      line: " + me.getLineNumber());
+            err.println("      column: " + me.getColumnNumber());
+
+        } else if (e instanceof InvalidDocumentException) {
+            
+            final InvalidDocumentException ie = (InvalidDocumentException)e;
+            
+            if (ie.getPath() != null) {
+                err.println("  path:" + ie.getPath());
+            }            
+        }
+        
+        if (mediaType != null) {
+            err.println("    media_type: " + mediaType);
+        }
+
+        if (file != null) {
+            err.println("    file: " + file);
+        }
+    }
 }

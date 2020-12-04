@@ -8,8 +8,7 @@ import picocli.CommandLine.ParseResult;
 @Command(
     name = "alps", 
     description = "Transform and validate ALPS documents",
-    subcommands = {Validator.class, Transformer.class},
-//    synopsisSubcommandLabel = "(validate | transform)",
+    subcommands = { Transformer.class, Validator.class },
     mixinStandardHelpOptions = false,
     descriptionHeading = "%n",
     parameterListHeading = "%nParameters:%n",
@@ -44,7 +43,8 @@ public final class App {
             cli.execute(args);
 
         } catch (Exception ex) {
-            ex.printStackTrace(cli.getErr());
+            cli.getErr().println(ex.getMessage());
+//            ex.printStackTrace(cli.getErr());
             System.exit(cli.getCommandSpec().exitCodeOnExecutionException());
         }
     }

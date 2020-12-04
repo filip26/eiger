@@ -156,7 +156,6 @@ Fork and clone the project repository.
 Compile sources:
 
 ```ShellSession
-> cd alps
 > ./mvnw clean package install
 ```
 

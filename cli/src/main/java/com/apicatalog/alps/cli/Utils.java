@@ -36,6 +36,7 @@ final class Utils {
     private Utils() {
     }
     
+    @Deprecated
     static final String getMediaType(final String type, final String path, final boolean input) {
         
         if (Constants.ARG_PARAM_XML.equalsIgnoreCase(type)) {
@@ -77,17 +78,32 @@ final class Utils {
         throw new IllegalArgumentException("Can not determine " + (input ? "input" : "output") + " type, please add --" + (input ? "source" : "target")  + "=(json|xml|yaml) argument.");
     }
 
-    static final InputStream fileToInputStream(final String path) {
-        
-        final File file = new File(path);
+    static final String detectMediaType(File file) {
+        if (file.getName() != null) {
+            if (file.getName().toLowerCase().endsWith(".xml") || file.getName().toLowerCase().endsWith("+xml")) {
+                return Constants.MEDIA_TYPE_ALPS_XML;
+            }
+
+            if (file.getName().toLowerCase().endsWith(".json") || file.getName().toLowerCase().endsWith("+json")) {
+                return Constants.MEDIA_TYPE_ALPS_JSON;
+            }
+            
+            if (file.getName().toLowerCase().endsWith(".yaml") || file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith("+yaml")) {
+                return Constants.MEDIA_TYPE_ALPS_YAML;
+            }
+        }
+        return null;
+    }
+    
+    static final InputStream fileToInputStream(final File file) {
         
         if (!file.exists()) {
-            System.err.println("Input file '" + path + "' does not exist.");            
+            System.err.println("Input file '" + file + "' does not exist.");            
             return null;
         }
 
         if (!file.canRead()) {
-            System.err.println("Input file '" + path + "' is not readable.");
+            System.err.println("Input file '" + file + "' is not readable.");
             return null;
         }
         

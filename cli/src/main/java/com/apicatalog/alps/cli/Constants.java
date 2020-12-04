@@ -17,14 +17,17 @@ package com.apicatalog.alps.cli;
 
 final class Constants {
 
+   
     static final String ARG_VALIDATE = "validate";
-    
+   
     static final String ARG_TRANSFORM = "transform";
-    
+   
     static final String ARG_SOURCE_SHORT = "-s=";
+   
     static final String ARG_SOURCE = "--source=";
-
+   
     static final String ARG_TARGET_SHORT = "-t=";
+   
     static final String ARG_TARGET = "--target=";
 
     static final String ARG_PRETTY_SHORT = "-p";
