@@ -1,6 +1,6 @@
-# ALPS Processor & API
+# ALPS CLI
 
-An implementation of [Application-Level Profile Semantics](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02).
+Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02) documents.
 
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
 ![CodeQL](https://github.com/filip26/alps/workflows/CodeQL/badge.svg)
@@ -8,7 +8,8 @@ An implementation of [Application-Level Profile Semantics](https://tools.ietf.or
 
 ## Table of Contents  
 - [Features](#features)
-- [Command Line Interface](#command-line-interface)
+- [Installation](#installation)
+- [Usage](#usage)
 - [Contributing](#contributing)  
 - [Resources](#resources)  
 - [Commercial Support](#commercial-support)
@@ -20,47 +21,76 @@ Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
 read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
 write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
-## Command Line Interface
+## Installation
 
-Transform and/or validate ALPS documents.
+Download the latest package:
 
-### Prerequisites
-- [`Java 11+`](https://www.oracle.com/java/technologies/javase-downloads.html)
+- [alps-cli-0.4.1-ubuntu-20.04.zip](https://github.com/filip26/alps/suites/1598565863/artifacts/29118802)
+- [alps-cli-0.4.1-macos-11.0.zip](https://github.com/filip26/alps/suites/1598565863/artifacts/29118801)
 
-### Installation
+Extract the zip content and make `alps` command executable.
 
-Download the latest [alps-cli-0.4.zip](https://github.com/filip26/alps/releases/download/0.4/alps-cli-0.4.zip). Extract the zip content and make `alps.sh` executable.
-
-```bash
-> cd alps-cli-0.4
-> chmod +x bin/alps.sh
+```ShellSession
+> chmod +x alps
 ```
 
-Set `ALPS_HOME` and `PATH` variables.
+## Usage
 
-e.g.
+```ShellSession
+> ./alps -h
+Usage: alps [-h] [COMMAND]
 
-```bash
-> export ALPS_HOME=/home/filip/alps-cli-0.4
-> export PATH=$PATH:/home/filip/alps/alps-cli-0.4/bin
+Transform and validate ALPS documents
+
+Options:
+  -h, --help   display a help message
+
+Commands:
+  validate   Validate ALPS document
+  transform  Transform documents into ALPS
 ```
 
-### Usage
+```ShellSession
+> ./alps -h transform
+Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<file>]
 
-```bash
-> alps.sh validate [{-s|--source}={json|xml}] [input]
-> alps.sh transform [{-s|--source}={json|xml|oas}] [input] {-t|--target}={json|xml|yaml} [{-p|--pretty}] [{-v|--verbose}]
-> alps.sh [{-h|--help}]
+Transform documents into ALPS.
+
+Parameters:
+      [<file>]    input file
+
+Options:
+  -s, --source=(xml|json|oas)
+                  source media type, e.g. --source=oas for OpenAPI
+  -t, --target=(xml|json|yaml)
+                  target media type, e.g. --target=yaml for alps+yaml
+  -p, --pretty    print pretty JSON|XML
+  -v, --verbose   include default values
+
+```
+
+```ShellSession
+> ./alps -h validate
+Usage: alps validate [-s=(json|xml)] [<file>]
+
+Validate ALPS document
+
+Parameters:
+      [<file>]              input file
+
+Options:
+  -s, --source=(json|xml)   source media type, e.g. --source=json for alps+json
 ```
 
 ### Examples
 
 #### Validation
 
-```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh validate --source=xml
+```ShellSession
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps validate --source=xml
 ```
-```yaml
+
+```YAML
 # Valid ALPS document
 - document: 
     media_type: application/alps+xml
@@ -76,12 +106,12 @@ e.g.
 
 `OpenAPI` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps.sh transform --source=oas --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps transform --source=oas --target=yaml
 ```
 
 `ALPS+XML` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps.sh transform --source=xml --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps transform --source=xml --target=yaml
 ```
 
 ## Contributing
@@ -113,6 +143,7 @@ Your contribution is welcome! There are many ways to motivate developers or spee
 - [x] ~0.3 CLI - validation, transformations (`ALPS+JSON` :left_right_arrow: `ALPS+XML`)~
   - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
 - [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
+  - [ ] 0.4.1 Native Executables (Ubuntu, MacOS) 
 - [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] 0.6 Effective Document Processor
 - [ ] 0.7 Semantic Equivalence
@@ -124,64 +155,9 @@ Your contribution is welcome! There are many ways to motivate developers or spee
 Fork and clone the project repository.
 Compile sources:
 
-```bash
-> cd alps
+```ShellSession
 > ./mvnw clean package install
 ```
-
-### Usage
-
-#### ALPS+YAML
-
-```xml
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-yaml</artifactId>
-    <version>0.4</version>
-</dependency>
-
-```
-
-#### ALPS+JSON
-
-```xml
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-json</artifactId>
-    <version>0.4</version>
-</dependency>
-```
-
-Add [JSON-P](https://javaee.github.io/jsonp/) provider, if it is not on the classpath already.
-
-```xml
-<dependency>
-    <groupId>org.glassfish</groupId>
-    <artifactId>jakarta.json</artifactId>
-    <version>2.0.0</version>
-</dependency>
-```
-
-#### ALPS+XML
-
-```xml
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-xml</artifactId>
-    <version>0.4</version>
-</dependency>
-```
-
-#### OpenAPI
-
-```xml
-<dependency>
-    <groupId>com.apicatalog</groupId>
-    <artifactId>alps-oas</artifactId>
-    <version>0.4</version>
-</dependency>
-```
-
 
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)

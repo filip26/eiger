@@ -6,9 +6,9 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alps-oas</artifactId>
+    <artifactId>alps.oas</artifactId>
 
-    <name>OpenAPI into ALPS</name>
+    <name>OpenAPI Reader</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-api</artifactId>
+            <artifactId>alps.api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

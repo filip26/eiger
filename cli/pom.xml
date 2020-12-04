@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    >
+
+    <modelVersion>4.0.0</modelVersion>
+    
+    <artifactId>alps.cli</artifactId>
+    <packaging>jar</packaging>
+
+    <name>ALPS Command Line Interface</name>
+
+	<parent>
+        <groupId>com.apicatalog</groupId>
+        <artifactId>alps</artifactId>
+       	<version>${revision}</version>
+    </parent>
+    
+    <properties>
+    	<mainClass>com.apicatalog.alps.cli.App</mainClass>
+    	<command.name>alps</command.name>
+    
+    	<graal.version>20.3.0</graal.version>
+    	<picocli.version>4.5.2</picocli.version>
+  		<picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
+    	<jansi.version>1.18</jansi.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps-xml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps-yaml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog</groupId>
+            <artifactId>alps.oas</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>${jakarta.json-p.version}</version>        
+        </dependency>
+        
+		<dependency>
+			<groupId>org.graalvm.nativeimage</groupId>
+			<artifactId>svm</artifactId>
+			<version>${graal.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+        <dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picocli.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli-jansi-graalvm</artifactId>
+			<version>${picocli-jansi-graalvm.version}</version>
+		</dependency>        
+        
+		<dependency>
+			<groupId>org.fusesource.jansi</groupId>
+			<artifactId>jansi</artifactId>
+			<version>${jansi.version}</version>
+		</dependency> 
+		          
+        <!--  Tests  -->      
+        <dependency>
+	        <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+		        
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.8.0</version>
+            <scope>test</scope>
+		</dependency>
+
+    </dependencies>
+
+	<build>
+    	<plugins>
+<!--            <plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-help-plugin</artifactId> -->
+<!--                 <version>3.2.0</version> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <id>show-profiles</id> -->
+<!--                         <phase>compile</phase> -->
+<!--                         <goals> -->
+<!--                             <goal>active-profiles</goal> -->
+<!--                         </goals> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin> -->
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-compiler-plugin</artifactId>
+			  <version>3.8.1</version>
+			  <configuration>
+				<source>${maven.compiler.source}</source>
+				<target>${maven.compiler.target}</target>
+			    <annotationProcessorPaths>
+			      <path>
+			        <groupId>info.picocli</groupId>
+			        <artifactId>picocli-codegen</artifactId>
+			        <version>${picocli.version}</version>
+			      </path>
+			    </annotationProcessorPaths>
+			    <compilerArgs>
+			      <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+			    </compilerArgs>
+			  </configuration>
+			</plugin>			        	
+     		<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                	<execution>
+                		<goals>
+							<goal>jar</goal>
+						</goals>
+						<id>default-jar</id>
+					</execution>
+ 				</executions>
+<!--                 <configuration> -->
+<!--                     <archive> -->
+<!--                         <manifest> -->
+<!--                             <addClasspath>true</addClasspath> -->
+<!--                             <classpathPrefix>lib</classpathPrefix> -->
+<!--                             <mainClass>com.apicatalog.alps.cli.AlpsCommand</mainClass> -->
+<!--                         </manifest> -->
+<!--                     </archive> -->
+<!--                 </configuration> -->
+            </plugin>
+<!--    			<plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-assembly-plugin</artifactId> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <phase>package</phase> -->
+<!--                         <goals> -->
+<!--                             <goal>single</goal> -->
+<!--                         </goals> -->
+<!--                         <configuration> -->
+<!--                             <appendAssemblyId>false</appendAssemblyId> -->
+<!--                             <descriptors> -->
+<!--                                 <descriptor>src/main/assembly/zip.xml</descriptor> -->
+<!--                             </descriptors> -->
+<!--                         </configuration> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin> -->
+        	<plugin>
+            	<artifactId>maven-surefire-plugin</artifactId>
+            	<version>2.22.2</version>
+				<configuration>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+ 					<excludedGroups>native-image</excludedGroups>
+				</configuration>            	
+        	</plugin>
+        	<plugin>
+            	<artifactId>maven-failsafe-plugin</artifactId>
+            	<version>2.22.2</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<groups>native-image</groups>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+        	</plugin>
+    	</plugins>
+	</build>
+
+<profiles>
+  <profile>
+    <id>native-image</id>
+    <activation>
+      <activeByDefault>false</activeByDefault>
+    </activation>
+    
+    <build>
+    	<plugins>
+    	
+    				<plugin>
+				<groupId>org.graalvm.nativeimage</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>${graal.version}</version>
+				<configuration>
+					<imageName>${command.name}</imageName>
+					<mainClass>${mainClass}</mainClass>
+<!-- 					<buildArgs>${buildArgs}</buildArgs> -->
+<!--  					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback</buildArgs> -->
+<!-- 					<buildArgs>no-server -H:+ReportUnsupportedElementsAtRuntime &#45;&#45;allow-incomplete-classpath</buildArgs> -->
+ 					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+			</plugin>
+    	</plugins>
+    </build>
+    
+  </profile>
+</profiles>
+
+</project>

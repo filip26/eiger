@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>alps-xml</artifactId>
 
-    <name>ALPS+XML Document (SAXParser)</name>
+    <name>ALPS+XML Document (org.xml.sax)</name>
 
 	<parent>
         <groupId>com.apicatalog</groupId>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.apicatalog</groupId>
-            <artifactId>alps-api</artifactId>
+            <artifactId>alps.api</artifactId>
 			<version>${project.version}</version>
         </dependency>
         
