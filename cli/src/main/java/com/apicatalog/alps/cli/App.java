@@ -37,14 +37,14 @@ public final class App {
                 }
                 
                 cli.usage(cli.getOut());
+                System.exit(cli.getCommandSpec().exitCodeOnUsageHelp());
                 return;
             }
     
-            cli.execute(args);
+            System.exit(cli.execute(args));
 
         } catch (Exception ex) {
             cli.getErr().println(ex.getMessage());
-//            ex.printStackTrace(cli.getErr());
             System.exit(cli.getCommandSpec().exitCodeOnExecutionException());
         }
     }

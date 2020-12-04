@@ -16,15 +16,20 @@
 package com.apicatalog.alps.cli;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.concurrent.Callable;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
+import com.apicatalog.alps.json.JsonDocumentWriter;
+import com.apicatalog.alps.xml.XmlDocumentWriter;
+import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -41,10 +46,10 @@ import picocli.CommandLine.Spec;
         parameterListHeading = "%nParameters:%n",
         optionListHeading = "%nOptions:%n"
         )
-final class Transformer implements Runnable {
+final class Transformer implements Callable<Integer> {
 
-    enum Source { XML, JSON, OAS };
-    enum Target { XML, JSON, YAML };
+    enum Source { XML, JSON, OAS }
+    enum Target { XML, JSON, YAML }
         
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=oas for OpenAPI", paramLabel = "(xml|json|oas)")
     Source source = null;
@@ -55,8 +60,8 @@ final class Transformer implements Runnable {
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Parameters(index = "0", arity = "0..1") 
-    File input;
+    @Parameters(index = "0", arity = "0..1", description = "input file") 
+    File file;
 
     @Option(names = { "-p", "--pretty" }, description = "print pretty JSON|XML")
     boolean pretty = false;
@@ -68,114 +73,107 @@ final class Transformer implements Runnable {
     
     Transformer() {}
     
-    public static final void transform(String...args) throws Exception {
+    public final int transform() throws Exception {
 
-        if (args.length > 5) {
-//            PrintUtils.printUsage();
-            return;
-        }
-
-        String sourcePath = null;
-        String sourceType = null;
+        String sourceMediaType = null;
         
-        String targetType = null;
-        
-        boolean prettyPrint = false;
-        boolean verbose = false;
-        
-        for (int i=0; i < args.length; i++) {
-
-            final String argument = args[i];
+        if (Source.JSON.equals(source)) {
+            sourceMediaType = Constants.MEDIA_TYPE_ALPS_JSON;
             
-            if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE_SHORT)) {
-                
-                sourceType = argument.substring(Constants.ARG_SOURCE_SHORT.length());
-                
-            } else if (sourceType == null && argument.startsWith(Constants.ARG_SOURCE)) {
+        } else if (Source.XML.equals(source)) {
+            sourceMediaType = Constants.MEDIA_TYPE_ALPS_XML;
+            
+        } else if (Source.OAS.equals(source)) {
+            sourceMediaType = Constants.MEDIA_TYPE_OPEN_API;
+        }
+        
+        if (file != null) {
+            
+            if (!file.exists()) {
+                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");            
+                return spec.exitCodeOnInvalidInput();
+            }
 
-                sourceType = argument.substring(Constants.ARG_SOURCE.length());
+            if (!file.canRead()) {
+                spec.commandLine().getErr().println("Input file '" + file + "' is not readable.");
+                return spec.exitCodeOnInvalidInput();
+            }
 
-            } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET_SHORT)) {
-                
-                targetType = argument.substring(Constants.ARG_TARGET_SHORT.length());
-                
-            } else if (targetType == null && argument.startsWith(Constants.ARG_TARGET)) {
-
-                targetType = argument.substring(Constants.ARG_TARGET.length());
-                
-            } else if (argument.startsWith(Constants.ARG_PRETTY_SHORT) || argument.startsWith(Constants.ARG_PRETTY)) {
-
-                prettyPrint = true;
-
-            } else if (argument.startsWith(Constants.ARG_VERBOSE_SHORT) || argument.startsWith(Constants.ARG_VERBOSE)) {
-
-                verbose = true;
-
-            } else if (sourcePath == null) {                
-                sourcePath = argument;
-
-            } else {
-//                PrintUtils.printUsage();
-                return;
+            if (sourceMediaType == null) {
+                sourceMediaType = Utils.detectMediaType(file);
             }
         }
-                
-        transform(sourceType, sourcePath, targetType, prettyPrint, verbose);
-    }
-    
-    private static final void transform(final String sourceType, final String sourcePath, final String targetType, final boolean prettyPrint, final boolean verbose) throws Exception {
         
-        final String sourceMediaType = Utils.getMediaType(sourceType, sourcePath, true);
-        
-        InputStream source = null;
-        
-        if (sourcePath != null) {
-            
-//            source = Utils.fileToInputStream(sourcePath);
-            
-//            if (source == null) {
-//                return;
-//            }
-            
-        } else {
-            source = System.in;
+        if (sourceMediaType == null) {
+            spec.commandLine().getErr().println("Missing '--source=(xml|json|oas)' option.");
+            return spec.exitCodeOnInvalidInput();
         }
         
-        final String targetMediaType = Utils.getMediaType(targetType, null, false);
+        return transform(sourceMediaType);
+    }
+    
+    private final int transform(final String sourceMediaType) throws Exception {
+        
+        InputStream inputStream = null;
+        
+        if (file != null) {
+            inputStream = new FileInputStream(file);
+        }
+        
+        if (inputStream == null) {
+            inputStream = System.in;
+        }
         
         try {
-            transform(sourceMediaType, source, targetMediaType, System.out, prettyPrint, verbose);
+            return transform(sourceMediaType, inputStream, spec.commandLine().getOut());
             
         } catch (DocumentParserException e) {
-//            PrintUtils.printError(e, sourceMediaType, sourcePath);
+            Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
             
         } catch (DocumentWriterException e) {
-            System.err.println(e.getMessage());
-            
+            spec.commandLine().getErr().println(e.getMessage());
         }
+        return spec.exitCodeOnExecutionException();
     }
     
-    protected static final void transform(final String sourceMediaType, final InputStream source, final String targetMediaType, final OutputStream target, boolean prettyPrint, boolean verbose) throws Exception {
+    protected final int transform(final String sourceMediaType, final InputStream source, final PrintWriter target) throws Exception {
         
-        final DocumentParser parser = Utils.getParser(sourceMediaType);
+        final DocumentParser parser;
+        
+        try {
+            parser = Utils.getParser(sourceMediaType);
+            
+        } catch (IllegalArgumentException e) {
+            spec.commandLine().getErr().println(e.getMessage());
+            return spec.exitCodeOnInvalidInput();            
+        }
         
         final Document document = parser.parse(null, source);
         
-        final DocumentWriter writer = Utils.getWriter(new OutputStreamWriter(target), targetMediaType, prettyPrint, verbose);
-
-        try {
-            writer.write(document);
-            
-        } finally {
-            writer.close();
+        try (final DocumentWriter writer = getWriter(target)) {
+            writer.write(document);            
         }
+
+        return spec.exitCodeOnExecutionException();
     }
 
     @Override
-    public void run() {
-        System.out.println("RUN !!! ");
-        
-        
-        
+    public Integer call() throws Exception {
+        return transform();
     }
+    
+    private final DocumentWriter getWriter(final Writer writer) throws DocumentWriterException {
+
+        if (Source.JSON.equals(source)) {
+            return JsonDocumentWriter.create(writer, pretty, verbose);
+            
+        } else if (Source.XML.equals(source)) {
+            return XmlDocumentWriter.create(writer, pretty, verbose);
+            
+        } else if (Source.OAS.equals(source)) {
+            return YamlDocumentWriter.create(writer, verbose);
+        }
+
+        throw new IllegalStateException();
+    }    
 }

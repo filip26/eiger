@@ -52,12 +52,12 @@ Commands:
 
 ```ShellSession
 > ./alps -h transform
-Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<input>]
+Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<file>]
 
 Transform documents into ALPS.
 
 Parameters:
-      [<input>]
+      [<file>]    input file
 
 Options:
   -s, --source=(xml|json|oas)
@@ -71,12 +71,12 @@ Options:
 
 ```ShellSession
 > ./alps -h validate
-Usage: alps validate [-s=(json|xml)] [<input>]
+Usage: alps validate [-s=(json|xml)] [<file>]
 
 Validate ALPS document
 
 Parameters:
-      [<input>]
+      [<file>]              input file
 
 Options:
   -s, --source=(json|xml)   source media type, e.g. --source=json for alps+json

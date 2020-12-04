@@ -16,6 +16,7 @@
 package com.apicatalog.alps.cli;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -45,7 +46,7 @@ import picocli.CommandLine.Spec;
         )
 final class Validator implements Callable<Integer> {
     
-    enum Source { XML, JSON };
+    enum Source { XML, JSON }
     
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(json|xml)")
     Source source = null;
@@ -53,7 +54,7 @@ final class Validator implements Callable<Integer> {
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Parameters(index = "0", arity = "0..1") 
+    @Parameters(index = "0", arity = "0..1", description = "input file") 
     File file;
     
     @Spec CommandSpec spec;
@@ -90,8 +91,7 @@ final class Validator implements Callable<Integer> {
         }
         
         if (sourceMediaType == null) {
-            spec.commandLine().getErr().println("Missing '--source' option.");
-            spec.commandLine().usage(spec.commandLine().getErr());
+            spec.commandLine().getErr().println("Missing '--source=(xml|json)' option.");
             return spec.exitCodeOnInvalidInput();
         }
 
@@ -99,13 +99,21 @@ final class Validator implements Callable<Integer> {
     }
     
     private final int validate(final String sourceMediaType) throws IOException {
+
+        final DocumentParser parser;
         
-        final DocumentParser parser = Utils.getParser(sourceMediaType);
+        try {
+            parser = Utils.getParser(sourceMediaType);
+            
+        } catch (IllegalArgumentException e) {
+            spec.commandLine().getErr().println(e.getMessage());
+            return spec.exitCodeOnInvalidInput();            
+        }
 
         InputStream inputStream = null;
         
         if (file != null) {
-            inputStream = Utils.fileToInputStream(file);
+            inputStream = new FileInputStream(file);
         }
         
         if (inputStream == null) {
@@ -116,7 +124,7 @@ final class Validator implements Callable<Integer> {
             printDocInfo(spec.commandLine().getOut(), parser.parse(null, inputStream), sourceMediaType);
                         
         } catch (DocumentParserException e) {
-            printError(spec.commandLine().getErr(), e, sourceMediaType);
+            printError(spec.commandLine().getErr(), e, sourceMediaType, file);
         }
         
         return spec.exitCodeOnSuccess();
@@ -150,7 +158,7 @@ final class Validator implements Callable<Integer> {
         out.println("      extensions: " + stats.getExtensions());
     }
 
-    private final void printError(final PrintWriter err, final DocumentParserException e, final String mediaType) {
+    public static final void printError(final PrintWriter err, final DocumentParserException e, final String mediaType, final File file) {
 
         err.println("# Invalid ALPS document");
         err.println("- error:");
