@@ -162,9 +162,9 @@ Compile sources:
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)
 - [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
-- [draft-amundsen-richardson-foster-alps-02](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02)
+- [draft-amundsen-richardson-foster-alps-05](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-05)
 - [alps.io group](https://groups.google.com/g/alps-io)
-- [alps.io homapge](http://alps.io/)
+- [alps.io hompage](http://alps.io/)
 
 ## Commercial Support
 Commercial support is available at filip26@gmail.com
