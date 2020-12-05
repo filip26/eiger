@@ -25,8 +25,8 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 Download the latest package:
 
-- [alps-cli-0.4.1-ubuntu-20.04.zip](https://github.com/filip26/alps-cli/releases/download/0.4.1/alps-cli-0.4.1-ubuntu-20.04.zip)
-- [alps-cli-0.4.1-macos-11.0.zip](https://github.com/filip26/alps-cli/releases/download/0.4.1/alps-cli-0.4.1-macos-11.0.zip)
+- [alps-cli-0.4.1-ubuntu-20.04.zip](https://bit.ly/3mPHdqo)
+- [alps-cli-0.4.1-macos-11.0.zip](https://bit.ly/3qyuwlZ)
 
 Extract the zip content and make `alps` command executable.
 
