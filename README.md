@@ -164,7 +164,7 @@ Compile sources:
 - [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
 - [draft-amundsen-richardson-foster-alps-05](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-05)
 - [alps.io group](https://groups.google.com/g/alps-io)
-- [alps.io hompage](http://alps.io/)
+- [alps.io homepage](http://alps.io/)
 
 ## Commercial Support
 Commercial support is available at filip26@gmail.com
