@@ -20,9 +20,9 @@ import java.util.Set;
 
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.yaml.Yaml;
-import com.apicatalog.yaml.YamlMappingBuilder;
-import com.apicatalog.yaml.YamlNode;
-import com.apicatalog.yaml.YamlSequenceBuilder;
+import com.apicatalog.yaml.node.YamlNode;
+import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
+import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
 final class YamlLink implements Link {
 

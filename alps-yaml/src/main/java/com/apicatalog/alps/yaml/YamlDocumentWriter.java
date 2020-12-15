@@ -36,7 +36,7 @@ public final class YamlDocumentWriter implements DocumentWriter {
     }
 
     public static final DocumentWriter create(final Writer writer, final boolean verbose) {
-        return new YamlDocumentWriter(Yaml.createWriter(writer).build(), verbose);
+        return new YamlDocumentWriter(Yaml.createWriterBuilder(writer).build(), verbose);
     }
     
     @Override

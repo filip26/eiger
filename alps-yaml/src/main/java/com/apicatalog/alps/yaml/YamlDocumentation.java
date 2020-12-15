@@ -22,11 +22,11 @@ import java.util.function.Predicate;
 
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.yaml.Yaml;
-import com.apicatalog.yaml.YamlMapping;
-import com.apicatalog.yaml.YamlMappingBuilder;
-import com.apicatalog.yaml.YamlNode;
-import com.apicatalog.yaml.YamlSequence;
-import com.apicatalog.yaml.YamlSequenceBuilder;
+import com.apicatalog.yaml.node.YamlMapping;
+import com.apicatalog.yaml.node.YamlNode;
+import com.apicatalog.yaml.node.YamlSequence;
+import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
+import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
 final class YamlDocumentation implements Documentation {
 
