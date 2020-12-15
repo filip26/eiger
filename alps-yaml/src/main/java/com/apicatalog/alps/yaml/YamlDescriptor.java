@@ -26,9 +26,9 @@ import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.yaml.Yaml;
-import com.apicatalog.yaml.YamlMappingBuilder;
-import com.apicatalog.yaml.YamlNode;
-import com.apicatalog.yaml.YamlSequenceBuilder;
+import com.apicatalog.yaml.node.YamlNode;
+import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
+import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
 final class YamlDescriptor implements Descriptor {
 

@@ -29,8 +29,8 @@ import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.yaml.Yaml;
-import com.apicatalog.yaml.YamlMapping;
-import com.apicatalog.yaml.YamlMappingBuilder;
+import com.apicatalog.yaml.node.YamlMapping;
+import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 
 public class YamlDocument implements Document {
 

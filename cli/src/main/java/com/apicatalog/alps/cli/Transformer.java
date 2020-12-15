@@ -158,7 +158,7 @@ final class Transformer implements Callable<Integer> {
             writer.write(document);            
         }
 
-        return spec.exitCodeOnExecutionException();
+        return spec.exitCodeOnSuccess();
     }
 
     @Override
