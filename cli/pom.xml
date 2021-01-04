@@ -23,7 +23,7 @@
     	<command.name>alps</command.name>
     
     	<graal.version>20.3.0</graal.version>
-    	<picocli.version>4.5.2</picocli.version>
+    	<picocli.version>4.6.1</picocli.version>
   		<picocli-jansi-graalvm.version>1.2.0</picocli-jansi-graalvm.version>
     	<jansi.version>1.18</jansi.version>
     </properties>
