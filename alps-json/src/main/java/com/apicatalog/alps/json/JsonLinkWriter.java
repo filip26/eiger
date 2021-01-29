@@ -16,6 +16,7 @@
 package com.apicatalog.alps.json;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Link;
 
@@ -51,6 +52,11 @@ final class JsonLinkWriter {
         
         if (link.rel() != null && !link.rel().isBlank()) {
             jsonLink.add(JsonConstants.RELATION, link.rel());
+        }
+        
+        // tag
+        if (!link.tag().isEmpty()) {
+            jsonLink.add(JsonConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
         }
         
         return jsonLink.build();

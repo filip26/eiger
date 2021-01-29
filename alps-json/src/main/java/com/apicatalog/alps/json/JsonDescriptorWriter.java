@@ -16,6 +16,7 @@
 package com.apicatalog.alps.json;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
@@ -61,6 +62,11 @@ final class JsonDescriptorWriter {
         descriptor.title().ifPresent(title -> jsonDescriptor.add(JsonConstants.TITLE, title));
         descriptor.returnType().ifPresent(rt -> jsonDescriptor.add(JsonConstants.RETURN_TYPE, rt.toString()));
 
+        // tag
+        if (!descriptor.tag().isEmpty()) {
+            jsonDescriptor.add(JsonConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+        }
+        
         // documentation
         JsonDocumentationWriter.toJson(descriptor.documentation(), verbose).ifPresent(doc -> jsonDescriptor.add(JsonConstants.DOCUMENTATION, doc));
         

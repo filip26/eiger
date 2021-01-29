@@ -115,6 +115,7 @@ final class JsonDocumentationParser {
             doc.type(JsonUtils.getString(contentType));
         }
         
+        doc.tag(JsonDescriptorParser.parseTag(value));
         
         return doc.build();
     } 

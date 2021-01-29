@@ -83,6 +83,9 @@ final class JsonExtensionParser {
             builder.value(JsonUtils.getString(value));
         }
         
+        // tag
+        builder.tag(JsonDescriptorParser.parseTag(jsonObject));
+        
         return parseAttributes(builder, jsonObject.entrySet()).build();
     }
 

@@ -17,7 +17,9 @@ package com.apicatalog.alps.json;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -108,6 +110,8 @@ final class JsonDescriptorParser {
         }
         
         parseReturnType(builder, jsonObject);
+        
+        builder.tag(parseTag(jsonObject));
 
         // nested descriptors
         if (jsonObject.containsKey(JsonConstants.DESCRIPTOR)) {
@@ -170,6 +174,37 @@ final class JsonDescriptorParser {
             }
         }
     }
+    
+    protected static List<String> parseTag(final JsonObject jsonObject) throws InvalidDocumentException {
+
+        // tag
+        if (jsonObject.containsKey(JsonConstants.TAG)) {
+            
+            final JsonValue tag = jsonObject.get(JsonConstants.TAG);
+            
+            if (JsonUtils.isNotString(tag)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'tag' property value must be JSON string but was " + tag);
+            }
+            
+            try {
+                final String value = JsonUtils.getString(tag);
+                
+                if (value != null && !value.isBlank()) {
+                    String[] tags = value.split("\s+");
+                    
+                    if (tags.length > 1) {
+                        return Arrays.asList(tags);
+                    }
+                }
+
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'tag' property value must be one of " + (Arrays.stream(DescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + tag);
+            }
+        }
+        
+        return Collections.emptyList();
+    }
+
 
     private static void parseReturnType(DescriptorBuilder builder, JsonObject jsonObject) throws InvalidDocumentException {
         

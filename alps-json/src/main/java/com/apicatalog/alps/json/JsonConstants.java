@@ -54,6 +54,8 @@ final class JsonConstants {
     public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
 
     public static final String CONTENT_TYPE = "contentType";
+
+    public static final String TAG = "tag";
     
     private JsonConstants() {
     }
