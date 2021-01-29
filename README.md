@@ -144,7 +144,7 @@ Compile sources:
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)
 - [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
-- [draft-amundsen-richardson-foster-alps-05](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-05)
+- [draft-amundsen-richardson-foster-alps-06](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-06)
 - [alps.io group](https://groups.google.com/g/alps-io)
 - [alps.io homepage](http://alps.io/)
 
