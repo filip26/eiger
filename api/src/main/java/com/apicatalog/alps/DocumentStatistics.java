@@ -38,23 +38,32 @@ public final class DocumentStatistics {
         
         final DocumentStatistics stats = new DocumentStatistics();
      
-        final Collection<Descriptor> descriptors = document.allDescriptors(); 
-        
-        stats.descriptors = descriptors.size();
+        stats.descriptors = document.descriptors().size();
         stats.docs = document.documentation().size();
         stats.links = document.links().size();
         stats.extensions = document.extensions().size();
+
+        add(stats, document.descriptors());
         
+        return stats;
+    }
+
+    static final void add(DocumentStatistics stats, Collection<Descriptor> descriptors) {
+        
+        stats.descriptors += descriptors.size();
+
         for (final Descriptor descriptor : descriptors) {
             
             stats.docs += descriptor.documentation().size();
             stats.links += descriptor.links().size();
             stats.extensions += descriptor.extensions().size();
+            
+            if (!descriptor.descriptors().isEmpty()) {
+                add(stats, descriptor.descriptors());
+            }
         }
-        
-        return stats;
     }
-    
+
     public long getDescriptors() {
         return descriptors;
     }

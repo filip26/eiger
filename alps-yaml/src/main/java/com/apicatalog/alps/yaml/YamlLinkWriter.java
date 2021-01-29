@@ -15,7 +15,6 @@
  */
 package com.apicatalog.alps.yaml;
 
-import java.net.URI;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.element.Link;
@@ -24,20 +23,9 @@ import com.apicatalog.yaml.node.YamlNode;
 import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
-final class YamlLink implements Link {
+final class YamlLinkWriter {
 
-    private URI href;
-    private String rel;
-    
-    @Override
-    public URI href() {
-        return href;
-    }
-
-    @Override
-    public String rel() {
-        return rel;
-    }
+    private YamlLinkWriter() {}
     
     public static final YamlNode toYaml(Set<Link> links) {
         
@@ -47,7 +35,7 @@ final class YamlLink implements Link {
         
         final YamlSequenceBuilder yamlLinks = Yaml.createSequenceBuilder();
         
-        links.stream().map(YamlLink::toYaml).forEach(yamlLinks::add);
+        links.stream().map(YamlLinkWriter::toYaml).forEach(yamlLinks::add);
         
         return yamlLinks.build();
     }

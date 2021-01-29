@@ -60,8 +60,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     
     private Set<Extension> extensions;
     
-    private Descriptor parent;
-    
     private XmlDescriptor(int index) {
         this.elementIndex = index;
     }
@@ -205,11 +203,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     }
 
     @Override
-    public Optional<Descriptor> parent() {
-        return Optional.ofNullable(parent);
-    }
-
-    @Override
     public Set<Link> links() {
         return links;
     }
@@ -255,7 +248,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
     @Override
     public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
-        dsc.parent = this;
         descriptors.add(dsc);
         stack.push(dsc);
     }

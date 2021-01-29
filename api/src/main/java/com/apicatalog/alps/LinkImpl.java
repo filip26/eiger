@@ -1,10 +1,10 @@
-package com.apicatalog.alps.api;
+package com.apicatalog.alps;
 
 import java.net.URI;
 
 import com.apicatalog.alps.dom.element.Link;
 
-public class LinkImpl implements Link {
+final class LinkImpl implements Link {
 
     final URI href;
     final String rel;

@@ -15,9 +15,6 @@
  */
 package com.apicatalog.alps.yaml;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.element.Extension;
@@ -26,34 +23,10 @@ import com.apicatalog.yaml.node.YamlNode;
 import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
-class YamlExtension implements Extension {
+final class YamlExtensionWriter {
 
-    private URI id;
-    private URI href;
-    private String value;
-    
-    private Map<String, String> attributes;
-    
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public URI id() {
-        return id;
-    }
-
-    @Override
-    public Optional<String> value() {
-        return Optional.ofNullable(value);
-    }
-    
-    @Override
-    public Map<String, String> attributes() {
-        return attributes;
-    }
-    
+    private YamlExtensionWriter() {}
+        
     public static final YamlNode toYaml(Set<Extension> extensions) {
         
         if (extensions.size() == 1) {
@@ -62,7 +35,7 @@ class YamlExtension implements Extension {
         
         final YamlSequenceBuilder yamlExt = Yaml.createSequenceBuilder();
         
-        extensions.stream().map(YamlExtension::toYaml).forEach(yamlExt::add);
+        extensions.stream().map(YamlExtensionWriter::toYaml).forEach(yamlExt::add);
         
         return yamlExt.build();
     }

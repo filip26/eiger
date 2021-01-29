@@ -41,7 +41,5 @@ public interface Descriptor {
 	
 	Set<Descriptor> descriptors();
 	
-	Optional<Descriptor> parent();
-	
 	Set<Link> links();
 }

@@ -19,7 +19,10 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
@@ -94,10 +97,37 @@ public final class JsonDocumentParser implements DocumentParser {
                 throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + JsonConstants.ROOT + "' does not contain JSON object");
             }
                 
-            return JsonDocument.parse(baseUri, alpsObject.asJsonObject());
+            return parse(baseUri, alpsObject.asJsonObject());
             
         } catch (JsonParsingException e) {
             throw new MalformedDocumentException(e.getLocation().getLineNumber(), e.getLocation().getColumnNumber(), "Document is not valid JSON document.");
         }
+    }
+    
+    public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws DocumentParserException {
+
+        final DocumentBuilder builder = Alps.createDocument(DocumentVersion.VERSION_1_0).base(baseUri);
+        
+        // documentation
+        if (alpsObject.containsKey(JsonConstants.DOCUMENTATION)) {
+            JsonDocumentationParser.parse(alpsObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);            
+        }
+        
+        // links
+        if (alpsObject.containsKey(JsonConstants.LINK)) {
+            JsonLinkParser.parse(alpsObject.get(JsonConstants.LINK)).forEach(builder::add);
+        }
+        
+        // descriptors
+        if (alpsObject.containsKey(JsonConstants.DESCRIPTOR)) {
+            JsonDescriptorParser.parse(alpsObject.get(JsonConstants.DESCRIPTOR)).forEach(builder::add);
+        }
+        
+        // extensions
+        if (alpsObject.containsKey(JsonConstants.EXTENSION)) {
+            JsonExtensionParser.parse(alpsObject.get(JsonConstants.EXTENSION)).forEach(builder::add);
+        }        
+        
+        return builder.build();
     }
 }
