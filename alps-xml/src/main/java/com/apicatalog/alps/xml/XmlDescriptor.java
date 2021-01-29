@@ -18,50 +18,28 @@ package com.apicatalog.alps.xml;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Deque;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.DescriptorBuilder;
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
-import com.apicatalog.alps.dom.element.Documentation;
-import com.apicatalog.alps.dom.element.Extension;
-import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-public class XmlDescriptor implements Descriptor, XmlElement {
+public class XmlDescriptor extends XmlElement {
 
-    private final int elementIndex;
-    
-    private URI id;
-    
-    private URI href;
-    
-    private URI definition;
-    
-    private String name;
-    
-    private DescriptorType type;
-    
-    private URI returnValue;
-    
-    private String title;
-    
-    private Set<Documentation> documentation;
-    
-    private Set<Descriptor> descriptors;
-    
-    private Set<Link> links;
-    
-    private Set<Extension> extensions;
+    final DescriptorBuilder builder;
     
     private XmlDescriptor(int index) {
-        this.elementIndex = index;
+        super(XmlConstants.DESCRIPTOR, index);
+        
+        this.builder = Alps.createDescriptor();
     }
     
     public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentParserException {
@@ -72,71 +50,71 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         
         if (id != null && !id.isBlank()) {
             try {
-                descriptor.id = URI.create(id);
+                descriptor.builder.id(URI.create(id));
                 
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
             }
         }  
 
-        final String href = attrs.getValue(XmlConstants.HREF);
-        
-        if (href != null && !href.isBlank()) {
-            try {
-                descriptor.href = URI.create(href);
-                
-            } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
-            }
-        }
+        parseHref(stack, index, attrs).ifPresent(descriptor.builder::href);
 
-        if (descriptor.id == null && descriptor.href == null) {
-            throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index));
-        }
+        parseDefinition(stack, index, attrs).ifPresent(descriptor.builder::definition);
 
-        final String definition = attrs.getValue(XmlConstants.DEFINITION);
-        
-        if (definition != null && !definition.isBlank()) {
-            try {
-                descriptor.definition = URI.create(definition);
-                
-            } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + href);
-            }
-        }
-
-        descriptor.type = parseType(stack, index, attrs);
+        descriptor.builder.type(parseType(stack, attrs));
         
         final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
-            descriptor.returnValue = URI.create(rt);
+            descriptor.builder.returnType(URI.create(rt));
         }
         
         final String name = attrs.getValue(XmlConstants.NAME);
         
         if (name != null && !name.isBlank()) {
-            descriptor.name = name;
+            descriptor.builder.name(name);
         }
 
         final String title = attrs.getValue(XmlConstants.TITLE);
         
         if (title != null && !title.isBlank()) {
-            descriptor.title = title;
+            descriptor.builder.title(title);
         }
 
-        descriptor.documentation = new LinkedHashSet<>();
-        
-        descriptor.descriptors = new LinkedHashSet<>();
-        
-        descriptor.links = new LinkedHashSet<>();
-        
-        descriptor.extensions = new LinkedHashSet<>();
-        
         return descriptor;
     }
+
+    private static final Optional<URI> parseDefinition(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
+        
+        final String definition = attrs.getValue(XmlConstants.DEFINITION);
+        
+        if (definition != null && !definition.isBlank()) {
+            try {
+                return Optional.of(URI.create(definition));
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + definition);
+            }
+        }        
+        return Optional.empty();
+    }
+
+    private static final Optional<URI> parseHref(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
+
+        final String href = attrs.getValue(XmlConstants.HREF);
+        
+        if (href != null && !href.isBlank()) {
+            try {
+                return Optional.of(URI.create(href));
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
+            }
+        }
+        return Optional.empty();
+    }
     
-    private static DescriptorType parseType(final Deque<XmlElement> stack, final int index, final Attributes attrs) throws InvalidDocumentException {
+    private static final DescriptorType parseType(final Deque<XmlElement> stack, final Attributes attrs) throws InvalidDocumentException {
 
         final String value = attrs.getValue(XmlConstants.TYPE);
         
@@ -152,66 +130,6 @@ public class XmlDescriptor implements Descriptor, XmlElement {
         }
     }
 
-    @Override
-    public String getElementName() {
-        return XmlConstants.DESCRIPTOR;
-    }
-
-    @Override
-    public Optional<URI> id() {
-        return Optional.ofNullable(id);
-    }
-
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public Optional<String> name() {
-        return Optional.ofNullable(name);
-    }
-
-    @Override
-    public DescriptorType type() {
-        return type;
-    }
-
-    @Override
-    public Optional<URI> returnType() {
-        return Optional.ofNullable(returnValue);
-    }
-    
-    @Override
-    public Optional<String> title() {
-        return Optional.ofNullable(title);
-    }
-
-    @Override
-    public Set<Documentation> documentation() {
-        return documentation;
-    }
-
-    @Override
-    public Set<Extension> extensions() {
-        return extensions;
-    }
-
-    @Override
-    public Set<Descriptor> descriptors() {
-        return descriptors;
-    }
-
-    @Override
-    public Set<Link> links() {
-        return links;
-    }
-    
-    @Override
-    public Optional<URI> definition() {
-        return Optional.ofNullable(definition);
-    }
-    
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer, final boolean verbose) throws DocumentWriterException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
@@ -239,37 +157,24 @@ public class XmlDescriptor implements Descriptor, XmlElement {
             }
         }
     }
-
+    
     @Override
-    public int getElementIndex() {
-        return elementIndex;
+    public void complete(XmlDescriptor descriptor) {
+        builder.add(descriptor.builder.build());
     }
-
+    
     @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
-        descriptors.add(dsc);
-        stack.push(dsc);
+    public void complete(XmlDocumentation doc) {
+        builder.add(doc.builder.build());
     }
-
+    
     @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
-        links.add(link);
-        stack.push(link);
+    public void complete(XmlLink link) {
+        builder.add(link.link);
     }
-
+    
     @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
-        documentation.add(doc);
-        stack.push(doc);
+    public void complete(XmlExtension ext) {
+        builder.add(ext.builder.build());
     }
-
-    @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlExtension ext = XmlExtension.create(stack, documentation.size(), attrs);
-        extensions.add(ext);
-        stack.push(ext);
-    }    
 }

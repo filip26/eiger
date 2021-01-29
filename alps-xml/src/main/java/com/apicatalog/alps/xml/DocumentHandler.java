@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
+import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -32,9 +33,12 @@ final class DocumentHandler extends DefaultHandler {
     private State state;
     
     private Deque<XmlElement> stack;
+    
+    private final URI baseUri;
 
-    public DocumentHandler() {
+    public DocumentHandler(URI baseUri) {
         this.stack = new ArrayDeque<>(10);
+        this.baseUri = baseUri;
     }
     
     @Override
@@ -76,20 +80,20 @@ final class DocumentHandler extends DefaultHandler {
             
             if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 
-                stack.peek().addDocumentation(stack, attributes);
+                stack.peek().beginDocumentation(stack, attributes);
                 state = State.DOCUMENTATION;
                 
             } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
                 
-                stack.peek().addDescriptor(stack, attributes);
+                stack.peek().beginDescriptor(stack, attributes);
     
             } else if (XmlConstants.LINK.equals(elementName)) {
                 
-                stack.peek().addLink(stack, attributes);
+                stack.peek().beginLink(stack, attributes);
     
             } else if (XmlConstants.EXTENSION.equals(elementName)) {
                 
-                stack.peek().addExtension(stack, attributes);                    
+                stack.peek().beginExtension(stack, attributes);                    
             }
 
         } catch (DocumentParserException e) {
@@ -112,19 +116,32 @@ final class DocumentHandler extends DefaultHandler {
                     
             if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
-                stack.peek().complete();
 
             } else if (stack.peek().getElementName().equals(elementName)) {
-                stack.pop().complete();
+
+                XmlElement child =  stack.pop();
+
+                if (XmlConstants.DESCRIPTOR.equals(elementName)) {
+                    stack.peek().complete((XmlDescriptor)child);                    
+                    
+                } else if (XmlConstants.LINK.equals(elementName)) {
+                    stack.peek().complete((XmlLink)child);
+                    
+                } else if (XmlConstants.EXTENSION.equals(elementName)) {
+                    stack.peek().complete((XmlExtension)child);
+                }
             }
             
         } else if (State.DOCUMENTATION.equals(state) && XmlConstants.DOCUMENTATION.equals(elementName)) {
             
-            state = State.DOCUMENT;
-            stack.pop().complete();             
+            final XmlDocumentation doc = (XmlDocumentation)stack.pop();
+            
+            stack.peek().complete(doc);
+            
+            state = State.DOCUMENT;            
         }
     }
-    
+
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         
@@ -145,7 +162,7 @@ final class DocumentHandler extends DefaultHandler {
             throw new DocumentParserException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
-        return (Document)stack.peek();
+        return ((XmlDocument)stack.peek()).build(baseUri);
     }
 
     private static final String getElementName(String localName, String qName) {
@@ -162,5 +179,4 @@ final class DocumentHandler extends DefaultHandler {
         
         return elementName;
     }
-    
 }

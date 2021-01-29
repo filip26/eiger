@@ -59,7 +59,7 @@ public class XmlDocumentParser implements DocumentParser {
         try {
             final SAXParser parser = factory.newSAXParser();
 
-            final DocumentHandler handler = new DocumentHandler();
+            final DocumentHandler handler = new DocumentHandler(baseUri);
             
             parser.parse(soure, handler);
           

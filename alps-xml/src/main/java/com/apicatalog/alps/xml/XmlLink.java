@@ -16,40 +16,22 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.util.Deque;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
 
+import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-final class XmlLink implements Link, XmlElement {
+final class XmlLink extends XmlElement {
 
-    private final int elementIndex;
-    
-    private URI href;
-    private String rel;
+    Link link;
     
     private XmlLink(int index) {
-        this.elementIndex = index;
+        super(XmlConstants.LINK, index);
     }
     
-    @Override
-    public URI href() {
-        return href;
-    }
-
-    @Override
-    public String rel() {
-        return rel;
-    }
-
-    @Override
-    public String getElementName() {
-        return XmlConstants.LINK;
-    }
-
     public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (links == null || links.isEmpty()) {
@@ -61,31 +43,24 @@ final class XmlLink implements Link, XmlElement {
         }        
     }
     
-    public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {
+    public static XmlLink create(int index, Attributes attributes) {
 
         final XmlLink link = new XmlLink(index);
         
         String href = attributes.getValue(XmlConstants.HREF);
         
-        if (href == null || href.isBlank()) {
-            //TODO
+        if (href != null && href.isBlank()) {
+            href = null;
         }
-        
-        link.href = URI.create(href);
         
         String rel = attributes.getValue(XmlConstants.RELATION);
         
-        if (rel == null || rel.isBlank()) {
-            //TODO
+        if (rel != null && rel.isBlank()) {
+            rel = null;
         }
         
-        link.rel = rel;
+        link.link = Alps.createLink(URI.create(href), rel);
         
         return link;
-    }
-    
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
-    }
+    }    
 }

@@ -15,77 +15,47 @@
  */
 package com.apicatalog.alps.xml;
 
-import java.net.URI;
-import java.util.Deque;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import org.xml.sax.Attributes;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.DocumentationBuilder;
 import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Documentation.Content;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-final class XmlDocumentation implements Documentation, XmlElement {
+final class XmlDocumentation extends XmlElement {
 
-    private final int elementIndex;
+    final DocumentationBuilder builder;
     
-    private URI href;
-    private XmlContent content;
+    final StringBuilder content;
     
-    private StringBuilder contentValue;
-    
-    private XmlDocumentation(int index) {
-        this.elementIndex = index;
-        this.contentValue = new StringBuilder();
+    private XmlDocumentation(String contentType, int index) {
+        super(XmlConstants.DOCUMENTATION, index);
+
+        this.builder = Alps.createDocumentation(contentType);
+        this.content = new StringBuilder();
     }
     
-    public static final XmlDocumentation create(final Deque<XmlElement> stack, final int index, final Attributes attributes) {
+    public static final XmlDocumentation create(final int index, final Attributes attributes) {
         
-        final XmlDocumentation doc = new XmlDocumentation(index);
+        String contentType = attributes.getValue(XmlConstants.MEDIA_TYPE);
         
-        final XmlContent content = doc.new XmlContent();
-        
-        content.type = attributes.getValue(XmlConstants.MEDIA_TYPE);
-        
-        if (content.type == null || content.type.isBlank()) {
-            content.type = "text/plain";
+        if (contentType == null || contentType.isBlank()) {
+            contentType = "text/plain";
         }
-        
-        doc.content = content;
-        
-        return doc; 
+
+        return new XmlDocumentation(contentType, index);
     }
 
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public Optional<Content> content() {
-        return Optional.ofNullable(content);
-    }
-
-    @Override
-    public String getElementName() {
-        return XmlConstants.DOCUMENTATION;
-    }
-    
     @Override
     public void addText(char[] ch, int start, int length) {        
-        contentValue.append(ch, start, length);
+        builder.append(new String(ch, start, length));
     }
 
-    @Override
-    public void complete() {
-        content.value = contentValue.toString().strip();
-        
-        if (content.value.isBlank()) {
-            content = null;
-        }
-    }
-    
     public static void write(final Set<Documentation> docs, final DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
         
         if (docs == null || docs.isEmpty()) {
@@ -108,26 +78,5 @@ final class XmlDocumentation implements Documentation, XmlElement {
             
             writer.endDoc();
         }
-    }
-    
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
-    }
-    
-    class XmlContent implements Content {
-        
-        private String value;
-        private String type;
-
-        @Override
-        public String type() {
-            return type;
-        }
-        
-        @Override
-        public String value() {
-            return value;
-        } 
     }
 }

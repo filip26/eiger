@@ -80,7 +80,7 @@ public final class OpenApiReader implements DocumentParser {
         Optional.ofNullable(oas.getPaths())
                 .map(Paths::entrySet)
                 .orElse(Collections.emptySet())
-                .forEach(e -> parsePath(e.getKey(), e.getValue(), document));
+                .forEach(e -> parsePath(e.getValue(), document));
 
         // OAS components
         Optional.ofNullable(oas.getComponents())
@@ -136,7 +136,7 @@ public final class OpenApiReader implements DocumentParser {
         return URI.create(ref);
     }
 
-    private static final void parsePath(String path, PathItem item, DocumentBuilder document) {
+    private static final void parsePath(PathItem item, DocumentBuilder document) {
 
         for (final Map.Entry<HttpMethod, Operation> op : item.readOperationsMap().entrySet()) {
             
@@ -156,14 +156,14 @@ public final class OpenApiReader implements DocumentParser {
                     .forEach(builder::add);
             
             Optional.ofNullable(op.getValue().getResponses())
-                    .map(r -> OpenApiReader.parseResponses(r, document))
+                    .map(OpenApiReader::parseResponses)
                     .ifPresent(builder::returnType);
             
             document.add(builder);
         }
     }
 
-    private static final URI parseResponses(final ApiResponses responses, final DocumentBuilder document) {
+    private static final URI parseResponses(final ApiResponses responses) {
         
         if (responses.containsKey("200")) {
             
