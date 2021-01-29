@@ -52,6 +52,8 @@ final class YamlConstants {
     public static final String EXTENSION = "ext";
     
     public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
+
+    public static final String CONTENT_TYPE = "contentType";
     
     private YamlConstants() {
     }
