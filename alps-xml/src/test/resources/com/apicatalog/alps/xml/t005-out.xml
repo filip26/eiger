@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <alps version="1.0">
-	<doc format="html"><![CDATA[ A <h1>Date of Birth</h1><br><?x abc ?><!-- comment --><p class="content">...</p>]]></doc>
+	<doc contentType="text/html"><![CDATA[ A <h1>Date of Birth</h1><br><?x abc ?><!-- comment --><p class="content">...</p>]]></doc>
 </alps>

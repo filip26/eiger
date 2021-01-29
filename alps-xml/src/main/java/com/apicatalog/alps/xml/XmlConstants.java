@@ -41,7 +41,7 @@ final class XmlConstants {
     
     public static final String RETURN_TYPE = "rt";
 
-    public static final String MEDIA_TYPE = "format";
+    public static final String FORMAT = "format";
     
     public static final String NAME = "name";
     
@@ -50,6 +50,8 @@ final class XmlConstants {
     public static final String EXTENSION = "ext";
     
     public static final String VALUE = "value";
+
+    public static final String CONTENT_TYPE = "contentType";
     
     private XmlConstants() {
         

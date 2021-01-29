@@ -182,10 +182,10 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             final Optional<String> mediaType = doc.content().map(Content::type).filter(Predicate.not(Predicate.isEqual("text").or(Predicate.isEqual("text/plain"))));
             
             if (mediaType.isPresent()) {
-                writer.writeAttribute(XmlConstants.MEDIA_TYPE, mediaType.get());
+                writer.writeAttribute(XmlConstants.CONTENT_TYPE, mediaType.get());
                 
             } else if (verbose) {
-                writer.writeAttribute(XmlConstants.MEDIA_TYPE, "text");
+                writer.writeAttribute(XmlConstants.CONTENT_TYPE, "text/plain");
             }
             
             final Optional<URI> href = doc.href();

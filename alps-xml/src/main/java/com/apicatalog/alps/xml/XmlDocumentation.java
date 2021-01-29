@@ -42,12 +42,25 @@ final class XmlDocumentation extends XmlElement {
     
     public static final XmlDocumentation create(final int index, final Attributes attributes) {
         
-        String contentType = attributes.getValue(XmlConstants.MEDIA_TYPE);
+        String contentType = attributes.getValue(XmlConstants.FORMAT);
         
         if (contentType == null || contentType.isBlank()) {
+            contentType = attributes.getValue(XmlConstants.CONTENT_TYPE);
+        
+            if (contentType == null || contentType.isBlank()) {
+                contentType = "text/plain";
+            }
+
+        } else if ("html".equalsIgnoreCase(contentType)) {
+            contentType = "text/html";
+            
+        } else if ("markdown".equalsIgnoreCase(contentType)) {
+            contentType = "text/markdown";
+            
+        } else {
             contentType = "text/plain";
         }
-
+        
         return new XmlDocumentation(contentType, index);
     }
 
