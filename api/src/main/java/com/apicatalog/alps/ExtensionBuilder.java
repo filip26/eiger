@@ -1,6 +1,7 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
+import java.util.List;
 
 import com.apicatalog.alps.dom.element.Extension;
 
@@ -16,4 +17,5 @@ public interface ExtensionBuilder {
 
     ExtensionBuilder id(URI create);
 
+    ExtensionBuilder tag(List<String> tag);
 }

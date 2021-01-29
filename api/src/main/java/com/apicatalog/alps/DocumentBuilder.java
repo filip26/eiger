@@ -20,8 +20,12 @@ public interface DocumentBuilder {
     DocumentBuilder add(DocumentationBuilder documentation);
 
     DocumentBuilder add(Extension extension);
+    
+    DocumentBuilder add(ExtensionBuilder extension);
 
     DocumentBuilder add(Link link);
+    
+    DocumentBuilder add(LinkBuilder link);
     
     DocumentBuilder base(URI baseUri);
     

@@ -1,6 +1,8 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import com.apicatalog.alps.dom.element.Documentation;
@@ -11,6 +13,7 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
     private String contentType;
     private StringBuilder text;
     private URI href;
+    private List<String> tag;
 
     public DocumentationBuilderImpl() {
         this.text = new StringBuilder();
@@ -25,7 +28,7 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
             content = new ContentImpl(contentType, text.toString());
         }
 
-        return new DocumentationImpl(href, content);
+        return new DocumentationImpl(href, content, tag);
     }
 
     @Override
@@ -59,22 +62,30 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
         return this;
     }
     
+    @Override
+    public final DocumentationBuilder tag(List<String> tag) {
+        this.tag = tag;
+        return this;
+    }
+    
     static final class DocumentationImpl implements Documentation {
 
         private final URI href;
         private final Content content;
+        private List<String> tag;
         
         public DocumentationImpl(URI href) {
-            this(href, null);
+            this(href, null, null);
         }
 
         public DocumentationImpl(Content content) {
-            this(null, content);
+            this(null, content, null);
         }
 
-        public DocumentationImpl(URI href, Content content) {
+        public DocumentationImpl(URI href, Content content, List<String> tag) {
             this.href = href;
             this.content = content;
+            this.tag = tag;
         }
 
         @Override
@@ -87,6 +98,10 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
             return Optional.ofNullable(content);
         }
         
+        @Override
+        public List<String> tag() {
+            return tag != null ? tag : Collections.emptyList();
+        }        
     }
     
     static final class ContentImpl implements Content {

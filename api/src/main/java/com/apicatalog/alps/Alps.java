@@ -1,9 +1,6 @@
 package com.apicatalog.alps;
 
-import java.net.URI;
-
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.dom.element.Link;
 
 public final class Alps {
 
@@ -19,8 +16,8 @@ public final class Alps {
         return new DocumentationBuilderImpl();
     }
     
-    public static final Link createLink(URI href, String rel) {
-        return new LinkImpl(href, rel);
+    public static final LinkBuilder createLink() {
+        return new LinkBuilderImpl();
     }
 
     public static final ExtensionBuilder createExtension() {

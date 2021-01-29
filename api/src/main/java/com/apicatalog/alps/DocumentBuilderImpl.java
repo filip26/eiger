@@ -31,9 +31,7 @@ final class DocumentBuilderImpl implements DocumentBuilder {
     }
 
     public DocumentBuilderImpl add(Descriptor descriptor) {
-        
         document.descriptors.add(descriptor);
-        
         return this;
     }
     
@@ -42,9 +40,7 @@ final class DocumentBuilderImpl implements DocumentBuilder {
     }
     
     public DocumentBuilderImpl add(Documentation documentation) {
-        
         document.documentation.add(documentation);
-        
         return this;
     }
 
@@ -53,17 +49,23 @@ final class DocumentBuilderImpl implements DocumentBuilder {
     }
 
     public DocumentBuilderImpl add(Extension extension) {
-        
         document.extensions.add(extension);
-        
         return this;
+    }
+    
+    @Override
+    public DocumentBuilder add(ExtensionBuilder extension) {
+        return add(extension.build());
     }
 
     public DocumentBuilderImpl add(Link link) {
-        
         document.links.add(link);
-        
         return this;
+    }
+    
+    @Override
+    public DocumentBuilder add(LinkBuilder link) {
+        return add(link.build());
     }
     
     @Override

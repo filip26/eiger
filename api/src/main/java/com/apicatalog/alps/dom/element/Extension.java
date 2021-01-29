@@ -17,12 +17,15 @@ package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public interface Extension  {
 
     URI id();
+    
+    List<String> tag();
     
 	/**
 	 * {@link URI} pointing to an external document which provides the definition of the extension

@@ -222,7 +222,7 @@ public final class OpenApiReader implements DocumentParser {
         
             Optional.ofNullable(server.getUrl())
                     .map(URI::create)
-                    .ifPresent(uri -> document.add(Alps.createLink(uri, "server")));
+                    .ifPresent(uri -> document.add(Alps.createLink().href(uri).rel("server")));
                 
         } catch (IllegalArgumentException e) {
             //TODO ignored, print warning

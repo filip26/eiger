@@ -16,6 +16,7 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,6 +35,8 @@ public interface Descriptor {
 	Optional<URI> returnType();
 	
 	Optional<String> title();
+	
+	List<String> tag();
 	
 	Set<Documentation> documentation();
 	

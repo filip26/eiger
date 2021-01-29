@@ -16,6 +16,7 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 public interface Documentation {
@@ -24,6 +25,8 @@ public interface Documentation {
 
 	Optional<Content> content();
 
+	List<String> tag();
+	
 	interface Content {
 	    
 	    String type();

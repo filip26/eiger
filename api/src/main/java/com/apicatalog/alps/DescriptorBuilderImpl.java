@@ -1,7 +1,9 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -78,6 +80,11 @@ final class DescriptorBuilderImpl implements DescriptorBuilder {
         return this;        
     }
 
+    public final DescriptorBuilder tag(List<String> tag) {
+        descriptor.tag = tag;
+        return this;
+    }
+
     public final Descriptor build() {
         return descriptor;
     }
@@ -90,6 +97,16 @@ final class DescriptorBuilderImpl implements DescriptorBuilder {
     @Override
     public DescriptorBuilder add(DocumentationBuilder documentation) {
         return add(documentation.build());
+    }
+    
+    @Override
+    public DescriptorBuilder add(ExtensionBuilder extension) {
+        return add(extension.build());
+    }
+    
+    @Override
+    public DescriptorBuilder add(LinkBuilder link) {
+        return add(link.build());
     }
 
     @Override
@@ -113,6 +130,8 @@ final class DescriptorBuilderImpl implements DescriptorBuilder {
         URI returnType;
         
         String title;
+        
+        List<String> tag;
         
         Set<Documentation> documentation;
         
@@ -176,5 +195,10 @@ final class DescriptorBuilderImpl implements DescriptorBuilder {
         public Optional<URI> definition() {
             return Optional.ofNullable(definition);
         }    
+        
+        @Override
+        public List<String> tag() {
+            return tag != null ? tag : Collections.emptyList();
+        }
     }
 }
