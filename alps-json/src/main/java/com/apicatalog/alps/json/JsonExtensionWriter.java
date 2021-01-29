@@ -16,6 +16,7 @@
 package com.apicatalog.alps.json;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Extension;
 
@@ -49,6 +50,11 @@ final class JsonExtensionWriter {
 
         extension.href().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
         extension.value().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
+        
+        // tag
+        if (!extension.tag().isEmpty()) {
+            jsonExt.add(JsonConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+        }
         
         // custom attributes
         extension

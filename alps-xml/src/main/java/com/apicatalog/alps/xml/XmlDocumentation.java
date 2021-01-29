@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -33,10 +34,10 @@ final class XmlDocumentation extends XmlElement {
     
     final StringBuilder content;
     
-    private XmlDocumentation(String contentType, int index) {
+    private XmlDocumentation(String contentType, int index, List<String> tag) {
         super(XmlConstants.DOCUMENTATION, index);
 
-        this.builder = Alps.createDocumentation().type(contentType);
+        this.builder = Alps.createDocumentation().type(contentType).tag(tag);
         this.content = new StringBuilder();
     }
     
@@ -52,9 +53,9 @@ final class XmlDocumentation extends XmlElement {
             contentType = "text/plain";
         }
         
-        return new XmlDocumentation(contentType, index);
+        return new XmlDocumentation(contentType, index, XmlDescriptor.parseTag(attributes));
     }
-
+        
     @Override
     public void addText(char[] ch, int start, int length) {        
         builder.append(new String(ch, start, length));

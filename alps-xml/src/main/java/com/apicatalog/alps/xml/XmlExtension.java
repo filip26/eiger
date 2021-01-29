@@ -71,6 +71,9 @@ final class XmlExtension extends XmlElement {
             ext.builder.value(value);
         }
         
+        // tag
+        ext.builder.tag(XmlDescriptor.parseTag(attributes));
+        
         // custom attributes
         for (int i = 0; i < attributes.getLength(); i++) {
             
@@ -84,7 +87,6 @@ final class XmlExtension extends XmlElement {
 
             ext.builder.attribute(attrName, attributes.getValue(i));
         }
-        
 
         return ext;
     }

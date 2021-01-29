@@ -27,12 +27,26 @@
            "name"  : "Descriptor with href but no id",
            "input" : "t004-in.json"
         },
-		{
+        {
            "@id"    : "#t005",
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "Custom attributes on 'ext'",
            "input" : "t005-in.json",
            "output" : "t005-in.json"
+         },
+     		{
+           "@id"    : "#t006",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'doc' with tags",
+           "input" : "t006-in.json",
+           "output" : "t006-in.json"
+        },
+             		{
+           "@id"    : "#t007",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'link' with tags",
+           "input" : "t007-in.json",
+           "output" : "t007-in.json"
         },                
         {
            "@id"    : "#nt001",

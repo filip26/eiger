@@ -1,0 +1,10 @@
+{
+    "alps": {
+        "version": "1.0",
+        
+        "doc": {
+                "value": "doc with tags",
+                "tag": "  tag1    tag2 "
+        }
+    }
+}

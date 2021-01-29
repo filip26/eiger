@@ -16,6 +16,7 @@
 package com.apicatalog.alps.dom.element;
 
 import java.net.URI;
+import java.util.List;
 
 public interface Link {
 
@@ -28,4 +29,6 @@ public interface Link {
 	URI href();
 	
 	String rel();
+	
+	List<String> tag();
 }

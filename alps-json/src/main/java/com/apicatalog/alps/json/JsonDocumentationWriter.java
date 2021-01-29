@@ -18,6 +18,7 @@ package com.apicatalog.alps.json;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Documentation.Content;
@@ -87,6 +88,11 @@ final class JsonDocumentationWriter {
                 .map(Documentation.Content::type)
                 .filter(Predicate.isEqual(JsonConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
                 .ifPresent(type -> doc.add(JsonConstants.CONTENT_TYPE, type));            
+        }
+        
+        // tag
+        if (!documentation.tag().isEmpty()) {
+            doc.add(JsonConstants.TAG, documentation.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
         }
     
         content

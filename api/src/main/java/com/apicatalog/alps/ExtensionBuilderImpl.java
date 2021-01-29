@@ -1,7 +1,9 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,12 +46,19 @@ final class ExtensionBuilderImpl implements ExtensionBuilder {
         extension.id = id;
         return this;
     }    
+    
+    @Override
+    public ExtensionBuilder tag(List<String> tag) {
+        extension.tag = tag;
+        return this;
+    }
 
     static final class ExtensionImpl implements Extension {
 
         private URI id;
         private URI href;
         private String value;
+        private List<String> tag;
         
         private Map<String, String> attributes;
         
@@ -71,6 +80,11 @@ final class ExtensionBuilderImpl implements ExtensionBuilder {
         @Override
         public Map<String, String> attributes() {
             return attributes;
+        }
+
+        @Override
+        public List<String> tag() {
+            return tag != null ? tag : Collections.emptyList();
         }
     }
 }

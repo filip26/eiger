@@ -16,6 +16,7 @@
 package com.apicatalog.alps.yaml;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.yaml.Yaml;
@@ -48,6 +49,11 @@ final class YamlExtensionWriter {
 
         extension.href().ifPresent(href -> yamlExt.add(YamlConstants.HREF, href.toString()));
         extension.value().ifPresent(value -> yamlExt.add(YamlConstants.VALUE, value));
+        
+        // tag
+        if (YamlDocumentWriter.isNotEmpty(extension.tag())) {
+            yamlExt.add(YamlConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+        }
         
         // custom attributes
         extension

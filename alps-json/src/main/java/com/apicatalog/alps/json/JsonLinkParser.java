@@ -79,6 +79,10 @@ final class JsonLinkParser {
             throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + jsonRel.getValueType());
         }
 
-        return Alps.createLink(href, JsonUtils.getString(jsonRel));
+        return Alps.createLink()
+                    .href(href)
+                    .rel(JsonUtils.getString(jsonRel))
+                    .tag(JsonDescriptorParser.parseTag(linkObject))
+                    .build();
     }    
 }

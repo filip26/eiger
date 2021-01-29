@@ -52,6 +52,8 @@ final class XmlConstants {
     public static final String VALUE = "value";
 
     public static final String CONTENT_TYPE = "contentType";
+
+    public static final String TAG = "tag";
     
     private XmlConstants() {
         

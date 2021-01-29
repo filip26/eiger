@@ -1,6 +1,7 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
+import java.util.List;
 
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
@@ -21,8 +22,12 @@ public interface DescriptorBuilder {
 
     
     DescriptorBuilder add(Extension extension);
+    
+    DescriptorBuilder add(ExtensionBuilder extension);
 
     DescriptorBuilder add(Link link);
+    
+    DescriptorBuilder add(LinkBuilder link);
 
     
     DescriptorBuilder id(URI id);
@@ -33,6 +38,8 @@ public interface DescriptorBuilder {
     DescriptorBuilder definition(URI definition);
     DescriptorBuilder returnType(URI returnType);
 
+    DescriptorBuilder tag(List<String> tag);
+    
     Descriptor build();
     
 }
