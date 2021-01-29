@@ -16,7 +16,6 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.util.Deque;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
@@ -51,20 +50,20 @@ final class XmlLink implements XmlElement {
         }        
     }
     
-    public static XmlLink create(Deque<XmlElement> stack, int index, Attributes attributes) {
+    public static XmlLink create(int index, Attributes attributes) {
 
         final XmlLink link = new XmlLink(index);
         
         String href = attributes.getValue(XmlConstants.HREF);
         
-        if (href == null || href.isBlank()) {
-            //TODO
+        if (href != null && href.isBlank()) {
+            href = null;
         }
         
         String rel = attributes.getValue(XmlConstants.RELATION);
         
-        if (rel == null || rel.isBlank()) {
-            //TODO
+        if (rel != null && rel.isBlank()) {
+            rel = null;
         }
         
         link.link = Alps.createLink(URI.create(href), rel);

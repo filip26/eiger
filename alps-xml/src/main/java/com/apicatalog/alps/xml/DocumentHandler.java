@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
+import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -32,9 +33,12 @@ final class DocumentHandler extends DefaultHandler {
     private State state;
     
     private Deque<XmlElement> stack;
+    
+    private final URI baseUri;
 
-    public DocumentHandler() {
+    public DocumentHandler(URI baseUri) {
         this.stack = new ArrayDeque<>(10);
+        this.baseUri = baseUri;
     }
     
     @Override
@@ -158,7 +162,7 @@ final class DocumentHandler extends DefaultHandler {
             throw new DocumentParserException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
-        return ((XmlDocument)stack.peek()).build();
+        return ((XmlDocument)stack.peek()).build(baseUri);
     }
 
     private static final String getElementName(String localName, String qName) {

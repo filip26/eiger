@@ -15,6 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
+import java.net.URI;
 import java.util.Deque;
 
 import org.xml.sax.Attributes;
@@ -76,13 +77,13 @@ final class XmlDocument implements XmlElement {
 
     @Override
     public void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlLink link = XmlLink.create(stack, links++, attrs);
+        final XmlLink link = XmlLink.create(links++, attrs);
         stack.push(link);
     }
 
     @Override
     public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDocumentation doc = XmlDocumentation.create(stack, docs++, attrs);
+        final XmlDocumentation doc = XmlDocumentation.create(docs++, attrs);
         stack.push(doc);
     }
     
@@ -132,7 +133,7 @@ final class XmlDocument implements XmlElement {
         return -1;
     }
 
-    public Document build() throws InvalidDocumentException {
-        return builder.build();
+    public Document build(URI baseUri) throws InvalidDocumentException {
+        return builder.base(baseUri).build();
     }
 }

@@ -18,6 +18,7 @@ package com.apicatalog.alps.xml;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.Optional;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
@@ -70,29 +71,11 @@ public class XmlDescriptor implements XmlElement {
             }
         }  
 
-        final String href = attrs.getValue(XmlConstants.HREF);
-        
-        if (href != null && !href.isBlank()) {
-            try {
-                descriptor.builder.href(URI.create(href));
-                
-            } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
-            }
-        }
+        parseHref(stack, index, attrs).ifPresent(descriptor.builder::href);
 
-        final String definition = attrs.getValue(XmlConstants.DEFINITION);
-        
-        if (definition != null && !definition.isBlank()) {
-            try {
-                descriptor.builder.definition(URI.create(definition));
-                
-            } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + href);
-            }
-        }
+        parseDefinition(stack, index, attrs).ifPresent(descriptor.builder::definition);
 
-        descriptor.builder.type(parseType(stack, index, attrs));
+        descriptor.builder.type(parseType(stack, attrs));
         
         final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
@@ -114,8 +97,38 @@ public class XmlDescriptor implements XmlElement {
 
         return descriptor;
     }
+
+    private static final Optional<URI> parseDefinition(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
+        
+        final String definition = attrs.getValue(XmlConstants.DEFINITION);
+        
+        if (definition != null && !definition.isBlank()) {
+            try {
+                return Optional.of(URI.create(definition));
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + definition);
+            }
+        }        
+        return Optional.empty();
+    }
+
+    private static final Optional<URI> parseHref(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
+
+        final String href = attrs.getValue(XmlConstants.HREF);
+        
+        if (href != null && !href.isBlank()) {
+            try {
+                return Optional.of(URI.create(href));
+                
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
+            }
+        }
+        return Optional.empty();
+    }
     
-    private static DescriptorType parseType(final Deque<XmlElement> stack, final int index, final Attributes attrs) throws InvalidDocumentException {
+    private static final DescriptorType parseType(final Deque<XmlElement> stack, final Attributes attrs) throws InvalidDocumentException {
 
         final String value = attrs.getValue(XmlConstants.TYPE);
         
@@ -177,13 +190,13 @@ public class XmlDescriptor implements XmlElement {
 
     @Override
     public void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlLink link = XmlLink.create(stack, links++, attrs);
+        final XmlLink link = XmlLink.create(links++, attrs);
         stack.push(link);
     }
 
     @Override
     public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation++, attrs);
+        final XmlDocumentation doc = XmlDocumentation.create(documentation++, attrs);
         stack.push(doc);
     }
 

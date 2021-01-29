@@ -15,7 +15,6 @@
  */
 package com.apicatalog.alps.xml;
 
-import java.util.Deque;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -42,7 +41,7 @@ final class XmlDocumentation implements XmlElement {
         this.content = new StringBuilder();
     }
     
-    public static final XmlDocumentation create(final Deque<XmlElement> stack, final int index, final Attributes attributes) {
+    public static final XmlDocumentation create(final int index, final Attributes attributes) {
         
         String contentType = attributes.getValue(XmlConstants.MEDIA_TYPE);
         
