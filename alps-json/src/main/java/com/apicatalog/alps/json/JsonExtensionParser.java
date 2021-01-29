@@ -17,48 +17,21 @@ package com.apicatalog.alps.json;
 
 import java.net.URI;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.ExtensionBuilder;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 
-class JsonExtension implements Extension {
-
-    private URI id;
-    private URI href;
-    private String value;
+final class JsonExtensionParser {
     
-    private Map<String, String> attributes;
-    
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public URI id() {
-        return id;
-    }
-
-    @Override
-    public Optional<String> value() {
-        return Optional.ofNullable(value);
-    }
-    
-    @Override
-    public Map<String, String> attributes() {
-        return attributes;
-    }
+    private JsonExtensionParser() {}
 
     protected static final Set<Extension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
         
@@ -83,19 +56,19 @@ class JsonExtension implements Extension {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, "An extension must have valid 'id' property but was " + jsonObject);
         }
  
-        final JsonExtension extension = new JsonExtension();
+        final ExtensionBuilder builder = Alps.createExtension();
         
         try {
             
-            extension.id = URI.create(jsonObject.getString(JsonConstants.ID));
+            builder.id(URI.create(jsonObject.getString(JsonConstants.ID)));
             
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
         }
-
+        
         // href
         if (jsonObject.containsKey(JsonConstants.HREF)) {
-            extension.href = JsonUtils.getHref(jsonObject);
+            builder.href(JsonUtils.getHref(jsonObject));
         }
         
         // value
@@ -107,12 +80,10 @@ class JsonExtension implements Extension {
                 throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION_VALUE, "An extension value must be represented as JSON string but was " + value);
             }
             
-            extension.value = JsonUtils.getString(value);
+            builder.value(JsonUtils.getString(value));
         }
         
-        // custom attributes
-        final Map<String, String> attributes = new LinkedHashMap<>();
-        
+        // custom attributes        
         for (Map.Entry<String, JsonValue> attr : jsonObject.entrySet()) {
             
             if (JsonConstants.HREF.equalsIgnoreCase(attr.getKey()) 
@@ -133,42 +104,10 @@ class JsonExtension implements Extension {
                     value = attr.toString();
                 }
                 
-                attributes.put(attr.getKey(), value);
+                builder.attribute(attr.getKey(), value);
             }
         }
         
-        extension.attributes = attributes;
-        
-        return extension;
-    }
-    
-    public static final JsonValue toJson(Set<Extension> extensions) {
-        
-        if (extensions.size() == 1) {
-            return toJson(extensions.iterator().next());
-        }
-        
-        final JsonArrayBuilder jsonExt = Json.createArrayBuilder();
-        
-        extensions.stream().map(JsonExtension::toJson).forEach(jsonExt::add);
-        
-        return jsonExt.build();
-    }
-
-    public static final JsonValue toJson(Extension extension) {
-        
-        final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
-
-        jsonExt.add(JsonConstants.ID, extension.id().toString());
-
-        extension.href().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
-        extension.value().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
-        
-        // custom attributes
-        extension
-                .attributes()
-                .forEach((name, value) -> jsonExt.add(name, JsonUtils.toValue(value)));
-        
-        return jsonExt.build();
+        return builder.build();
     }
 }

@@ -16,7 +16,6 @@
 package com.apicatalog.alps.dom;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,11 +31,11 @@ import com.apicatalog.alps.dom.element.Link;
  * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2">ALPS Document</a>
  */
 public interface Document {
-
-	Optional<Descriptor> findById(final URI id);
 	
-	Set<Descriptor> findByName(final String name);
-	
+    Optional<Descriptor> findById(final URI id);
+    
+    Set<Descriptor> findByName(final String name);
+    
 	/**
 	 * Indicates the version of the ALPS specification used in the document.
      * Currently the only valid value is '1.0'.  If no value appears, then
@@ -54,13 +53,6 @@ public interface Document {
 	 * @return top level document descriptors, never <code>null</code>
 	 */
 	Set<Descriptor> descriptors();
-	
-	/**
-	 * Returns flattened document descriptors.
-	 * 
-	 * @return all descriptors present in the document, never <code>null</code>
-	 */
-	Collection<Descriptor> allDescriptors();
 	
 	Set<Link> links();
 	

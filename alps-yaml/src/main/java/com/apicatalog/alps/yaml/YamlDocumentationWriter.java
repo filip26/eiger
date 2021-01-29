@@ -15,12 +15,12 @@
  */
 package com.apicatalog.alps.yaml;
 
-import java.net.URI;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import com.apicatalog.alps.dom.element.Documentation;
+import com.apicatalog.alps.dom.element.Documentation.Content;
 import com.apicatalog.yaml.Yaml;
 import com.apicatalog.yaml.node.YamlMapping;
 import com.apicatalog.yaml.node.YamlNode;
@@ -28,20 +28,9 @@ import com.apicatalog.yaml.node.YamlSequence;
 import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
-final class YamlDocumentation implements Documentation {
+final class YamlDocumentationWriter {
 
-    private URI href;
-    private Content content;
-    
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public Optional<Content> content() {
-        return Optional.ofNullable(content);
-    }
+    private YamlDocumentationWriter() {}
     
     public static final Optional<YamlNode> toYaml(final Set<Documentation> documentation, final boolean verbose) {
         
@@ -55,7 +44,7 @@ final class YamlDocumentation implements Documentation {
         
         final YamlSequenceBuilder yamlDocs = Yaml.createSequenceBuilder();
         
-        documentation.stream().map(d -> YamlDocumentation.toYaml(d, verbose)).flatMap(Optional::stream).forEach(yamlDocs::add);
+        documentation.stream().map(d -> YamlDocumentationWriter.toYaml(d, verbose)).flatMap(Optional::stream).forEach(yamlDocs::add);
         
         final YamlSequence array = yamlDocs.build();
         
@@ -107,21 +96,4 @@ final class YamlDocumentation implements Documentation {
         
         return yamlDoc.isEmpty() ? Optional.empty() : Optional.of(yamlDoc);
     }
-    
-    class YamlContent implements Content {
-        
-        private String type;
-        private String value;
-        
-        @Override
-        public String type() {
-            return type;
-        }
-
-        @Override
-        public String value() {
-            return value;
-        }
-    }
-    
 }

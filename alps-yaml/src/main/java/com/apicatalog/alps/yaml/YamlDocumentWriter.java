@@ -17,12 +17,15 @@ package com.apicatalog.alps.yaml;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.io.DocumentWriter;
 import com.apicatalog.yaml.Yaml;
 import com.apicatalog.yaml.YamlException;
+import com.apicatalog.yaml.node.YamlMapping;
+import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 import com.apicatalog.yaml.writer.YamlWriter;
 
 public final class YamlDocumentWriter implements DocumentWriter {
@@ -47,7 +50,7 @@ public final class YamlDocumentWriter implements DocumentWriter {
         }
 
         try {
-            writer.write(YamlDocument.toYaml(document, verbose));
+            writer.write(toYaml(document, verbose));
             
         } catch (YamlException e) {
             throw new DocumentWriterException(e);
@@ -57,5 +60,37 @@ public final class YamlDocumentWriter implements DocumentWriter {
     @Override
     public void close() throws Exception {
         writer.close();
+    }
+    
+    private static final YamlMapping toYaml(final Document document, final boolean verbose) {
+        
+        final YamlMappingBuilder alps = Yaml.createMappingBuilder();
+        
+        // version
+        alps.add(YamlConstants.VERSION, Yaml.createScalar(YamlConstants.VERSION_1_0));
+        
+        // documentation
+        YamlDocumentationWriter.toYaml(document.documentation(), verbose).ifPresent(doc -> alps.add(YamlConstants.DOCUMENTATION, doc));
+
+        // links
+        if (isNotEmpty(document.links())) {
+            alps.add(YamlConstants.LINK, YamlLinkWriter.toYaml(document.links()));
+        }
+        
+        // descriptors
+        if (isNotEmpty(document.descriptors())) {
+            alps.add(YamlConstants.DESCRIPTOR, YamlDescriptorWriter.toYaml(document.descriptors(), verbose));
+        }
+        
+        // extensions
+        if (isNotEmpty(document.extensions())) {
+            alps.add(YamlConstants.EXTENSION, YamlExtensionWriter.toYaml(document.extensions()));            
+        }
+
+        return Yaml.createMappingBuilder().add(YamlConstants.ROOT, alps).build();
+    }
+    
+    protected static final boolean isNotEmpty(final Collection<?> collection) {
+        return collection != null && !collection.isEmpty();
     }
 }

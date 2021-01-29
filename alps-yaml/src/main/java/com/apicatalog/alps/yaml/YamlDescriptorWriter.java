@@ -15,111 +15,19 @@
  */
 package com.apicatalog.alps.yaml;
 
-import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
-import com.apicatalog.alps.dom.element.Documentation;
-import com.apicatalog.alps.dom.element.Extension;
-import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.yaml.Yaml;
 import com.apicatalog.yaml.node.YamlNode;
 import com.apicatalog.yaml.node.builder.YamlMappingBuilder;
 import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 
-final class YamlDescriptor implements Descriptor {
+final class YamlDescriptorWriter {
 
-    private URI id;
-    
-    private URI href;
-    
-    private URI definition;
-    
-    private String name;
-    
-    private DescriptorType type;
-    
-    private URI returnType;
-    
-    private String title;
-    
-    private Set<Documentation> doc;
-    
-    private Set<Descriptor> descriptors;
-    
-    private Set<Link> links;
-    
-    private Set<Extension> extensions;
-    
-    private Descriptor parent;
-    
-    private YamlDescriptor() {
-        // default values
-        this.type = DescriptorType.SEMANTIC;
-    }
-    
-    @Override
-    public Optional<URI> id() {
-        return Optional.ofNullable(id);
-    }
-
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public Optional<String> name() {
-        return Optional.ofNullable(name);
-    }
-
-    @Override
-    public DescriptorType type() {
-        return type;
-    }
-
-    @Override
-    public Optional<URI> returnType() {
-        return Optional.ofNullable(returnType);
-    }
-
-    @Override
-    public Optional<String> title() {
-        return Optional.ofNullable(title);
-    }
-    
-    @Override
-    public Set<Documentation> documentation() {
-        return doc;
-    }
-
-    @Override
-    public Set<Extension> extensions() {
-        return extensions;
-    }
-
-    @Override
-    public Set<Descriptor> descriptors() {
-        return descriptors;
-    }
-
-    @Override
-    public Set<Link> links() {
-        return links;
-    }
-    
-    @Override
-    public Optional<Descriptor> parent() {
-        return Optional.ofNullable(parent);
-    }
-
-    @Override
-    public Optional<URI> definition() {
-        return Optional.ofNullable(definition);
-    }
+    private YamlDescriptorWriter() {}
     
     public static final YamlNode toYaml(final Set<Descriptor> descriptors, final boolean verbose) {
         
@@ -129,7 +37,7 @@ final class YamlDescriptor implements Descriptor {
         
         final YamlSequenceBuilder yamlDescriptors = Yaml.createSequenceBuilder();
         
-        descriptors.stream().filter(Objects::nonNull).map(d -> YamlDescriptor.toYaml(d, verbose)).forEach(yamlDescriptors::add);
+        descriptors.stream().filter(Objects::nonNull).map(d -> YamlDescriptorWriter.toYaml(d, verbose)).forEach(yamlDescriptors::add);
         
         return yamlDescriptors.build();
     }
@@ -158,21 +66,21 @@ final class YamlDescriptor implements Descriptor {
         descriptor.title().ifPresent(title -> yamlDescriptor.add(YamlConstants.TITLE, title));
         
         // documentation
-        YamlDocumentation.toYaml(descriptor.documentation(), verbose).ifPresent(doc -> yamlDescriptor.add(YamlConstants.DOCUMENTATION, doc));
+        YamlDocumentationWriter.toYaml(descriptor.documentation(), verbose).ifPresent(doc -> yamlDescriptor.add(YamlConstants.DOCUMENTATION, doc));
         
         // descriptors
-        if (YamlDocument.isNotEmpty(descriptor.descriptors())) {
+        if (YamlDocumentWriter.isNotEmpty(descriptor.descriptors())) {
             yamlDescriptor.add(YamlConstants.DESCRIPTOR, toYaml(descriptor.descriptors(), verbose));
         }
 
         // links
-        if (YamlDocument.isNotEmpty(descriptor.links())) {
-            yamlDescriptor.add(YamlConstants.LINK, YamlLink.toYaml(descriptor.links()));
+        if (YamlDocumentWriter.isNotEmpty(descriptor.links())) {
+            yamlDescriptor.add(YamlConstants.LINK, YamlLinkWriter.toYaml(descriptor.links()));
         }
 
         // extensions
-        if (YamlDocument.isNotEmpty(descriptor.extensions())) {
-            yamlDescriptor.add(YamlConstants.EXTENSION, YamlExtension.toYaml(descriptor.extensions()));
+        if (YamlDocumentWriter.isNotEmpty(descriptor.extensions())) {
+            yamlDescriptor.add(YamlConstants.EXTENSION, YamlExtensionWriter.toYaml(descriptor.extensions()));
         }
 
         return yamlDescriptor.build();

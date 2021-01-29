@@ -13,12 +13,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.apicatalog.alps.Alps;
-import com.apicatalog.alps.api.DescriptorBuilder;
-import com.apicatalog.alps.api.DocumentBuilder;
+import com.apicatalog.alps.DescriptorBuilder;
+import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.dom.element.DescriptorType;
 import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.io.DocumentParser;
 
 import io.swagger.v3.oas.models.Components;
@@ -54,7 +55,7 @@ public final class OpenApiReader implements DocumentParser {
         return parseContent(content);
     }
 
-    private static final Document parseContent(final String content) {
+    private static final Document parseContent(final String content) throws InvalidDocumentException {
         
         final SwaggerParseResult result = new OpenAPIV3Parser().readContents(content);
         //TODO errors?
@@ -95,21 +96,21 @@ public final class OpenApiReader implements DocumentParser {
 
     private static final DescriptorBuilder parseSchema(String key, String name, Schema<?> value) {
 
-        final DescriptorBuilder descriptor = Alps.createDescriptor(DescriptorType.SEMANTIC);
-        
+        final DescriptorBuilder builder = Alps.createDescriptor().type(DescriptorType.SEMANTIC);
+
         if (value.get$ref() != null) {
-            descriptor.href(toHref(value.get$ref()));
+            builder.href(toHref(value.get$ref()));
                     
         } else {
-            descriptor.id(URI.create(key));
+            builder.id(URI.create(key));
         }
-        descriptor.name(name);
+        builder.name(name);
 
         
         if ("object".equals(value.getType()) && value.getProperties() != null) {
         
-            for (Entry<String, Schema> e : value.getProperties().entrySet()) {
-                descriptor.add(parseSchema(key + "-" + e.getKey().toLowerCase(), e.getKey(), e.getValue()));
+            for (@SuppressWarnings("rawtypes") Entry<String, Schema> e : value.getProperties().entrySet()) {
+                builder.add(parseSchema(key + "-" + e.getKey().toLowerCase(), e.getKey(), e.getValue()));
             }
             
         } else if ("array".equals(value.getType())) {
@@ -117,11 +118,11 @@ public final class OpenApiReader implements DocumentParser {
             final Schema<?> items = ((ArraySchema)value).getItems(); 
             
             if (items != null) {
-                descriptor.add(parseSchema(key + "-items", null, items));
+                builder.add(parseSchema(key + "-items", null, items));
             }
         }
         
-        return descriptor;
+        return builder;
     }
     
     private static final void parseSchema(String key, Schema<?> value, DocumentBuilder document) {
@@ -139,26 +140,26 @@ public final class OpenApiReader implements DocumentParser {
 
         for (final Map.Entry<HttpMethod, Operation> op : item.readOperationsMap().entrySet()) {
             
-            final DescriptorBuilder descriptor = Alps.createDescriptor(parseMethod(op.getKey()));
+            final DescriptorBuilder builder = Alps.createDescriptor().type(parseMethod(op.getKey()));
             
             Optional.ofNullable(op.getValue().getOperationId())
                     .map(URI::create)
-                    .ifPresent(descriptor::id);
+                    .ifPresent(builder::id);
 
             Optional.ofNullable(op.getValue().getSummary())
-                    .ifPresent(descriptor::title);
+                    .ifPresent(builder::title);
 
             Optional.ofNullable(op.getValue().getParameters())
                     .orElse(Collections.emptyList())
                     .stream()
                     .map(OpenApiReader::parseParameter)
-                    .forEach(descriptor::add);
+                    .forEach(builder::add);
             
             Optional.ofNullable(op.getValue().getResponses())
                     .map(r -> OpenApiReader.parseResponses(r, document))
-                    .ifPresent(descriptor::returnType);
+                    .ifPresent(builder::returnType);
             
-            document.add(descriptor);
+            document.add(builder);
         }
     }
 
@@ -198,20 +199,20 @@ public final class OpenApiReader implements DocumentParser {
     
     private static final DescriptorBuilder parseParameter(final Parameter parameter) {
         
-        final DescriptorBuilder descriptor = Alps.createDescriptor(DescriptorType.SEMANTIC);
+        final DescriptorBuilder descriptor = Alps.createDescriptor().type(DescriptorType.SEMANTIC);
 
         descriptor.name(parameter.getName());
         
         return descriptor;
     }
     
-    private static final  void parseInfo(final Info info, final DocumentBuilder document) {
+    private static final void parseInfo(final Info info, final DocumentBuilder builder) {
         if (info.getTitle() != null && !info.getTitle().isBlank()) {
-            document.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
+            builder.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
         }
 
         if (info.getDescription() != null && !info.getDescription().isBlank()) {
-            document.add(Alps.createDocumentation("text/plain").append(info.getDescription()));
+            builder.add(Alps.createDocumentation("text/plain").append(info.getDescription()));
         }
     }
     

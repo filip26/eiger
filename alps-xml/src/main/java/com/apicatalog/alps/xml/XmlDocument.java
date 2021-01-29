@@ -16,11 +16,9 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -133,27 +131,6 @@ final class XmlDocument implements Document, XmlElement {
     @Override
     public Set<Descriptor> descriptors() {
         return descriptors;
-    }
-
-    @Override
-    public Collection<Descriptor> allDescriptors() {
-
-        if (descriptors.isEmpty()) {
-            return Collections.emptySet();
-        }
-
-        final Collection<Descriptor> result = new LinkedList<>();
-        
-        getAllDescriptors(result, descriptors);
-        
-        return result;
-    }
-    
-    private static final void getAllDescriptors(final Collection<Descriptor> result, final Set<Descriptor> descriptors) {
-        for (final Descriptor descriptor : descriptors) {
-            result.add(descriptor);
-            getAllDescriptors(result, descriptor.descriptors());
-        }
     }
 
     @Override

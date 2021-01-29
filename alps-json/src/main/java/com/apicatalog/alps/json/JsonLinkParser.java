@@ -19,31 +19,18 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 
-final class JsonLink implements Link {
+final class JsonLinkParser {
 
-    private URI href;
-    private String rel;
+    private JsonLinkParser() {}
     
-    @Override
-    public URI href() {
-        return href;
-    }
-
-    @Override
-    public String rel() {
-        return rel;
-    }
-
     public static final Set<Link> parse(final JsonValue value) throws InvalidDocumentException {
         
         final Set<Link> links = new HashSet<>();
@@ -62,7 +49,6 @@ final class JsonLink implements Link {
     
     private static final Link parseObject(final JsonObject linkObject) throws InvalidDocumentException {
         
-        final JsonLink link = new JsonLink();
         
         if (!linkObject.containsKey(JsonConstants.HREF)) {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "Link object must contain 'href' property");
@@ -72,56 +58,27 @@ final class JsonLink implements Link {
             throw new InvalidDocumentException(DocumentError.MISSING_REL, "Link object must contain 'rel' property");
         }
         
-        final JsonValue href = linkObject.get(JsonConstants.HREF);
+        final JsonValue jsonHref = linkObject.get(JsonConstants.HREF);
+        final URI href;
         
-        if (JsonUtils.isNotString(href)) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href.getValueType());
+        if (JsonUtils.isNotString(jsonHref)) {
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + jsonHref.getValueType());
         }
         
         try {
             
-            link.href = URI.create(JsonUtils.getString(href));
+            href = URI.create(JsonUtils.getString(jsonHref));
             
         } catch (IllegalArgumentException e) {
-            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + href);
+            throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + jsonHref);
         }
 
-        final JsonValue rel = linkObject.get(JsonConstants.RELATION);
+        final JsonValue jsonRel = linkObject.get(JsonConstants.RELATION);
         
-        if (JsonUtils.isNotString(href)) {
-            throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + rel.getValueType());
+        if (JsonUtils.isNotString(jsonHref)) {
+            throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + jsonRel.getValueType());
         }
 
-        link.rel = JsonUtils.getString(rel);
-        
-        return link;
-    }
-    
-    public static final JsonValue toJson(Set<Link> links) {
-        
-        if (links.size() == 1) {
-            return toJson(links.iterator().next());
-        }
-        
-        final JsonArrayBuilder jsonLinks = Json.createArrayBuilder();
-        
-        links.stream().map(JsonLink::toJson).forEach(jsonLinks::add);
-        
-        return jsonLinks.build();
-    }
-
-    public static final JsonValue toJson(Link link) {
-        
-        final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
-        
-        if (link.href() != null) {
-            jsonLink.add(JsonConstants.HREF, link.href().toString());
-        }
-        
-        if (link.rel() != null && !link.rel().isBlank()) {
-            jsonLink.add(JsonConstants.RELATION, link.rel());
-        }
-        
-        return jsonLink.build();
-    }
+        return Alps.createLink(href, JsonUtils.getString(jsonRel));
+    }    
 }

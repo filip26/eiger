@@ -16,6 +16,7 @@
 package com.apicatalog.alps.json;
 
 import java.io.Writer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.io.DocumentWriter;
 
 import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonWriter;
 import jakarta.json.stream.JsonGenerator;
 
@@ -49,11 +52,43 @@ public final class JsonDocumentWriter implements DocumentWriter {
 
     @Override
     public void write(final Document document) {
-        writer.write(JsonDocument.toJson(document, verbose));            
+        writer.write(toJson(document, verbose));            
     }
     
     @Override
     public void close() throws Exception {
         writer.close();
+    }
+    
+    protected static final JsonObject toJson(final Document document, final boolean verbose) {
+        
+        final JsonObjectBuilder alps = Json.createObjectBuilder();
+
+        // version
+        alps.add(JsonConstants.VERSION, JsonConstants.VERSION_1_0);
+        
+        // documentation
+        JsonDocumentationWriter.toJson(document.documentation(), verbose).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));
+        
+        // links
+        if (isNotEmpty(document.links())) {
+            alps.add(JsonConstants.LINK, JsonLinkWriter.toJson(document.links()));
+        }
+        
+        // descriptors
+        if (isNotEmpty(document.descriptors())) {
+            alps.add(JsonConstants.DESCRIPTOR, JsonDescriptorWriter.toJson(document.descriptors(), verbose));
+        }
+        
+        // extensions
+        if (isNotEmpty(document.extensions())) {
+            alps.add(JsonConstants.EXTENSION, JsonExtensionWriter.toJson(document.extensions()));            
+        }
+
+        return Json.createObjectBuilder().add(JsonConstants.ROOT, alps).build();
+    }
+    
+    protected static final boolean isNotEmpty(final Collection<?> collection) {
+        return collection != null && !collection.isEmpty();
     }
 }

@@ -2,37 +2,30 @@ package com.apicatalog.alps;
 
 import java.net.URI;
 
-import com.apicatalog.alps.api.DescriptorBuilder;
-import com.apicatalog.alps.api.DocumentBuilder;
-import com.apicatalog.alps.api.DocumentationBuilder;
-import com.apicatalog.alps.api.LinkImpl;
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.dom.element.Descriptor;
-import com.apicatalog.alps.dom.element.DescriptorType;
 import com.apicatalog.alps.dom.element.Link;
 
 public final class Alps {
 
     public static final DocumentBuilder createDocument(DocumentVersion version) {
-        return new DocumentBuilder(version);
+        return new DocumentBuilderImpl(version);
     }
     
-    public static final DescriptorBuilder createDescriptor(DescriptorType type) {
-        return new DescriptorBuilder(type);
-    }
-
-    public static final DescriptorBuilder createDescriptor(Descriptor descriptor) {
-        //TODO
-        throw new UnsupportedOperationException();
+    public static final DescriptorBuilder createDescriptor() {
+        return new DescriptorBuilderImpl();
     }
 
     public static final DocumentationBuilder createDocumentation(String mediaType) {
-        return new DocumentationBuilder(mediaType);
+        return new DocumentationBuilderImpl(mediaType);
     }
     
     public static final Link createLink(URI href, String rel) {
         return new LinkImpl(href, rel);
     }
 
+    public static final ExtensionBuilder createExtension() {
+        return new ExtensionBuilderImpl();
+    }
+    
     private Alps() {}
 }
