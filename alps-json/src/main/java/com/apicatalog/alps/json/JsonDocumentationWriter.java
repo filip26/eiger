@@ -79,14 +79,14 @@ final class JsonDocumentationWriter {
             content
                 .map(Documentation.Content::type)
                 .ifPresentOrElse(
-                        t -> doc.add(JsonConstants.FORMAT, t), 
-                        () -> doc.add(JsonConstants.FORMAT, "text")
+                        t -> doc.add(JsonConstants.CONTENT_TYPE, t), 
+                        () -> doc.add(JsonConstants.CONTENT_TYPE, JsonConstants.MEDIA_TYPE_TEXT_PLAIN)
                         );
         } else {
             content
                 .map(Documentation.Content::type)
                 .filter(Predicate.isEqual(JsonConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
-                .ifPresent(type -> doc.add(JsonConstants.FORMAT, type));            
+                .ifPresent(type -> doc.add(JsonConstants.CONTENT_TYPE, type));            
         }
     
         content

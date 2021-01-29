@@ -208,11 +208,11 @@ public final class OpenApiReader implements DocumentParser {
     
     private static final void parseInfo(final Info info, final DocumentBuilder builder) {
         if (info.getTitle() != null && !info.getTitle().isBlank()) {
-            builder.add(Alps.createDocumentation("text/plain").append(info.getTitle().strip()));
+            builder.add(Alps.createDocumentation().type("text/plain").append(info.getTitle().strip()));
         }
 
         if (info.getDescription() != null && !info.getDescription().isBlank()) {
-            builder.add(Alps.createDocumentation("text/plain").append(info.getDescription()));
+            builder.add(Alps.createDocumentation().type("text/plain").append(info.getDescription()));
         }
     }
     

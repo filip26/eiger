@@ -12,8 +12,7 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
     private StringBuilder text;
     private URI href;
 
-    public DocumentationBuilderImpl(String contentType) {
-        this.contentType = contentType;
+    public DocumentationBuilderImpl() {
         this.text = new StringBuilder();
     }
     
@@ -37,7 +36,20 @@ final class DocumentationBuilderImpl implements DocumentationBuilder {
 
     @Override
     public DocumentationBuilder type(String contentType) {
-        this.contentType = contentType;
+        
+        if ("html".equalsIgnoreCase(contentType)) {
+            this.contentType = "text/html";
+        
+        } else  if ("markdown".equalsIgnoreCase(contentType)) {
+            this.contentType = "text/markdown";
+        
+        } else if ("text".equalsIgnoreCase(contentType) || "asciidoc".equals(contentType)) {
+            this.contentType = "text/plain";
+            
+        } else {
+            this.contentType = contentType;    
+        }
+        
         return this;
     }
 

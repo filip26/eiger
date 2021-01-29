@@ -54,14 +54,15 @@ final class JsonDocumentationParser {
     }
     
     private static Documentation parseString(final JsonString value) {
-        return Alps.createDocumentation(JsonConstants.MEDIA_TYPE_TEXT_PLAIN)
-                   .append(value.getString())
-                   .build();
+        return Alps.createDocumentation()
+                    .type(JsonConstants.MEDIA_TYPE_TEXT_PLAIN)
+                    .append(value.getString())
+                    .build();
     }
 
     private static Documentation parseObject(final JsonObject value) throws InvalidDocumentException {
         
-        final DocumentationBuilder doc = Alps.createDocumentation(JsonConstants.MEDIA_TYPE_TEXT_PLAIN);
+        final DocumentationBuilder doc = Alps.createDocumentation().type(JsonConstants.MEDIA_TYPE_TEXT_PLAIN);
                 
         if (value.containsKey(JsonConstants.VALUE)) {
 
@@ -102,7 +103,18 @@ final class JsonDocumentationParser {
             }
 
             doc.type(JsonUtils.getString(format));
+            
+        } else if (value.containsKey(JsonConstants.CONTENT_TYPE)) {
+
+            final JsonValue contentType = value.get(JsonConstants.CONTENT_TYPE);
+            
+            if (JsonUtils.isNotString(contentType)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.contentType property must be string but was " + contentType.getValueType());
+            }
+
+            doc.type(JsonUtils.getString(contentType));
         }
+        
         
         return doc.build();
     } 

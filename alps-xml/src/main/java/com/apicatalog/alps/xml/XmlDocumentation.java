@@ -36,18 +36,22 @@ final class XmlDocumentation extends XmlElement {
     private XmlDocumentation(String contentType, int index) {
         super(XmlConstants.DOCUMENTATION, index);
 
-        this.builder = Alps.createDocumentation(contentType);
+        this.builder = Alps.createDocumentation().type(contentType);
         this.content = new StringBuilder();
     }
     
     public static final XmlDocumentation create(final int index, final Attributes attributes) {
         
-        String contentType = attributes.getValue(XmlConstants.MEDIA_TYPE);
+        String contentType = attributes.getValue(XmlConstants.FORMAT);
+        
+        if (contentType == null || contentType.isBlank()) {
+            contentType = attributes.getValue(XmlConstants.CONTENT_TYPE);
+        }
         
         if (contentType == null || contentType.isBlank()) {
             contentType = "text/plain";
         }
-
+        
         return new XmlDocumentation(contentType, index);
     }
 

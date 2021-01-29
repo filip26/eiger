@@ -78,14 +78,14 @@ final class YamlDocumentationWriter {
             content
                 .map(Documentation.Content::type)
                 .ifPresentOrElse(
-                        t -> doc.add(YamlConstants.FORMAT, Yaml.createScalar(t)), 
-                        () -> doc.add(YamlConstants.FORMAT, Yaml.createScalar("text"))
+                        t -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(t)), 
+                        () -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(YamlConstants.MEDIA_TYPE_TEXT_PLAIN))
                         );
         } else {
             content
                 .map(Documentation.Content::type)
                 .filter(Predicate.isEqual(YamlConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
-                .ifPresent(type -> doc.add(YamlConstants.FORMAT, Yaml.createScalar(type)));            
+                .ifPresent(type -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(type)));            
         }
     
         content
