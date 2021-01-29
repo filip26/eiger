@@ -83,21 +83,26 @@ final class JsonExtensionParser {
             builder.value(JsonUtils.getString(value));
         }
         
+        return parseAttributes(builder, jsonObject.entrySet()).build();
+    }
+
+    private static final ExtensionBuilder parseAttributes(ExtensionBuilder builder, Set<Map.Entry<String, JsonValue>> attrs) {
+    
         // custom attributes        
-        for (Map.Entry<String, JsonValue> attr : jsonObject.entrySet()) {
+        for (Map.Entry<String, JsonValue> attr : attrs) {
             
             if (JsonConstants.HREF.equalsIgnoreCase(attr.getKey()) 
                     || JsonConstants.VALUE.equalsIgnoreCase(attr.getKey()) 
                     || JsonConstants.ID.equalsIgnoreCase(attr.getKey())) {
                 continue;
             }
-
+    
             if (JsonUtils.isScalar(attr.getValue())) {
                 
                 final String value;
                 
                 if (JsonUtils.isString(attr.getValue())) {
-
+    
                     value = JsonUtils.getString(attr.getValue());
                     
                 } else {
@@ -108,6 +113,7 @@ final class JsonExtensionParser {
             }
         }
         
-        return builder.build();
+        return builder;
     }
+
 }
