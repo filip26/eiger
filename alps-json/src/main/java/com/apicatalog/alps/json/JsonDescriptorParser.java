@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.apicatalog.alps.Alps;
@@ -190,11 +191,7 @@ final class JsonDescriptorParser {
                 final String value = JsonUtils.getString(tag);
                 
                 if (value != null && !value.isBlank()) {
-                    String[] tags = value.split("\s+");
-                    
-                    if (tags.length > 1) {
-                        return Arrays.asList(tags);
-                    }
+                    return Arrays.asList(value.split("\s+")).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
                 }
 
             } catch (IllegalArgumentException e) {

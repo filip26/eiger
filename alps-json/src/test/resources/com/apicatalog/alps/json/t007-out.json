@@ -1,0 +1,11 @@
+{
+    "alps": {
+        "version": "1.0",
+        
+        "link": {
+            "tag": "tag1",
+            "href": "/help/contacts.html",
+            "rel": "test"
+        }        
+    }
+}

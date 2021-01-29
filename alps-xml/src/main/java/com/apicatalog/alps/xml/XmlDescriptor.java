@@ -22,6 +22,8 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.xml.sax.Attributes;
 
@@ -139,11 +141,7 @@ public class XmlDescriptor extends XmlElement {
         final String value = attrs.getValue(XmlConstants.TAG);
         
         if (value != null && !value.isBlank()) {
-            String[] tags = value.split("\s+");
-            
-            if (tags.length > 1) {
-                return Arrays.asList(tags);
-            }
+            return Arrays.asList(value.split("\s+")).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
