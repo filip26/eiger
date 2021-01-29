@@ -27,16 +27,15 @@ import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Documentation.Content;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-final class XmlDocumentation implements XmlElement {
-
-    private final int elementIndex;
+final class XmlDocumentation extends XmlElement {
 
     final DocumentationBuilder builder;
     
     final StringBuilder content;
     
     private XmlDocumentation(String contentType, int index) {
-        this.elementIndex = index;
+        super(XmlConstants.DOCUMENTATION, index);
+
         this.builder = Alps.createDocumentation(contentType);
         this.content = new StringBuilder();
     }
@@ -52,11 +51,6 @@ final class XmlDocumentation implements XmlElement {
         return new XmlDocumentation(contentType, index);
     }
 
-    @Override
-    public String getElementName() {
-        return XmlConstants.DOCUMENTATION;
-    }
-    
     @Override
     public void addText(char[] ch, int start, int length) {        
         builder.append(new String(ch, start, length));
@@ -84,10 +78,5 @@ final class XmlDocumentation implements XmlElement {
             
             writer.endDoc();
         }
-    }
-    
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
     }
 }

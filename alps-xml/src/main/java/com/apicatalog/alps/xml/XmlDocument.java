@@ -16,7 +16,6 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
-import java.util.Deque;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -25,26 +24,17 @@ import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class XmlDocument implements XmlElement {
+final class XmlDocument extends XmlElement {
 
     final DocumentBuilder builder;
     
-    private int descriptors;
-    private int links;
-    private int docs;
-    private int exts;
-    
     public XmlDocument(DocumentVersion version) {
-        this.builder = Alps.createDocument(version);
+        super(XmlConstants.DOCUMENT, -1);
         
-        this.descriptors = 0;
-        this.links = 0;
-        this.docs = 0;
-        this.exts = 0;
+        this.builder = Alps.createDocument(version);
     }
     
     public static final XmlDocument create(Attributes attrs) throws SAXException {
@@ -63,30 +53,7 @@ final class XmlDocument implements XmlElement {
         
         throw new SAXException();
     }
-    
-    @Override
-    public String getElementName() {
-        return XmlConstants.DOCUMENT;
-    }
 
-    @Override
-    public void beginDescriptor(final Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors++, attrs);
-        stack.push(dsc);
-    }
-
-    @Override
-    public void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlLink link = XmlLink.create(links++, attrs);
-        stack.push(link);
-    }
-
-    @Override
-    public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDocumentation doc = XmlDocumentation.create(docs++, attrs);
-        stack.push(doc);
-    }
-    
     @Override
     public void complete(XmlDescriptor descriptor) {
         builder.add(descriptor.builder.build());
@@ -107,12 +74,6 @@ final class XmlDocument implements XmlElement {
         builder.add(ext.builder.build());
     }
 
-    @Override
-    public void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlExtension ext = XmlExtension.create(stack, exts++, attrs);
-        stack.push(ext);
-    }
-
     public static void write(Document document, DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
 
         writer.startDocument(document.version());
@@ -128,11 +89,6 @@ final class XmlDocument implements XmlElement {
         writer.endDocument();        
     }
     
-    @Override
-    public int getElementIndex() {
-        return -1;
-    }
-
     public Document build(URI baseUri) throws InvalidDocumentException {
         return builder.base(baseUri).build();
     }

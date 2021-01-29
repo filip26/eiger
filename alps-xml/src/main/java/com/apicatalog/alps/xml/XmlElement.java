@@ -21,27 +21,61 @@ import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.error.DocumentParserException;
 
-interface XmlElement {
+abstract class XmlElement {
 
-    String getElementName();
+    private final int elementIndex;
+    private final String elementName;
     
-    int getElementIndex();
+    private int descriptors;
+    private int links;
+    private int docs;
+    private int exts;
+    
+    protected XmlElement(String elementName, int elementIndex) {
+        this.elementName = elementName;
+        this.elementIndex = elementIndex;
+        
+        this.descriptors = 0;
+        this.links = 0;
+        this.docs = 0;
+        this.exts = 0;
+    }
+    
+    public String getElementName() {
+        return elementName;
+    }
+    
+    public int getElementIndex() {
+        return elementIndex;
+    }
+    
+    public void beginDescriptor(final Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors++, attrs);
+        stack.push(dsc);
+    }
 
-    default void beginDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
-    
-    default void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    public void beginLink(Deque<XmlElement> stack, Attributes attrs) {
+        final XmlLink link = XmlLink.create(links++, attrs);
+        stack.push(link);
+    }
 
-    default void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) {
+        final XmlDocumentation doc = XmlDocumentation.create(docs++, attrs);
+        stack.push(doc);
+    }
     
-    default void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    public void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlExtension ext = XmlExtension.create(stack, exts++, attrs);
+        stack.push(ext);
+    }    
     
-    default void addText(char[] ch, int start, int length) {}
+    public void addText(char[] ch, int start, int length) {}
     
-    default void complete(XmlDescriptor descriptor) {}
+    public void complete(XmlDescriptor descriptor) {}
     
-    default void complete(XmlDocumentation doc) {}
+    public void complete(XmlDocumentation doc) {}
     
-    default void complete(XmlLink link) {}
+    public void complete(XmlLink link) {}
     
-    default void complete(XmlExtension ext) {}
+    public void complete(XmlExtension ext) {}
 }
