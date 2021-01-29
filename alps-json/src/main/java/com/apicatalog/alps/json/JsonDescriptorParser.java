@@ -108,7 +108,12 @@ final class JsonDescriptorParser {
         }
         
         parseReturnType(builder, jsonObject);
-        
+
+        // nested descriptors
+        if (jsonObject.containsKey(JsonConstants.DESCRIPTOR)) {
+            JsonDescriptorParser.parse(jsonObject.get(JsonConstants.DESCRIPTOR)).forEach(builder::add);
+        }
+
         // extensions
         if (jsonObject.containsKey(JsonConstants.EXTENSION)) {
             JsonExtensionParser.parse(jsonObject.get(JsonConstants.EXTENSION)).forEach(builder::add);
