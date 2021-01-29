@@ -109,20 +109,6 @@
 
 	<build>
     	<plugins>
-<!--            <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-help-plugin</artifactId> -->
-<!--                 <version>3.2.0</version> -->
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <id>show-profiles</id> -->
-<!--                         <phase>compile</phase> -->
-<!--                         <goals> -->
-<!--                             <goal>active-profiles</goal> -->
-<!--                         </goals> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
-<!--             </plugin> -->
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-compiler-plugin</artifactId>
@@ -154,34 +140,7 @@
 						<id>default-jar</id>
 					</execution>
  				</executions>
-<!--                 <configuration> -->
-<!--                     <archive> -->
-<!--                         <manifest> -->
-<!--                             <addClasspath>true</addClasspath> -->
-<!--                             <classpathPrefix>lib</classpathPrefix> -->
-<!--                             <mainClass>com.apicatalog.alps.cli.AlpsCommand</mainClass> -->
-<!--                         </manifest> -->
-<!--                     </archive> -->
-<!--                 </configuration> -->
             </plugin>
-<!--    			<plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-assembly-plugin</artifactId> -->
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <phase>package</phase> -->
-<!--                         <goals> -->
-<!--                             <goal>single</goal> -->
-<!--                         </goals> -->
-<!--                         <configuration> -->
-<!--                             <appendAssemblyId>false</appendAssemblyId> -->
-<!--                             <descriptors> -->
-<!--                                 <descriptor>src/main/assembly/zip.xml</descriptor> -->
-<!--                             </descriptors> -->
-<!--                         </configuration> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
-<!--             </plugin> -->
         	<plugin>
             	<artifactId>maven-surefire-plugin</artifactId>
             	<version>2.22.2</version>
@@ -228,9 +187,6 @@
 				<configuration>
 					<imageName>${command.name}</imageName>
 					<mainClass>${mainClass}</mainClass>
-<!-- 					<buildArgs>${buildArgs}</buildArgs> -->
-<!--  					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback</buildArgs> -->
-<!-- 					<buildArgs>no-server -H:+ReportUnsupportedElementsAtRuntime &#45;&#45;allow-incomplete-classpath</buildArgs> -->
  					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
 				</configuration>
 				<executions>
