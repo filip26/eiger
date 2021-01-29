@@ -17,6 +17,7 @@ package com.apicatalog.alps.yaml;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
@@ -65,6 +66,11 @@ final class YamlDescriptorWriter {
         descriptor.returnType().ifPresent(rt -> yamlDescriptor.add(YamlConstants.RETURN_TYPE, rt.toString()));
         descriptor.title().ifPresent(title -> yamlDescriptor.add(YamlConstants.TITLE, title));
         
+        // tag
+        if (YamlDocumentWriter.isNotEmpty(descriptor.tag())) {
+            yamlDescriptor.add(YamlConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+        }
+
         // documentation
         YamlDocumentationWriter.toYaml(descriptor.documentation(), verbose).ifPresent(doc -> yamlDescriptor.add(YamlConstants.DOCUMENTATION, doc));
         

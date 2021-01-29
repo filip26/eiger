@@ -16,6 +16,7 @@
 package com.apicatalog.alps.yaml;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.yaml.Yaml;
@@ -52,6 +53,11 @@ final class YamlLinkWriter {
             yamlLink.add(YamlConstants.RELATION, link.rel());
         }
         
+        // tag
+        if (YamlDocumentWriter.isNotEmpty(link.tag())) {
+            yamlLink.add(YamlConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+        }
+
         return yamlLink.build();
     }
 }

@@ -18,6 +18,7 @@ package com.apicatalog.alps.yaml;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Documentation.Content;
@@ -87,7 +88,12 @@ final class YamlDocumentationWriter {
                 .filter(Predicate.isEqual(YamlConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
                 .ifPresent(type -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(type)));            
         }
-    
+        
+        // tag
+        if (YamlDocumentWriter.isNotEmpty(documentation.tag())) {
+            doc.add(YamlConstants.TAG, documentation.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+        }
+        
         content
             .map(Documentation.Content::value)
             .ifPresent(value -> doc.add(YamlConstants.VALUE, Yaml.createScalar(value)));
