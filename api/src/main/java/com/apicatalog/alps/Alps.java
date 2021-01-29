@@ -15,8 +15,8 @@ public final class Alps {
         return new DescriptorBuilderImpl();
     }
 
-    public static final DocumentationBuilder createDocumentation(String mediaType) {
-        return new DocumentationBuilderImpl(mediaType);
+    public static final DocumentationBuilder createDocumentation() {
+        return new DocumentationBuilderImpl();
     }
     
     public static final Link createLink(URI href, String rel) {

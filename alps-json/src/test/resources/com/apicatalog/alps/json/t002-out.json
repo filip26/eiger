@@ -4,7 +4,7 @@
         
         "doc": [
             {
-                "format": "html",
+                "contentType": "text/html",
                 "value": "<b>A contact list.</b>"
             },
             "A contact list."

@@ -36,7 +36,7 @@ final class XmlDocumentation extends XmlElement {
     private XmlDocumentation(String contentType, int index) {
         super(XmlConstants.DOCUMENTATION, index);
 
-        this.builder = Alps.createDocumentation(contentType);
+        this.builder = Alps.createDocumentation().type(contentType);
         this.content = new StringBuilder();
     }
     
@@ -46,18 +46,9 @@ final class XmlDocumentation extends XmlElement {
         
         if (contentType == null || contentType.isBlank()) {
             contentType = attributes.getValue(XmlConstants.CONTENT_TYPE);
+        }
         
-            if (contentType == null || contentType.isBlank()) {
-                contentType = "text/plain";
-            }
-
-        } else if ("html".equalsIgnoreCase(contentType)) {
-            contentType = "text/html";
-            
-        } else if ("markdown".equalsIgnoreCase(contentType)) {
-            contentType = "text/markdown";
-            
-        } else {
+        if (contentType == null || contentType.isBlank()) {
             contentType = "text/plain";
         }
         
