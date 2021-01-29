@@ -141,7 +141,7 @@ public class XmlDescriptor extends XmlElement {
         final String value = attrs.getValue(XmlConstants.TAG);
         
         if (value != null && !value.isBlank()) {
-            return Arrays.asList(value.split("\s+")).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
+            return Arrays.asList(value.split("\\s+")).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
