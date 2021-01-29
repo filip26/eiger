@@ -15,49 +15,39 @@
  */
 package com.apicatalog.alps.xml;
 
-import java.net.URI;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
-import com.apicatalog.alps.dom.element.Descriptor;
-import com.apicatalog.alps.dom.element.Documentation;
-import com.apicatalog.alps.dom.element.Extension;
-import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class XmlDocument implements Document, XmlElement {
+final class XmlDocument implements XmlElement {
 
-    private DocumentVersion version;
-
-    private URI baseUri;
-
-    private Set<Documentation> documentation;
+    final DocumentBuilder builder;
     
-    private Set<Link> links;
+    private int descriptors;
+    private int links;
+    private int docs;
+    private int exts;
     
-    private Set<Extension> extensions;
-    
-    private Set<Descriptor> descriptors;
-
+    public XmlDocument(DocumentVersion version) {
+        this.builder = Alps.createDocument(version);
+        
+        this.descriptors = 0;
+        this.links = 0;
+        this.docs = 0;
+        this.exts = 0;
+    }
     
     public static final XmlDocument create(Attributes attrs) throws SAXException {
-        
-        final XmlDocument doc = new XmlDocument();
-        doc.version = readVersion(attrs);
-        doc.documentation = new LinkedHashSet<>();
-        doc.descriptors = new LinkedHashSet<>();
-        doc.links = new LinkedHashSet<>();
-        doc.extensions = new LinkedHashSet<>();
-        return doc;
+        return new XmlDocument(readVersion(attrs));
     }
 
     private static final DocumentVersion readVersion(Attributes attrs) throws SAXException {
@@ -74,118 +64,51 @@ final class XmlDocument implements Document, XmlElement {
     }
     
     @Override
-    public Optional<Descriptor> findById(final URI id) {
-        return findById(descriptors, id);
-    }
-
-    private static final Optional<Descriptor> findById(final Set<Descriptor> descriptors, final URI id) {
-        
-        for (final Descriptor descriptor : descriptors) {
-            
-            if (descriptor.id().filter(id::equals).isPresent()) {
-                return Optional.of(descriptor);
-            }
-            
-            final Optional<Descriptor> result = findById(descriptor.descriptors(), id);
-            
-            if (result.isPresent()) {
-                return result;
-            }
-            
-        }
-        return Optional.empty();
-    }
-
-    
-    @Override
-    public Set<Descriptor> findByName(final String name) {
-        
-        if (descriptors.isEmpty()) {
-            return Collections.emptySet();
-        }
-        
-        final Set<Descriptor> result = new LinkedHashSet<>();
-        
-        findByName(result, descriptors, name);
-        
-        return result;
-    }
-
-    private static final void findByName(Set<Descriptor> result, Set<Descriptor> descriptors, final String name) {
-        
-        for (final Descriptor descriptor : descriptors) {
-            
-            if (descriptor.name().filter(name::equalsIgnoreCase).isPresent()) {
-                result.add(descriptor);
-            }
-            
-            findByName(result, descriptor.descriptors(), name);
-        }        
-    }
-
-    @Override
-    public DocumentVersion version() {
-        return version;
-    }
-
-    @Override
-    public Set<Descriptor> descriptors() {
-        return descriptors;
-    }
-
-    @Override
-    public Set<Link> links() {
-        return links;
-    }
-
-    @Override
-    public Set<Documentation> documentation() {
-        return documentation;
-    }
-
-    @Override
-    public Set<Extension> extensions() {
-        return extensions;
-    }
-
-    @Override
-    public URI baseUri() {
-        return baseUri;
-    }
-
-    @Override
     public String getElementName() {
         return XmlConstants.DOCUMENT;
     }
 
     @Override
-    public void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        
-        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors.size(), attrs);
-        descriptors.add(dsc);
+    public void beginDescriptor(final Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors++, attrs);
         stack.push(dsc);
     }
 
     @Override
-    public void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        
-        final XmlLink link = XmlLink.create(stack, links.size(), attrs);
-        links.add(link);
+    public void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlLink link = XmlLink.create(stack, links++, attrs);
         stack.push(link);
     }
 
     @Override
-    public void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        
-        final XmlDocumentation doc = XmlDocumentation.create(stack, documentation.size(), attrs);
-        documentation.add(doc);
+    public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlDocumentation doc = XmlDocumentation.create(stack, docs++, attrs);
         stack.push(doc);
+    }
+    
+    @Override
+    public void complete(XmlDescriptor descriptor) {
+        builder.add(descriptor.builder.build());
     }
 
     @Override
-    public void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlExtension ext = XmlExtension.create(stack, extensions.size(), attrs);
-        extensions.add(ext);
+    public void complete(XmlDocumentation doc) {
+        builder.add(doc.builder.build());
+    }
+    
+    @Override
+    public void complete(XmlLink link) {
+        builder.add(link.link);
+    }
+    
+    @Override
+    public void complete(XmlExtension ext) {
+        builder.add(ext.builder.build());
+    }
+
+    @Override
+    public void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
+        final XmlExtension ext = XmlExtension.create(stack, exts++, attrs);
         stack.push(ext);
     }
 
@@ -207,5 +130,9 @@ final class XmlDocument implements Document, XmlElement {
     @Override
     public int getElementIndex() {
         return -1;
+    }
+
+    public Document build() throws InvalidDocumentException {
+        return builder.build();
     }
 }

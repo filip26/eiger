@@ -27,15 +27,21 @@ interface XmlElement {
     
     int getElementIndex();
 
-    default void addDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    default void beginDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
-    default void addLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    default void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
 
-    default void addDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    default void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
-    default void addExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
+    default void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {}
     
     default void addText(char[] ch, int start, int length) {}
     
-    default void complete() {}
+    default void complete(XmlDescriptor descriptor) {}
+    
+    default void complete(XmlDocumentation doc) {}
+    
+    default void complete(XmlLink link) {}
+    
+    default void complete(XmlExtension ext) {}
 }

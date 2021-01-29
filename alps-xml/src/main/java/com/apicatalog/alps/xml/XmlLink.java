@@ -21,30 +21,20 @@ import java.util.Set;
 
 import org.xml.sax.Attributes;
 
+import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-final class XmlLink implements Link, XmlElement {
+final class XmlLink implements XmlElement {
 
     private final int elementIndex;
     
-    private URI href;
-    private String rel;
+    Link link;
     
     private XmlLink(int index) {
         this.elementIndex = index;
     }
     
-    @Override
-    public URI href() {
-        return href;
-    }
-
-    @Override
-    public String rel() {
-        return rel;
-    }
-
     @Override
     public String getElementName() {
         return XmlConstants.LINK;
@@ -71,15 +61,13 @@ final class XmlLink implements Link, XmlElement {
             //TODO
         }
         
-        link.href = URI.create(href);
-        
         String rel = attributes.getValue(XmlConstants.RELATION);
         
         if (rel == null || rel.isBlank()) {
             //TODO
         }
         
-        link.rel = rel;
+        link.link = Alps.createLink(URI.create(href), rel);
         
         return link;
     }

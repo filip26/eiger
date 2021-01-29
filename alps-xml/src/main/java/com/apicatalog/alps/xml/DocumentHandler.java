@@ -76,20 +76,20 @@ final class DocumentHandler extends DefaultHandler {
             
             if (XmlConstants.DOCUMENTATION.equals(elementName)) {
                 
-                stack.peek().addDocumentation(stack, attributes);
+                stack.peek().beginDocumentation(stack, attributes);
                 state = State.DOCUMENTATION;
                 
             } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
                 
-                stack.peek().addDescriptor(stack, attributes);
+                stack.peek().beginDescriptor(stack, attributes);
     
             } else if (XmlConstants.LINK.equals(elementName)) {
                 
-                stack.peek().addLink(stack, attributes);
+                stack.peek().beginLink(stack, attributes);
     
             } else if (XmlConstants.EXTENSION.equals(elementName)) {
                 
-                stack.peek().addExtension(stack, attributes);                    
+                stack.peek().beginExtension(stack, attributes);                    
             }
 
         } catch (DocumentParserException e) {
@@ -112,19 +112,32 @@ final class DocumentHandler extends DefaultHandler {
                     
             if (XmlConstants.DOCUMENT.equals(elementName)) {
                 state = State.DONE;
-                stack.peek().complete();
 
             } else if (stack.peek().getElementName().equals(elementName)) {
-                stack.pop().complete();
+
+                XmlElement child =  stack.pop();
+
+                if (XmlConstants.DESCRIPTOR.equals(elementName)) {
+                    stack.peek().complete((XmlDescriptor)child);                    
+                    
+                } else if (XmlConstants.LINK.equals(elementName)) {
+                    stack.peek().complete((XmlLink)child);
+                    
+                } else if (XmlConstants.EXTENSION.equals(elementName)) {
+                    stack.peek().complete((XmlExtension)child);
+                }
             }
             
         } else if (State.DOCUMENTATION.equals(state) && XmlConstants.DOCUMENTATION.equals(elementName)) {
             
-            state = State.DOCUMENT;
-            stack.pop().complete();             
+            final XmlDocumentation doc = (XmlDocumentation)stack.pop();
+            
+            stack.peek().complete(doc);
+            
+            state = State.DOCUMENT;            
         }
     }
-    
+
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         
@@ -145,7 +158,7 @@ final class DocumentHandler extends DefaultHandler {
             throw new DocumentParserException("The ALPS document declaration is unenclosed, expected " + stack.peek());
         }
         
-        return (Document)stack.peek();
+        return ((XmlDocument)stack.peek()).build();
     }
 
     private static final String getElementName(String localName, String qName) {

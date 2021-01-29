@@ -17,32 +17,26 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.xml.sax.Attributes;
 
+import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.ExtensionBuilder;
 import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class XmlExtension implements Extension, XmlElement {
+final class XmlExtension implements XmlElement {
 
-    private URI id; 
-    
-    private URI href;
-    
-    private String value;
-    
-    private Map<String, String> attributes;
+    final ExtensionBuilder builder;
     
     private int elementIndex;
     
     private XmlExtension(int index) {
         this.elementIndex = index;
+        this.builder = Alps.createExtension();
     }
     
     @Override
@@ -55,26 +49,6 @@ final class XmlExtension implements Extension, XmlElement {
         return elementIndex;
     }
 
-    @Override
-    public Optional<URI> href() {
-        return Optional.ofNullable(href);
-    }
-
-    @Override
-    public URI id() {
-        return id;
-    }
-
-    @Override
-    public Optional<String> value() {
-        return Optional.ofNullable(value);
-    }
-    
-    @Override
-    public Map<String, String> attributes() {
-        return attributes;
-    }
-
     public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) throws InvalidDocumentException {
         
         final XmlExtension ext = new XmlExtension(elementIndex);
@@ -84,7 +58,7 @@ final class XmlExtension implements Extension, XmlElement {
         if (id != null && !id.isBlank()) {
             
             try {
-                ext.id = URI.create(id);
+                ext.builder.id(URI.create(id));
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension id must be valid URI but was " + id);
             }
@@ -97,7 +71,7 @@ final class XmlExtension implements Extension, XmlElement {
         
         if (href != null && !href.isBlank()) {
             try {
-                ext.href = URI.create(href);
+                ext.builder.href(URI.create(href));
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension href must be valid URI but was " + href);
             }
@@ -106,13 +80,11 @@ final class XmlExtension implements Extension, XmlElement {
         final String value = attributes.getValue(XmlConstants.VALUE);
         
         if (value != null && !value.isBlank()) {
-            ext.value = value;
+            ext.builder.value(value);
         }
         
-        final Map<String, String> custom = new LinkedHashMap<>();
-        
         // custom attributes
-        for (int i=0; i < attributes.getLength(); i++) {
+        for (int i = 0; i < attributes.getLength(); i++) {
             
             String attrName = attributes.getLocalName(i);
             
@@ -122,10 +94,9 @@ final class XmlExtension implements Extension, XmlElement {
                 continue;
             }
 
-            custom.put(attrName, attributes.getValue(i));
+            ext.builder.attribute(attrName, attributes.getValue(i));
         }
         
-        ext.attributes = custom;
 
         return ext;
     }

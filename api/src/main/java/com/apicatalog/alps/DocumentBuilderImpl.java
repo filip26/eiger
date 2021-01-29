@@ -1,7 +1,6 @@
 package com.apicatalog.alps;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -19,31 +18,19 @@ final class DocumentBuilderImpl implements DocumentBuilder {
     final DocumentImpl document;
     
     public DocumentBuilderImpl(DocumentVersion version) {
-        this.document = new DocumentImpl(version);  
+        this.document = new DocumentImpl(version);
+        
+        this.document.documentation = new LinkedHashSet<>();
+        this.document.links = new LinkedHashSet<>();
+        this.document.descriptors = new LinkedHashSet<>();
+        this.document.extensions = new LinkedHashSet<>();        
     }
     
     public Document build() {
-        
-        if (document.documentation == null) {
-            document.documentation = Collections.emptySet();
-        }
-        
-        if (document.links == null) {
-            document.links = Collections.emptySet();
-        }
-        
-        if (document.descriptors == null) {
-            document.descriptors = Collections.emptySet();
-        }
-
         return document;
     }
 
     public DocumentBuilderImpl add(Descriptor descriptor) {
-        
-        if (document.descriptors == null) {
-            document.descriptors = new LinkedHashSet<>();
-        }
         
         document.descriptors.add(descriptor);
         
@@ -56,22 +43,7 @@ final class DocumentBuilderImpl implements DocumentBuilder {
     
     public DocumentBuilderImpl add(Documentation documentation) {
         
-        if (document.documentation == null) {
-            document.documentation = new LinkedHashSet<>();
-        }
-        
         document.documentation.add(documentation);
-        
-        return this;
-    }
-
-    public DocumentBuilderImpl add(Extension extension) {
-        
-        if (document.extensions == null) {
-            document.extensions = new LinkedHashSet<>();
-        }
-        
-        document.extensions.add(extension);
         
         return this;
     }
@@ -80,12 +52,16 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         return add(documentation.build());
     }
 
-    public DocumentBuilderImpl add(Link link) {
-        if (document.links == null) {
-            document.links = new LinkedHashSet<>();
-        }
+    public DocumentBuilderImpl add(Extension extension) {
         
-        document.links().add(link);
+        document.extensions.add(extension);
+        
+        return this;
+    }
+
+    public DocumentBuilderImpl add(Link link) {
+        
+        document.links.add(link);
         
         return this;
     }
