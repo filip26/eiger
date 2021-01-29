@@ -70,28 +70,8 @@ final class JsonDescriptorParser {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, "Descriptor must define valid 'id' or 'href' property");            
         }
         
-        // id
-        if (jsonObject.containsKey(JsonConstants.ID)) {
-            if (JsonUtils.isNotString(jsonObject.get(JsonConstants.ID))) {
-                throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(JsonConstants.ID));
-            }
-            
-            try {
-                builder.id(URI.create(jsonObject.getString(JsonConstants.ID)));
-
-            } catch (IllegalArgumentException e) {
-                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
-            }            
-        }
-
-        // href
-        if (jsonObject.containsKey(JsonConstants.HREF)) {
-            builder.href(JsonUtils.getHref(jsonObject));
-        }
-
-        if (jsonObject.containsKey(JsonConstants.DEFINITION)) {
-            builder.href(JsonUtils.getDefinition(jsonObject));
-        }
+        parseId(builder, jsonObject);
+        parseHref(builder, jsonObject);
 
         // name
         if (jsonObject.containsKey(JsonConstants.NAME)) {
@@ -115,6 +95,59 @@ final class JsonDescriptorParser {
             builder.title(JsonUtils.getString(title));
         }
 
+        parseType(builder, jsonObject);
+
+        // documentation
+        if (jsonObject.containsKey(JsonConstants.DOCUMENTATION)) {
+            JsonDocumentationParser.parse(jsonObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);
+        }
+        
+        // links
+        if (jsonObject.containsKey(JsonConstants.LINK)) {
+            JsonLinkParser.parse(jsonObject.get(JsonConstants.LINK)).forEach(builder::add);
+        }
+        
+        parseReturnType(builder, jsonObject);
+        
+        // extensions
+        if (jsonObject.containsKey(JsonConstants.EXTENSION)) {
+            JsonExtensionParser.parse(jsonObject.get(JsonConstants.EXTENSION)).forEach(builder::add);
+        }
+        
+        return builder.build();
+    }
+    
+    private static void parseId(DescriptorBuilder builder, JsonObject jsonObject) throws InvalidDocumentException {
+        
+        // id
+        if (jsonObject.containsKey(JsonConstants.ID)) {
+            if (JsonUtils.isNotString(jsonObject.get(JsonConstants.ID))) {
+                throw new InvalidDocumentException(DocumentError.INVALID_ID, "The 'id' property value must be valid URI represented as JSON string but was " + jsonObject.get(JsonConstants.ID));
+            }
+            
+            try {
+                builder.id(URI.create(jsonObject.getString(JsonConstants.ID)));
+
+            } catch (IllegalArgumentException e) {
+                throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'id' must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
+            }            
+        }
+    }
+    
+    private static void parseHref(DescriptorBuilder builder, JsonObject jsonObject) throws InvalidDocumentException {
+        
+        // href
+        if (jsonObject.containsKey(JsonConstants.HREF)) {
+            builder.href(JsonUtils.getHref(jsonObject));
+        }
+
+        if (jsonObject.containsKey(JsonConstants.DEFINITION)) {
+            builder.href(JsonUtils.getDefinition(jsonObject));
+        }
+    }
+    
+    private static void parseType(DescriptorBuilder builder, JsonObject jsonObject) throws InvalidDocumentException {
+
         // type
         if (jsonObject.containsKey(JsonConstants.TYPE)) {
             
@@ -131,16 +164,9 @@ final class JsonDescriptorParser {
                 throw new InvalidDocumentException(DocumentError.INVALID_TYPE, "The 'type' property value must be one of " + (Arrays.stream(DescriptorType.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.joining(", " ))) +  " but was " + type);
             }
         }
+    }
 
-        // documentation
-        if (jsonObject.containsKey(JsonConstants.DOCUMENTATION)) {
-            JsonDocumentationParser.parse(jsonObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);
-        }
-        
-        // links
-        if (jsonObject.containsKey(JsonConstants.LINK)) {
-            JsonLinkParser.parse(jsonObject.get(JsonConstants.LINK)).forEach(builder::add);
-        }
+    private static void parseReturnType(DescriptorBuilder builder, JsonObject jsonObject) throws InvalidDocumentException {
         
         // return type
         if (jsonObject.containsKey(JsonConstants.RETURN_TYPE)) {
@@ -157,18 +183,6 @@ final class JsonDescriptorParser {
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "The 'rt' property value must be URI represented as JSON string but was " + returnType);
             }            
-        }
-        
-        // nested descriptors
-        if (jsonObject.containsKey(JsonConstants.DESCRIPTOR)) {
-            JsonDescriptorParser.parse(jsonObject.get(JsonConstants.DESCRIPTOR)).forEach(builder::add);            
-        }
-        
-        // extensions
-        if (jsonObject.containsKey(JsonConstants.EXTENSION)) {
-            JsonExtensionParser.parse(jsonObject.get(JsonConstants.EXTENSION)).forEach(builder::add);
-        }
-        
-        return builder.build();
+        }        
     }
 }
