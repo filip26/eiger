@@ -17,7 +17,9 @@ package com.apicatalog.alps.xml;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,9 +62,9 @@ public class XmlDescriptor extends XmlElement {
         parseHref(stack, index, attrs).ifPresent(descriptor.builder::href);
 
         parseDefinition(stack, index, attrs).ifPresent(descriptor.builder::definition);
-
-        descriptor.builder.type(parseType(stack, attrs));
         
+        descriptor.builder.type(parseType(stack, attrs));
+
         final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
         
         if (rt != null && !rt.isBlank()) {
@@ -81,6 +83,8 @@ public class XmlDescriptor extends XmlElement {
             descriptor.builder.title(title);
         }
 
+        descriptor.builder.tag(parseTag(attrs));
+        
         return descriptor;
     }
 
@@ -128,6 +132,20 @@ public class XmlDescriptor extends XmlElement {
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.INVALID_TYPE, XPathUtil.getPath(stack, XmlConstants.TYPE), "Expected one of " + Arrays.toString(DescriptorType.values()) + " but was " + value);
         }
+    }
+
+    protected static final List<String> parseTag(final Attributes attrs) {
+
+        final String value = attrs.getValue(XmlConstants.TAG);
+        
+        if (value != null && !value.isBlank()) {
+            String[] tags = value.split("\s+");
+            
+            if (tags.length > 1) {
+                return Arrays.asList(tags);
+            }
+        }
+        return Collections.emptyList();
     }
 
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer, final boolean verbose) throws DocumentWriterException {

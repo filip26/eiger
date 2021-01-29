@@ -59,7 +59,11 @@ final class XmlLink extends XmlElement {
             rel = null;
         }
         
-        link.link = Alps.createLink().href(URI.create(href)).rel(rel).build();
+        link.link = Alps.createLink()
+                        .href(URI.create(href))
+                        .rel(rel)
+                        .tag(XmlDescriptor.parseTag(attributes))
+                        .build();
         
         return link;
     }    

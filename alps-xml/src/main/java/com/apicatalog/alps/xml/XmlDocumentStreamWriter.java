@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -137,6 +138,11 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             if (title.isPresent()) {
                 writer.writeAttribute(XmlConstants.TITLE, title.get());
             }
+            
+            // tag
+            if (!descriptor.tag().isEmpty()) {
+                writer.writeAttribute(XmlConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+            }
 
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
@@ -192,6 +198,11 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             
             if (href.isPresent()) {
                 writer.writeAttribute(XmlConstants.HREF, href.get().toString());
+            }
+            
+            // tag
+            if (!doc.tag().isEmpty()) {
+                writer.writeAttribute(XmlConstants.TAG, doc.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
             }
 
         } catch (XMLStreamException e) {
@@ -257,6 +268,11 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             if (rel != null && !rel.isBlank()) {
                 writer.writeAttribute(XmlConstants.RELATION, rel);
             }
+            
+            // tag
+            if (!link.tag().isEmpty()) {
+                writer.writeAttribute(XmlConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
+            }
 
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
@@ -291,6 +307,11 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             
             if (value.isPresent()) {
                 writer.writeAttribute(XmlConstants.VALUE, value.get());
+            }
+            
+            // tag
+            if (!extension.tag().isEmpty()) {
+                writer.writeAttribute(XmlConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
             }
             
             for (Map.Entry<String, String> attr : extension.attributes().entrySet()) {
