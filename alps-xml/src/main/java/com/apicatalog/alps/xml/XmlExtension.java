@@ -28,27 +28,15 @@ import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-final class XmlExtension implements XmlElement {
+final class XmlExtension extends XmlElement {
 
     final ExtensionBuilder builder;
     
-    private int elementIndex;
-    
     private XmlExtension(int index) {
-        this.elementIndex = index;
+        super(XmlConstants.EXTENSION, index);
         this.builder = Alps.createExtension();
     }
     
-    @Override
-    public String getElementName() {
-        return XmlConstants.EXTENSION;
-    }
-
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
-    }
-
     public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) throws InvalidDocumentException {
         
         final XmlExtension ext = new XmlExtension(elementIndex);

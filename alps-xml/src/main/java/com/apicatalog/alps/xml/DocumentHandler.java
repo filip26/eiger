@@ -179,5 +179,4 @@ final class DocumentHandler extends DefaultHandler {
         
         return elementName;
     }
-    
 }

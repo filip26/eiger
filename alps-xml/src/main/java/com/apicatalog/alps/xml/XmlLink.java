@@ -24,21 +24,14 @@ import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
-final class XmlLink implements XmlElement {
+final class XmlLink extends XmlElement {
 
-    private final int elementIndex;
-    
     Link link;
     
     private XmlLink(int index) {
-        this.elementIndex = index;
+        super(XmlConstants.LINK, index);
     }
     
-    @Override
-    public String getElementName() {
-        return XmlConstants.LINK;
-    }
-
     public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (links == null || links.isEmpty()) {
@@ -69,10 +62,5 @@ final class XmlLink implements XmlElement {
         link.link = Alps.createLink(URI.create(href), rel);
         
         return link;
-    }
-    
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
-    }
+    }    
 }

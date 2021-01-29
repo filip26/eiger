@@ -32,28 +32,14 @@ import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
-public class XmlDescriptor implements XmlElement {
+public class XmlDescriptor extends XmlElement {
 
-    private final int elementIndex;
-    
     final DescriptorBuilder builder;
-        
-    private int documentation;
-    
-    private int descriptors;
-    
-    private int links;
-    
-    private int extensions;
     
     private XmlDescriptor(int index) {
-        this.elementIndex = index;
+        super(XmlConstants.DESCRIPTOR, index);
+        
         this.builder = Alps.createDescriptor();
-
-        this.documentation = 0;
-        this.descriptors = 0;
-        this.links = 0;
-        this.extensions = 0;
     }
     
     public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentParserException {
@@ -144,11 +130,6 @@ public class XmlDescriptor implements XmlElement {
         }
     }
 
-    @Override
-    public String getElementName() {
-        return XmlConstants.DESCRIPTOR;
-    }
-
     public static void write(final Set<Descriptor> descriptors, final DocumentStreamWriter writer, final boolean verbose) throws DocumentWriterException {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
@@ -176,35 +157,6 @@ public class XmlDescriptor implements XmlElement {
             }
         }
     }
-
-    @Override
-    public int getElementIndex() {
-        return elementIndex;
-    }
-
-    @Override
-    public void beginDescriptor(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors++, attrs);
-        stack.push(dsc);
-    }
-
-    @Override
-    public void beginLink(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlLink link = XmlLink.create(links++, attrs);
-        stack.push(link);
-    }
-
-    @Override
-    public void beginDocumentation(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlDocumentation doc = XmlDocumentation.create(documentation++, attrs);
-        stack.push(doc);
-    }
-
-    @Override
-    public void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
-        final XmlExtension ext = XmlExtension.create(stack, extensions++, attrs);
-        stack.push(ext);
-    }  
     
     @Override
     public void complete(XmlDescriptor descriptor) {
