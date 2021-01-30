@@ -110,16 +110,17 @@ final class Validator implements Callable<Integer> {
             return spec.exitCodeOnInvalidInput();            
         }
 
-        InputStream inputStream = null;
-        
         if (file != null) {
-            inputStream = new FileInputStream(file);
+            try (InputStream inputStream = new FileInputStream(file)) {
+                return print(parser, inputStream, sourceMediaType);
+            }   
         }
         
-        if (inputStream == null) {
-            inputStream = System.in;
-        }
-
+        return print(parser, System.in, sourceMediaType);
+    }
+    
+    private  final int print(final DocumentParser parser, final InputStream inputStream, String sourceMediaType) throws IOException {
+        
         try {
             printDocInfo(spec.commandLine().getOut(), parser.parse(null, inputStream), sourceMediaType);
                         
@@ -127,7 +128,7 @@ final class Validator implements Callable<Integer> {
             printError(spec.commandLine().getErr(), e, sourceMediaType, file);
         }
         
-        return spec.exitCodeOnSuccess();
+        return spec.exitCodeOnSuccess();        
     }
 
     @Override
