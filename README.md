@@ -3,7 +3,7 @@
 Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02) documents.
 
 ![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
-![CodeQL](https://github.com/filip26/alps/workflows/CodeQL/badge.svg)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/filip26/alps-cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/filip26/alps-cli/context:java)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=security_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
