@@ -187,7 +187,7 @@
 				<configuration>
 					<imageName>${command.name}</imageName>
 					<mainClass>${mainClass}</mainClass>
- 					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages</buildArgs>
+ 					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages  &#45;H:IncludeResourceBundles=com.sun.org.apache.xerces.internal.impl.msg.XMLMessages &#45;H:IncludeResourceBundles=com.sun.org.apache.xml.internal.res.XMLErrorResources</buildArgs>
 				</configuration>
 				<executions>
 					<execution>
