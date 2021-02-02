@@ -1,4 +1,4 @@
-package com.apicatalog.alps.cli;
+package com.apicatalog.eiger.cli;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
