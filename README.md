@@ -27,8 +27,8 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 Download the latest package:
 
-- [eiger-0.4.8-ubuntu-20.04.zip](https://bit.ly/3mPHdqo)
-- [eiger-0.4.8-macos-11.0.zip](https://bit.ly/3qyuwlZ)
+- [eiger-cli-0.4.8-ubuntu-20.04.zip](https://bit.ly/3jb4LF0)
+- [eiger-cli-0.4.8-macos-11.0.zip](https://bit.ly/3rkaTh1)
 
 Extract the zip content and make `eiger` command executable.
 
