@@ -1,8 +1,8 @@
-# ALPS CLI
+# Eiger
 
-Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02) documents.
+Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-06) documents.
 
-![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Java CI with Maven](https://github.com/filip26/eiger/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/filip26/alps-cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/filip26/alps-cli/context:java)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=security_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
@@ -27,20 +27,20 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 Download the latest package:
 
-- [alps-cli-0.4.1-ubuntu-20.04.zip](https://bit.ly/3mPHdqo)
-- [alps-cli-0.4.1-macos-11.0.zip](https://bit.ly/3qyuwlZ)
+- [eiger-0.4.8-ubuntu-20.04.zip](https://bit.ly/3mPHdqo)
+- [eiger-0.4.8-macos-11.0.zip](https://bit.ly/3qyuwlZ)
 
-Extract the zip content and make `alps` command executable.
+Extract the zip content and make `eiger` command executable.
 
 ```ShellSession
-> chmod +x alps
+> chmod +x eiger
 ```
 
 ## Usage
 
 ```ShellSession
-> ./alps -h
-Usage: alps [-h] [COMMAND]
+> ./eiger -h
+Usage: eiger [-h] [COMMAND]
 
 Transform and validate ALPS documents
 
@@ -53,8 +53,8 @@ Commands:
 ```
 
 ```ShellSession
-> ./alps -h transform
-Usage: alps transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<file>]
+> ./eiger -h transform
+Usage: eiger transform [-pv] [-s=(xml|json|oas)] [-t=(xml|json|yaml)] [<file>]
 
 Transform documents into ALPS.
 
@@ -72,8 +72,8 @@ Options:
 ```
 
 ```ShellSession
-> ./alps -h validate
-Usage: alps validate [-s=(json|xml)] [<file>]
+> ./eiger -h validate
+Usage: eiger validate [-s=(json|xml)] [<file>]
 
 Validate ALPS document
 
@@ -89,7 +89,7 @@ Options:
 #### Validation
 
 ```ShellSession
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps validate --source=xml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | eiger validate --source=xml
 ```
 
 ```YAML
@@ -108,12 +108,12 @@ Options:
 
 `OpenAPI` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | alps transform --source=oas --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml | eiger transform --source=oas --target=yaml
 ```
 
 `ALPS+XML` :arrow_right: `ALPS+YAML`
 ```bash
-> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | alps transform --source=xml --target=yaml
+> wget -q -O- https://raw.githubusercontent.com/alps-io/profiles/master/xml/contacts.xml | eiger transform --source=xml --target=yaml
 ```
 
 ## Contributing

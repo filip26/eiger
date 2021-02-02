@@ -11,15 +11,15 @@
     <name>ALPS+JSON Document (jakarta.json)</name>
 
 	<parent>
-        <groupId>com.apicatalog</groupId>
-        <artifactId>alps</artifactId>
+        <groupId>com.apicatalog.eiger</groupId>
+        <artifactId>eiger</artifactId>
 		<version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>alps.api</artifactId>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         

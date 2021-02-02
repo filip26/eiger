@@ -7,13 +7,13 @@
 
     <modelVersion>4.0.0</modelVersion>
     
-    <artifactId>alps.api</artifactId>
+    <artifactId>alps-api</artifactId>
     
     <name>ALPS API</name>
 
     <parent>
-        <groupId>com.apicatalog</groupId>
-        <artifactId>alps</artifactId>
+        <groupId>com.apicatalog.eiger</groupId>
+        <artifactId>eiger</artifactId>
         <version>${revision}</version>
     </parent>
 

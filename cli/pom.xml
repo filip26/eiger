@@ -6,21 +6,21 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    
-    <artifactId>alps.cli</artifactId>
+
+    <artifactId>eiger-cli</artifactId>
     <packaging>jar</packaging>
 
     <name>ALPS Command Line Interface</name>
 
 	<parent>
-        <groupId>com.apicatalog</groupId>
-        <artifactId>alps</artifactId>
+        <groupId>com.apicatalog.eiger</groupId>
+        <artifactId>eiger</artifactId>
        	<version>${revision}</version>
     </parent>
     
     <properties>
-    	<mainClass>com.apicatalog.alps.cli.App</mainClass>
-    	<command.name>alps</command.name>
+    	<mainClass>com.apicatalog.eiger.cli.App</mainClass>
+    	<command.name>eiger</command.name>
     
     	<graal.version>21.0.0</graal.version>
     	<picocli.version>4.6.1</picocli.version>
@@ -30,32 +30,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>alps.api</artifactId>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.apicatalog</groupId>
+            <groupId>com.apicatalog.eiger</groupId>
             <artifactId>alps-json</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.apicatalog</groupId>
+            <groupId>com.apicatalog.eiger</groupId>
             <artifactId>alps-xml</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.apicatalog</groupId>
+            <groupId>com.apicatalog.eiger</groupId>
             <artifactId>alps-yaml</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>alps.oas</artifactId>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-oas</artifactId>
             <version>${project.version}</version>
         </dependency>
 

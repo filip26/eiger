@@ -43,9 +43,9 @@ jobs:
       - name: 'Upload'
         uses: actions/upload-artifact@v2
         with:
-          name: alps-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
+          name: eiger-cli-${{ needs.get-version.outputs.BUILD_VERSION }}-${{ matrix.os }}
           path: |
-            cli/target/alps
+            cli/target/eiger
           if-no-files-found: error
 
   get-version:

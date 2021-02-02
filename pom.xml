@@ -7,12 +7,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 	<version>${revision}</version>
-	<groupId>com.apicatalog</groupId>
-	<artifactId>alps</artifactId>
+	<groupId>com.apicatalog.eiger</groupId>
+	<artifactId>eiger</artifactId>
 
     <name>Application-Level Profile Semantics Processor &amp; API</name>
 
-    <url>https://github.com/filip26/alps</url>
+    <url>https://github.com/filip26/eiger</url>
     
     <licenses>
         <license>
@@ -23,13 +23,13 @@
    
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/filip26/alps/issues</url>
+        <url>https://github.com/filip26/eiger/issues</url>
     </issueManagement>
     
     <scm>
-        <connection>scm:git:git://github.com/filip26/alps.git</connection>
-        <developerConnection>scm:git:git://github.com/filip26/alps.git</developerConnection>
-        <url>https://github.com/filip26/alps/tree/master</url>
+        <connection>scm:git:git://github.com/filip26/eiger.git</connection>
+        <developerConnection>scm:git:git://github.com/filip26/eiger.git</developerConnection>
+        <url>https://github.com/filip26/eiger/tree/master</url>
     </scm>
 
     <developers>
@@ -44,7 +44,7 @@
     <inceptionYear>2020</inceptionYear>
 
     <properties>
-        <revision>0.4.7</revision>
+        <revision>0.4.8</revision>
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

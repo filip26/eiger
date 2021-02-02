@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.apicatalog.alps.cli;
+package com.apicatalog.eiger.cli;
 
 final class Constants {
    
