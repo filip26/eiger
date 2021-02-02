@@ -1,8 +1,8 @@
 # Eiger
 
-Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02) documents.
+Transform and validate [Application-Level Profile Semantics (ALPS)](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-06) documents.
 
-![Java CI with Maven](https://github.com/filip26/alps/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Java CI with Maven](https://github.com/filip26/eiger/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/filip26/alps-cli.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/filip26/alps-cli/context:java)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=alps-cli&metric=security_rating)](https://sonarcloud.io/dashboard?id=alps-cli)
