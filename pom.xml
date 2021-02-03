@@ -29,7 +29,7 @@
     <scm>
         <connection>scm:git:git://github.com/filip26/eiger.git</connection>
         <developerConnection>scm:git:git://github.com/filip26/eiger.git</developerConnection>
-        <url>https://github.com/filip26/eiger/tree/master</url>
+        <url>https://github.com/filip26/eiger/tree/main</url>
     </scm>
 
     <developers>
