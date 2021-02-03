@@ -44,7 +44,7 @@
     <inceptionYear>2020</inceptionYear>
 
     <properties>
-        <revision>0.4.8</revision>
+        <revision>0.4.9-SNAPSHOT</revision>
 
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
