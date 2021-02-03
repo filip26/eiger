@@ -6,7 +6,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
 
 @Command(
-    name = "alps", 
+    name = "eiger", 
     description = "Transform and validate ALPS documents",
     subcommands = { Transformer.class, Validator.class },
     mixinStandardHelpOptions = false,
