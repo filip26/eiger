@@ -128,9 +128,9 @@ Your contribution is welcome!
   - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
 - [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
   - [x] ~0.4.1 Native Executables (Ubuntu, MacOS)~
-- [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
-- [ ] 0.6 Effective Document Processor
-- [ ] 0.7 Semantic Equivalence
+- [ ] 0.5 Effective Profile Processor
+- [ ] 0.6 Profile Simlarity  / Semantic Equivalence
+- [ ] 0.7 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] TBD
 
 
