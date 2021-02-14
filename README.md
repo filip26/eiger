@@ -129,7 +129,7 @@ Your contribution is welcome!
 - [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
   - [x] ~0.4.1 Native Executables (Ubuntu, MacOS)~
 - [ ] 0.5 Effective Profile Processor
-- [ ] 0.6 Profile Simlarity  / Semantic Equivalence
+- [ ] 0.6 Similarity  / Semantic Equivalence
 - [ ] 0.7 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] TBD
 
