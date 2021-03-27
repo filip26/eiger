@@ -26,7 +26,7 @@ import com.apicatalog.alps.error.DocumentParserException;
 public interface DocumentParser {
 
     Document parse(URI baseUri, InputStream stream) throws IOException, DocumentParserException;
-    
+
     Document parse(URI baseUri, Reader reader) throws IOException, DocumentParserException;
 
 }

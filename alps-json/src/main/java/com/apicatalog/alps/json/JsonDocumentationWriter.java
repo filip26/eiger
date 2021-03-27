@@ -31,36 +31,36 @@ import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 
 final class JsonDocumentationWriter {
-    
+
     private JsonDocumentationWriter() {}
-    
+
     public static final Optional<JsonValue> toJson(final Set<Documentation> documentation, final boolean verbose) {
-        
+
         if (documentation == null || documentation.isEmpty()) {
             return Optional.empty();
         }
-        
+
         if (documentation.size() == 1) {
             return toJson(documentation.iterator().next(), verbose);
         }
-        
+
         final JsonArrayBuilder jsonDocs = Json.createArrayBuilder();
-        
+
         documentation.stream().map(d -> JsonDocumentationWriter.toJson(d, verbose)).flatMap(Optional::stream).forEach(jsonDocs::add);
-        
+
         final JsonArray array = jsonDocs.build();
-        
+
         return array.isEmpty() ? Optional.empty() : Optional.of(array);
     }
 
     public static final Optional<JsonValue> toJson(final Documentation documentation, final boolean verbose) {
-        
+
         if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
             return Optional.empty();
         }
-        
+
         final Optional<Content> content = documentation.content();
-        
+
         if (documentation.href().isEmpty()
                 && content.isPresent()
                 && content
@@ -69,38 +69,38 @@ final class JsonDocumentationWriter {
                        .isPresent()
                 ) {
 
-            return Optional.of(Json.createValue(content.get().value()));            
+            return Optional.of(Json.createValue(content.get().value()));
         }
-                     
+
         final JsonObjectBuilder doc = Json.createObjectBuilder();
-        
+
         documentation.href().ifPresent(href -> doc.add(JsonConstants.HREF, href.toString()));
 
         if (verbose) {
             content
                 .map(Documentation.Content::type)
                 .ifPresentOrElse(
-                        t -> doc.add(JsonConstants.CONTENT_TYPE, t), 
+                        t -> doc.add(JsonConstants.CONTENT_TYPE, t),
                         () -> doc.add(JsonConstants.CONTENT_TYPE, JsonConstants.MEDIA_TYPE_TEXT_PLAIN)
                         );
         } else {
             content
                 .map(Documentation.Content::type)
                 .filter(Predicate.isEqual(JsonConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
-                .ifPresent(type -> doc.add(JsonConstants.CONTENT_TYPE, type));            
+                .ifPresent(type -> doc.add(JsonConstants.CONTENT_TYPE, type));
         }
-        
+
         // tag
         if (!documentation.tag().isEmpty()) {
-            doc.add(JsonConstants.TAG, documentation.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+            doc.add(JsonConstants.TAG, documentation.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-    
+
         content
             .map(Documentation.Content::value)
             .ifPresent(value -> doc.add(JsonConstants.VALUE, value));
-        
+
         final JsonObject jsonDoc = doc.build();
-        
+
         return jsonDoc.isEmpty() ? Optional.empty() : Optional.of(jsonDoc);
-    }    
+    }
 }

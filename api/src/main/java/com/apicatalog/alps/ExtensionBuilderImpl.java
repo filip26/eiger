@@ -12,12 +12,12 @@ import com.apicatalog.alps.dom.element.Extension;
 final class ExtensionBuilderImpl implements ExtensionBuilder {
 
     private ExtensionImpl extension;
-    
+
     public ExtensionBuilderImpl() {
         this.extension = new ExtensionImpl();
         this.extension.attributes = new LinkedHashMap<>();
     }
-    
+
     @Override
     public Extension build() {
         return extension;
@@ -45,8 +45,8 @@ final class ExtensionBuilderImpl implements ExtensionBuilder {
     public ExtensionBuilder id(URI id) {
         extension.id = id;
         return this;
-    }    
-    
+    }
+
     @Override
     public ExtensionBuilder tag(List<String> tag) {
         extension.tag = tag;
@@ -59,24 +59,24 @@ final class ExtensionBuilderImpl implements ExtensionBuilder {
         private URI href;
         private String value;
         private List<String> tag;
-        
+
         private Map<String, String> attributes;
-        
+
         @Override
         public Optional<URI> href() {
             return Optional.ofNullable(href);
         }
-    
+
         @Override
         public URI id() {
             return id;
         }
-    
+
         @Override
         public Optional<String> value() {
             return Optional.ofNullable(value);
         }
-        
+
         @Override
         public Map<String, String> attributes() {
             return attributes;

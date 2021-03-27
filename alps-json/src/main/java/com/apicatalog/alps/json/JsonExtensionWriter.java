@@ -28,39 +28,39 @@ import jakarta.json.JsonValue;
 final class JsonExtensionWriter {
 
     private JsonExtensionWriter() {}
-    
+
     public static final JsonValue toJson(Set<Extension> extensions) {
-        
+
         if (extensions.size() == 1) {
             return toJson(extensions.iterator().next());
         }
-        
+
         final JsonArrayBuilder jsonExt = Json.createArrayBuilder();
-        
+
         extensions.stream().map(JsonExtensionWriter::toJson).forEach(jsonExt::add);
-        
+
         return jsonExt.build();
     }
 
     public static final JsonValue toJson(Extension extension) {
-        
+
         final JsonObjectBuilder jsonExt = Json.createObjectBuilder();
 
         jsonExt.add(JsonConstants.ID, extension.id().toString());
 
         extension.href().ifPresent(href -> jsonExt.add(JsonConstants.HREF, href.toString()));
         extension.value().ifPresent(value -> jsonExt.add(JsonConstants.VALUE, value));
-        
+
         // tag
         if (!extension.tag().isEmpty()) {
-            jsonExt.add(JsonConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+            jsonExt.add(JsonConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-        
+
         // custom attributes
         extension
                 .attributes()
                 .forEach((name, value) -> jsonExt.add(name, JsonUtils.toValue(value)));
-        
+
         return jsonExt.build();
     }
 }

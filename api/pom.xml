@@ -6,15 +6,15 @@
     >
 
     <modelVersion>4.0.0</modelVersion>
-    
+
     <artifactId>alps-api</artifactId>
-    
+
     <name>ALPS API</name>
 
     <parent>
         <groupId>com.apicatalog.eiger</groupId>
         <artifactId>eiger</artifactId>
-        <version>${revision}</version>
+        <version>0.4.9-SNAPSHOT</version>
     </parent>
 
 </project>

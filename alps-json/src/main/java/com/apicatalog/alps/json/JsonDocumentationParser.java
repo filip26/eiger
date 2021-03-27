@@ -30,29 +30,29 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 
 final class JsonDocumentationParser {
-    
+
     private JsonDocumentationParser() {}
 
     public static Set<Documentation> parse(final JsonValue jsonValue) throws InvalidDocumentException {
 
         final Set<Documentation> docs = new HashSet<>();
-                
+
         for (final JsonValue item : JsonUtils.toArray(jsonValue)) {
-            
+
             if (JsonUtils.isString(item)) {
                 docs.add(parseString((JsonString)item));
-                
+
             } else if (JsonUtils.isObject(item)) {
                 docs.add(parseObject(item.asJsonObject()));
-                
+
             } else {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC, "Expected JSON string or object but was " + item.getValueType());
             }
         }
-        
+
         return docs;
     }
-    
+
     private static Documentation parseString(final JsonString value) {
         return Alps.createDocumentation()
                     .type(JsonConstants.MEDIA_TYPE_TEXT_PLAIN)
@@ -61,62 +61,62 @@ final class JsonDocumentationParser {
     }
 
     private static Documentation parseObject(final JsonObject value) throws InvalidDocumentException {
-        
+
         final DocumentationBuilder doc = Alps.createDocumentation().type(JsonConstants.MEDIA_TYPE_TEXT_PLAIN);
-                
+
         if (value.containsKey(JsonConstants.VALUE)) {
 
             final JsonValue contentValue = value.get(JsonConstants.VALUE);
-            
+
             if (JsonUtils.isNotString(contentValue)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_VALUE, "doc.value property must be string but was " + contentValue.getValueType());
             }
-            
+
             doc.append(JsonUtils.getString(contentValue));
-                        
+
         } else if (value.containsKey(JsonConstants.HREF)) {
-            
+
             final JsonValue href = value.get(JsonConstants.HREF);
-            
+
             if (JsonUtils.isNotString(href)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_HREF, "'href' property must have string value but was " + href.getValueType());
             }
-            
+
             try {
-            
+
                 doc.href(URI.create(JsonUtils.getString(href)));
-                
+
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "'href' property value is not URI but was " + JsonUtils.getString(href));
             }
-            
+
         } else {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "doc object must contain href of value property");
         }
-        
+
         if (value.containsKey(JsonConstants.FORMAT)) {
-            
+
             final JsonValue format = value.get(JsonConstants.FORMAT);
-            
+
             if (JsonUtils.isNotString(format)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.format property must be string but was " + format.getValueType());
             }
 
             doc.type(JsonUtils.getString(format));
-            
+
         } else if (value.containsKey(JsonConstants.CONTENT_TYPE)) {
 
             final JsonValue contentType = value.get(JsonConstants.CONTENT_TYPE);
-            
+
             if (JsonUtils.isNotString(contentType)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_DOC_MEDIATYPE, "doc.contentType property must be string but was " + contentType.getValueType());
             }
 
             doc.type(JsonUtils.getString(contentType));
         }
-        
+
         doc.tag(JsonDescriptorParser.parseTag(value));
-        
+
         return doc.build();
-    } 
+    }
 }

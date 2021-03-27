@@ -21,28 +21,28 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface Descriptor {
-    
-	Optional<URI> id();
-	
-	Optional<URI> href();
-	
-	Optional<URI> definition();
-	
-	Optional<String> name();
-	
-	DescriptorType type();
-	
-	Optional<URI> returnType();
-	
-	Optional<String> title();
-	
-	List<String> tag();
-	
-	Set<Documentation> documentation();
-	
-	Set<Extension> extensions();
-	
-	Set<Descriptor> descriptors();
-	
-	Set<Link> links();
+
+    Optional<URI> id();
+
+    Optional<URI> href();
+
+    Optional<URI> definition();
+
+    Optional<String> name();
+
+    DescriptorType type();
+
+    Optional<URI> returnType();
+
+    Optional<String> title();
+
+    List<String> tag();
+
+    Set<Documentation> documentation();
+
+    Set<Extension> extensions();
+
+    Set<Descriptor> descriptors();
+
+    Set<Link> links();
 }

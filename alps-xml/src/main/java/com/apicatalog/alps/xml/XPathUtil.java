@@ -19,17 +19,17 @@ import java.util.Deque;
 import java.util.stream.Collectors;
 
 class XPathUtil {
-    
+
     public static final String getPath(Deque<XmlElement> stack) {
         return stack.stream().map(XPathUtil::getElementPath).collect(Collectors.joining());
     }
-    
+
     public static final String getPath(Deque<XmlElement> stack, final String element) {
         return getPath(stack, element, -1);
     }
 
     public static final String getPath(Deque<XmlElement> stack, final String element, final int index) {
-        return  stack.stream().map(XPathUtil::getElementPath).collect(Collectors.joining()) 
+        return  stack.stream().map(XPathUtil::getElementPath).collect(Collectors.joining())
                 + getElementPath(element, index)
                 ;
     }
@@ -39,8 +39,8 @@ class XPathUtil {
     }
 
     private static final String getElementPath(final String elementName, final int elementIndex) {
-        return "/" + elementName 
-                + (elementIndex != -1 ? "[position()=" + (elementIndex + 1) + "]" : ""); 
+        return "/" + elementName
+                + (elementIndex != -1 ? "[position()=" + (elementIndex + 1) + "]" : "");
     }
 
     private XPathUtil() {

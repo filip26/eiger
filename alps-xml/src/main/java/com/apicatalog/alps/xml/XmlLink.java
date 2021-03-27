@@ -27,44 +27,44 @@ import com.apicatalog.alps.error.DocumentWriterException;
 final class XmlLink extends XmlElement {
 
     Link link;
-    
+
     private XmlLink(int index) {
         super(XmlConstants.LINK, index);
     }
-    
+
     public static void write(Set<Link> links, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (links == null || links.isEmpty()) {
             return;
         }
-        
+
         for (final Link link : links) {
             writer.writeLink(link);
-        }        
+        }
     }
-    
+
     public static XmlLink create(int index, Attributes attributes) {
 
         final XmlLink link = new XmlLink(index);
-        
+
         String href = attributes.getValue(XmlConstants.HREF);
-        
+
         if (href != null && href.isBlank()) {
             href = null;
         }
-        
+
         String rel = attributes.getValue(XmlConstants.RELATION);
-        
+
         if (rel != null && rel.isBlank()) {
             rel = null;
         }
-        
+
         link.link = Alps.createLink()
                         .href(URI.create(href))
                         .rel(rel)
                         .tag(XmlDescriptor.parseTag(attributes))
                         .build();
-        
+
         return link;
-    }    
+    }
 }

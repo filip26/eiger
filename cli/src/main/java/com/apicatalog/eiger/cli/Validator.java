@@ -45,38 +45,38 @@ import picocli.CommandLine.Spec;
         optionListHeading = "%nOptions:%n"
         )
 final class Validator implements Callable<Integer> {
-    
+
     enum Source { XML, JSON }
-    
+
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=json for alps+json", paramLabel = "(json|xml)")
     Source source = null;
 
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "input file") 
+    @Parameters(index = "0", arity = "0..1", description = "input file")
     File file;
-    
+
     @Spec CommandSpec spec;
 
     private Validator() {
     }
 
     public int validate() throws IOException {
-                
+
         String sourceMediaType = null;
-     
+
         if (Source.JSON.equals(source)) {
             sourceMediaType = Constants.MEDIA_TYPE_ALPS_JSON;
-            
+
         } else if (Source.XML.equals(source)) {
             sourceMediaType = Constants.MEDIA_TYPE_ALPS_XML;
         }
-        
+
         if (file != null) {
-            
+
             if (!file.exists()) {
-                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");            
+                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");
                 return spec.exitCodeOnInvalidInput();
             }
 
@@ -89,53 +89,53 @@ final class Validator implements Callable<Integer> {
                 sourceMediaType = Utils.detectMediaType(file);
             }
         }
-        
+
         if (sourceMediaType == null) {
             spec.commandLine().getErr().println("Missing '--source=(xml|json)' option.");
             return spec.exitCodeOnInvalidInput();
         }
 
-        return validate(sourceMediaType);        
+        return validate(sourceMediaType);
     }
-    
+
     private final int validate(final String sourceMediaType) throws IOException {
 
         final DocumentParser parser;
-        
+
         try {
             parser = Utils.getParser(sourceMediaType);
-            
+
         } catch (IllegalArgumentException e) {
             spec.commandLine().getErr().println(e.getMessage());
-            return spec.exitCodeOnInvalidInput();            
+            return spec.exitCodeOnInvalidInput();
         }
 
         if (file != null) {
             try (InputStream inputStream = new FileInputStream(file)) {
                 return print(parser, inputStream, sourceMediaType);
-            }   
+            }
         }
-        
+
         return print(parser, System.in, sourceMediaType);
     }
-    
+
     private  final int print(final DocumentParser parser, final InputStream inputStream, String sourceMediaType) throws IOException {
-        
+
         try {
             printDocInfo(spec.commandLine().getOut(), parser.parse(null, inputStream), sourceMediaType);
-                        
+
         } catch (DocumentParserException e) {
             printError(spec.commandLine().getErr(), e, sourceMediaType, file);
         }
-        
-        return spec.exitCodeOnSuccess();        
+
+        return spec.exitCodeOnSuccess();
     }
 
     @Override
     public Integer call() throws Exception {
         return validate();
     }
-    
+
     private final void printDocInfo(final PrintWriter out, final Document document, final String mediaType) {
         out.println("# Valid ALPS document");
         out.println("- document: ");
@@ -147,12 +147,12 @@ final class Validator implements Callable<Integer> {
         if (file != null) {
             out.println("    file: " + file);
         }
-        
+
         out.println("    version: " + PrintUtils.versionToString(document.version()));
         out.println("    statistics:");
-        
+
         final DocumentStatistics stats = DocumentStatistics.of(document);
-        
+
         out.println("      descriptors: " + stats.getDescriptors());
         out.println("      docs: " + stats.getDocs());
         out.println("      links: " + stats.getLinks());
@@ -166,22 +166,22 @@ final class Validator implements Callable<Integer> {
         err.println("    message: " + e.getMessage());
 
         if (e instanceof MalformedDocumentException) {
-            
+
             final MalformedDocumentException me = (MalformedDocumentException)e;
-            
+
             err.println("    location:");
             err.println("      line: " + me.getLineNumber());
             err.println("      column: " + me.getColumnNumber());
 
         } else if (e instanceof InvalidDocumentException) {
-            
+
             final InvalidDocumentException ie = (InvalidDocumentException)e;
-            
+
             if (ie.getPath() != null) {
                 err.println("  path:" + ie.getPath());
-            }            
+            }
         }
-        
+
         if (mediaType != null) {
             err.println("    media_type: " + mediaType);
         }

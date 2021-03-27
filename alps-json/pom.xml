@@ -10,10 +10,10 @@
 
     <name>ALPS+JSON Document (jakarta.json)</name>
 
-	<parent>
+    <parent>
         <groupId>com.apicatalog.eiger</groupId>
         <artifactId>eiger</artifactId>
-		<version>${revision}</version>
+        <version>0.4.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -22,45 +22,45 @@
             <artifactId>alps-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
-			<groupId>jakarta.json</groupId>
-    		<artifactId>jakarta.json-api</artifactId>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
             <version>${jakarta.json-p.version}</version>
             <scope>provided</scope>
-        </dependency>        
-        
+        </dependency>
+
         <!--  Test -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
             <version>${jakarta.json-p.version}</version>
-            <scope>test</scope>        
+            <scope>test</scope>
         </dependency>
-        
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		        
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
-	<build>
-    	<plugins>
-        	<plugin>
-            	<artifactId>maven-surefire-plugin</artifactId>
-            	<version>2.22.2</version>
-				<configuration>
-					<argLine>-Dfile.encoding=UTF-8</argLine>
-				</configuration>            	
-        	</plugin>
-        	<plugin>
-            	<artifactId>maven-failsafe-plugin</artifactId>
-            	<version>2.22.2</version>
-        	</plugin>
-    	</plugins>
-	</build>
-	
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

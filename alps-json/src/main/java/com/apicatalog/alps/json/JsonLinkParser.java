@@ -30,26 +30,26 @@ import jakarta.json.JsonValue;
 final class JsonLinkParser {
 
     private JsonLinkParser() {}
-    
+
     public static final Set<Link> parse(final JsonValue value) throws InvalidDocumentException {
-        
+
         final Set<Link> links = new HashSet<>();
-        
+
         for (final JsonValue item : JsonUtils.toArray(value)) {
-            
+
             if (JsonUtils.isNotObject(item)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_LINK, "Link property must be JSON object but was " + item.getValueType());
             }
-            
+
             links.add(parseObject(item.asJsonObject()));
         }
-        
+
         return links;
     }
-    
+
     private static final Link parseObject(final JsonObject linkObject) throws InvalidDocumentException {
-        
-        
+
+
         if (!linkObject.containsKey(JsonConstants.HREF)) {
             throw new InvalidDocumentException(DocumentError.MISSING_HREF, "Link object must contain 'href' property");
         }
@@ -57,24 +57,24 @@ final class JsonLinkParser {
         if (!linkObject.containsKey(JsonConstants.RELATION)) {
             throw new InvalidDocumentException(DocumentError.MISSING_REL, "Link object must contain 'rel' property");
         }
-        
+
         final JsonValue jsonHref = linkObject.get(JsonConstants.HREF);
         final URI href;
-        
+
         if (JsonUtils.isNotString(jsonHref)) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + jsonHref.getValueType());
         }
-        
+
         try {
-            
+
             href = URI.create(JsonUtils.getString(jsonHref));
-            
+
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "Link.href property must be URI but was " + jsonHref);
         }
 
         final JsonValue jsonRel = linkObject.get(JsonConstants.RELATION);
-        
+
         if (JsonUtils.isNotString(jsonHref)) {
             throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + jsonRel.getValueType());
         }
@@ -84,5 +84,5 @@ final class JsonLinkParser {
                     .rel(JsonUtils.getString(jsonRel))
                     .tag(JsonDescriptorParser.parseTag(linkObject))
                     .build();
-    }    
+    }
 }

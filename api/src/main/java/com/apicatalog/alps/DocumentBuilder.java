@@ -12,22 +12,22 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 public interface DocumentBuilder {
 
     DocumentBuilder add(Descriptor descriptor);
-    
+
     DocumentBuilder add(DescriptorBuilder descriptor);
-    
+
     DocumentBuilder add(Documentation documentation);
 
     DocumentBuilder add(DocumentationBuilder documentation);
 
     DocumentBuilder add(Extension extension);
-    
+
     DocumentBuilder add(ExtensionBuilder extension);
 
     DocumentBuilder add(Link link);
-    
+
     DocumentBuilder add(LinkBuilder link);
-    
+
     DocumentBuilder base(URI baseUri);
-    
+
     Document build() throws InvalidDocumentException;
 }

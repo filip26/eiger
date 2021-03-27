@@ -31,56 +31,56 @@ import com.apicatalog.alps.error.DocumentWriterException;
 final class XmlDocumentation extends XmlElement {
 
     final DocumentationBuilder builder;
-    
+
     final StringBuilder content;
-    
+
     private XmlDocumentation(String contentType, int index, List<String> tag) {
         super(XmlConstants.DOCUMENTATION, index);
 
         this.builder = Alps.createDocumentation().type(contentType).tag(tag);
         this.content = new StringBuilder();
     }
-    
+
     public static final XmlDocumentation create(final int index, final Attributes attributes) {
-        
+
         String contentType = attributes.getValue(XmlConstants.FORMAT);
-        
+
         if (contentType == null || contentType.isBlank()) {
             contentType = attributes.getValue(XmlConstants.CONTENT_TYPE);
         }
-        
+
         if (contentType == null || contentType.isBlank()) {
             contentType = "text/plain";
         }
-        
+
         return new XmlDocumentation(contentType, index, XmlDescriptor.parseTag(attributes));
     }
-        
+
     @Override
-    public void addText(char[] ch, int start, int length) {        
+    public void addText(char[] ch, int start, int length) {
         builder.append(new String(ch, start, length));
     }
 
     public static void write(final Set<Documentation> docs, final DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
-        
+
         if (docs == null || docs.isEmpty()) {
             return;
         }
-        
+
         for (final Documentation doc : docs) {
-            
+
             if (doc.content().isEmpty() && doc.href().isEmpty()) {
                 continue;
             }
-            
+
             writer.startDoc(doc, doc.content().isEmpty(), verbose);
-            
+
             final Optional<String> value = doc.content().map(Content::value).filter(Predicate.not(String::isBlank));
-            
+
             if (value.isPresent()) {
                 writer.writeDocContent(value.get());
             }
-            
+
             writer.endDoc();
         }
     }

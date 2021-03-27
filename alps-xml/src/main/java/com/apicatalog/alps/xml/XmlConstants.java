@@ -18,13 +18,13 @@ package com.apicatalog.alps.xml;
 final class XmlConstants {
 
     public static final String DOCUMENT = "alps";
-    
+
     public static final String DOCUMENTATION = "doc";
-    
+
     public static final String DESCRIPTOR = "descriptor";
 
     public static final String VERSION = "version";
-    
+
     public static final String VERSION_1_0 = "1.0";
 
     public static final String ID = "id";
@@ -34,28 +34,28 @@ final class XmlConstants {
     public static final String LINK = "link";
 
     public static final String HREF = "href";
-    
+
     public static final String DEFINITION = "definition";
 
     public static final String RELATION = "rel";
-    
+
     public static final String RETURN_TYPE = "rt";
 
     public static final String FORMAT = "format";
-    
+
     public static final String NAME = "name";
-    
+
     public static final String TITLE = "title";
-    
+
     public static final String EXTENSION = "ext";
-    
+
     public static final String VALUE = "value";
 
     public static final String CONTENT_TYPE = "contentType";
 
     public static final String TAG = "tag";
-    
+
     private XmlConstants() {
-        
+
     }
 }

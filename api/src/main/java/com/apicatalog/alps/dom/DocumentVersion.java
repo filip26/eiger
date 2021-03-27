@@ -18,5 +18,5 @@ package com.apicatalog.alps.dom;
 public enum DocumentVersion {
 
     VERSION_1_0
-    
+
 }

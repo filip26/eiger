@@ -16,15 +16,15 @@
 package com.apicatalog.alps.error;
 
 public class DocumentWriterException extends Exception {
-    
+
     private static final long serialVersionUID = 6994823590814188368L;
 
     public DocumentWriterException(String message) {
         super(message);
     }
-    
+
     public DocumentWriterException(Throwable cause) {
         super(cause.getMessage(), cause);
     }
-    
+
 }

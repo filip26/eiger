@@ -32,34 +32,34 @@ import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 final class YamlDocumentationWriter {
 
     private YamlDocumentationWriter() {}
-    
+
     public static final Optional<YamlNode> toYaml(final Set<Documentation> documentation, final boolean verbose) {
-        
+
         if (documentation == null || documentation.isEmpty()) {
             return Optional.empty();
         }
-        
+
         if (documentation.size() == 1) {
             return toYaml(documentation.iterator().next(), verbose);
         }
-        
+
         final YamlSequenceBuilder yamlDocs = Yaml.createSequenceBuilder();
-        
+
         documentation.stream().map(d -> YamlDocumentationWriter.toYaml(d, verbose)).flatMap(Optional::stream).forEach(yamlDocs::add);
-        
+
         final YamlSequence array = yamlDocs.build();
-        
+
         return array.isEmpty() ? Optional.empty() : Optional.of(array);
     }
 
     public static final Optional<YamlNode> toYaml(final Documentation documentation, final boolean verbose) {
-        
+
         if (documentation == null || (documentation.href().isEmpty() && documentation.content().isEmpty())) {
             return Optional.empty();
         }
-        
+
         final Optional<Content> content = documentation.content();
-        
+
         if (documentation.href().isEmpty()
                 && content.isPresent()
                 && content
@@ -68,38 +68,38 @@ final class YamlDocumentationWriter {
                        .isPresent()
                 ) {
 
-            return Optional.of(Yaml.createScalar(content.get().value()));            
+            return Optional.of(Yaml.createScalar(content.get().value()));
         }
-                     
+
         final YamlMappingBuilder doc = Yaml.createMappingBuilder();
-        
+
         documentation.href().ifPresent(href -> doc.add(YamlConstants.HREF, Yaml.createScalar(href.toString())));
 
         if (verbose) {
             content
                 .map(Documentation.Content::type)
                 .ifPresentOrElse(
-                        t -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(t)), 
+                        t -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(t)),
                         () -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(YamlConstants.MEDIA_TYPE_TEXT_PLAIN))
                         );
         } else {
             content
                 .map(Documentation.Content::type)
                 .filter(Predicate.isEqual(YamlConstants.MEDIA_TYPE_TEXT_PLAIN).negate().and(Predicate.isEqual("text").negate()))
-                .ifPresent(type -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(type)));            
+                .ifPresent(type -> doc.add(YamlConstants.CONTENT_TYPE, Yaml.createScalar(type)));
         }
-        
+
         // tag
         if (YamlDocumentWriter.isNotEmpty(documentation.tag())) {
             doc.add(YamlConstants.TAG, documentation.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-        
+
         content
             .map(Documentation.Content::value)
             .ifPresent(value -> doc.add(YamlConstants.VALUE, Yaml.createScalar(value)));
-        
+
         final YamlMapping yamlDoc = doc.build();
-        
+
         return yamlDoc.isEmpty() ? Optional.empty() : Optional.of(yamlDoc);
     }
 }

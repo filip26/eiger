@@ -9,7 +9,7 @@ import com.apicatalog.alps.dom.element.Link;
 final class LinkBuilderImpl implements LinkBuilder {
 
     private final LinkImpl link;
-    
+
     public LinkBuilderImpl() {
         link = new LinkImpl();
     }
@@ -36,14 +36,14 @@ final class LinkBuilderImpl implements LinkBuilder {
         this.link.tag = tag;
         return this;
     }
-    
+
     static final class LinkImpl implements Link {
 
         URI href;
         String rel;
-        
+
         List<String> tag;
-        
+
         @Override
         public URI href() {
             return href;

@@ -1,0 +1,3 @@
+runtime: java11
+env: standard
+service: eiger

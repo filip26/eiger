@@ -39,98 +39,98 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 public class XmlDescriptor extends XmlElement {
 
     final DescriptorBuilder builder;
-    
+
     private XmlDescriptor(int index) {
         super(XmlConstants.DESCRIPTOR, index);
-        
+
         this.builder = Alps.createDescriptor();
     }
-    
+
     public static final XmlDescriptor create(final Deque<XmlElement> stack, int index, final Attributes attrs) throws DocumentParserException {
 
         final XmlDescriptor descriptor = new XmlDescriptor(index);
-        
+
         final String id = attrs.getValue(XmlConstants.ID);
-        
+
         if (id != null && !id.isBlank()) {
             try {
                 descriptor.builder.id(URI.create(id));
-                
+
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor id must be valid URI but was " + id);
             }
-        }  
+        }
 
         parseHref(stack, index, attrs).ifPresent(descriptor.builder::href);
 
         parseDefinition(stack, index, attrs).ifPresent(descriptor.builder::definition);
-        
+
         descriptor.builder.type(parseType(stack, attrs));
 
         final String rt = attrs.getValue(XmlConstants.RETURN_TYPE);
-        
+
         if (rt != null && !rt.isBlank()) {
             descriptor.builder.returnType(URI.create(rt));
         }
-        
+
         final String name = attrs.getValue(XmlConstants.NAME);
-        
+
         if (name != null && !name.isBlank()) {
             descriptor.builder.name(name);
         }
 
         final String title = attrs.getValue(XmlConstants.TITLE);
-        
+
         if (title != null && !title.isBlank()) {
             descriptor.builder.title(title);
         }
 
         descriptor.builder.tag(parseTag(attrs));
-        
+
         return descriptor;
     }
 
     private static final Optional<URI> parseDefinition(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
-        
+
         final String definition = attrs.getValue(XmlConstants.DEFINITION);
-        
+
         if (definition != null && !definition.isBlank()) {
             try {
                 return Optional.of(URI.create(definition));
-                
+
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor def attribute must be valid URI but was " + definition);
             }
-        }        
+        }
         return Optional.empty();
     }
 
     private static final Optional<URI> parseHref(final Deque<XmlElement> stack, int index, final Attributes attrs) throws InvalidDocumentException {
 
         final String href = attrs.getValue(XmlConstants.HREF);
-        
+
         if (href != null && !href.isBlank()) {
             try {
                 return Optional.of(URI.create(href));
-                
+
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.DESCRIPTOR, index), "Descriptor href attribute must be valid URI but was " + href);
             }
         }
         return Optional.empty();
     }
-    
+
     private static final DescriptorType parseType(final Deque<XmlElement> stack, final Attributes attrs) throws InvalidDocumentException {
 
         final String value = attrs.getValue(XmlConstants.TYPE);
-        
+
         if (value == null || value.isBlank()) {
             return DescriptorType.SEMANTIC;
         }
-     
-        try { 
+
+        try {
             return DescriptorType.valueOf(value.toUpperCase());
-            
+
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.INVALID_TYPE, XPathUtil.getPath(stack, XmlConstants.TYPE), "Expected one of " + Arrays.toString(DescriptorType.values()) + " but was " + value);
         }
@@ -139,7 +139,7 @@ public class XmlDescriptor extends XmlElement {
     protected static final List<String> parseTag(final Attributes attrs) {
 
         final String value = attrs.getValue(XmlConstants.TAG);
-        
+
         if (value != null && !value.isBlank()) {
             return Arrays.asList(value.split("\\s+")).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
         }
@@ -150,45 +150,45 @@ public class XmlDescriptor extends XmlElement {
         if (descriptors == null || descriptors.isEmpty()) {
             return;
         }
-        
+
         for (final Descriptor descriptor : descriptors) {
 
             final boolean selfClose = descriptor.descriptors().isEmpty()
                     && descriptor.documentation().isEmpty()
                     && descriptor.links().isEmpty()
                     && descriptor.extensions().isEmpty();
-            
+
             writer.startDescriptor(descriptor, selfClose, verbose);
-            
+
             if (!selfClose) {
                 XmlDocumentation.write(descriptor.documentation(), writer, verbose);
-                
+
                 XmlLink.write(descriptor.links(), writer);
-                
+
                 XmlDescriptor.write(descriptor.descriptors(), writer, verbose);
-                
+
                 XmlExtension.write(descriptor.extensions(), writer);
-                
+
                 writer.endDescriptor();
             }
         }
     }
-    
+
     @Override
     public void complete(XmlDescriptor descriptor) {
         builder.add(descriptor.builder.build());
     }
-    
+
     @Override
     public void complete(XmlDocumentation doc) {
         builder.add(doc.builder.build());
     }
-    
+
     @Override
     public void complete(XmlLink link) {
         builder.add(link.link);
     }
-    
+
     @Override
     public void complete(XmlExtension ext) {
         builder.add(ext.builder.build());

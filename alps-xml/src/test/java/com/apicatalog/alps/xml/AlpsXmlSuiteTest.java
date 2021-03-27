@@ -50,97 +50,97 @@ class AlpsXmlSuiteTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
     void testCase(final TestDescription testCase) throws IOException {
-        
+
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
-        
+
         Document document = null;
-        
+
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream(testCase.getInput())) {
-            
+
             assertNotNull(is);
-            
+
             document = (new XmlDocumentParser()).parse(URI.create("http://example.com"), is);
-            
+
         } catch (DocumentParserException e) {
 
             if (testCase.isNegativeTest()) {
                 return;
             }
-            
-            fail(e.getMessage(), e);                
+
+            fail(e.getMessage(), e);
         }
-        
+
         assertNotNull(document);
-        
+
         compare(testCase, document);
     }
-    
+
     static final Stream<TestDescription> testCaseMethodSource() throws IOException {
-        
+
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream("manifest.json")) {
-            
+
             assertNotNull(is);
-            
+
             final JsonParser jsonParser = Json.createParser(is);
-            
+
             jsonParser.next();
-            
+
             final JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
-            
+
             return tests.stream().map(JsonObject.class::cast).map(TestDescription::of);
         }
     }
-    
+
     static final void compare(final TestDescription testCase, final Document document) {
 
         if (testCase.getExpected() == null) {
             return;
         }
-                
+
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream(testCase.getExpected())) {
-            
+
             assertNotNull(is);
-            
+
             byte[] expectedBytes = is.readAllBytes();
-            
+
             Transformer inputTransformer = createInputTransformer();
-            
+
             final org.w3c.dom.Document expected = readDocument(inputTransformer, new ByteArrayInputStream(expectedBytes));
             expected.normalizeDocument();
-            
+
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            
+
             XmlDocumentWriter.create(new OutputStreamWriter(outputStream), true, false).write(document);
-            
+
             final byte[] outputBytes = outputStream.toByteArray();
 
             final org.w3c.dom.Document output = readDocument(inputTransformer, new ByteArrayInputStream(outputBytes));
             output.normalizeDocument();
 
             final boolean match = expected.isEqualNode(output);
-            
+
             if (!match) {
-                
+
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
                 System.out.println("Expected:");
 
                 System.out.println(new String(expectedBytes));
-                
+
                 System.out.println("\n\n");
                 System.out.println("Actual:\n");
 
                 System.out.println(new String(outputBytes));
                 System.out.println();
-                
+
                 fail("Expected output does not match.");
             }
-            
+
         } catch (IOException | DocumentWriterException e) {
-            fail(e.getMessage(), e);            
+            fail(e.getMessage(), e);
         }
-    }    
-    
+    }
+
     private static final Transformer createInputTransformer() {
 
         try (final InputStream is = AlpsXmlSuiteTest.class.getResourceAsStream("strip-whitespace.xsl")) {
@@ -152,23 +152,23 @@ class AlpsXmlSuiteTest {
         } catch (TransformerFactoryConfigurationError | TransformerException | IOException e) {
             fail(e.getMessage(), e);
         }
-        
+
         return null;
     }
-    
+
     private static final org.w3c.dom.Document readDocument(Transformer transformer, InputStream source) {
 
         try {
             final DOMResult result = new DOMResult();
-            
+
             transformer.transform(new StreamSource(source), result);
-            
+
             return (org.w3c.dom.Document)result.getNode();
 
         } catch (TransformerFactoryConfigurationError | TransformerException e) {
             fail(e.getMessage(), e);
         }
-        
+
         return null;
     }
 }

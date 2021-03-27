@@ -20,15 +20,15 @@ import java.util.List;
 
 public interface Link {
 
-	/**
-	 * {@link URI} pointing to an external document whose relationship to the current document 
-	 * or <code>descriptor</code> is described by the associated {@link #rel()} property
-	 *  
-	 * @return {@link URI} of an external document
-	 */
-	URI href();
-	
-	String rel();
-	
-	List<String> tag();
+    /**
+     * {@link URI} pointing to an external document whose relationship to the current document
+     * or <code>descriptor</code> is described by the associated {@link #rel()} property
+     *
+     * @return {@link URI} of an external document
+     */
+    URI href();
+
+    String rel();
+
+    List<String> tag();
 }

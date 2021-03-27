@@ -25,30 +25,30 @@ abstract class XmlElement {
 
     private final int elementIndex;
     private final String elementName;
-    
+
     private int descriptors;
     private int links;
     private int docs;
     private int exts;
-    
+
     protected XmlElement(String elementName, int elementIndex) {
         this.elementName = elementName;
         this.elementIndex = elementIndex;
-        
+
         this.descriptors = 0;
         this.links = 0;
         this.docs = 0;
         this.exts = 0;
     }
-    
+
     public String getElementName() {
         return elementName;
     }
-    
+
     public int getElementIndex() {
         return elementIndex;
     }
-    
+
     public void beginDescriptor(final Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlDescriptor dsc = XmlDescriptor.create(stack, descriptors++, attrs);
         stack.push(dsc);
@@ -63,19 +63,19 @@ abstract class XmlElement {
         final XmlDocumentation doc = XmlDocumentation.create(docs++, attrs);
         stack.push(doc);
     }
-    
+
     public void beginExtension(Deque<XmlElement> stack, Attributes attrs) throws DocumentParserException {
         final XmlExtension ext = XmlExtension.create(stack, exts++, attrs);
         stack.push(ext);
-    }    
-    
+    }
+
     public void addText(char[] ch, int start, int length) {}
-    
+
     public void complete(XmlDescriptor descriptor) {}
-    
+
     public void complete(XmlDocumentation doc) {}
-    
+
     public void complete(XmlLink link) {}
-    
+
     public void complete(XmlExtension ext) {}
 }

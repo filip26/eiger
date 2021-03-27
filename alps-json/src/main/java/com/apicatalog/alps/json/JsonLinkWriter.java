@@ -28,37 +28,37 @@ import jakarta.json.JsonValue;
 final class JsonLinkWriter {
 
     private JsonLinkWriter() {}
-    
+
     public static final JsonValue toJson(Set<Link> links) {
-        
+
         if (links.size() == 1) {
             return toJson(links.iterator().next());
         }
-        
+
         final JsonArrayBuilder jsonLinks = Json.createArrayBuilder();
-        
+
         links.stream().map(JsonLinkWriter::toJson).forEach(jsonLinks::add);
-        
+
         return jsonLinks.build();
     }
 
     public static final JsonValue toJson(Link link) {
-        
+
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
-        
+
         if (link.href() != null) {
             jsonLink.add(JsonConstants.HREF, link.href().toString());
         }
-        
+
         if (link.rel() != null && !link.rel().isBlank()) {
             jsonLink.add(JsonConstants.RELATION, link.rel());
         }
-        
+
         // tag
         if (!link.tag().isEmpty()) {
-            jsonLink.add(JsonConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+            jsonLink.add(JsonConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-        
+
         return jsonLink.build();
     }
 }

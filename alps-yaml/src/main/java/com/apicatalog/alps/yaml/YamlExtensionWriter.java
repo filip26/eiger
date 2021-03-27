@@ -27,39 +27,39 @@ import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 final class YamlExtensionWriter {
 
     private YamlExtensionWriter() {}
-        
+
     public static final YamlNode toYaml(Set<Extension> extensions) {
-        
+
         if (extensions.size() == 1) {
             return toYaml(extensions.iterator().next());
         }
-        
+
         final YamlSequenceBuilder yamlExt = Yaml.createSequenceBuilder();
-        
+
         extensions.stream().map(YamlExtensionWriter::toYaml).forEach(yamlExt::add);
-        
+
         return yamlExt.build();
     }
 
     public static final YamlNode toYaml(Extension extension) {
-        
+
         final YamlMappingBuilder yamlExt = Yaml.createMappingBuilder();
 
         yamlExt.add(YamlConstants.ID, extension.id().toString());
 
         extension.href().ifPresent(href -> yamlExt.add(YamlConstants.HREF, href.toString()));
         extension.value().ifPresent(value -> yamlExt.add(YamlConstants.VALUE, value));
-        
+
         // tag
         if (YamlDocumentWriter.isNotEmpty(extension.tag())) {
             yamlExt.add(YamlConstants.TAG, extension.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-        
+
         // custom attributes
         extension
                 .attributes()
                 .forEach(yamlExt::add);
-        
+
         return yamlExt.build();
     }
 }

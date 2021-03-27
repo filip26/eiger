@@ -35,29 +35,29 @@ public final class DocumentStatistics {
     }
 
     public static final DocumentStatistics of(Document document) {
-        
+
         final DocumentStatistics stats = new DocumentStatistics();
-     
+
         stats.descriptors = document.descriptors().size();
         stats.docs = document.documentation().size();
         stats.links = document.links().size();
         stats.extensions = document.extensions().size();
 
         add(stats, document.descriptors());
-        
+
         return stats;
     }
 
     static final void add(DocumentStatistics stats, Collection<Descriptor> descriptors) {
-        
+
         stats.descriptors += descriptors.size();
 
         for (final Descriptor descriptor : descriptors) {
-            
+
             stats.docs += descriptor.documentation().size();
             stats.links += descriptor.links().size();
             stats.extensions += descriptor.extensions().size();
-            
+
             if (!descriptor.descriptors().isEmpty()) {
                 add(stats, descriptor.descriptors());
             }
@@ -67,15 +67,15 @@ public final class DocumentStatistics {
     public long getDescriptors() {
         return descriptors;
     }
-    
+
     public long getDocs() {
         return docs;
     }
-    
+
     public long getLinks() {
         return links;
     }
-    
+
     public long getExtensions() {
         return extensions;
     }

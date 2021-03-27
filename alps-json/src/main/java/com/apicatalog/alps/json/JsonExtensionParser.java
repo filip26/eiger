@@ -30,92 +30,92 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 
 final class JsonExtensionParser {
-    
+
     private JsonExtensionParser() {}
 
     protected static final Set<Extension> parse(final JsonValue jsonValue) throws InvalidDocumentException {
-        
+
         final Set<Extension> extension = new HashSet<>();
-        
+
         for (final JsonValue item : JsonUtils.toArray(jsonValue)) {
-            
+
             if (JsonUtils.isObject(item)) {
                 extension.add(parseObject(item.asJsonObject()));
-                
+
             } else {
                 throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION, "Expected JSON string or object but was " + item.getValueType());
             }
-        }        
+        }
         return extension;
     }
-    
+
     private static final Extension parseObject(final JsonObject jsonObject) throws InvalidDocumentException {
-        
+
         // id
         if (JsonUtils.isNotString(jsonObject.get(JsonConstants.ID))) {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, "An extension must have valid 'id' property but was " + jsonObject);
         }
- 
+
         final ExtensionBuilder builder = Alps.createExtension();
-        
+
         try {
-            
+
             builder.id(URI.create(jsonObject.getString(JsonConstants.ID)));
-            
+
         } catch (IllegalArgumentException e) {
             throw new InvalidDocumentException(DocumentError.MALFORMED_URI, "An extension id must be valid URI but was " + jsonObject.getString(JsonConstants.ID));
         }
-        
+
         // href
         if (jsonObject.containsKey(JsonConstants.HREF)) {
             builder.href(JsonUtils.getHref(jsonObject));
         }
-        
+
         // value
         if (jsonObject.containsKey(JsonConstants.VALUE)) {
-            
+
             final JsonValue value = jsonObject.get(JsonConstants.VALUE);
-            
+
             if (JsonUtils.isNotString(value)) {
                 throw new InvalidDocumentException(DocumentError.INVALID_EXTENSION_VALUE, "An extension value must be represented as JSON string but was " + value);
             }
-            
+
             builder.value(JsonUtils.getString(value));
         }
-        
+
         // tag
         builder.tag(JsonDescriptorParser.parseTag(jsonObject));
-        
+
         return parseAttributes(builder, jsonObject.entrySet()).build();
     }
 
     private static final ExtensionBuilder parseAttributes(ExtensionBuilder builder, Set<Map.Entry<String, JsonValue>> attrs) {
-    
-        // custom attributes        
+
+        // custom attributes
         for (Map.Entry<String, JsonValue> attr : attrs) {
-            
-            if (JsonConstants.HREF.equalsIgnoreCase(attr.getKey()) 
-                    || JsonConstants.VALUE.equalsIgnoreCase(attr.getKey()) 
+
+            if (JsonConstants.HREF.equalsIgnoreCase(attr.getKey())
+                    || JsonConstants.VALUE.equalsIgnoreCase(attr.getKey())
                     || JsonConstants.ID.equalsIgnoreCase(attr.getKey())) {
                 continue;
             }
-    
+
             if (JsonUtils.isScalar(attr.getValue())) {
-                
+
                 final String value;
-                
+
                 if (JsonUtils.isString(attr.getValue())) {
-    
+
                     value = JsonUtils.getString(attr.getValue());
-                    
+
                 } else {
                     value = attr.toString();
                 }
-                
+
                 builder.attribute(attr.getKey(), value);
             }
         }
-        
+
         return builder;
     }
 

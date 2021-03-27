@@ -50,7 +50,7 @@ final class Transformer implements Callable<Integer> {
 
     enum Source { XML, JSON, OAS }
     enum Target { XML, JSON, YAML }
-        
+
     @Option(names = { "-s", "--source" },  description = "source media type, e.g. --source=oas for OpenAPI", paramLabel = "(xml|json|oas)")
     Source source = null;
 
@@ -60,7 +60,7 @@ final class Transformer implements Callable<Integer> {
     @Option(names = { "-h", "--help" },  hidden = true, usageHelp = true)
     boolean help = false;
 
-    @Parameters(index = "0", arity = "0..1", description = "input file") 
+    @Parameters(index = "0", arity = "0..1", description = "input file")
     File file;
 
     @Option(names = { "-p", "--pretty" }, description = "print pretty JSON|XML")
@@ -70,27 +70,27 @@ final class Transformer implements Callable<Integer> {
     boolean verbose = false;
 
     @Spec CommandSpec spec;
-    
+
     Transformer() {}
-    
+
     public final int transform() throws Exception {
 
         String sourceMediaType = null;
-        
+
         if (Source.JSON.equals(source)) {
             sourceMediaType = Constants.MEDIA_TYPE_ALPS_JSON;
-            
+
         } else if (Source.XML.equals(source)) {
             sourceMediaType = Constants.MEDIA_TYPE_ALPS_XML;
-            
+
         } else if (Source.OAS.equals(source)) {
             sourceMediaType = Constants.MEDIA_TYPE_OPEN_API;
         }
-        
+
         if (file != null) {
-            
+
             if (!file.exists()) {
-                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");            
+                spec.commandLine().getErr().println("Input file '" + file + "' does not exist.");
                 return spec.exitCodeOnInvalidInput();
             }
 
@@ -103,59 +103,59 @@ final class Transformer implements Callable<Integer> {
                 sourceMediaType = Utils.detectMediaType(file);
             }
         }
-        
+
         if (sourceMediaType == null) {
             spec.commandLine().getErr().println("Missing '--source=(xml|json|oas)' option.");
             return spec.exitCodeOnInvalidInput();
         }
-        
+
         return transform(sourceMediaType);
     }
-    
+
     private final int transform(final String sourceMediaType) throws Exception {
-        
+
         InputStream inputStream = null;
-        
+
         if (file != null) {
             inputStream = new FileInputStream(file);
         }
-        
+
         if (inputStream == null) {
             inputStream = System.in;
         }
-        
+
         try {
             return transform(sourceMediaType, inputStream, spec.commandLine().getOut());
-            
+
         } catch (DocumentParserException e) {
             Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
-            
+
         } catch (DocumentWriterException e) {
             spec.commandLine().getErr().println(e.getMessage());
         }
         return spec.exitCodeOnExecutionException();
     }
-    
+
     protected final int transform(final String sourceMediaType, final InputStream source, final PrintWriter target) throws Exception {
-        
+
         final DocumentParser parser;
-        
+
         try {
             parser = Utils.getParser(sourceMediaType);
-            
+
         } catch (IllegalArgumentException e) {
             spec.commandLine().getErr().println(e.getMessage());
-            return spec.exitCodeOnInvalidInput();            
+            return spec.exitCodeOnInvalidInput();
         }
-        
+
         final Document document = parser.parse(null, source);
-        
+
         if (document == null) {
             return spec.exitCodeOnInvalidInput();
         }
-        
+
         try (final DocumentWriter writer = getWriter(target)) {
-            writer.write(document);            
+            writer.write(document);
         }
 
         return spec.exitCodeOnSuccess();
@@ -165,19 +165,19 @@ final class Transformer implements Callable<Integer> {
     public Integer call() throws Exception {
         return transform();
     }
-    
+
     private final DocumentWriter getWriter(final Writer writer) throws DocumentWriterException {
 
         if (Target.JSON.equals(target)) {
             return JsonDocumentWriter.create(writer, pretty, verbose);
-            
+
         } else if (Target.XML.equals(target)) {
             return XmlDocumentWriter.create(writer, pretty, verbose);
-            
+
         } else if (Target.YAML.equals(target)) {
             return YamlDocumentWriter.create(writer, verbose);
         }
 
         throw new IllegalStateException();
-    }    
+    }
 }

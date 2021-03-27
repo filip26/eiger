@@ -31,32 +31,32 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 final class XmlExtension extends XmlElement {
 
     final ExtensionBuilder builder;
-    
+
     private XmlExtension(int index) {
         super(XmlConstants.EXTENSION, index);
         this.builder = Alps.createExtension();
     }
-    
+
     public static final XmlExtension create(Deque<XmlElement> stack, int elementIndex, Attributes attributes) throws InvalidDocumentException {
-        
+
         final XmlExtension ext = new XmlExtension(elementIndex);
 
         final String id = attributes.getValue(XmlConstants.ID);
-        
+
         if (id != null && !id.isBlank()) {
-            
+
             try {
                 ext.builder.id(URI.create(id));
             } catch (IllegalArgumentException e) {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension id must be valid URI but was " + id);
             }
-            
+
         } else {
             throw new InvalidDocumentException(DocumentError.MISSING_ID, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex));
         }
 
         final String href = attributes.getValue(XmlConstants.HREF);
-        
+
         if (href != null && !href.isBlank()) {
             try {
                 ext.builder.href(URI.create(href));
@@ -64,23 +64,23 @@ final class XmlExtension extends XmlElement {
                 throw new InvalidDocumentException(DocumentError.MALFORMED_URI, XPathUtil.getPath(stack, XmlConstants.EXTENSION, elementIndex), "Extension href must be valid URI but was " + href);
             }
         }
-        
+
         final String value = attributes.getValue(XmlConstants.VALUE);
-        
+
         if (value != null && !value.isBlank()) {
             ext.builder.value(value);
         }
-        
+
         // tag
         ext.builder.tag(XmlDescriptor.parseTag(attributes));
-        
+
         // custom attributes
         for (int i = 0; i < attributes.getLength(); i++) {
-            
+
             String attrName = attributes.getLocalName(i);
-            
-            if (XmlConstants.HREF.equalsIgnoreCase(attrName) 
-                    || XmlConstants.VALUE.equalsIgnoreCase(attrName) 
+
+            if (XmlConstants.HREF.equalsIgnoreCase(attrName)
+                    || XmlConstants.VALUE.equalsIgnoreCase(attrName)
                     || XmlConstants.ID.equalsIgnoreCase(attrName)) {
                 continue;
             }
@@ -90,15 +90,15 @@ final class XmlExtension extends XmlElement {
 
         return ext;
     }
-    
+
     public static void write(Set<Extension> extensions, DocumentStreamWriter writer) throws DocumentWriterException {
 
         if (extensions == null || extensions.isEmpty()) {
             return;
         }
-        
+
         for (final Extension extension : extensions) {
             writer.writeExtension(extension);
-        }        
+        }
     }
 }
