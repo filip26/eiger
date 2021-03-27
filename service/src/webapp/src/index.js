@@ -3,6 +3,14 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+require('codemirror/lib/codemirror.css');
+require('codemirror/theme/material-darker.css');
+
+require('codemirror/mode/xml/xml.js');
+require('codemirror/mode/yaml/yaml.js');
+require('codemirror/mode/javascript/javascript.js');
+
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

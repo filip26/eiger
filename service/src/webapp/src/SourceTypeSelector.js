@@ -42,7 +42,7 @@ export default function SourceTypeSelector() {
         >
           <MenuItem value={10}>ALPS+XML</MenuItem>
           <MenuItem value={20}>ALPS+JSON</MenuItem>
-          <MenuItem value={30}>OpenAPI v3</MenuItem>
+          <MenuItem value={30}>OpenAPI v3 (YAML)</MenuItem>
         </Select>
       </FormControl>
   );

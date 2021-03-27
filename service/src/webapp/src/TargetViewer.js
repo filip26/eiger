@@ -20,13 +20,13 @@ info:
 `;
 
 class TargetViewer extends React.Component {
-    
+
 state = { value: exampleCode };
-    
+
     render() {
-    
+
       const { classes } = this.props;
-    
+
     return (
 <CodeMirror
 className={classes.root}
@@ -38,8 +38,8 @@ className={classes.root}
     readOnly: 'nocursor',
   }}
 />
-    )        
-    }    
+    )
+    }
 }
 
 export default withStyles(styles)(TargetViewer);

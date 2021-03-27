@@ -11,45 +11,44 @@ import Checkbox from '@material-ui/core/Checkbox';
 const useStyles = makeStyles((theme) => ({
 }));
 
-export default function TargetOptions() {
+export default function TargetOptions(props) {
+    
     const classes = useStyles();
 
-     const [age, setAge] = React.useState('');
+    const handlePrettyChange = event => {
+        props.onChange({pretty: event.target.checked});
+    }
 
-      const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+    const handleVerboseChange = event => {
+        props.onChange({verbose: event.target.checked});
+    }
 
-   const [state, setState] = React.useState({
-    checkedA: false,
-    checkedB: true,
-  });
-
-  return (
-               <FormControl className={classes.formControl2}>
-
-         <FormGroup row>
-      <FormControlLabel
-
-
-        control={
-          <Checkbox
-
-            className={classes.targetOption}
-            checked={state.checkedB}
-            onChange={handleChange}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Pretty"
-      />
-            <FormControlLabel
-        control={<Checkbox checked={state.checkedA}              className={classes.targetOption} onChange={handleChange}             color="primary" name="checkedA" />}
-        label="Verbose"
-      />
-
-    </FormGroup>
-      </FormControl>
-  );
+    return (
+        <FormControl className={classes.formControl}>
+            <FormGroup row>
+                <FormControlLabel
+                    control={
+                      <Checkbox            
+                        className={classes.targetOption}
+                        checked={props.pretty}
+                        name="pretty"
+                        color="primary"
+                        onChange={handlePrettyChange}
+                      />}
+                    label="Pretty"
+                    />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            className={classes.targetOption}                        
+                            checked={props.verbose} 
+                            color="primary" 
+                            name="checkedA"
+                            onChange={handleVerboseChange}
+                            />}
+                    label="Verbose"
+                    />
+            </FormGroup>
+        </FormControl>
+        );
 }

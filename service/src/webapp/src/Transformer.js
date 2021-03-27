@@ -6,10 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Welcome from './Welcome';
 import SourceTypeSelector from './SourceTypeSelector';
-import SourceEditor from './SourceEditor';
 import TargetTypeSelector from './TargetTypeSelector';
-import TargetViewer from './TargetViewer';
 import TargetOptions from './TargetOptions';
+import Code from './Code';
 
 const styles = theme => ({
     paper: {
@@ -26,7 +25,20 @@ const styles = theme => ({
 
 class Transformer extends React.Component {
 
-    render() {    
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            verbose: false,
+            pretty: true,
+        }
+    }
+    
+    handleTargetOptionsChange = (state) => {
+        this.setState(state); 
+    }
+
+    render() {
         const { classes } = this.props;
 
         return (
@@ -34,7 +46,7 @@ class Transformer extends React.Component {
             <Welcome />
 
             <Container maxWidth="md">
-            
+
                 <Paper className={classes.paper} elevation={1} square>
                     <Grid>
                         <Grid item>
@@ -44,7 +56,7 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item>
                             <div className={classes.control}>
-                                <SourceEditor />
+                                <Code />
                             </div>
                         </Grid>
                     </Grid>
@@ -56,19 +68,19 @@ class Transformer extends React.Component {
                             <TargetTypeSelector />
                         </Grid>
                         <Grid item>
-                                         <div className={classes.control}>
-                            <TargetOptions />
+                            <div className={classes.control}>
+                                <TargetOptions pretty={this.state.pretty} verbose={this.state.verbose} onChange={this.handleTargetOptionsChange}/>
                             </div>
                         </Grid>
                     </Grid>
                 </Paper>
-                
+
                 <Button variant="contained" color="primary" fullWidth size="large">Process</Button>
-    
+
                 <Paper className={classes.paper} elevation={1} square>
-                    <TargetViewer />
+                    <Code />
                 </Paper>
-            
+
             </Container>
         </React.Fragment>
         );

@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import {Controlled as CodeMirror} from 'react-codemirror2'
 
 
-import exampleC from './openapi.yaml';
 
 
 //const useStyles = makeStyles((theme) => ({
@@ -20,16 +19,14 @@ const styles = theme => ({
   }
 });
 
-const exampleCode = exampleC;
 
 
+const exampleCode = `openapi: 3.0.2
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+`;
 
-//const exampleCode = `openapi: 3.0.2
-//info:
-//  title: Swagger Petstore - OpenAPI 3.0
-//`;
-
-class SourceEditor extends React.Component {
+class Code extends React.Component {
 state = { value: exampleCode }
 
 
@@ -56,4 +53,4 @@ className={classes.root}
   }
 }
 
-export default withStyles(styles)(SourceEditor);
+export default withStyles(styles)(Code);
