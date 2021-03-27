@@ -32,7 +32,7 @@ export default function TypeSelector(props) {
                 className={classes.mediaTypeSelector}
                 >
                 {props.options.map((o) => (
-                    <MenuItem value={o.model + "+" + o.format}>{o.label}</MenuItem>
+                    <MenuItem key={o.model + o.format} value={o.model + "+" + o.format}>{o.label}</MenuItem>
                 ))}
 
             </Select>

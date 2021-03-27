@@ -35,7 +35,7 @@ export default function Header() {
                 <FilterHdrIcon className={classes.icon}/>
                 <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
                 
-                    Eiger Service <sup className={classes.version}>v0.4.9</sup>
+                    Eiger <sup className={classes.version}>v0.4.9</sup>
                 </Typography>
 
                 <div className={classes.padding} />
