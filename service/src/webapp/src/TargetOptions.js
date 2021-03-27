@@ -16,11 +16,11 @@ export default function TargetOptions(props) {
     const classes = useStyles();
 
     const handlePrettyChange = event => {
-        props.onChange({pretty: event.target.checked});
+        props.onChange && props.onChange({pretty: event.target.checked});
     }
 
     const handleVerboseChange = event => {
-        props.onChange({verbose: event.target.checked});
+        props.onChange && props.onChange({verbose: event.target.checked});
     }
 
     return (
