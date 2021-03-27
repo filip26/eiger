@@ -42,8 +42,8 @@ class Transformer extends React.Component {
         this.state = {
             verbose: false,
             pretty: true,
-            sourceType: { model: "oas", format: "yaml" },
-            targetType: { model: "alps", format: "xml" },
+            sourceType: sourceTypes[2],
+            targetType: targetTypes[0],
         }
     }
     
@@ -51,12 +51,8 @@ class Transformer extends React.Component {
         this.setState(state); 
     }
     
-    handleSourceTypeChange = type => {
-        this.setState({sourceType: type});
-    }
-
-    handleTargetTypeChange = type => {
-        this.setState({targetType: type});
+    handleTypeChange = (key, type) => {
+        this.setState({[key]: type});
     }
 
     render() {
@@ -68,13 +64,13 @@ class Transformer extends React.Component {
 
             <Container maxWidth="md">
 
-                <Paper className={classes.paper} elevation={1} square>
+                <Paper className={classes.paper} elevation={1}>
                     <Grid>
                         <Grid item>
                             <div className={classes.control}>
                                 <TypeSelector 
                                     value={this.state.sourceType} 
-                                    onChange={this.handleSourceTypeChange}
+                                    onChange={this.handleTypeChange.bind(this, "sourceType")}
                                     labelId="source-select-label"
                                     label="Source"
                                     options={sourceTypes}
@@ -89,12 +85,12 @@ class Transformer extends React.Component {
                     </Grid>
                 </Paper>
 
-                <Paper className={classes.paper} elevation={1} square>
+                <Paper className={classes.paper} elevation={1}>
                     <Grid container spacing={4}>
                         <Grid item>
                                 <TypeSelector 
                                     value={this.state.targetType} 
-                                    onChange={this.handleTargetTypeChange}
+                                    onChange={this.handleTypeChange.bind(this, "targetType")}
                                     labelId="target-select-label"
                                     label="Target"
                                     options={targetTypes}
@@ -110,7 +106,7 @@ class Transformer extends React.Component {
 
                 <Button variant="contained" color="primary" fullWidth size="large">Process</Button>
 
-                <Paper className={classes.paper} elevation={1} square>
+                <Paper className={classes.paper} elevation={1}>
                     <Code />
                 </Paper>
 

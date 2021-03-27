@@ -1,37 +1,31 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-const useStyles = makeStyles((theme) => ({
-
-}));
+import { 
+    InputLabel,
+    MenuItem,
+    FormControl,
+    Select,
+    } from '@material-ui/core';
 
 export default function TypeSelector(props) {
 
-    const classes = useStyles();
-    
-    const handleChange = (event) => {
+    const handleChange =  event => {
         
         const type = event.target.value.split("+");
         
-        props.onChange && props.onChange({model: type[0], format: type[1]});        
+        props.onChange && props.onChange(props.options.find(o => o.model === type[0] && o.format === type[1]));        
     };
 
     return (
-        <FormControl className={classes.formControl} variant="outlined">
+        <FormControl variant="outlined">
             <InputLabel id={props.labelId}>{props.label}</InputLabel>
             <Select
                 labelId={props.labelId}
                 value={props.value.model + "+" + props.value.format}
                 onChange={handleChange}
                 label={props.label}
-                className={classes.mediaTypeSelector}
                 >
-                {props.options.map((o) => (
+                {props.options && props.options.map(o => (
                     <MenuItem key={o.model + o.format} value={o.model + "+" + o.format}>{o.label}</MenuItem>
                 ))}
 
