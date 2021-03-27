@@ -6,25 +6,32 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import GitHubButton from 'react-github-btn'
 
+import Link from '@material-ui/core/Link';
+
 const useStyles = makeStyles((theme) => ({
-  heroContent: {
-    padding: theme.spacing(8, 0, 4),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
+    content: {
+        padding: theme.spacing(8, 0, 4),
+    },
 }));
 
 export default function Welcome() {
+
   const classes = useStyles();
 
   return (
-      <div className={classes.heroContent}>
+      <div className={classes.content}>
         <Container maxWidth="md">
+
             <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>Transformer</Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                Application-Level Profile Semantics (ALPS)
+
+            <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                <Link href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps" color="inherit" target="_default">
+                    Application-Level Profile Semantics (ALPS)
+                </Link>
+                ,&nbsp;
+                <Link href="https://www.openapis.org/" color="inherit" target="_default">OpenAPI Specification (OAS)</Link>
             </Typography>
+
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
