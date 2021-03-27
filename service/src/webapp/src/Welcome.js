@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
     content: {
         padding: theme.spacing(8, 0, 4),
     },
+    name: {
+        fontFamily: "'Montserrat', Roboto, sans-serif;",
+    }
 }));
 
 export default function Welcome() {
@@ -22,9 +25,9 @@ export default function Welcome() {
       <div className={classes.content}>
         <Container maxWidth="md">
 
-            <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>Transformer</Typography>
+            <Typography component="h1" variant="h3" align="center" color="textPrimary" className={classes.name} gutterBottom>Transformer</Typography>
 
-            <Typography variant="h6" align="center" color="textSecondary" paragraph>
+            <Typography variant="h6" align="center" color="textSecondary" paragraph >
                 <Link href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps" color="inherit" target="_default">
                     Application-Level Profile Semantics (ALPS)
                 </Link>

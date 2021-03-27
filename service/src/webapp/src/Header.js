@@ -3,12 +3,18 @@ import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, AppBar, Toolbar, Typography } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import grey from '@material-ui/core/colors/grey';
-import amber from '@material-ui/core/colors/amber';
+import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
         backgroundColor: "#121212",
         color: grey[200],
+    },
+    icon: {
+        marginRight: theme.spacing(1),
+    },
+    appName: {
+        fontFamily: "'Montserrat', Roboto, sans-serif;",
     },
     padding: {
         flexGrow: 1,
@@ -26,7 +32,9 @@ export default function Header() {
     return (
         <AppBar position="relative" className={classes.appBar}>
             <Toolbar>
-                <Typography variant="h6" color="inherit" noWrap>
+                <FilterHdrIcon className={classes.icon}/>
+                <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
+                
                     Eiger Service <sup className={classes.version}>v0.4.9</sup>
                 </Typography>
 
