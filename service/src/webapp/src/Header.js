@@ -7,7 +7,7 @@ import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
-        backgroundColor: "#121212",
+        backgroundColor: grey[900],
         color: grey[200],
     },
     icon: {

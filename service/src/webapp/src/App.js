@@ -18,6 +18,7 @@ let theme = responsiveFontSizes(createMuiTheme( {
             main: amber.A200,
         },
         background: {
+            default: "#121212"
         }
     }
 }));
