@@ -56,6 +56,7 @@ class Transformer extends React.Component {
             pretty: true,
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
+            processing: false,
         }
 
          this.sourceRef = React.createRef();
@@ -85,16 +86,16 @@ class Transformer extends React.Component {
     }
 
     handleProcessing = () => {
-//        this.setState({}, () => {
-//            
+        this.setState({processing: true}, () => {
+            
             this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
             
                 .then(async response => {
     
-                    let state = {error: null};
+                    let state = {error: null, processing: false};
     
                     if (response.status !== 200) {
-                        state.error = "Service Error: " + response.statusText; 
+                        state.error = response.status + " " + response.statusText; 
                     }
     
                     return response.text().then(text => {
@@ -107,9 +108,9 @@ class Transformer extends React.Component {
                     
                 }).catch(error => {
                     console.error(error);
-                    this.setState({error: "An internal application error has occurred.", response: null});
+                    this.setState({error: "An internal application error has occurred.", response: null, processing: false});
                 }); 
-//        });
+        });
     }
     
     transform = async (sourceType, source, targetType, options) => {
@@ -187,8 +188,13 @@ class Transformer extends React.Component {
                     fullWidth
                     size="large"
                     onClick={this.handleProcessing}
-                    >Process</Button>
+                    disabled={this.state.processing}
+                    >{this.state.processing ? "Processing" : "Process"}</Button>
 
+                {this.state.processing &&
+                    <LinearProgress color="secondary"/>                    
+                }
+                
                 {this.state.error &&                    
                     <MuiAlert 
                         className={classes.paper} 
