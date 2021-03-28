@@ -10,8 +10,10 @@ Transform and validate [Application-Level Profile Semantics (ALPS)](https://tool
 
 ## Table of Contents  
 - [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Service](#service)
+- [CLI](#cli)
+  - [Installation](#installation)
+  - [Usage](#usage)
 - [Contributing](#contributing)  
 - [Resources](#resources)  
 - [Commercial Support](#commercial-support)
@@ -23,7 +25,13 @@ Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
 read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
 write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
-## Installation
+## Service
+
+An alpha version is avaiable here [https://eiger.apicatalog.com](https://eiger.apicatalog.com)
+
+## CLI
+
+### Installation
 
 Download the latest package:
 
@@ -36,7 +44,7 @@ Extract the zip content and make `eiger` command executable.
 > chmod +x eiger
 ```
 
-## Usage
+### Usage
 
 ```ShellSession
 > ./eiger -h
