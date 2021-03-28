@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { 
-    FormControl, 
+import {
+    FormControl,
     FormControlLabel,
     FormGroup,
     Checkbox,
@@ -18,7 +18,7 @@ export default function TargetOptions(props) {
             <FormGroup row>
                 <FormControlLabel
                     control={
-                      <Checkbox            
+                      <Checkbox
                         checked={props.pretty}
                         name="pretty"
                         color="primary"
@@ -28,9 +28,9 @@ export default function TargetOptions(props) {
                     />
                 <FormControlLabel
                     control={
-                        <Checkbox                        
-                            checked={props.verbose} 
-                            color="primary" 
+                        <Checkbox
+                            checked={props.verbose}
+                            color="primary"
                             name="checkedA"
                             onChange={handleChange.bind(this, "verbose")}
                             />}

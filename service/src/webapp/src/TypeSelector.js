@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { 
+import {
     InputLabel,
     MenuItem,
     FormControl,
@@ -10,10 +10,10 @@ import {
 export default function TypeSelector(props) {
 
     const handleChange =  event => {
-        
+
         const type = event.target.value.split("+");
-        
-        props.onChange && props.onChange(props.options.find(o => o.model === type[0] && o.format === type[1]));        
+
+        props.onChange && props.onChange(props.options.find(o => o.model === type[0] && o.format === type[1]));
     };
 
     return (

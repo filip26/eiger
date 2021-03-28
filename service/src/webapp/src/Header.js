@@ -1,7 +1,15 @@
 import React from 'react';
+
+import {
+    IconButton,
+    AppBar,
+    Toolbar,
+    Typography
+    } from '@material-ui/core';
+
 import { makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import { IconButton, AppBar, Toolbar, Typography } from '@material-ui/core';
+
 import GitHubIcon from '@material-ui/icons/GitHub';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
@@ -34,7 +42,7 @@ export default function Header() {
             <Toolbar variant="dense">
                 <FilterHdrIcon className={classes.icon}/>
                 <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
-                
+
                     Eiger <sup className={classes.version}>v0.4.9</sup>
                 </Typography>
 

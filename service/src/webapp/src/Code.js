@@ -5,21 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import {Controlled as CodeMirror} from 'react-codemirror2'
 
 
-
-
-//const useStyles = makeStyles((theme) => ({
-//
-//}));
-
 const styles = theme => ({
-
-
-  root: {
-    fontSize: '16px'
-  }
+    root: {
+        fontSize: '16px'
+    }
 });
-
-
 
 const exampleCode = `openapi: 3.0.2
 info:
@@ -27,30 +17,46 @@ info:
 `;
 
 class Code extends React.Component {
-state = { value: exampleCode }
 
+    constructor(props) {
+        super(props);
 
-  render() {
+        this.state = {
+            value: exampleCode
+        }
+    }
 
-      const { classes } = this.props;
+    value = () => {
+        return this.state.value;
+    }
 
-    return (
-<CodeMirror
-className={classes.root}
-  value={this.state.value}
-  options={{
-    mode: { name: "javascript", json: true },
-    theme: 'material-darker',
-    lineNumbers: true
-  }}
-  onBeforeChange={(editor, data, value) => {
-    this.setState({value});
-  }}
-  onChange={(editor, data, value) => {
-  }}
-/>
-    )
-  }
+    render() {
+        const { classes } = this.props;
+        const mode = this.props.type.format === 'json' ? { name: "javascript", json: true } : this.props.type.format;
+
+        let options = {
+                mode: mode,
+                theme: 'material-darker',
+                lineNumbers: true,
+            };
+
+        if (this.props.readOnly) {
+            options['readOnly'] = "nocursor";
+        }
+
+        return (
+            <CodeMirror
+                className={classes.root}
+                value={this.state.value}
+                options={options}
+                onBeforeChange={(editor, data, value) => {
+                    this.setState({value});
+                }}
+                onChange={(editor, data, value) => {
+                }}
+                />
+                );
+            }
 }
 
 export default withStyles(styles)(Code);
