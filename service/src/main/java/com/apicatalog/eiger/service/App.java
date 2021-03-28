@@ -33,7 +33,7 @@ public class App extends AbstractVerticle {
               .path("/transform")
               .consumes("application/alps+xml")
               .consumes("application/alps+json")
-              .consumes("application/oas??")  //TODO
+              .consumes("application/vnd.oai.openapi")
               .produces("application/alps+xml")
               .produces("application/alps+json")
               .produces("application/alps+yaml")

@@ -11,18 +11,13 @@ const styles = theme => ({
     }
 });
 
-const exampleCode = `openapi: 3.0.2
-info:
-  title: Swagger Petstore - OpenAPI 3.0
-`;
-
 class Code extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            value: exampleCode
+            value: props.value
         }
     }
 
@@ -31,8 +26,8 @@ class Code extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const mode = this.props.type.format === 'json' ? { name: "javascript", json: true } : this.props.type.format;
+        const { classes, type } = this.props;
+        const mode = type === 'json' ? { name: "javascript", json: true } : type;
 
         let options = {
                 mode: mode,
