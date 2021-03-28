@@ -71,18 +71,19 @@ class Transformer extends React.Component {
     }
     
     contentTypeToFormat = contentType => {
-        if (contentType.endsWith("json")) {
+        if (contentType.includes("json")) {
             return "json";
         }
-        if (contentType.endsWith("yaml")) {
+        if (contentType.includes("yaml")) {
             return "yaml";
         }
-        if (contentType.endsWith("xml")) {
+        if (contentType.includes("xml")) {
             return "xml";
         }
-        if (contentType === "text/plain") {
-            return "text";
+        if (contentType.includes( "html")) {
+            return "htmlmixed";
         }
+        return "text";
     }
 
     handleProcessing = () => {

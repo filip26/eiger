@@ -9,6 +9,7 @@ require('codemirror/theme/material-darker.css');
 require('codemirror/mode/xml/xml.js');
 require('codemirror/mode/yaml/yaml.js');
 require('codemirror/mode/javascript/javascript.js');
+require('codemirror/mode/htmlmixed/htmlmixed.js');
 
 
 ReactDOM.render(

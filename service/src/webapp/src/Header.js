@@ -38,7 +38,7 @@ export default function Header() {
     const classes = useStyles();
 
     return (
-        <AppBar position="relative" className={classes.appBar}>
+        <AppBar position="fixed" className={classes.appBar}>
             <Toolbar variant="dense">
                 <FilterHdrIcon className={classes.icon}/>
                 <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
