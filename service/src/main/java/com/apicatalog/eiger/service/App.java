@@ -1,5 +1,22 @@
 package com.apicatalog.eiger.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import com.apicatalog.alps.dom.Document;
+import com.apicatalog.alps.error.DocumentParserException;
+import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.io.DocumentParser;
+import com.apicatalog.alps.io.DocumentWriter;
+import com.apicatalog.alps.json.JsonDocumentParser;
+import com.apicatalog.alps.json.JsonDocumentWriter;
+import com.apicatalog.alps.oas.OpenApiReader;
+import com.apicatalog.alps.xml.XmlDocumentParser;
+import com.apicatalog.alps.xml.XmlDocumentWriter;
+import com.apicatalog.alps.yaml.YamlDocumentWriter;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
@@ -18,49 +35,61 @@ public class App extends AbstractVerticle {
 
         router.route("/").method(HttpMethod.GET).handler(ctx -> ctx.reroute("/index.html"));
         
-        router.route()
-            .method(HttpMethod.OPTIONS)
-            .handler(ctx -> {
-                    HttpServerResponse response = ctx.response();
-                    response.putHeader("Access-Control-Allow-Origin", "chrome-extension://aejoelaoggembcahagimdiliamlcdmfm");
-                    response.end();
-                });
-
         router.route().method(HttpMethod.POST).handler(BodyHandler.create().setBodyLimit(250000));
 
         router.route()
               .method(HttpMethod.POST)
               .path("/transform")
-              .consumes("application/alps+xml")
-              .consumes("application/alps+json")
-              .consumes("application/vnd.oai.openapi")
-              .produces("application/alps+xml")
-              .produces("application/alps+json")
-              .produces("application/alps+yaml")
+              .consumes(Constants.MEDIA_TYPE_ALPS_XML)
+              .consumes(Constants.MEDIA_TYPE_ALPS_JSON)
+              .consumes(Constants.MEDIA_TYPE_OPEN_API)
+              .produces(Constants.MEDIA_TYPE_ALPS_XML)
+              .produces(Constants.MEDIA_TYPE_ALPS_JSON)
+              .produces(Constants.MEDIA_TYPE_ALPS_YAML)
 
               .handler(ctx -> {
 
                       Buffer body = ctx.getBody();
 
+                      // This handler will be called for every request
+                      HttpServerResponse response = ctx.response();
 
+                      String acceptableContentType = ctx.getAcceptableContentType();
 
-                              // This handler will be called for every request
-                              HttpServerResponse response = ctx.response();
+                      boolean verbose = ctx.queryParam("verbose").stream().findFirst().map(Boolean::valueOf).orElse(false);
+                      boolean pretty = ctx.queryParam("pretty").stream().findFirst().map(Boolean::valueOf).orElse(false);
+                      
+                  try {
+                        
+                        final Buffer target = transform(ctx.request().getHeader("content-type"), new ByteArrayInputStream(body.getBytes()), acceptableContentType, verbose, pretty);
+                        
+                        response.putHeader("content-type", acceptableContentType);
 
-                              String acceptableContentType = ctx.getAcceptableContentType();
+                        // Write to the response and end it
+                        response.end(target);
+                        
+                      } catch (DocumentParserException e) {
+                          e.printStackTrace();
+//                      Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
+                          response.setStatusCode(400);
+                          response.putHeader("content-type", "text/plain");
+                          response.end(Buffer.buffer(e.getMessage()));
 
-                              response.putHeader("content-type", acceptableContentType);
+                      } catch (DocumentWriterException e) {
+                          e.printStackTrace();
+//                      spec.commandLine().getErr().println(e.getMessage());
+                          response.setStatusCode(500);
+                          response.putHeader("content-type", "text/plain");
+                          response.end(Buffer.buffer(e.getMessage()));
 
-                              // Write to the response and end it
-                              response.end(body);
-                          });
-
-//        router.route().handler(
-//                CorsHandler
-//                    .create()
-//                    .allowedMethod(HttpMethod.POST)
-//                    .addOrigin("chrome-extension://aejoelaoggembcahagimdiliamlcdmfm")
-//                );
+                    } catch (Throwable e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        response.setStatusCode(500);
+                        response.putHeader("content-type", "text/plain");
+                        response.end(Buffer.buffer(e.getMessage()));
+                    }        
+              });
 
         StaticHandler webapp = StaticHandler.create("META-INF/resources")
                 .setFilesReadOnly(true)
@@ -80,4 +109,77 @@ public class App extends AbstractVerticle {
                     System.err.println("Eiger HTTP service start failed [" + ctx.getMessage() + "].")
                 );
     }
+    
+//    static final Buffer transform(final String sourceType, final byte[] source, final String targetType, boolean verbose, boolean pretty) throws Exception {
+//
+//        try {
+//
+//
+//        } catch (DocumentParserException e) {
+//            e.printStackTrace();
+//            return Buffer.buffer(e.getMessage()); //FIXME
+////            Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
+//
+//        } catch (DocumentWriterException e) {
+//            e.printStackTrace();
+//            return Buffer.buffer(e.getMessage()); //FIXME
+////            spec.commandLine().getErr().println(e.getMessage());
+//        }
+//        
+//    }
+
+    static final Buffer transform(final String sourceMediaType, final InputStream source, final String targetType, boolean verbose, boolean pretty) throws Exception {
+
+        final DocumentParser parser;
+
+        parser = getParser(sourceMediaType);
+
+
+        final Document document = parser.parse(null, source);
+
+        if (document == null) {
+            return Buffer.buffer();
+        }
+
+        final StringWriter target = new StringWriter();
+        
+        try (final DocumentWriter writer = getWriter(targetType, pretty, verbose, target)) {
+            writer.write(document);
+        }
+
+        return Buffer.buffer(target.toString());
+    }
+    
+    static final DocumentWriter getWriter(final String target, final boolean pretty, final boolean verbose, final Writer writer) throws DocumentWriterException {
+
+        if (Constants.MEDIA_TYPE_ALPS_JSON.equals(target)) {
+            return JsonDocumentWriter.create(writer, pretty, verbose);
+
+        } else if (Constants.MEDIA_TYPE_ALPS_XML.equals(target)) {
+            return XmlDocumentWriter.create(writer, pretty, verbose);
+
+        } else if (Constants.MEDIA_TYPE_ALPS_YAML.equals(target)) {
+            return YamlDocumentWriter.create(writer, verbose);
+        }
+
+        throw new IllegalStateException();
+    }
+    
+    static final DocumentParser getParser(final String mediaType) {
+
+        if (Constants.MEDIA_TYPE_ALPS_JSON.equals(mediaType)) {
+            return new JsonDocumentParser();
+        }
+
+        if (Constants.MEDIA_TYPE_ALPS_XML.equals(mediaType)) {
+            return new XmlDocumentParser();
+        }
+
+        if (Constants.MEDIA_TYPE_OPEN_API.equals(mediaType)) {
+            return new OpenApiReader();
+        }
+
+        throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
+    }
+
 }

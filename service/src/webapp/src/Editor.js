@@ -11,7 +11,7 @@ const styles = theme => ({
     }
 });
 
-class Code extends React.Component {
+class Editor extends React.Component {
 
     constructor(props) {
         super(props);
@@ -54,4 +54,4 @@ class Code extends React.Component {
             }
 }
 
-export default withStyles(styles)(Code);
+export default withStyles(styles)(Editor);

@@ -13,7 +13,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Welcome from './Welcome';
 import TypeSelector from './TypeSelector';
 import TargetOptions from './TargetOptions';
-import Code from './Code';
+import Editor from './Editor';
+import Viewer from './Viewer';
 
 const styles = theme => ({
     paper: {
@@ -36,7 +37,7 @@ const sourceTypes = [
 
 const targetTypes = [
             {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alpsjson"},
+            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
             {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml"}
             ];
 
@@ -78,34 +79,44 @@ class Transformer extends React.Component {
         if (contentType.endsWith("xml")) {
             return "xml";
         }
+        if (contentType === "text/plain") {
+            return "text";
+        }
     }
 
-    handleProcessing = event => {
-
-        this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {})
-            .then(async response => {
-
-                if (response.status !== 200) {
-                    this.setState({error: "Service Error: " + response.statusText, response: null});
-                    return;    
-                }
-
-                return response.text().then(text => {
-                    this.setState({
-                        response: text,
-                        responseFormat: this.contentTypeToFormat(response.headers.get('content-type')),
-                        error: null,
-                    });                           
-                })
-                
-            }).catch(error => {
-                console.error(error);
-                this.setState({error: "An internal application error has occurred.", response: null});
-            });
+    handleProcessing = () => {
+//        this.setState({}, () => {
+//            
+            this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
+            
+                .then(async response => {
+    
+                    let state = {error: null};
+    
+                    if (response.status !== 200) {
+                        state.error = "Service Error: " + response.statusText; 
+                    }
+    
+                    return response.text().then(text => {
+                        
+                        state.response = text;
+                        state.responseFormat = this.contentTypeToFormat(response.headers.get('content-type'));
+                        
+                        this.setState(state);                           
+                    })
+                    
+                }).catch(error => {
+                    console.error(error);
+                    this.setState({error: "An internal application error has occurred.", response: null});
+                }); 
+//        });
     }
     
     transform = async (sourceType, source, targetType, options) => {
-        return fetch('/transform', {
+        
+        const url = '/transform?' + new URLSearchParams(options);        
+                                    
+        return fetch(url, {
             method: 'POST',
             headers: {
                 'Accept': targetType.mediaType + ";q=1,*/*",
@@ -141,7 +152,7 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item>
                             <div className={classes.control}>
-                                <Code
+                                <Editor
                                     type={this.state.sourceType.format}
                                     value={exampleCode}
                                     ref={this.sourceRef}
@@ -178,11 +189,6 @@ class Transformer extends React.Component {
                     onClick={this.handleProcessing}
                     >Process</Button>
 
-                {this.state.response &&
-                    <Paper className={classes.paper} elevation={1}>
-                        <Code type={this.state.responseFormat} readOnly value={this.state.response}/>
-                    </Paper>
-                    }
                 {this.state.error &&                    
                     <MuiAlert 
                         className={classes.paper} 
@@ -192,6 +198,12 @@ class Transformer extends React.Component {
                         >{this.state.error}</MuiAlert>
                     }
 
+                {this.state.response &&
+                    <Paper className={classes.paper} elevation={1}>
+                        <Viewer type={this.state.responseFormat} readOnly value={this.state.response}/>
+                    </Paper>
+                    }
+                    
             </Container>
         </React.Fragment>
         );
