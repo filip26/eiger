@@ -39,7 +39,7 @@ state = { value: exampleCode }
 className={classes.root}
   value={this.state.value}
   options={{
-    mode: 'yaml',
+    mode: { name: "javascript", json: true },
     theme: 'material-darker',
     lineNumbers: true
   }}

@@ -23,15 +23,15 @@ const styles = theme => ({
 });
 
 const sourceTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)"}, 
-            {model: "alps", format: "json", label: "ALPS (JSON)"}, 
-            {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)"}
+            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"}, 
+            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"}, 
+            {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: ""}
             ];
             
 const targetTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)"}, 
-            {model: "alps", format: "json", label: "ALPS (JSON)"}, 
-            {model: "alps", format: "yaml", label: "ALPS (YAML)"}
+            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"}, 
+            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alpsjson"}, 
+            {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml"}
             ];
 
 class Transformer extends React.Component {
@@ -62,7 +62,7 @@ class Transformer extends React.Component {
         <React.Fragment>
             <Welcome />
 
-            <Container maxWidth="md">
+            <Container maxWidth="lg">
 
                 <Paper className={classes.paper} elevation={1}>
                     <Grid>
@@ -79,7 +79,7 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item>
                             <div className={classes.control}>
-                                <Code />
+                                <Code type={this.state.sourceType}/>
                             </div>
                         </Grid>
                     </Grid>
@@ -107,7 +107,7 @@ class Transformer extends React.Component {
                 <Button variant="contained" color="primary" fullWidth size="large">Process</Button>
 
                 <Paper className={classes.paper} elevation={1}>
-                    <Code />
+                    <Code type={this.state.targetType} readOnly/>
                 </Paper>
 
             </Container>
