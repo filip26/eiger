@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
     content: {
-        padding: theme.spacing(8, 0, 4),
+        padding: theme.spacing(12, 0, 4),
     },
     name: {
         fontFamily: "'Montserrat', Roboto, sans-serif;",

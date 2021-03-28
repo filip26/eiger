@@ -16,19 +16,6 @@ import TargetOptions from './TargetOptions';
 import Editor from './Editor';
 import Viewer from './Viewer';
 
-const styles = theme => ({
-    paper: {
-        margin: `${theme.spacing(1)}px auto`,
-        padding: theme.spacing(2),
-    },
-    mediaTypeSelector: {
-        minWidth: theme.spacing(25),
-    },
-    control: {
-        margin: `${theme.spacing(1)}px auto`,
-    },
-});
-
 const sourceTypes = [
             {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
             {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
@@ -45,6 +32,23 @@ const exampleCode = `openapi: 3.0.2
 info:
   title: Swagger Petstore - OpenAPI 3.0
 `;
+
+
+const styles = theme => ({
+    paper: {
+        margin: `${theme.spacing(1)}px auto`,
+        padding: theme.spacing(2),
+    },
+    mediaTypeSelector: {
+        minWidth: theme.spacing(25),
+    },
+    control: {
+        margin: `${theme.spacing(1)}px auto auto auto`,
+    },
+    second: {
+        margin: `${theme.spacing(2)}px auto auto auto`,
+    }
+});
 
 class Transformer extends React.Component {
 
@@ -153,7 +157,7 @@ class Transformer extends React.Component {
                             </div>
                         </Grid>
                         <Grid item>
-                            <div className={classes.control}>
+                            <div className={classes.second}>
                                 <Editor
                                     type={this.state.sourceType.format}
                                     value={exampleCode}
@@ -167,6 +171,7 @@ class Transformer extends React.Component {
                 <Paper className={classes.paper} elevation={1}>
                     <Grid container spacing={4}>
                         <Grid item>
+                            <div className={classes.control}>
                                 <TypeSelector
                                     value={this.state.targetType}
                                     onChange={this.handleTypeChange.bind(this, "targetType")}
@@ -174,9 +179,10 @@ class Transformer extends React.Component {
                                     label="Target"
                                     options={targetTypes}
                                     />
+                            </div>
                         </Grid>
                         <Grid item>
-                            <div className={classes.control}>
+                            <div className={classes.second}>
                                 <TargetOptions pretty={this.state.pretty} verbose={this.state.verbose} onChange={this.handleTargetOptionsChange}/>
                             </div>
                         </Grid>
