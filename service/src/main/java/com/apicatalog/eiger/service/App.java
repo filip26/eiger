@@ -158,5 +158,4 @@ public class App extends AbstractVerticle {
 
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
     }
-
 }

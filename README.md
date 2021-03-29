@@ -10,8 +10,10 @@ Transform and validate [Application-Level Profile Semantics (ALPS)](https://tool
 
 ## Table of Contents  
 - [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Service](#service)
+- [CLI](#cli)
+  - [Installation](#installation)
+  - [Usage](#usage)
 - [Contributing](#contributing)  
 - [Resources](#resources)  
 - [Commercial Support](#commercial-support)
@@ -23,7 +25,13 @@ Mode | `ALPS+XML` | `ALPS+JSON` | `ALPS+YAML` | `OpenAPI 3.0`
 read |   :heavy_check_mark:  |  :heavy_check_mark:  | | :heavy_check_mark:  
 write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  
 
-## Installation
+## Service
+
+Alpha version is avaiable here [https://eiger.apicatalog.com](https://eiger.apicatalog.com)
+
+## CLI
+
+### Installation
 
 Download the latest package:
 
@@ -36,7 +44,7 @@ Extract the zip content and make `eiger` command executable.
 > chmod +x eiger
 ```
 
-## Usage
+### Usage
 
 ```ShellSession
 > ./eiger -h
@@ -128,9 +136,9 @@ Your contribution is welcome!
   - [x] ~0.3.1 `YamlWriter` (`ALPS+JSON`/`ALPS+XML` :arrow_right: `ALPS+YAML`)~
 - [x] ~0.4 OpenAPI Specification (`OAS` :arrow_right: `ALPS`)~
   - [x] ~0.4.1 Native Executables (Ubuntu, MacOS)~
-- [ ] 0.5 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
-- [ ] 0.6 Effective Document Processor
-- [ ] 0.7 Semantic Equivalence
+- [ ] 0.5 Effective Profile Processor
+- [ ] 0.6 Similarity  / Semantic Equivalence
+- [ ] 0.7 `YamlParser` (`ALPS+YAML` :arrow_right: `ALPS+JSON`/`ALPS+XML`)
 - [ ] TBD
 
 
@@ -146,9 +154,10 @@ Compile sources:
 ## Resources
 - [ALPS Specification Documents](https://github.com/alps-io/spec)
 - [A Method for Unified API Design](http://amundsen.com/talks/2020-04-goto-unified/index.html)
-- [draft-amundsen-richardson-foster-alps-06](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-06)
+- [draft-amundsen-richardson-foster-alps-06](https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps)
 - [alps.io group](https://groups.google.com/g/alps-io)
 - [alps.io homepage](http://alps.io/)
+- [ALPS Illustrated!](https://bit.ly/3tZ42Mq)
 
 ## Commercial Support
 Commercial support is available at filip26@gmail.com
