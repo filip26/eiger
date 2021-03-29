@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { 
-    Button, 
-    Paper, 
-    Grid, 
-    Container, 
+import {
+    Button,
+    Paper,
+    Grid,
+    Container,
     LinearProgress,
     } from '@material-ui/core/';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -28,9 +28,52 @@ const targetTypes = [
             {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml"}
             ];
 
-const exampleCode = `openapi: 3.0.2
+const openApi = `openapi: 3.0.2
 info:
-  title: Swagger Petstore - OpenAPI 3.0
+  title: Eiger Transformer API
+  version: 0.4.9
+servers:
+  - url: 'https://eiger.apicatalog.com'
+paths:
+  /transform:
+    post:
+      summary: Transforms ALPS and OAS documents
+      operationId: transform
+      parameters:
+        - name: verbose
+          in: query
+          description: Adds implicit attributes
+          schema:
+            type: boolean
+        - name: pretty
+          in: query
+          description: Enables indented output
+          schema:
+            type: boolean
+      requestBody:
+        content:
+          application/vnd.oai.openapi:
+            schema:
+              type: string
+          application/alps+xml:
+            schema:
+              type: string
+          application/alps+json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/alps+xml:
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/alps+yaml:
+              schema:
+                type: string
 `;
 
 
@@ -73,7 +116,7 @@ class Transformer extends React.Component {
     handleTypeChange = (key, type) => {
         this.setState({[key]: type});
     }
-    
+
     contentTypeToFormat = contentType => {
         if (contentType.includes("json")) {
             return "json";
@@ -92,36 +135,36 @@ class Transformer extends React.Component {
 
     handleProcessing = () => {
         this.setState({processing: true}, () => {
-            
+
             this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
-            
+
                 .then(async response => {
-    
+
                     let state = {error: null, processing: false};
-    
+
                     if (response.status !== 200) {
-                        state.error = response.status + " " + response.statusText; 
+                        state.error = response.status + " " + response.statusText;
                     }
-    
+
                     return response.text().then(text => {
-                        
+
                         state.response = text;
                         state.responseFormat = this.contentTypeToFormat(response.headers.get('content-type'));
-                        
-                        this.setState(state);                           
+
+                        this.setState(state);
                     })
-                    
+
                 }).catch(error => {
                     console.error(error);
                     this.setState({error: "An internal application error has occurred.", response: null, processing: false});
-                }); 
+                });
         });
     }
-    
+
     transform = async (sourceType, source, targetType, options) => {
-        
-        const url = '/transform?' + new URLSearchParams(options);        
-                                    
+
+        const url = '/transform?' + new URLSearchParams(options);
+
         return fetch(url, {
             method: 'POST',
             headers: {
@@ -160,7 +203,7 @@ class Transformer extends React.Component {
                             <div className={classes.second}>
                                 <Editor
                                     type={this.state.sourceType.format}
-                                    value={exampleCode}
+                                    value={openApi}
                                     ref={this.sourceRef}
                                     />
                             </div>
@@ -199,14 +242,14 @@ class Transformer extends React.Component {
                     >{this.state.processing ? "Processing" : "Process"}</Button>
 
                 {this.state.processing &&
-                    <LinearProgress color="secondary"/>                    
+                    <LinearProgress color="secondary"/>
                 }
-                
-                {this.state.error &&                    
-                    <MuiAlert 
-                        className={classes.paper} 
-                        elevation={1} 
-                        variant="filled" 
+
+                {this.state.error &&
+                    <MuiAlert
+                        className={classes.paper}
+                        elevation={1}
+                        variant="filled"
                         severity="error"
                         >{this.state.error}</MuiAlert>
                     }
@@ -216,7 +259,7 @@ class Transformer extends React.Component {
                         <Viewer type={this.state.responseFormat} readOnly value={this.state.response}/>
                     </Paper>
                     }
-                    
+
             </Container>
         </React.Fragment>
         );

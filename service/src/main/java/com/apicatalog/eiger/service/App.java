@@ -34,7 +34,7 @@ public class App extends AbstractVerticle {
         final Router router = Router.router(vertx);
 
         router.route("/").method(HttpMethod.GET).handler(ctx -> ctx.reroute("/index.html"));
-        
+
         router.route().method(HttpMethod.POST).handler(BodyHandler.create().setBodyLimit(250000));
 
         router.route()
@@ -51,53 +51,48 @@ public class App extends AbstractVerticle {
 
                       Buffer body = ctx.getBody();
 
-                      // This handler will be called for every request
                       HttpServerResponse response = ctx.response();
 
                       String acceptableContentType = ctx.getAcceptableContentType();
 
                       boolean verbose = ctx.queryParam("verbose").stream().findFirst().map(Boolean::valueOf).orElse(false);
                       boolean pretty = ctx.queryParam("pretty").stream().findFirst().map(Boolean::valueOf).orElse(false);
-                      
-                  try {
-                        
-                        final Buffer target = transform(ctx.request().getHeader("content-type"), new ByteArrayInputStream(body.getBytes()), acceptableContentType, verbose, pretty);
-                        
-                        response.putHeader("content-type", acceptableContentType);
 
-                        // Write to the response and end it
+                  try {
+                        final Buffer target = transform(ctx.request().getHeader("content-type"), new ByteArrayInputStream(body.getBytes()), acceptableContentType, verbose, pretty);
+
+                        response.setStatusCode(200);
+                        response.putHeader("content-type", acceptableContentType);
                         response.end(target);
-                        
+
                       } catch (DocumentParserException e) {
-                          e.printStackTrace();
-//                      Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
+
                           response.setStatusCode(400);
                           response.putHeader("content-type", "text/plain");
                           response.end(Buffer.buffer(e.getMessage()));
 
                       } catch (DocumentWriterException e) {
-                          e.printStackTrace();
-//                      spec.commandLine().getErr().println(e.getMessage());
+
                           response.setStatusCode(500);
                           response.putHeader("content-type", "text/plain");
                           response.end(Buffer.buffer(e.getMessage()));
 
                     } catch (Throwable e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+
                         response.setStatusCode(500);
                         response.putHeader("content-type", "text/plain");
                         response.end(Buffer.buffer(e.getMessage()));
-                    }        
+                    }
               });
 
         StaticHandler webapp = StaticHandler.create("META-INF/resources")
                 .setFilesReadOnly(true)
                 .setDirectoryListing(false)
-                .setCachingEnabled(false);
+                .setCachingEnabled(true)
+                ;
 
         router.route("/*").method(HttpMethod.GET).handler(webapp);
-        
+
         vertx
             .createHttpServer()
             .requestHandler(router)
@@ -105,28 +100,10 @@ public class App extends AbstractVerticle {
                 .onSuccess(ctx ->
                     System.out.println("Eiger HTTP service started on port " + ctx.actualPort() + ".")
                         )
-                .onFailure(ctx -> 
+                .onFailure(ctx ->
                     System.err.println("Eiger HTTP service start failed [" + ctx.getMessage() + "].")
                 );
     }
-    
-//    static final Buffer transform(final String sourceType, final byte[] source, final String targetType, boolean verbose, boolean pretty) throws Exception {
-//
-//        try {
-//
-//
-//        } catch (DocumentParserException e) {
-//            e.printStackTrace();
-//            return Buffer.buffer(e.getMessage()); //FIXME
-////            Validator.printError(spec.commandLine().getErr(), e, sourceMediaType, file);
-//
-//        } catch (DocumentWriterException e) {
-//            e.printStackTrace();
-//            return Buffer.buffer(e.getMessage()); //FIXME
-////            spec.commandLine().getErr().println(e.getMessage());
-//        }
-//        
-//    }
 
     static final Buffer transform(final String sourceMediaType, final InputStream source, final String targetType, boolean verbose, boolean pretty) throws Exception {
 
@@ -142,14 +119,14 @@ public class App extends AbstractVerticle {
         }
 
         final StringWriter target = new StringWriter();
-        
+
         try (final DocumentWriter writer = getWriter(targetType, pretty, verbose, target)) {
             writer.write(document);
         }
 
         return Buffer.buffer(target.toString());
     }
-    
+
     static final DocumentWriter getWriter(final String target, final boolean pretty, final boolean verbose, final Writer writer) throws DocumentWriterException {
 
         if (Constants.MEDIA_TYPE_ALPS_JSON.equals(target)) {
@@ -164,7 +141,7 @@ public class App extends AbstractVerticle {
 
         throw new IllegalStateException();
     }
-    
+
     static final DocumentParser getParser(final String mediaType) {
 
         if (Constants.MEDIA_TYPE_ALPS_JSON.equals(mediaType)) {

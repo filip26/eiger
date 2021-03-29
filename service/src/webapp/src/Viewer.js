@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Viewer(props) {
 
     const classes = useStyles();
- 
+
     const { type, value } = props;
     const mode = type === 'json' ? { name: "javascript", json: true } : type;
 
@@ -26,7 +26,7 @@ export default function Viewer(props) {
             options={{
                 mode: mode,
                 theme: 'material-darker',
-                lineNumbers: true,
+                lineNumbers: false,
                 readOnly: 'nocursor',
                 }}
             />
