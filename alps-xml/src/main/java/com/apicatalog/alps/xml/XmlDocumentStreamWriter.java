@@ -214,7 +214,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     public void writeDocContent(final String content) throws DocumentWriterException {
 
         try {
-            if (content.matches(".*[<>&].*")) {
+            if (content.contains("&") || content.contains("<") || content.contains(">")) {
                 writer.writeCData(content);
             } else {
                 writer.writeCharacters(content);
