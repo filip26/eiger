@@ -27,7 +27,7 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 ## Service
 
-An alpha version is avaiable here [https://eiger.apicatalog.com](https://eiger.apicatalog.com)
+Alpha version is avaiable here [https://eiger.apicatalog.com](https://eiger.apicatalog.com)
 
 ## CLI
 
