@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Documentation {
-	
-	Optional<URI> href();
 
-	Optional<Content> content();
+    Optional<URI> href();
 
-	List<String> tag();
-	
-	interface Content {
-	    
-	    String type();
-	    
-	    String value();	    
-	}
+    Optional<Content> content();
+
+    List<String> tag();
+
+    interface Content {
+
+        String type();
+
+        String value();
+    }
 }

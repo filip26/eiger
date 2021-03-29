@@ -14,6 +14,6 @@ public interface DocumentationBuilder {
     DocumentationBuilder type(String contentType);
 
     DocumentationBuilder href(URI href);
-    
+
     DocumentationBuilder tag(List<String> tag);
 }

@@ -1,0 +1,217 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>eiger-service</artifactId>
+
+    <name>ALPS Service</name>
+
+    <parent>
+        <groupId>com.apicatalog.eiger</groupId>
+        <artifactId>eiger</artifactId>
+        <version>0.4.9-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <vertx.version>4.0.3</vertx.version>
+        <main.verticle>com.apicatalog.eiger.service.App</main.verticle>
+        <launcher.class>io.vertx.core.Launcher</launcher.class>
+        
+        <frontend-src-dir>${project.basedir}/src/webapp</frontend-src-dir>
+        <node.version>v12.3.1</node.version>
+        <yarn.version>v1.16.0</yarn.version>
+        <frontend-maven-plugin.version>1.7.6</frontend-maven-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-stack-depchain</artifactId>
+                <version>${vertx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-junit5</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-xml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-yaml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apicatalog.eiger</groupId>
+            <artifactId>alps-oas</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    <dependency>
+		<groupId>org.glassfish</groupId>
+		<artifactId>jakarta.json</artifactId>
+		<version>${jakarta.json-p.version}</version>
+   </dependency>
+
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven.surefire.version}</version>
+        </plugin>
+
+		<plugin>
+		    <groupId>com.github.eirslett</groupId>
+		    <artifactId>frontend-maven-plugin</artifactId>
+		    <version>${frontend-maven-plugin.version}</version>
+		
+		    <configuration>
+		        <nodeVersion>${node.version}</nodeVersion>
+		        <yarnVersion>${yarn.version}</yarnVersion>
+		        <workingDirectory>${frontend-src-dir}</workingDirectory>
+		        <installDirectory>${project.build.directory}</installDirectory>
+		    </configuration>
+		
+		    <executions>
+		        <execution>
+		            <id>install-frontend-tools</id>
+		            <goals>
+		                <goal>install-node-and-yarn</goal>
+		            </goals>
+		        </execution>
+		
+		        <execution>
+		            <id>yarn-install</id>
+		            <goals>
+		                <goal>yarn</goal>
+		            </goals>
+		            <configuration>
+		                <arguments>install</arguments>
+		            </configuration>
+		        </execution>
+		
+		        <execution>
+		            <id>build-frontend</id>
+		            <goals>
+		                <goal>yarn</goal>
+		            </goals>
+		            <phase>prepare-package</phase>
+		            <configuration>
+		                <arguments>build</arguments>
+		            </configuration>
+		        </execution>
+		    </executions>
+		</plugin>
+
+		<plugin>
+		    <artifactId>maven-resources-plugin</artifactId>
+		    <version>3.0.1</version>
+		    <executions>
+		        <execution>
+		            <id>position-react-build</id>
+		            <goals>
+		                <goal>copy-resources</goal>
+		            </goals>
+		            <phase>prepare-package</phase>
+		            <configuration>
+		                <outputDirectory>${project.build.outputDirectory}/META-INF/resources</outputDirectory>
+		                <resources>
+		                    <resource>
+		                        <directory>${frontend-src-dir}/build</directory>
+		                        <filtering>false</filtering>
+		                    </resource>
+		                </resources>
+		            </configuration>
+		        </execution>
+		    </executions>
+		</plugin>
+
+        <plugin>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<executions>
+			  <execution>
+			    <phase>package</phase>
+			    <goals>
+			      <goal>single</goal>
+			    </goals>
+			  </execution>
+			</executions>
+			<configuration>
+			  <descriptorRefs>
+			    <descriptorRef>jar-with-dependencies</descriptorRef>
+			  </descriptorRefs>
+			  <archive>
+			    <manifest>
+			      <mainClass>${launcher.class}</mainClass>
+			    </manifest>
+			    <manifestEntries>
+			      <Main-Verticle>${main.verticle}</Main-Verticle>
+			    </manifestEntries>
+			  </archive>
+			</configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${maven.exec.version}</version>
+            <configuration>
+                <mainClass>${launcher.class}</mainClass>
+                <arguments>
+                    <argument>run</argument>
+                    <argument>${main.verticle}</argument>
+                </arguments>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+</project>

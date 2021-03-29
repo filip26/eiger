@@ -23,7 +23,7 @@ import com.apicatalog.alps.error.DocumentWriterException;
 public interface DocumentWriter extends AutoCloseable {
 
     void write(Document document) throws IOException, DocumentWriterException;
-    
+
     @Override
     void close() throws Exception;
 }

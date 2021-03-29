@@ -21,10 +21,10 @@ final class PrintUtils {
 
     private PrintUtils() {
     }
-        
+
     public static final String versionToString(DocumentVersion version) {
         if (version != null) {
-            
+
             if (DocumentVersion.VERSION_1_0.equals(version)) {
                 return "1.0";
             }
@@ -32,5 +32,5 @@ final class PrintUtils {
         }
         return "n/a";
     }
-    
+
 }

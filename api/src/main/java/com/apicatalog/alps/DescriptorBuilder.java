@@ -10,26 +10,26 @@ import com.apicatalog.alps.dom.element.Extension;
 import com.apicatalog.alps.dom.element.Link;
 
 public interface DescriptorBuilder {
-    
+
     DescriptorBuilder add(Descriptor descriptor);
-    
+
     DescriptorBuilder add(DescriptorBuilder descriptor);
 
-    
+
     DescriptorBuilder add(Documentation documentation);
-        
+
     DescriptorBuilder add(DocumentationBuilder documentation);
 
-    
+
     DescriptorBuilder add(Extension extension);
-    
+
     DescriptorBuilder add(ExtensionBuilder extension);
 
     DescriptorBuilder add(Link link);
-    
+
     DescriptorBuilder add(LinkBuilder link);
 
-    
+
     DescriptorBuilder id(URI id);
     DescriptorBuilder type(DescriptorType type);
     DescriptorBuilder title(String title);
@@ -39,7 +39,7 @@ public interface DescriptorBuilder {
     DescriptorBuilder returnType(URI returnType);
 
     DescriptorBuilder tag(List<String> tag);
-    
+
     Descriptor build();
-    
+
 }

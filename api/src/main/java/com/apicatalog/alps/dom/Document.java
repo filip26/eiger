@@ -27,43 +27,43 @@ import com.apicatalog.alps.dom.element.Link;
 /**
  * An ALPS document contains a machine-readable collection of
  * identifying strings and their human-readable explanations.
- * 
+ *
  * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2">ALPS Document</a>
  */
 public interface Document {
-	
+
     Optional<Descriptor> findById(final URI id);
-    
+
     Set<Descriptor> findByName(final String name);
-    
-	/**
-	 * Indicates the version of the ALPS specification used in the document.
+
+    /**
+     * Indicates the version of the ALPS specification used in the document.
      * Currently the only valid value is '1.0'.  If no value appears, then
      * 'version="1.0"' is implied.
      *
      * @see <a href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2.2.14">ALPS Version</a>
-     * 
+     *
      * @return ALPS document version, never <code>null</code>
-	 */
-	DocumentVersion version();
+     */
+    DocumentVersion version();
 
-	/**
-	 * Returns top level document descriptors.
-	 * 
-	 * @return top level document descriptors, never <code>null</code>
-	 */
-	Set<Descriptor> descriptors();
-	
-	Set<Link> links();
-	
-	Set<Documentation> documentation();
-	
-	Set<Extension> extensions();
-	
-	/**
-	 * Base {@link URI} of the ALPS document 
-	 * 
-	 * @return base {@link URI}
-	 */
-	URI baseUri();	
+    /**
+     * Returns top level document descriptors.
+     *
+     * @return top level document descriptors, never <code>null</code>
+     */
+    Set<Descriptor> descriptors();
+
+    Set<Link> links();
+
+    Set<Documentation> documentation();
+
+    Set<Extension> extensions();
+
+    /**
+     * Base {@link URI} of the ALPS document
+     *
+     * @return base {@link URI}
+     */
+    URI baseUri();
 }

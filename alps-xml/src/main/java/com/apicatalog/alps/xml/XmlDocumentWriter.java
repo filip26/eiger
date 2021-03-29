@@ -31,31 +31,31 @@ public class XmlDocumentWriter implements DocumentWriter {
     private final XMLStreamWriter writer;
     private final int indentLength;
     private final boolean verbose;
-    
+
     public XmlDocumentWriter(final XMLStreamWriter writer, final int indentLength, final boolean verbose) {
         this.writer = writer;
         this.indentLength = indentLength;
         this.verbose = verbose;
     }
-    
+
     public static final DocumentWriter create(final Writer writer, final boolean prettyPrint, final boolean verbose) throws DocumentWriterException {
-        
+
         final XMLOutputFactory factory = XMLOutputFactory.newDefaultFactory();
         factory.setProperty("escapeCharacters", false);
 
         try {
             return new XmlDocumentWriter(factory.createXMLStreamWriter(writer), prettyPrint ? 4 : -1, verbose);
-            
+
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);
         }
     }
-    
+
     @Override
     public void write(Document document) throws IOException, DocumentWriterException {
-        XmlDocument.write(document, new XmlDocumentStreamWriter(writer, indentLength), verbose);        
-    }   
-    
+        XmlDocument.write(document, new XmlDocumentStreamWriter(writer, indentLength), verbose);
+    }
+
     @Override
     public void close() throws Exception {
         //ignored

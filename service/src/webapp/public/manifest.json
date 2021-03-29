@@ -1,0 +1,8 @@
+{
+  "short_name": "Eiger",
+  "name": "Eiger ALPS Transformer UI",
+  "start_url": "https://eiger.apicatalog.com",
+  "display": "standalone",
+  "theme_color": "#1a1a1a",
+  "background_color": "#eaeaea"
+}

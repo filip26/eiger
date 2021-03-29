@@ -27,35 +27,35 @@ import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 
 final class JsonDescriptorWriter {
-    
+
     private JsonDescriptorWriter() {}
 
     public static final JsonValue toJson(final Set<Descriptor> descriptors, final boolean verbose) {
-        
+
         if (descriptors.size() == 1) {
             return toJson(descriptors.iterator().next(), verbose);
         }
-        
+
         final JsonArrayBuilder jsonDescriptors = Json.createArrayBuilder();
-        
+
         descriptors.stream().map(d -> JsonDescriptorWriter.toJson(d, verbose)).forEach(jsonDescriptors::add);
-        
+
         return jsonDescriptors.build();
     }
 
     public static final JsonValue toJson(final Descriptor descriptor, final boolean verbose) {
-        
+
         final JsonObjectBuilder jsonDescriptor = Json.createObjectBuilder();
-        
+
         descriptor.id().ifPresent(id -> jsonDescriptor.add(JsonConstants.ID, id.toString()));
-        
+
         if (descriptor.type() != null && !DescriptorType.SEMANTIC.equals(descriptor.type())) {
             jsonDescriptor.add(JsonConstants.TYPE, descriptor.type().name().toLowerCase());
-            
+
         } else if (verbose) {
             jsonDescriptor.add(JsonConstants.TYPE, DescriptorType.SEMANTIC.name().toLowerCase());
         }
-        
+
         descriptor.href().ifPresent(href -> jsonDescriptor.add(JsonConstants.HREF, href.toString()));
         descriptor.definition().ifPresent(def -> jsonDescriptor.add(JsonConstants.DEFINITION, def.toString()));
         descriptor.name().ifPresent(name -> jsonDescriptor.add(JsonConstants.NAME, name));
@@ -64,12 +64,12 @@ final class JsonDescriptorWriter {
 
         // tag
         if (!descriptor.tag().isEmpty()) {
-            jsonDescriptor.add(JsonConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));            
+            jsonDescriptor.add(JsonConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
         }
-        
+
         // documentation
         JsonDocumentationWriter.toJson(descriptor.documentation(), verbose).ifPresent(doc -> jsonDescriptor.add(JsonConstants.DOCUMENTATION, doc));
-        
+
         // descriptors
         if (JsonDocumentWriter.isNotEmpty(descriptor.descriptors())) {
             jsonDescriptor.add(JsonConstants.DESCRIPTOR, toJson(descriptor.descriptors(), verbose));
@@ -86,5 +86,5 @@ final class JsonDescriptorWriter {
         }
 
         return jsonDescriptor.build();
-    }  
+    }
 }

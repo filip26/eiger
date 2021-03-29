@@ -25,21 +25,21 @@ import com.apicatalog.alps.error.DocumentWriterException;
 public interface DocumentStreamWriter {
 
     void startDocument(DocumentVersion version) throws DocumentWriterException;
-    
+
     void endDocument() throws DocumentWriterException;
-    
+
     void startDescriptor(Descriptor descriptor, boolean selfClose, boolean verbose) throws DocumentWriterException;
-    
+
     void endDescriptor() throws DocumentWriterException;
-    
+
     void startDoc(Documentation doc, boolean selfClose, boolean verbose) throws DocumentWriterException;
-    
+
     void writeDocContent(String content) throws DocumentWriterException;
-    
+
     void endDoc() throws DocumentWriterException;
-    
+
     void writeLink(Link link) throws DocumentWriterException;
-    
+
     void writeExtension(Extension extension) throws DocumentWriterException;
-            
+
 }

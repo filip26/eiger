@@ -24,28 +24,28 @@ import java.util.Optional;
 public interface Extension  {
 
     URI id();
-    
+
     List<String> tag();
-    
-	/**
-	 * {@link URI} pointing to an external document which provides the definition of the extension
-	 *  
-	 * @return {@link URI} of an external document
-	 */
-	default Optional<URI> href() {
-	    return Optional.empty();
-	}
-	
-	default Optional<String> value() {
-	    return Optional.empty();
-	}
-	
-	/**
-	 * A map of custom attributes that are not specified by the ALPS specification.
+
+    /**
+     * {@link URI} pointing to an external document which provides the definition of the extension
      *
-	 * @return {@link Map} of custom attributes
-	 */
-	default Map<String, String> attributes() {
-	    return Collections.emptyMap();
-	}
+     * @return {@link URI} of an external document
+     */
+    default Optional<URI> href() {
+        return Optional.empty();
+    }
+
+    default Optional<String> value() {
+        return Optional.empty();
+    }
+
+    /**
+     * A map of custom attributes that are not specified by the ALPS specification.
+     *
+     * @return {@link Map} of custom attributes
+     */
+    default Map<String, String> attributes() {
+        return Collections.emptyMap();
+    }
 }

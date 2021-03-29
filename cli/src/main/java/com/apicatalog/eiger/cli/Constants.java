@@ -16,13 +16,13 @@
 package com.apicatalog.eiger.cli;
 
 final class Constants {
-   
+
     static final String MEDIA_TYPE_ALPS_JSON = "application/alps+json";
     static final String MEDIA_TYPE_ALPS_XML = "application/alps+xml";
     static final String MEDIA_TYPE_ALPS_YAML = "application/alps+yaml";
-    
+
     static final String MEDIA_TYPE_OPEN_API = "application/vnd.oai.openapi";
-    
+
     private Constants() {
     }
 }

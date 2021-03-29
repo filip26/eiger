@@ -26,7 +26,7 @@ final class Utils {
 
     private Utils() {
     }
-    
+
     static final String detectMediaType(File file) {
         if (file.getName() != null) {
             if (file.getName().toLowerCase().endsWith(".xml") || file.getName().toLowerCase().endsWith("+xml")) {
@@ -36,16 +36,16 @@ final class Utils {
             if (file.getName().toLowerCase().endsWith(".json") || file.getName().toLowerCase().endsWith("+json")) {
                 return Constants.MEDIA_TYPE_ALPS_JSON;
             }
-            
+
             if (file.getName().toLowerCase().endsWith(".yaml") || file.getName().toLowerCase().endsWith(".yml") || file.getName().toLowerCase().endsWith("+yaml")) {
                 return Constants.MEDIA_TYPE_ALPS_YAML;
             }
         }
         return null;
     }
-    
+
     static final DocumentParser getParser(final String mediaType) {
-        
+
         if (Constants.MEDIA_TYPE_ALPS_JSON.equals(mediaType)) {
             return new JsonDocumentParser();
         }
@@ -53,7 +53,7 @@ final class Utils {
         if (Constants.MEDIA_TYPE_ALPS_XML.equals(mediaType)) {
             return new XmlDocumentParser();
         }
-        
+
         if (Constants.MEDIA_TYPE_OPEN_API.equals(mediaType)) {
             return new OpenApiReader();
         }

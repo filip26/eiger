@@ -27,32 +27,32 @@ import com.apicatalog.yaml.node.builder.YamlSequenceBuilder;
 final class YamlLinkWriter {
 
     private YamlLinkWriter() {}
-    
+
     public static final YamlNode toYaml(Set<Link> links) {
-        
+
         if (links.size() == 1) {
             return toYaml(links.iterator().next());
         }
-        
+
         final YamlSequenceBuilder yamlLinks = Yaml.createSequenceBuilder();
-        
+
         links.stream().map(YamlLinkWriter::toYaml).forEach(yamlLinks::add);
-        
+
         return yamlLinks.build();
     }
 
     public static final YamlNode toYaml(Link link) {
-        
+
         final YamlMappingBuilder yamlLink = Yaml.createMappingBuilder();
-        
+
         if (link.href() != null) {
             yamlLink.add(YamlConstants.HREF, link.href().toString());
         }
-        
+
         if (link.rel() != null && !link.rel().isBlank()) {
             yamlLink.add(YamlConstants.RELATION, link.rel());
         }
-        
+
         // tag
         if (YamlDocumentWriter.isNotEmpty(link.tag())) {
             yamlLink.add(YamlConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));

@@ -45,11 +45,11 @@ public final class JsonDocumentParser implements DocumentParser {
         if (stream == null) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
-        
+
             return parse(baseUri, Json.createParser(stream));
-            
+
         } catch (JsonException e) {
             throw new DocumentParserException(e);
         }
@@ -61,73 +61,73 @@ public final class JsonDocumentParser implements DocumentParser {
         if (reader == null) {
             throw new IllegalArgumentException();
         }
-        
+
         try {
-        
+
             return parse(baseUri, Json.createParser(reader));
-            
+
         } catch (JsonException e) {
             throw new DocumentParserException(e);
         }
     }
-    
+
     private static final Document parse(URI baseUri, JsonParser parser)  throws DocumentParserException {
-        
+
         try {
-        
+
             if (!parser.hasNext()) {
                 throw new DocumentParserException("Expected JSON object but was an empty input");
             }
-                
+
             final Event event = parser.next();
-            
+
             if (!Event.START_OBJECT.equals(event)) {
                 throw new DocumentParserException("Expected JSON object but was " + event);
             }
-            
+
             final JsonObject rootObject = parser.getObject();
-            
+
             if (!rootObject.containsKey(JsonConstants.ROOT)) {
                 throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + JsonConstants.ROOT + "' is not present");
             }
-            
+
             final JsonValue alpsObject = rootObject.get(JsonConstants.ROOT);
-            
+
             if (JsonUtils.isNotObject(alpsObject)) {
                 throw new InvalidDocumentException(DocumentError.MISSING_ROOT, "Property '" + JsonConstants.ROOT + "' does not contain JSON object");
             }
-                
+
             return parse(baseUri, alpsObject.asJsonObject());
-            
+
         } catch (JsonParsingException e) {
             throw new MalformedDocumentException(e.getLocation().getLineNumber(), e.getLocation().getColumnNumber(), "Document is not valid JSON document.");
         }
     }
-    
+
     public static final Document parse(final URI baseUri, final JsonObject alpsObject) throws DocumentParserException {
 
         final DocumentBuilder builder = Alps.createDocument(DocumentVersion.VERSION_1_0).base(baseUri);
-        
+
         // documentation
         if (alpsObject.containsKey(JsonConstants.DOCUMENTATION)) {
-            JsonDocumentationParser.parse(alpsObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);            
+            JsonDocumentationParser.parse(alpsObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);
         }
-        
+
         // links
         if (alpsObject.containsKey(JsonConstants.LINK)) {
             JsonLinkParser.parse(alpsObject.get(JsonConstants.LINK)).forEach(builder::add);
         }
-        
+
         // descriptors
         if (alpsObject.containsKey(JsonConstants.DESCRIPTOR)) {
             JsonDescriptorParser.parse(alpsObject.get(JsonConstants.DESCRIPTOR)).forEach(builder::add);
         }
-        
+
         // extensions
         if (alpsObject.containsKey(JsonConstants.EXTENSION)) {
             JsonExtensionParser.parse(alpsObject.get(JsonConstants.EXTENSION)).forEach(builder::add);
-        }        
-        
+        }
+
         return builder.build();
     }
 }

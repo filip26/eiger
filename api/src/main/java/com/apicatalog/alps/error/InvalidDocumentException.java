@@ -16,11 +16,11 @@
 package com.apicatalog.alps.error;
 
 public final class InvalidDocumentException extends DocumentParserException {
-    
+
     private static final long serialVersionUID = -7523514970503251586L;
 
     private final DocumentError code;
-    
+
     private final String path;
 
     public InvalidDocumentException(DocumentError code, final String message) {
@@ -32,7 +32,7 @@ public final class InvalidDocumentException extends DocumentParserException {
         this.code = code;
         this.path = path;
     }
-    
+
     public InvalidDocumentException(DocumentError code, String path, final Throwable cause) {
         super(cause);
         this.code = code;
@@ -42,8 +42,8 @@ public final class InvalidDocumentException extends DocumentParserException {
     public DocumentError getCode() {
         return code;
     }
-    
+
     public String getPath() {
         return path;
-    }    
+    }
 }

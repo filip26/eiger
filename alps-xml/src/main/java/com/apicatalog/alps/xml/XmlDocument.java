@@ -30,13 +30,13 @@ import com.apicatalog.alps.error.InvalidDocumentException;
 final class XmlDocument extends XmlElement {
 
     final DocumentBuilder builder;
-    
+
     public XmlDocument(DocumentVersion version) {
         super(XmlConstants.DOCUMENT, -1);
-        
+
         this.builder = Alps.createDocument(version);
     }
-    
+
     public static final XmlDocument create(Attributes attrs) throws SAXException {
         return new XmlDocument(readVersion(attrs));
     }
@@ -48,9 +48,9 @@ final class XmlDocument extends XmlElement {
 
         if (version == null || version.isBlank() || "1.0".equals(version)) {
 
-            return DocumentVersion.VERSION_1_0;            
+            return DocumentVersion.VERSION_1_0;
         }
-        
+
         throw new SAXException();
     }
 
@@ -63,12 +63,12 @@ final class XmlDocument extends XmlElement {
     public void complete(XmlDocumentation doc) {
         builder.add(doc.builder.build());
     }
-    
+
     @Override
     public void complete(XmlLink link) {
         builder.add(link.link);
     }
-    
+
     @Override
     public void complete(XmlExtension ext) {
         builder.add(ext.builder.build());
@@ -77,18 +77,18 @@ final class XmlDocument extends XmlElement {
     public static void write(Document document, DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
 
         writer.startDocument(document.version());
-                
+
         XmlDocumentation.write(document.documentation(), writer, verbose);
-        
+
         XmlLink.write(document.links(), writer);
 
         XmlDescriptor.write(document.descriptors(), writer, verbose);
-        
+
         XmlExtension.write(document.extensions(), writer);
 
-        writer.endDocument();        
+        writer.endDocument();
     }
-    
+
     public Document build(URI baseUri) throws InvalidDocumentException {
         return builder.base(baseUri).build();
     }

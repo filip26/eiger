@@ -16,28 +16,28 @@
 package com.apicatalog.alps.error;
 
 public final class MalformedDocumentException extends DocumentParserException {
-    
+
     private static final long serialVersionUID = -4042494993712747461L;
 
     private final long columnNumber;
     private final long lineNumber;
-    
+
     public MalformedDocumentException(long lineNumber, long columnNumber, String message) {
         super(message);
         this.columnNumber = columnNumber;
         this.lineNumber = lineNumber;
     }
-    
+
     public MalformedDocumentException(long lineNumber, long columnNumber, Throwable cause) {
         super(cause);
         this.columnNumber = columnNumber;
         this.lineNumber = lineNumber;
-    }    
-    
+    }
+
     public long getColumnNumber() {
         return columnNumber;
     }
-    
+
     public long getLineNumber() {
         return lineNumber;
     }

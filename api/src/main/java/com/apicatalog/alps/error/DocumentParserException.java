@@ -16,15 +16,15 @@
 package com.apicatalog.alps.error;
 
 public class DocumentParserException extends Exception {
-    
+
     private static final long serialVersionUID = -1277283759805773786L;
 
     public DocumentParserException(String message) {
         super(message);
     }
-    
+
     public DocumentParserException(Throwable cause) {
         super(cause.getMessage(), cause);
     }
-    
+
 }

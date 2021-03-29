@@ -16,16 +16,16 @@ import com.apicatalog.alps.dom.element.Link;
 final class DocumentBuilderImpl implements DocumentBuilder {
 
     final DocumentImpl document;
-    
+
     public DocumentBuilderImpl(DocumentVersion version) {
         this.document = new DocumentImpl(version);
-        
+
         this.document.documentation = new LinkedHashSet<>();
         this.document.links = new LinkedHashSet<>();
         this.document.descriptors = new LinkedHashSet<>();
-        this.document.extensions = new LinkedHashSet<>();        
+        this.document.extensions = new LinkedHashSet<>();
     }
-    
+
     public Document build() {
         return document;
     }
@@ -34,11 +34,11 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         document.descriptors.add(descriptor);
         return this;
     }
-    
+
     public DocumentBuilderImpl add(DescriptorBuilder descriptor) {
         return add(descriptor.build());
     }
-    
+
     public DocumentBuilderImpl add(Documentation documentation) {
         document.documentation.add(documentation);
         return this;
@@ -52,7 +52,7 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         document.extensions.add(extension);
         return this;
     }
-    
+
     @Override
     public DocumentBuilder add(ExtensionBuilder extension) {
         return add(extension.build());
@@ -62,36 +62,36 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         document.links.add(link);
         return this;
     }
-    
+
     @Override
     public DocumentBuilder add(LinkBuilder link) {
         return add(link.build());
     }
-    
+
     @Override
     public DocumentBuilder base(URI baseUri) {
         document.setBaseUri(baseUri);
         return this;
     }
-    
+
     static final class DocumentImpl implements Document {
 
         protected DocumentVersion version;
-        
+
         protected URI baseUri;
-        
+
         protected Set<Documentation> documentation;
-        
+
         protected Set<Link> links;
-        
+
         protected Set<Extension> extensions;
-        
+
         protected Set<Descriptor> descriptors;
 
         public DocumentImpl(DocumentVersion version) {
             this.version = version;
         }
-        
+
         @Override
         public DocumentVersion version() {
             return version;
@@ -121,11 +121,11 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         public URI baseUri() {
             return baseUri;
         }
-        
+
         public void setBaseUri(URI baseUri) {
             this.baseUri = baseUri;
         }
-        
+
         @Override
         public Optional<Descriptor> findById(final URI id) {
             return descriptors.stream().filter(d -> d.id().isPresent() && id.equals(d.id().get())).findFirst();

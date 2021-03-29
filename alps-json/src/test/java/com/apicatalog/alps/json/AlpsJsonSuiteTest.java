@@ -46,70 +46,70 @@ class AlpsJsonSuiteTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCaseMethodSource")
     void testCase(TestDescription testCase) throws IOException {
-        
+
         assertNotNull(testCase);
         assertNotNull(testCase.getInput());
-        
+
         Document document = null;
-        
+
         try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream(testCase.getInput())) {
-            
+
             assertNotNull(is);
-            
+
             document = (new JsonDocumentParser()).parse(URI.create("http://example.com"), is);
-            
+
             assertTrue(testCase.isPositiveTest());
-            
+
         } catch (DocumentParserException e) {
-            
+
             if (testCase.isNegativeTest()) {
                 return;
             }
-            
+
             fail(e.getMessage(), e);
         }
-        
+
         assertNotNull(document);
-        
+
         compare(testCase, document);
     }
-    
+
     static final Stream<TestDescription> testCaseMethodSource() throws IOException {
-        
+
         try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream("manifest.json")) {
-            
+
             assertNotNull(is);
-            
+
             final JsonParser jsonParser = Json.createParser(is);
-            
+
             jsonParser.next();
-            
+
             JsonArray tests = jsonParser.getObject().getJsonArray("sequence");
-            
+
             return tests.stream().map(JsonObject.class::cast).map(TestDescription::of);
         }
     }
-    
+
     static final void compare(final TestDescription testCase, final Document document) {
 
         if (testCase.getExpected() == null) {
             return;
         }
-        
+
         try (final InputStream is = AlpsJsonSuiteTest.class.getResourceAsStream(testCase.getExpected())) {
-            
+
             final JsonParser expectedParser = Json.createParser(is);
-         
+
             assertTrue(expectedParser.hasNext());
-            
+
             expectedParser.next();
-            
+
             final JsonObject expectedObject = expectedParser.getObject();
 
             final JsonObject outputObject = JsonDocumentWriter.toJson(document, false);
 
-            final boolean match = JsonComparison.equals(expectedObject, outputObject); 
-            
+            final boolean match = JsonComparison.equals(expectedObject, outputObject);
+
             if (!match) {
                 System.out.println("Test " + testCase.getId() + ": " + testCase.getName());
                 System.out.println("Expected:");
@@ -120,7 +120,7 @@ class AlpsJsonSuiteTest {
                 JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
 
                 StringWriter writer = new StringWriter();
-                
+
                 JsonWriter jsonWriter1 = writerFactory.createWriter(writer);
                 jsonWriter1.write(expectedObject);
                 jsonWriter1.close();
@@ -135,13 +135,13 @@ class AlpsJsonSuiteTest {
                 System.out.print(writer.toString());
                 System.out.println();
                 System.out.println();
-                
+
                 fail("Expected " + expectedObject + ", but was" + outputObject);
             }
-            
-            
+
+
         } catch (IOException e) {
             fail(e.getMessage(), e);
         }
-    }    
+    }
 }

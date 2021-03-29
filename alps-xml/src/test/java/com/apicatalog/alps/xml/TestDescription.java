@@ -35,52 +35,52 @@ final class TestDescription {
     private Set<String> type;
 
     private ExpectedError expectedError;
-    
+
     public static final TestDescription of(JsonObject jsonObject) {
         final TestDescription testCase = new TestDescription();
-        
+
         testCase.id = jsonObject.getString("@id");
         testCase.type = jsonObject.getJsonArray("@type").stream().map(JsonString.class::cast).map(JsonString::getString).collect(Collectors.toSet());
 
         testCase.name = jsonObject.getString("name");
         testCase.input = jsonObject.getString("input");
-        
+
         JsonValue expected = jsonObject.get("expected");
-        
+
         if (expected != null && !ValueType.NULL.equals(expected.getValueType())) {
-            
+
             if (ValueType.STRING.equals(expected.getValueType())) {
 
                 testCase.expected = jsonObject.getString("expected", null);
 
             } else if (ValueType.OBJECT.equals(expected.getValueType())) {
-                
+
                 testCase.expectedError = ExpectedError.of((JsonObject)expected);
-                
+
             } else {
                 fail("expected property value must be JSON string or JSON object but was " + expected.getValueType());
-            }    
+            }
         }
-        
+
         return testCase;
     }
-    
+
     public String getId() {
         return id;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getInput() {
         return input;
     }
-    
+
     public String getExpected() {
         return expected;
     }
-    
+
     public ExpectedError getExpectedError() {
         return expectedError;
     }
@@ -88,12 +88,12 @@ final class TestDescription {
     @Override
     public String toString() {
         return id + ": " + name;
-    }   
-    
+    }
+
     public boolean isType(final String type) {
         return this.type != null && this.type.contains(type);
     }
-    
+
     public boolean isNegativeTest() {
         return isType("#NegativeEvaluationTest");
     }

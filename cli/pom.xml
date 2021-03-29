@@ -12,12 +12,12 @@
 
     <name>ALPS Command Line Interface</name>
 
-	<parent>
+    <parent>
         <groupId>com.apicatalog.eiger</groupId>
         <artifactId>eiger</artifactId>
-       	<version>${revision}</version>
+        <version>0.4.9-SNAPSHOT</version>
     </parent>
-    
+
     <properties>
     	<mainClass>com.apicatalog.eiger.cli.App</mainClass>
     	<command.name>eiger</command.name>
@@ -62,113 +62,113 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
-            <version>${jakarta.json-p.version}</version>        
+            <version>${jakarta.json-p.version}</version>
         </dependency>
-        
-		<dependency>
-			<groupId>org.graalvm.nativeimage</groupId>
-			<artifactId>svm</artifactId>
-			<version>${graal.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		
+
         <dependency>
-			<groupId>info.picocli</groupId>
-			<artifactId>picocli</artifactId>
-			<version>${picocli.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>info.picocli</groupId>
-			<artifactId>picocli-jansi-graalvm</artifactId>
-			<version>${picocli-jansi-graalvm.version}</version>
-		</dependency>        
-        
-		<dependency>
-			<groupId>org.fusesource.jansi</groupId>
-			<artifactId>jansi</artifactId>
-			<version>${jansi.version}</version>
-		</dependency> 
-		          
-        <!--  Tests  -->      
+            <groupId>org.graalvm.nativeimage</groupId>
+            <artifactId>svm</artifactId>
+            <version>${graal.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
-	        <groupId>org.junit.jupiter</groupId>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli-jansi-graalvm</artifactId>
+            <version>${picocli-jansi-graalvm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>${jansi.version}</version>
+        </dependency>
+
+        <!--  Tests  -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-		        
-		<dependency>
-		    <groupId>commons-io</groupId>
-		    <artifactId>commons-io</artifactId>
-		    <version>2.8.0</version>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.8.0</version>
             <scope>test</scope>
-		</dependency>
+        </dependency>
 
     </dependencies>
 
-	<build>
-    	<plugins>
-			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-compiler-plugin</artifactId>
-			  <version>3.8.1</version>
-			  <configuration>
-				<source>${maven.compiler.source}</source>
-				<target>${maven.compiler.target}</target>
-			    <annotationProcessorPaths>
-			      <path>
-			        <groupId>info.picocli</groupId>
-			        <artifactId>picocli-codegen</artifactId>
-			        <version>${picocli.version}</version>
-			      </path>
-			    </annotationProcessorPaths>
-			    <compilerArgs>
-			      <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
-			    </compilerArgs>
-			  </configuration>
-			</plugin>			        	
-     		<plugin>
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>3.8.1</version>
+              <configuration>
+                <source>${maven.compiler.source}</source>
+                <target>${maven.compiler.target}</target>
+                <annotationProcessorPaths>
+                  <path>
+                    <groupId>info.picocli</groupId>
+                    <artifactId>picocli-codegen</artifactId>
+                    <version>${picocli.version}</version>
+                  </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                  <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+                </compilerArgs>
+              </configuration>
+            </plugin>
+             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <executions>
-                	<execution>
-                		<goals>
-							<goal>jar</goal>
-						</goals>
-						<id>default-jar</id>
-					</execution>
- 				</executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <id>default-jar</id>
+                    </execution>
+                 </executions>
             </plugin>
-        	<plugin>
-            	<artifactId>maven-surefire-plugin</artifactId>
-            	<version>2.22.2</version>
-				<configuration>
-					<argLine>-Dfile.encoding=UTF-8</argLine>
- 					<excludedGroups>native-image</excludedGroups>
-				</configuration>            	
-        	</plugin>
-        	<plugin>
-            	<artifactId>maven-failsafe-plugin</artifactId>
-            	<version>2.22.2</version>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<groups>native-image</groups>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-        	</plugin>
-    	</plugins>
-	</build>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                     <excludedGroups>native-image</excludedGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <groups>native-image</groups>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 <profiles>
   <profile>
@@ -176,47 +176,47 @@
     <activation>
       <activeByDefault>false</activeByDefault>
     </activation>
-    
+
     <build>
-    	<plugins>
-    	
-    				<plugin>
-				<groupId>org.graalvm.nativeimage</groupId>
-				<artifactId>native-image-maven-plugin</artifactId>
-				<version>${graal.version}</version>
-				<configuration>
-					<imageName>${command.name}</imageName>
-					<mainClass>${mainClass}</mainClass>
- 					<buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages  &#45;H:IncludeResourceBundles=com.sun.org.apache.xerces.internal.impl.msg.XMLMessages &#45;H:IncludeResourceBundles=com.sun.org.apache.xml.internal.res.XMLErrorResources</buildArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>native-image</goal>
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<finalName>${project.artifactId}-${project.version}</finalName>
-				</configuration>
-			</plugin>
-    	</plugins>
+        <plugins>
+
+                    <plugin>
+                <groupId>org.graalvm.nativeimage</groupId>
+                <artifactId>native-image-maven-plugin</artifactId>
+                <version>${graal.version}</version>
+                <configuration>
+                    <imageName>${command.name}</imageName>
+                    <mainClass>${mainClass}</mainClass>
+                     <buildArgs>&#45;&#45;no-server &#45;&#45;no-fallback &#45;&#45;report-unsupported-elements-at-runtime &#45;&#45;allow-incomplete-classpath &#45;H:ReflectionConfigurationFiles=${project.basedir}/graal.json &#45;H:+ReportExceptionStackTraces &#45;H:+AddAllCharsets  &#45;H:IncludeResourceBundles=org.glassfish.json.messages  &#45;H:IncludeResourceBundles=com.sun.org.apache.xerces.internal.impl.msg.XMLMessages &#45;H:IncludeResourceBundles=com.sun.org.apache.xml.internal.res.XMLErrorResources</buildArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>native-image</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
-    
+
   </profile>
 </profiles>
 

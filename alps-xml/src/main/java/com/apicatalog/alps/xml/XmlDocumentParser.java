@@ -36,7 +36,7 @@ import com.apicatalog.alps.io.DocumentParser;
 public class XmlDocumentParser implements DocumentParser {
 
     private final SAXParserFactory factory;
-    
+
     public XmlDocumentParser() {
         this(SAXParserFactory.newDefaultInstance());
     }
@@ -53,34 +53,34 @@ public class XmlDocumentParser implements DocumentParser {
     @Override
     public Document parse(final URI baseUri, final Reader reader) throws DocumentParserException, IOException {
         return parse(baseUri, new InputSource(reader));
-    }    
-    
+    }
+
     private Document parse(final URI baseUri, final InputSource soure) throws DocumentParserException, IOException {
         try {
             final SAXParser parser = factory.newSAXParser();
 
             final DocumentHandler handler = new DocumentHandler(baseUri);
-            
+
             parser.parse(soure, handler);
-          
+
             return handler.getDocument();
-            
+
         } catch (SAXParseException e) {
 
             throw new MalformedDocumentException(e.getLineNumber(), e.getColumnNumber(), e.getMessage());
 
-        } catch (ParserConfigurationException e) {     
-            
+        } catch (ParserConfigurationException e) {
+
             throw new DocumentParserException(e);
-            
+
         } catch (SAXException e) {
-            
+
             if (e.getCause() instanceof DocumentParserException) {
                 throw (DocumentParserException)e.getCause();
             }
-                        
-            throw new DocumentParserException(e);            
-        }        
-    }    
+
+            throw new DocumentParserException(e);
+        }
+    }
 
 }
