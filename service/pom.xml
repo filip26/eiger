@@ -163,7 +163,7 @@
 		            </goals>
 		            <phase>prepare-package</phase>
 		            <configuration>
-		                <outputDirectory>${project.build.outputDirectory}/META-INF/resources</outputDirectory>
+		                <outputDirectory>${project.build.outputDirectory}/webroot</outputDirectory>
 		                <resources>
 		                    <resource>
 		                        <directory>${frontend-src-dir}/build</directory>

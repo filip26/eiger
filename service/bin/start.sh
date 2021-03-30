@@ -4,6 +4,7 @@ export LAUNCHER="io.vertx.core.Launcher"
 export VERTICLE="com.apicatalog.eiger.service.App"
 export CMD="mvn compile"
 export VERTX_CMD="run"
+export PORT=8080
 
 if [ "$1" == "dev" ]
   then

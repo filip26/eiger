@@ -18,7 +18,6 @@ import com.apicatalog.alps.xml.XmlDocumentWriter;
 import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
@@ -29,13 +28,13 @@ import io.vertx.ext.web.handler.StaticHandler;
 public class App extends AbstractVerticle {
 
     @Override
-    public void start(Promise<Void> startPromise) throws Exception {
+    public void start() throws Exception {
 
         final Router router = Router.router(vertx);
 
         router.route("/").method(HttpMethod.GET).handler(ctx -> ctx.reroute("/index.html"));
 
-        router.route().method(HttpMethod.POST).handler(BodyHandler.create().setBodyLimit(250000));
+        router.post().handler(BodyHandler.create().setBodyLimit(250000));
 
         router.route()
               .method(HttpMethod.POST)
@@ -85,18 +84,17 @@ public class App extends AbstractVerticle {
                     }
               });
 
-        StaticHandler webapp = StaticHandler.create("META-INF/resources")
-                .setFilesReadOnly(true)
-                .setDirectoryListing(false)
-                .setCachingEnabled(true)
-                ;
-
-        router.route("/*").method(HttpMethod.GET).handler(webapp);
+        // static resources
+        router.get().handler(StaticHandler
+                                    .create()
+                                    .setFilesReadOnly(true)
+                                    .setDirectoryListing(false)
+                            );
 
         vertx
             .createHttpServer()
             .requestHandler(router)
-            .listen(8080)
+            .listen(getDefaultPort())
                 .onSuccess(ctx ->
                     System.out.println("Eiger HTTP service started on port " + ctx.actualPort() + ".")
                         )
@@ -157,5 +155,13 @@ public class App extends AbstractVerticle {
         }
 
         throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
+    }
+    
+    static final int getDefaultPort() {
+        String envPort = System.getenv("PORT");
+        if (envPort != null) {
+            return Integer.valueOf(envPort);            
+        }
+        return 8080;
     }
 }
