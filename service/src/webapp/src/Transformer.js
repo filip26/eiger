@@ -116,22 +116,6 @@ class Transformer extends React.Component {
         this.setState({[key]: value});
     }
 
-    contentTypeToFormat = contentType => {
-        if (contentType.includes("json")) {
-            return "json";
-        }
-        if (contentType.includes("yaml")) {
-            return "yaml";
-        }
-        if (contentType.includes("xml")) {
-            return "xml";
-        }
-        if (contentType.includes( "html")) {
-            return "htmlmixed";
-        }
-        return "text";
-    }
-
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
@@ -148,7 +132,7 @@ class Transformer extends React.Component {
                     return response.text().then(text => {
 
                         state.response = text;
-                        state.responseFormat = this.contentTypeToFormat(response.headers.get('content-type'));
+                        state.responseMediaType = response.headers.get('content-type');
 
                         this.setState(state);
                     })
@@ -255,7 +239,7 @@ class Transformer extends React.Component {
 
                 {this.state.response &&
                     <Paper className={classes.paper} elevation={1}>
-                        <Viewer type={this.state.responseFormat} readOnly value={this.state.response}/>
+                        <Viewer mediaType={this.state.responseMediaType} readOnly value={this.state.response}/>
                     </Paper>
                     }
 
