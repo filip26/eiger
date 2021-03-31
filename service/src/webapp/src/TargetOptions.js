@@ -22,7 +22,7 @@ export default function TargetOptions(props) {
                         checked={props.pretty}
                         name="pretty"
                         color="primary"
-                        onChange={handleChange.bind(this, "pretty")}
+                        onChange={event => handleChange("pretty", event)}
                       />}
                     label="Pretty"
                     />
@@ -32,7 +32,7 @@ export default function TargetOptions(props) {
                             checked={props.verbose}
                             color="primary"
                             name="checkedA"
-                            onChange={handleChange.bind(this, "verbose")}
+                            onChange={event => handleChange("verbose", event)}
                             />}
                     label="Verbose"
                     />

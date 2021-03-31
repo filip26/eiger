@@ -1,57 +1,42 @@
 import React from 'react'
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {Controlled as CodeMirror} from 'react-codemirror2'
 
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         fontSize: '16px'
     }
-});
+}));
 
-class Editor extends React.Component {
+export default function Editor(props) {
 
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
 
-        this.state = {
-            value: props.value
-        }
+    const { type, readOnly, value, onChange } = props;
+    
+    const mode = type === 'json' ? { name: "javascript", json: true } : type;
+
+    let options = {
+            mode: mode,
+            theme: 'material-darker',
+            lineNumbers: true,
+        };
+
+    if (readOnly) {
+        options['readOnly'] = "nocursor";
     }
 
-    value = () => {
-        return this.state.value;
-    }
-
-    render() {
-        const { classes, type } = this.props;
-        const mode = type === 'json' ? { name: "javascript", json: true } : type;
-
-        let options = {
-                mode: mode,
-                theme: 'material-darker',
-                lineNumbers: true,
-            };
-
-        if (this.props.readOnly) {
-            options['readOnly'] = "nocursor";
-        }
-
-        return (
-            <CodeMirror
-                className={classes.root}
-                value={this.state.value}
-                options={options}
-                onBeforeChange={(editor, data, value) => {
-                    this.setState({value});
-                }}
-                onChange={(editor, data, value) => {
-                }}
-                />
-                );
-            }
+    return (
+        <CodeMirror
+            className={classes.root}
+            value={value}
+            options={options}
+            onBeforeChange={(editor, data, value) => {
+                onChange && onChange(value);
+            }}
+            />
+            );
 }
-
-export default withStyles(styles)(Editor);

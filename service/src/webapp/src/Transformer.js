@@ -104,39 +104,22 @@ class Transformer extends React.Component {
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
             processing: false,
+            source: openApi
         }
-
-         this.sourceRef = React.createRef();
     }
 
     handleTargetOptionsChange = state => {
         this.setState(state);
     }
 
-    handleTypeChange = (key, type) => {
-        this.setState({[key]: type});
-    }
-
-    contentTypeToFormat = contentType => {
-        if (contentType.includes("json")) {
-            return "json";
-        }
-        if (contentType.includes("yaml")) {
-            return "yaml";
-        }
-        if (contentType.includes("xml")) {
-            return "xml";
-        }
-        if (contentType.includes( "html")) {
-            return "htmlmixed";
-        }
-        return "text";
+    handleStateChange = (key, value) => {
+        this.setState({[key]: value});
     }
 
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
+            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
 
                 .then(async response => {
 
@@ -149,7 +132,7 @@ class Transformer extends React.Component {
                     return response.text().then(text => {
 
                         state.response = text;
-                        state.responseFormat = this.contentTypeToFormat(response.headers.get('content-type'));
+                        state.responseMediaType = response.headers.get('content-type');
 
                         this.setState(state);
                     })
@@ -192,7 +175,7 @@ class Transformer extends React.Component {
                             <div className={classes.control}>
                                 <TypeSelector
                                     value={this.state.sourceType}
-                                    onChange={this.handleTypeChange.bind(this, "sourceType")}
+                                    onChange={this.handleStateChange.bind(this, "sourceType")}
                                     labelId="source-select-label"
                                     label="Source"
                                     options={sourceTypes}
@@ -203,8 +186,8 @@ class Transformer extends React.Component {
                             <div className={classes.second}>
                                 <Editor
                                     type={this.state.sourceType.format}
-                                    value={openApi}
-                                    ref={this.sourceRef}
+                                    value={this.state.source}
+                                    onChange={this.handleStateChange.bind(this, "source")}
                                     />
                             </div>
                         </Grid>
@@ -217,7 +200,7 @@ class Transformer extends React.Component {
                             <div className={classes.control}>
                                 <TypeSelector
                                     value={this.state.targetType}
-                                    onChange={this.handleTypeChange.bind(this, "targetType")}
+                                    onChange={this.handleStateChange.bind(this, "targetType")}
                                     labelId="target-select-label"
                                     label="Target"
                                     options={targetTypes}
@@ -256,7 +239,7 @@ class Transformer extends React.Component {
 
                 {this.state.response &&
                     <Paper className={classes.paper} elevation={1}>
-                        <Viewer type={this.state.responseFormat} readOnly value={this.state.response}/>
+                        <Viewer mediaType={this.state.responseMediaType} readOnly value={this.state.response}/>
                     </Paper>
                     }
 

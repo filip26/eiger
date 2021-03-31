@@ -16,15 +16,30 @@ export default function Viewer(props) {
 
     const classes = useStyles();
 
-    const { type, value } = props;
-    const mode = type === 'json' ? { name: "javascript", json: true } : type;
+    const { mediaType, value } = props;
+
+    const typeToMode = contentType => {        
+        if (contentType.includes("json")) {
+            return { name: "javascript", json: true };
+        }
+        if (contentType.includes("yaml")) {
+            return "yaml";
+        }
+        if (contentType.includes("xml")) {
+            return "xml";
+        }
+        if (contentType.includes( "html")) {
+            return "htmlmixed";
+        }
+        return "text";
+    }
 
     return (
         <CodeMirror
             className={classes.root}
             value={value}
             options={{
-                mode: mode,
+                mode: `${typeToMode(mediaType)}`,
                 theme: 'material-darker',
                 lineNumbers: false,
                 readOnly: 'nocursor',
