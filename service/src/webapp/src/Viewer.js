@@ -12,28 +12,27 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function typeToMode(contentType) {        
-    if (contentType.includes("json")) {
-        return { name: "javascript", json: true };
-    }
-    if (contentType.includes("yaml")) {
-        return "yaml";
-    }
-    if (contentType.includes("xml")) {
-        return "xml";
-    }
-    if (contentType.includes( "html")) {
-        return "htmlmixed";
-    }
-    return "text";
-}
-
-
 export default function Viewer(props) {
 
     const classes = useStyles();
 
     const { mediaType, value } = props;
+
+    const typeToMode = contentType => {        
+        if (contentType.includes("json")) {
+            return { name: "javascript", json: true };
+        }
+        if (contentType.includes("yaml")) {
+            return "yaml";
+        }
+        if (contentType.includes("xml")) {
+            return "xml";
+        }
+        if (contentType.includes( "html")) {
+            return "htmlmixed";
+        }
+        return "text";
+    }
 
     return (
         <CodeMirror
