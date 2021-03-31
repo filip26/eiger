@@ -104,17 +104,16 @@ class Transformer extends React.Component {
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
             processing: false,
+            source: openApi
         }
-
-         this.sourceRef = React.createRef();
     }
 
     handleTargetOptionsChange = state => {
         this.setState(state);
     }
 
-    handleTypeChange = (key, type) => {
-        this.setState({[key]: type});
+    handleStateChange = (key, value) => {
+        this.setState({[key]: value});
     }
 
     contentTypeToFormat = contentType => {
@@ -136,7 +135,7 @@ class Transformer extends React.Component {
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.sourceRef.current.value(), this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
+            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
 
                 .then(async response => {
 
@@ -192,7 +191,7 @@ class Transformer extends React.Component {
                             <div className={classes.control}>
                                 <TypeSelector
                                     value={this.state.sourceType}
-                                    onChange={this.handleTypeChange.bind(this, "sourceType")}
+                                    onChange={this.handleStateChange.bind(this, "sourceType")}
                                     labelId="source-select-label"
                                     label="Source"
                                     options={sourceTypes}
@@ -203,8 +202,8 @@ class Transformer extends React.Component {
                             <div className={classes.second}>
                                 <Editor
                                     type={this.state.sourceType.format}
-                                    value={openApi}
-                                    ref={this.sourceRef}
+                                    value={this.state.source}
+                                    onChange={this.handleStateChange.bind(this, "source")}
                                     />
                             </div>
                         </Grid>
@@ -217,7 +216,7 @@ class Transformer extends React.Component {
                             <div className={classes.control}>
                                 <TypeSelector
                                     value={this.state.targetType}
-                                    onChange={this.handleTypeChange.bind(this, "targetType")}
+                                    onChange={this.handleStateChange.bind(this, "targetType")}
                                     labelId="target-select-label"
                                     label="Target"
                                     options={targetTypes}
