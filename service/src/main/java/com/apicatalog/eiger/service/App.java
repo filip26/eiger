@@ -1,12 +1,13 @@
 package com.apicatalog.eiger.service;
 
-import static io.vertx.json.schema.common.dsl.Schemas.booleanSchema;
 import static io.vertx.ext.web.validation.builder.Parameters.optionalParam;
+import static io.vertx.json.schema.common.dsl.Schemas.*;
 import static com.apicatalog.eiger.service.Constants.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -62,6 +63,7 @@ public class App extends AbstractVerticle {
                                 .create(schemaParser)
                                 .queryParameter(optionalParam(PARAM_PRETTY, booleanSchema()))
                                 .queryParameter(optionalParam(PARAM_VERBOSE, booleanSchema()))
+                                .queryParameter(optionalParam(PARAM_BASE, stringSchema()))
                                 .predicate(RequestPredicate.BODY_REQUIRED)      // request body is required
                                 .build()
                         )
@@ -75,22 +77,41 @@ public class App extends AbstractVerticle {
                         final RequestParameter verbose = parameters.queryParameter(PARAM_VERBOSE);
                         ctx.put(PARAM_VERBOSE, verbose != null && verbose.getBoolean());
 
-                        ctx.next();
+                        final RequestParameter base = parameters.queryParameter(PARAM_BASE);
+                        
+                        try {
+                            
+                            ctx.put(PARAM_BASE, base != null && !base.getString().isBlank() ? URI.create(base.getString().strip()) : null);
+                            ctx.next();
+                            
+                        } catch (IllegalArgumentException e) {
+                            ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + base.getString() + "] is not valid URI." );
+                        }
+
                     });
 
         // xml -> alps
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_XML)
+                .produces(MEDIA_TYPE_ALPS_XML)
+                .produces(MEDIA_TYPE_ALPS_JSON)
+                .produces(MEDIA_TYPE_ALPS_YAML)
                 .handler(new ReaderHandler(new XmlDocumentParser()));
 
         // json -> alps
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_JSON)
+                .produces(MEDIA_TYPE_ALPS_XML)
+                .produces(MEDIA_TYPE_ALPS_JSON)
+                .produces(MEDIA_TYPE_ALPS_YAML)
                 .handler(new ReaderHandler(new JsonDocumentParser()));
 
         // oas -> alps
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_OPEN_API)
+                .produces(MEDIA_TYPE_ALPS_XML)
+                .produces(MEDIA_TYPE_ALPS_JSON)
+                .produces(MEDIA_TYPE_ALPS_YAML)
                 .handler(new ReaderHandler(new OpenApiReader()));
 
         // alps -> xml | json | yaml
@@ -198,7 +219,7 @@ public class App extends AbstractVerticle {
         public void handle(RoutingContext ctx) {
             try {
 
-                final Document document = parser.parse(null, new ByteArrayInputStream(ctx.getBody().getBytes()));
+                final Document document = parser.parse(ctx.get(PARAM_BASE), new ByteArrayInputStream(ctx.getBody().getBytes()));
 
                 if (document == null) {
                     ctx.end();

@@ -6,7 +6,6 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 
 
 const useStyles = makeStyles((theme) => ({
-
     root: {
         fontSize: '16px'
     }

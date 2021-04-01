@@ -27,6 +27,7 @@ final class Constants {
 
     static final String PARAM_PRETTY = "pretty";
     static final String PARAM_VERBOSE = "verbose";
+    static final String PARAM_BASE = "base";
 
     static final String SOURCE = "source";
 
