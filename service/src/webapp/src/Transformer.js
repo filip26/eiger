@@ -210,10 +210,10 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item>
                             <div className={classes.second}>
-                                <TargetOptions 
+                                <TargetOptions
                                     pretty={this.state.pretty || this.state.targetType.prettyDisabled}
-                                    prettyDisabled={this.state.targetType.prettyDisabled} 
-                                    verbose={this.state.verbose} 
+                                    prettyDisabled={this.state.targetType.prettyDisabled}
+                                    verbose={this.state.verbose}
                                     onChange={this.handleTargetOptionsChange}
                                     />
                             </div>

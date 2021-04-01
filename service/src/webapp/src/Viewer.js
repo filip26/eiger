@@ -18,7 +18,7 @@ export default function Viewer(props) {
 
     const { mediaType, value } = props;
 
-    const typeToMode = contentType => {   
+    const typeToMode = contentType => {
 
         if (contentType.includes("json")) {
             return { name: "javascript", json: true };
