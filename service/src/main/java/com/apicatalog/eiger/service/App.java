@@ -1,9 +1,16 @@
 package com.apicatalog.eiger.service;
 
+import static io.vertx.json.schema.common.dsl.Schemas.booleanSchema;
+import static io.vertx.ext.web.validation.builder.Parameters.optionalParam;
+import static com.apicatalog.eiger.service.Constants.*;
+
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.time.Duration;
+import java.time.Instant;
+
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
@@ -18,71 +25,114 @@ import com.apicatalog.alps.xml.XmlDocumentWriter;
 import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpMethod;
+import io.vertx.core.Handler;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.validation.RequestParameter;
+import io.vertx.ext.web.validation.RequestParameters;
+import io.vertx.ext.web.validation.RequestPredicate;
+import io.vertx.ext.web.validation.ValidationHandler;
+import io.vertx.ext.web.validation.builder.ValidationHandlerBuilder;
+import io.vertx.json.schema.SchemaParser;
+import io.vertx.json.schema.SchemaRouter;
+import io.vertx.json.schema.SchemaRouterOptions;
 
 public class App extends AbstractVerticle {
+
+    Instant startTime;
 
     @Override
     public void start() throws Exception {
 
-        final Router router = Router.router(vertx);
+        final SchemaRouter schemaRouter = SchemaRouter.create(vertx, new SchemaRouterOptions());
+        final SchemaParser schemaParser = SchemaParser.createDraft201909SchemaParser(schemaRouter);
 
-        router.route("/").method(HttpMethod.GET).handler(ctx -> ctx.reroute("/index.html"));
+        final Router router = Router.router(vertx);
 
         router.post().handler(BodyHandler.create().setBodyLimit(250000));
 
-        router.route()
-              .method(HttpMethod.POST)
-              .path("/transform")
-              .consumes(Constants.MEDIA_TYPE_ALPS_XML)
-              .consumes(Constants.MEDIA_TYPE_ALPS_JSON)
-              .consumes(Constants.MEDIA_TYPE_OPEN_API)
-              .produces(Constants.MEDIA_TYPE_ALPS_XML)
-              .produces(Constants.MEDIA_TYPE_ALPS_JSON)
-              .produces(Constants.MEDIA_TYPE_ALPS_YAML)
+        // validate parameters
+        router.post(PATH_TRANSFORM)
+                    // transformer options validation
+                    .handler(
+                        ValidationHandlerBuilder
+                                .create(schemaParser)
+                                .queryParameter(optionalParam(PARAM_PRETTY, booleanSchema()))
+                                .queryParameter(optionalParam(PARAM_VERBOSE, booleanSchema()))
+                                .predicate(RequestPredicate.BODY_REQUIRED)      // request body is required
+                                .build()
+                        )
+                    // transformer options extraction
+                    .handler(ctx -> {
+                        final RequestParameters parameters = ctx.get(ValidationHandler.REQUEST_CONTEXT_KEY);
 
-              .handler(ctx -> {
+                        final RequestParameter pretty = parameters.queryParameter(PARAM_PRETTY);
+                        ctx.put(PARAM_PRETTY, pretty != null && pretty.getBoolean());
 
-                      Buffer body = ctx.getBody();
+                        final RequestParameter verbose = parameters.queryParameter(PARAM_VERBOSE);
+                        ctx.put(PARAM_VERBOSE, verbose != null && verbose.getBoolean());
 
-                      HttpServerResponse response = ctx.response();
+                        ctx.next();
+                    });
 
-                      String acceptableContentType = ctx.getAcceptableContentType();
+        // xml -> alps
+        router.post(PATH_TRANSFORM)
+                .consumes(MEDIA_TYPE_ALPS_XML)
+                .handler(new ReaderHandler(new XmlDocumentParser()));
 
-                      boolean verbose = ctx.queryParam("verbose").stream().findFirst().map(Boolean::valueOf).orElse(false);
-                      boolean pretty = ctx.queryParam("pretty").stream().findFirst().map(Boolean::valueOf).orElse(false);
+        // json -> alps
+        router.post(PATH_TRANSFORM)
+                .consumes(MEDIA_TYPE_ALPS_JSON)
+                .handler(new ReaderHandler(new JsonDocumentParser()));
 
-                  try {
-                        final Buffer target = transform(ctx.request().getHeader("content-type"), new ByteArrayInputStream(body.getBytes()), acceptableContentType, verbose, pretty);
+        // oas -> alps
+        router.post(PATH_TRANSFORM)
+                .consumes(MEDIA_TYPE_OPEN_API)
+                .handler(new ReaderHandler(new OpenApiReader()));
+
+        // alps -> xml | json | yaml
+        router.post(PATH_TRANSFORM)
+                .consumes(MEDIA_TYPE_ALPS_XML)
+                .consumes(MEDIA_TYPE_ALPS_JSON)
+                .consumes(MEDIA_TYPE_OPEN_API)
+                .produces(MEDIA_TYPE_ALPS_XML)
+                .produces(MEDIA_TYPE_ALPS_JSON)
+                .produces(MEDIA_TYPE_ALPS_YAML)
+                .handler(ctx -> {
+
+                    final HttpServerResponse response = ctx.response();
+
+                    String acceptableContentType = ctx.getAcceptableContentType();
+
+                    final StringWriter target = new StringWriter();
+
+                    try (final DocumentWriter writer = getWriter(
+                                                            acceptableContentType,
+                                                            ctx.get(PARAM_PRETTY),
+                                                            ctx.get(PARAM_VERBOSE),
+                                                            target
+                                                            )) {
+
+                        writer.write(ctx.get(SOURCE));
 
                         response.setStatusCode(200);
-                        response.putHeader("content-type", acceptableContentType);
-                        response.end(target);
+                        response.putHeader(HEADER_CONTENT_TYPE, acceptableContentType);
+                        response.end(target.toString());
 
-                      } catch (DocumentParserException e) {
-
-                          response.setStatusCode(400);
-                          response.putHeader("content-type", "text/plain");
-                          response.end(Buffer.buffer(e.getMessage()));
-
-                      } catch (DocumentWriterException e) {
-
-                          response.setStatusCode(500);
-                          response.putHeader("content-type", "text/plain");
-                          response.end(Buffer.buffer(e.getMessage()));
+                    } catch (DocumentWriterException e) {
+                        response.setStatusCode(500);
+                        response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
+                        response.end(e.getMessage());
 
                     } catch (Throwable e) {
-
                         response.setStatusCode(500);
-                        response.putHeader("content-type", "text/plain");
-                        response.end(Buffer.buffer(e.getMessage()));
+                        response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
+                        response.end(e.getMessage());
                     }
-              });
+                });
 
         // static resources
         router.get().handler(StaticHandler
@@ -95,73 +145,82 @@ public class App extends AbstractVerticle {
             .createHttpServer()
             .requestHandler(router)
             .listen(getDefaultPort())
-                .onSuccess(ctx ->
-                    System.out.println("Eiger HTTP service started on port " + ctx.actualPort() + ".")
-                        )
+                .onSuccess(ctx -> {
+                    System.out.println("Eiger HTTP node started on port " + ctx.actualPort() + ".");
+                    startTime = Instant.now();
+                })
                 .onFailure(ctx ->
-                    System.err.println("Eiger HTTP service start failed [" + ctx.getMessage() + "].")
+                    System.err.println("Eiger HTTP node start failed [" + ctx.getMessage() + "].")
                 );
     }
 
-    static final Buffer transform(final String sourceMediaType, final InputStream source, final String targetType, boolean verbose, boolean pretty) throws Exception {
-
-        final DocumentParser parser;
-
-        parser = getParser(sourceMediaType);
-
-
-        final Document document = parser.parse(null, source);
-
-        if (document == null) {
-            return Buffer.buffer();
+    @Override
+    public void stop() throws Exception {
+        if (startTime != null) {
+            System.out.println("Eiger HTTP node stopped after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
         }
+        super.stop();
+    }
 
-        final StringWriter target = new StringWriter();
+    static final int getDefaultPort() {
+        final String envPort = System.getenv("PORT");
 
-        try (final DocumentWriter writer = getWriter(targetType, pretty, verbose, target)) {
-            writer.write(document);
+        if (envPort != null) {
+            return Integer.valueOf(envPort);
         }
-
-        return Buffer.buffer(target.toString());
+        return 8080;
     }
 
     static final DocumentWriter getWriter(final String target, final boolean pretty, final boolean verbose, final Writer writer) throws DocumentWriterException {
 
-        if (Constants.MEDIA_TYPE_ALPS_JSON.equals(target)) {
+        if (MEDIA_TYPE_ALPS_JSON.equals(target)) {
             return JsonDocumentWriter.create(writer, pretty, verbose);
 
-        } else if (Constants.MEDIA_TYPE_ALPS_XML.equals(target)) {
+        } else if (MEDIA_TYPE_ALPS_XML.equals(target)) {
             return XmlDocumentWriter.create(writer, pretty, verbose);
 
-        } else if (Constants.MEDIA_TYPE_ALPS_YAML.equals(target)) {
+        } else if (MEDIA_TYPE_ALPS_YAML.equals(target)) {
             return YamlDocumentWriter.create(writer, verbose);
         }
 
         throw new IllegalStateException();
     }
 
-    static final DocumentParser getParser(final String mediaType) {
+    static class ReaderHandler implements Handler<RoutingContext> {
 
-        if (Constants.MEDIA_TYPE_ALPS_JSON.equals(mediaType)) {
-            return new JsonDocumentParser();
+        final DocumentParser parser;
+
+        public ReaderHandler(DocumentParser parser) {
+            this.parser = parser;
         }
 
-        if (Constants.MEDIA_TYPE_ALPS_XML.equals(mediaType)) {
-            return new XmlDocumentParser();
-        }
+        @Override
+        public void handle(RoutingContext ctx) {
+            try {
 
-        if (Constants.MEDIA_TYPE_OPEN_API.equals(mediaType)) {
-            return new OpenApiReader();
-        }
+                final Document document = parser.parse(null, new ByteArrayInputStream(ctx.getBody().getBytes()));
 
-        throw new IllegalArgumentException("Unsupported source media type [" + mediaType + "].");
-    }
-    
-    static final int getDefaultPort() {
-        String envPort = System.getenv("PORT");
-        if (envPort != null) {
-            return Integer.valueOf(envPort);            
+                if (document == null) {
+                    ctx.end();
+                    return;
+                }
+
+                ctx.put(SOURCE, document).next();
+
+            } catch (DocumentParserException e) {
+
+                final HttpServerResponse response = ctx.response();
+                response.setStatusCode(400);
+                response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
+                response.end(e.getMessage());
+
+            } catch (Throwable e) {
+
+                final HttpServerResponse response = ctx.response();
+                response.setStatusCode(500);
+                response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
+                response.end(e.getMessage());
+            }
         }
-        return 8080;
     }
 }

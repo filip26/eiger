@@ -23,6 +23,17 @@ final class Constants {
 
     static final String MEDIA_TYPE_OPEN_API = "application/vnd.oai.openapi";
 
+    static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
+
+    static final String PARAM_PRETTY = "pretty";
+    static final String PARAM_VERBOSE = "verbose";
+
+    static final String SOURCE = "source";
+
+    static final String PATH_TRANSFORM = "/transform";
+
+    static final String HEADER_CONTENT_TYPE = "content-type";
+
     private Constants() {
     }
 }
