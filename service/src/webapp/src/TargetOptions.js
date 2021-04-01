@@ -16,7 +16,7 @@ export default function TargetOptions(props) {
     return (
         <FormControl>
             <FormGroup row>
-                <FormControlLabel
+                <FormControlLabel disabled={props.prettyDisabled}
                     control={
                       <Checkbox
                         checked={props.pretty}

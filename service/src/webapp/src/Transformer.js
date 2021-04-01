@@ -25,7 +25,7 @@ const sourceTypes = [
 const targetTypes = [
             {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
             {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-            {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml"}
+            {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
             ];
 
 const openApi = `openapi: 3.0.2
@@ -210,7 +210,12 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item>
                             <div className={classes.second}>
-                                <TargetOptions pretty={this.state.pretty} verbose={this.state.verbose} onChange={this.handleTargetOptionsChange}/>
+                                <TargetOptions 
+                                    pretty={this.state.pretty || this.state.targetType.prettyDisabled}
+                                    prettyDisabled={this.state.targetType.prettyDisabled} 
+                                    verbose={this.state.verbose} 
+                                    onChange={this.handleTargetOptionsChange}
+                                    />
                             </div>
                         </Grid>
                     </Grid>
