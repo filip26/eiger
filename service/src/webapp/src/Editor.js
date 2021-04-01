@@ -16,7 +16,7 @@ export default function Editor(props) {
     const classes = useStyles();
 
     const { type, readOnly, value, onChange } = props;
-    
+
     const mode = type === 'json' ? { name: "javascript", json: true } : type;
 
     let options = {
