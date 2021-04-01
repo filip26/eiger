@@ -51,6 +51,11 @@ paths:
           description: Enables indented output
           schema:
             type: boolean
+        - name: base
+          in: query
+          description: Sets base URI
+          schema:
+            type: string
       requestBody:
         description: An input document represention
         content:
