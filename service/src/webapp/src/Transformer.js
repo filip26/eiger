@@ -51,7 +51,7 @@ paths:
           schema:
             type: boolean
       requestBody:
-        description: A transformation input
+        description: An input document represention
         content:
           application/vnd.oai.openapi:
             schema:
@@ -64,7 +64,7 @@ paths:
               type: string
       responses:
         '200':
-          description: A transformation result
+          description: An output document representation
           content:
             application/alps+xml:
               schema:
