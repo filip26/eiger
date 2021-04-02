@@ -124,7 +124,7 @@ public class App extends AbstractVerticle {
                                     .create()
                                     .setIncludeHidden(false)
                                     .setDefaultContentEncoding("UTF-8") 
-                                    .setMaxAgeSeconds(60*10)     // maxAge = 10 min
+                                    .setMaxAgeSeconds(600l)     // maxAge = 10 min
                             );
 
         vertx
