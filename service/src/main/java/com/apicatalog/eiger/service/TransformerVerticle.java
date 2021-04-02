@@ -194,7 +194,7 @@ public class TransformerVerticle extends AbstractVerticle {
 
                 ctx.response()
                         .setStatusCode(200)
-                        .putHeader(HEADER_CONTENT_TYPE, acceptableContentType)
+                        .putHeader(HEADER_CONTENT_TYPE, acceptableContentType + "; charset=" + Charset.defaultCharset())
                         .end(target.toString());
 
             } catch (Exception e) {
@@ -213,7 +213,7 @@ public class TransformerVerticle extends AbstractVerticle {
             if (e instanceof DocumentParserException) {
                 ctx.response()
                         .setStatusCode(400)
-                        .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN)
+                        .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
                         .end(e.getMessage());
 
                 return;
@@ -221,7 +221,7 @@ public class TransformerVerticle extends AbstractVerticle {
 
             ctx.response()
                     .setStatusCode(500)
-                    .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN)
+                    .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
                     .end(e.getMessage());
         }
     }
