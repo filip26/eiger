@@ -7,3 +7,10 @@ handlers:
   script: auto
   secure: always
   redirect_http_response_code: 301
+
+env_variables:
+  JAVA_USER_OPTS: "-Dfile.encoding=UTF-8"
+  DEFAULT_ENCODING: "UTF-8"
+  LANG: "en_US.UTF-8"
+
+
