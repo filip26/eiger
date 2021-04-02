@@ -130,7 +130,7 @@ class Transformer extends React.Component {
                     return response.text().then(text => {
 
                         state.response = text;
-                        state.responseMediaType = response.headers.get('content-type');
+                        state.responseMediaType = response.headers.get('content-type') || "text/plain";
 
                         this.setState(state);
                     })

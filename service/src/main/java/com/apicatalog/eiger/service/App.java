@@ -27,7 +27,6 @@ import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -90,77 +89,42 @@ public class App extends AbstractVerticle {
 
                     });
 
-        // xml -> alps
+        // xml -> xml | json | yaml
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_XML)
                 .produces(MEDIA_TYPE_ALPS_XML)
                 .produces(MEDIA_TYPE_ALPS_JSON)
                 .produces(MEDIA_TYPE_ALPS_YAML)
-                .handler(new ReaderHandler(new XmlDocumentParser()));
+                .handler(new ReaderHandler(new XmlDocumentParser()))
+                .handler(new WriterHandler())
+                .failureHandler(new ErrorHandler());
 
-        // json -> alps
+        // json -> xml | json | yaml
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_JSON)
                 .produces(MEDIA_TYPE_ALPS_XML)
                 .produces(MEDIA_TYPE_ALPS_JSON)
                 .produces(MEDIA_TYPE_ALPS_YAML)
-                .handler(new ReaderHandler(new JsonDocumentParser()));
+                .handler(new ReaderHandler(new JsonDocumentParser()))
+                .handler(new WriterHandler())
+                .failureHandler(new ErrorHandler());
 
-        // oas -> alps
+        // oas -> xml | json | yaml
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_OPEN_API)
                 .produces(MEDIA_TYPE_ALPS_XML)
                 .produces(MEDIA_TYPE_ALPS_JSON)
                 .produces(MEDIA_TYPE_ALPS_YAML)
-                .handler(new ReaderHandler(new OpenApiReader()));
-
-        // alps -> xml | json | yaml
-        router.post(PATH_TRANSFORM)
-                .consumes(MEDIA_TYPE_ALPS_XML)
-                .consumes(MEDIA_TYPE_ALPS_JSON)
-                .consumes(MEDIA_TYPE_OPEN_API)
-                .produces(MEDIA_TYPE_ALPS_XML)
-                .produces(MEDIA_TYPE_ALPS_JSON)
-                .produces(MEDIA_TYPE_ALPS_YAML)
-                .handler(ctx -> {
-
-                    final HttpServerResponse response = ctx.response();
-
-                    String acceptableContentType = ctx.getAcceptableContentType();
-
-                    final StringWriter target = new StringWriter();
-
-                    try (final DocumentWriter writer = getWriter(
-                                                            acceptableContentType,
-                                                            ctx.get(PARAM_PRETTY),
-                                                            ctx.get(PARAM_VERBOSE),
-                                                            target
-                                                            )) {
-
-                        writer.write(ctx.get(SOURCE));
-
-                        response.setStatusCode(200);
-                        response.putHeader(HEADER_CONTENT_TYPE, acceptableContentType);
-                        response.end(target.toString());
-
-                    } catch (DocumentWriterException e) {
-                        response.setStatusCode(500);
-                        response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
-                        response.end(e.getMessage());
-
-                    } catch (Throwable e) {
-                        response.setStatusCode(500);
-                        response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
-                        response.end(e.getMessage());
-                    }
-                });
+                .handler(new ReaderHandler(new OpenApiReader()))
+                .handler(new WriterHandler())
+                .failureHandler(new ErrorHandler());
 
         // static resources
         router.get().handler(StaticHandler
                                     .create()
                                     .setIncludeHidden(false)
                                     .setDefaultContentEncoding("UTF-8") 
-                                    .setMaxAgeSeconds(60*10)            // maxAge = 10 min
+                                    .setMaxAgeSeconds(60*10)     // maxAge = 10 min
                             );
 
         vertx
@@ -193,6 +157,84 @@ public class App extends AbstractVerticle {
         return 8080;
     }
 
+    static class ReaderHandler implements Handler<RoutingContext> {
+
+        final DocumentParser parser;
+
+        public ReaderHandler(DocumentParser parser) {
+            this.parser = parser;
+        }
+
+        @Override
+        public void handle(RoutingContext ctx) {
+            try {
+                final Document document = parser.parse(ctx.get(PARAM_BASE), new ByteArrayInputStream(ctx.getBody().getBytes()));
+
+                if (document == null) {
+                    ctx.response().end();
+                    return;
+                }
+
+                ctx.put(SOURCE, document).next();
+
+            } catch (Exception e) {
+                ctx.fail(e);  
+            }
+        }
+    }
+    
+    static class WriterHandler implements Handler<RoutingContext> {
+
+        @Override
+        public void handle(RoutingContext ctx) {
+            
+            final String acceptableContentType = ctx.getAcceptableContentType();
+
+            final StringWriter target = new StringWriter();
+
+            try (final DocumentWriter writer = getWriter(
+                                                    acceptableContentType,
+                                                    ctx.get(PARAM_PRETTY),
+                                                    ctx.get(PARAM_VERBOSE),
+                                                    target
+                                                    )) {
+
+                writer.write(ctx.get(SOURCE));
+
+                ctx.response()
+                        .setStatusCode(200)
+                        .putHeader(HEADER_CONTENT_TYPE, acceptableContentType)
+                        .end(target.toString());
+
+            } catch (Exception e) {
+                ctx.fail(e);
+            }
+        }
+    }
+    
+    static class ErrorHandler implements Handler<RoutingContext> {
+
+        @Override
+        public void handle(RoutingContext ctx) {
+            
+            final Throwable e = ctx.failure();
+            
+            if (e instanceof DocumentParserException) {
+                ctx.response()
+                        .setStatusCode(400)
+                        .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN)
+                        .end(e.getMessage());
+              
+                return;
+            }
+
+            ctx.response()
+                    .setStatusCode(500)
+                    .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN)
+                    .end(e.getMessage());
+        }
+    }
+
     static final DocumentWriter getWriter(final String target, final boolean pretty, final boolean verbose, final Writer writer) throws DocumentWriterException {
 
         if (MEDIA_TYPE_ALPS_JSON.equals(target)) {
@@ -206,43 +248,5 @@ public class App extends AbstractVerticle {
         }
 
         throw new IllegalStateException();
-    }
-
-    static class ReaderHandler implements Handler<RoutingContext> {
-
-        final DocumentParser parser;
-
-        public ReaderHandler(DocumentParser parser) {
-            this.parser = parser;
-        }
-
-        @Override
-        public void handle(RoutingContext ctx) {
-            try {
-
-                final Document document = parser.parse(ctx.get(PARAM_BASE), new ByteArrayInputStream(ctx.getBody().getBytes()));
-
-                if (document == null) {
-                    ctx.end();
-                    return;
-                }
-
-                ctx.put(SOURCE, document).next();
-
-            } catch (DocumentParserException e) {
-
-                final HttpServerResponse response = ctx.response();
-                response.setStatusCode(400);
-                response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
-                response.end(e.getMessage());
-
-            } catch (Throwable e) {
-
-                final HttpServerResponse response = ctx.response();
-                response.setStatusCode(500);
-                response.putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN);
-                response.end(e.getMessage());
-            }
-        }
     }
 }
