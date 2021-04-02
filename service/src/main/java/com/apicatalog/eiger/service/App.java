@@ -84,7 +84,7 @@ public class App extends AbstractVerticle {
                             ctx.next();
                             
                         } catch (IllegalArgumentException e) {
-                            ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + base.getString() + "] is not valid URI." );
+                            ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
                         }
 
                     });
