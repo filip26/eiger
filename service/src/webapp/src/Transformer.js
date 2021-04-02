@@ -8,6 +8,7 @@ import {
     LinearProgress,
     TextField
     } from '@material-ui/core/';
+    
 import MuiAlert from '@material-ui/lab/Alert';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -17,17 +18,15 @@ import TargetOptions from './TargetOptions';
 import Editor from './Editor';
 import Viewer from './Viewer';
 
-const sourceTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-            {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"}
-            ];
+const types = [
+        {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
+        {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
+        {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"},
+        {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}    
+]
 
-const targetTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-            {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
-            ];
+const sourceTypes = [ types[0], types[1], types[2] ];
+const targetTypes = [ types[0], types[1], types[3] ];
 
 const openApi = `openapi: 3.0.2
 info:
@@ -150,8 +149,8 @@ class Transformer extends React.Component {
         return fetch(url, {
             method: 'POST',
             headers: {
-                'Accept': targetType.mediaType + ";q=1,*/*",
-                'Content-Type': sourceType.mediaType,
+                'Accept': targetType.mediaType + ",*/*;q=0.1",
+                'Content-Type': sourceType.mediaType + "; charset=" + document.characterSet,
             },
             referrerPolicy: 'no-referrer',
             cache: 'no-cache',
@@ -182,8 +181,7 @@ class Transformer extends React.Component {
                             <Grid item md={9} sm={7} xs={12}>
                                 <TextField
                                     fullWidth  
-                                    label="Base URI" 
-                                    defaultValue="/" 
+                                    label="Base URI"  
                                     variant="outlined" 
                                     value={this.state.baseUri}
                                     onChange={event => this.handleStateChange("baseUri", event.target.value)}

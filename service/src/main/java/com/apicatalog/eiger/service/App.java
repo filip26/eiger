@@ -158,8 +158,7 @@ public class App extends AbstractVerticle {
         // static resources
         router.get().handler(StaticHandler
                                     .create()
-                                    .setFilesReadOnly(true)
-                                    .setDirectoryListing(false)
+                                    .setIncludeHidden(false)
                                     .setDefaultContentEncoding("UTF-8") 
                                     .setMaxAgeSeconds(60*10)            // maxAge = 10 min
                             );
