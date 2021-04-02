@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export LAUNCHER="io.vertx.core.Launcher"
-export VERTICLE="com.apicatalog.eiger.service.App"
+export VERTICLE="com.apicatalog.eiger.service.TransformerVerticle"
 export CMD="mvn compile"
 export VERTX_CMD="run"
 export PORT=8080

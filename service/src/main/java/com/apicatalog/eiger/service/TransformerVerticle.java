@@ -1,13 +1,14 @@
 package com.apicatalog.eiger.service;
 
-import static io.vertx.ext.web.validation.builder.Parameters.optionalParam;
-import static io.vertx.json.schema.common.dsl.Schemas.*;
 import static com.apicatalog.eiger.service.Constants.*;
+import static io.vertx.ext.web.validation.builder.Parameters.*;
+import static io.vertx.json.schema.common.dsl.Schemas.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -40,7 +41,7 @@ import io.vertx.json.schema.SchemaParser;
 import io.vertx.json.schema.SchemaRouter;
 import io.vertx.json.schema.SchemaRouterOptions;
 
-public class App extends AbstractVerticle {
+public class TransformerVerticle extends AbstractVerticle {
 
     Instant startTime;
 
@@ -56,40 +57,39 @@ public class App extends AbstractVerticle {
 
         // validate parameters
         router.post(PATH_TRANSFORM)
-                    // transformer options validation
-                    .handler(
-                        ValidationHandlerBuilder
-                                .create(schemaParser)
-                                .queryParameter(optionalParam(PARAM_PRETTY, booleanSchema()))
-                                .queryParameter(optionalParam(PARAM_VERBOSE, booleanSchema()))
-                                .queryParameter(optionalParam(PARAM_BASE, stringSchema()))
-                                .predicate(RequestPredicate.BODY_REQUIRED)      // request body is required
-                                .build()
-                        )
-                    // transformer options extraction
-                    .handler(ctx -> {
-                        final RequestParameters parameters = ctx.get(ValidationHandler.REQUEST_CONTEXT_KEY);
+                // transformer options validation
+                .handler(
+                    ValidationHandlerBuilder
+                            .create(schemaParser)
+                            .queryParameter(optionalParam(PARAM_PRETTY, booleanSchema()))
+                            .queryParameter(optionalParam(PARAM_VERBOSE, booleanSchema()))
+                            .queryParameter(optionalParam(PARAM_BASE, stringSchema()))
+                            .predicate(RequestPredicate.BODY_REQUIRED)      // request body is required
+                            .build()
+                    )
+                // transformer options extraction
+                .handler(ctx -> {
+                    final RequestParameters parameters = ctx.get(ValidationHandler.REQUEST_CONTEXT_KEY);
 
-                        final RequestParameter pretty = parameters.queryParameter(PARAM_PRETTY);
-                        ctx.put(PARAM_PRETTY, pretty != null && pretty.getBoolean());
+                    final RequestParameter pretty = parameters.queryParameter(PARAM_PRETTY);
+                    ctx.put(PARAM_PRETTY, pretty != null && pretty.getBoolean());
 
-                        final RequestParameter verbose = parameters.queryParameter(PARAM_VERBOSE);
-                        ctx.put(PARAM_VERBOSE, verbose != null && verbose.getBoolean());
+                    final RequestParameter verbose = parameters.queryParameter(PARAM_VERBOSE);
+                    ctx.put(PARAM_VERBOSE, verbose != null && verbose.getBoolean());
 
-                        final RequestParameter base = parameters.queryParameter(PARAM_BASE);
-                        
-                        try {
-                            
-                            ctx.put(PARAM_BASE, base != null && !base.getString().isBlank() ? URI.create(base.getString().strip()) : null);
-                            ctx.next();
-                            
-                        } catch (IllegalArgumentException e) {
-                            ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
-                        }
+                    final RequestParameter base = parameters.queryParameter(PARAM_BASE);
 
-                    });
+                    try {
 
-        // xml -> xml | json | yaml
+                        ctx.put(PARAM_BASE, base != null && !base.getString().isBlank() ? URI.create(base.getString().strip()) : null);
+                        ctx.next();
+
+                    } catch (IllegalArgumentException e) {
+                        ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
+                    }
+                });
+
+        // XML -> XML | JSON | YAML
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_XML)
                 .produces(MEDIA_TYPE_ALPS_XML)
@@ -99,7 +99,7 @@ public class App extends AbstractVerticle {
                 .handler(new WriterHandler())
                 .failureHandler(new ErrorHandler());
 
-        // json -> xml | json | yaml
+        // JSON -> XML | JSON | YAML
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_ALPS_JSON)
                 .produces(MEDIA_TYPE_ALPS_XML)
@@ -109,7 +109,7 @@ public class App extends AbstractVerticle {
                 .handler(new WriterHandler())
                 .failureHandler(new ErrorHandler());
 
-        // oas -> xml | json | yaml
+        // OpenAPI -> XML | JSON | YAML
         router.post(PATH_TRANSFORM)
                 .consumes(MEDIA_TYPE_OPEN_API)
                 .produces(MEDIA_TYPE_ALPS_XML)
@@ -123,38 +123,29 @@ public class App extends AbstractVerticle {
         router.get().handler(StaticHandler
                                     .create()
                                     .setIncludeHidden(false)
-                                    .setDefaultContentEncoding("UTF-8") 
+                                    .setDefaultContentEncoding("UTF-8")
                                     .setMaxAgeSeconds(600l)     // maxAge = 10 min
                             );
 
+        // server
         vertx
             .createHttpServer()
             .requestHandler(router)
             .listen(getDefaultPort())
                 .onSuccess(ctx -> {
-                    System.out.println("Eiger HTTP node started on port " + ctx.actualPort() + ".");
+                    System.out.println("Transformer verticle started on port " + ctx.actualPort() + " with " + Charset.defaultCharset()  + " charset.");
                     startTime = Instant.now();
                 })
                 .onFailure(ctx ->
-                    System.err.println("Eiger HTTP node start failed [" + ctx.getMessage() + "].")
+                    System.err.println("Transformer verticle start failed [" + ctx.getMessage() + "].")
                 );
     }
 
     @Override
     public void stop() throws Exception {
         if (startTime != null) {
-            System.out.println("Eiger HTTP node stopped after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
+            System.out.println("Transformer verticle after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
         }
-        super.stop();
-    }
-
-    static final int getDefaultPort() {
-        final String envPort = System.getenv("PORT");
-
-        if (envPort != null) {
-            return Integer.valueOf(envPort);
-        }
-        return 8080;
     }
 
     static class ReaderHandler implements Handler<RoutingContext> {
@@ -178,16 +169,16 @@ public class App extends AbstractVerticle {
                 ctx.put(SOURCE, document).next();
 
             } catch (Exception e) {
-                ctx.fail(e);  
+                ctx.fail(e);
             }
         }
     }
-    
+
     static class WriterHandler implements Handler<RoutingContext> {
 
         @Override
         public void handle(RoutingContext ctx) {
-            
+
             final String acceptableContentType = ctx.getAcceptableContentType();
 
             final StringWriter target = new StringWriter();
@@ -211,20 +202,20 @@ public class App extends AbstractVerticle {
             }
         }
     }
-    
+
     static class ErrorHandler implements Handler<RoutingContext> {
 
         @Override
         public void handle(RoutingContext ctx) {
-            
+
             final Throwable e = ctx.failure();
-            
+
             if (e instanceof DocumentParserException) {
                 ctx.response()
                         .setStatusCode(400)
                         .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN)
                         .end(e.getMessage());
-              
+
                 return;
             }
 
@@ -248,5 +239,14 @@ public class App extends AbstractVerticle {
         }
 
         throw new IllegalStateException();
+    }
+
+    static final int getDefaultPort() {
+        final String envPort = System.getenv("PORT");
+
+        if (envPort != null) {
+            return Integer.valueOf(envPort);
+        }
+        return 8080;
     }
 }
