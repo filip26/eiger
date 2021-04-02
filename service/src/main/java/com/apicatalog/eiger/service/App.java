@@ -160,6 +160,8 @@ public class App extends AbstractVerticle {
                                     .create()
                                     .setFilesReadOnly(true)
                                     .setDirectoryListing(false)
+                                    .setDefaultContentEncoding("UTF-8") 
+                                    .setMaxAgeSeconds(60*10)            // maxAge = 10 min
                             );
 
         vertx
