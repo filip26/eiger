@@ -17,7 +17,7 @@ export default function TypeSelector(props) {
     };
 
     return (
-        <FormControl variant="outlined">
+        <FormControl variant="outlined" fullWidth>
             <InputLabel id={props.labelId}>{props.label}</InputLabel>
             <Select
                 labelId={props.labelId}

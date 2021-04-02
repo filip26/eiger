@@ -13,7 +13,7 @@
 
     <properties>
         <vertx.version>4.0.3</vertx.version>
-        <main.verticle>com.apicatalog.eiger.service.App</main.verticle>
+        <main.verticle>com.apicatalog.eiger.service.TransformerVerticle</main.verticle>
         <launcher.class>io.vertx.core.Launcher</launcher.class>
         
         <frontend-src-dir>${project.basedir}/src/webapp</frontend-src-dir>

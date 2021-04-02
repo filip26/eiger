@@ -6,7 +6,9 @@ import {
     Grid,
     Container,
     LinearProgress,
+    TextField
     } from '@material-ui/core/';
+    
 import MuiAlert from '@material-ui/lab/Alert';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,17 +18,15 @@ import TargetOptions from './TargetOptions';
 import Editor from './Editor';
 import Viewer from './Viewer';
 
-const sourceTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-            {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"}
-            ];
+const types = [
+        {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
+        {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
+        {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"},
+        {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}    
+]
 
-const targetTypes = [
-            {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-            {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-            {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
-            ];
+const sourceTypes = [ types[0], types[1], types[2] ];
+const targetTypes = [ types[0], types[1], types[3] ];
 
 const openApi = `openapi: 3.0.2
 info:
@@ -50,6 +50,11 @@ paths:
           description: Enables indented output
           schema:
             type: boolean
+        - name: base
+          in: query
+          description: Sets base URI
+          schema:
+            type: string
       requestBody:
         description: An input document represention
         content:
@@ -83,15 +88,6 @@ const styles = theme => ({
         margin: `${theme.spacing(1)}px auto`,
         padding: theme.spacing(2),
     },
-    mediaTypeSelector: {
-        minWidth: theme.spacing(25),
-    },
-    control: {
-        margin: `${theme.spacing(1)}px auto auto auto`,
-    },
-    second: {
-        margin: `${theme.spacing(2)}px auto auto auto`,
-    }
 });
 
 class Transformer extends React.Component {
@@ -105,7 +101,8 @@ class Transformer extends React.Component {
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
             processing: false,
-            source: openApi
+            source: openApi,
+            baseUri: "/",
         }
     }
 
@@ -120,7 +117,7 @@ class Transformer extends React.Component {
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty})
+            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.baseUri})
 
                 .then(async response => {
 
@@ -133,7 +130,7 @@ class Transformer extends React.Component {
                     return response.text().then(text => {
 
                         state.response = text;
-                        state.responseMediaType = response.headers.get('content-type');
+                        state.responseMediaType = response.headers.get('content-type') || "text/plain";
 
                         this.setState(state);
                     })
@@ -152,8 +149,8 @@ class Transformer extends React.Component {
         return fetch(url, {
             method: 'POST',
             headers: {
-                'Accept': targetType.mediaType + ";q=1,*/*",
-                'Content-Type': sourceType.mediaType,
+                'Accept': targetType.mediaType + ",*/*;q=0.1",
+                'Content-Type': sourceType.mediaType + "; charset=" + document.characterSet,
             },
             referrerPolicy: 'no-referrer',
             cache: 'no-cache',
@@ -169,11 +166,10 @@ class Transformer extends React.Component {
             <Welcome />
 
             <Container maxWidth="lg">
-
                 <Paper className={classes.paper} elevation={1}>
-                    <Grid>
-                        <Grid item>
-                            <div className={classes.control}>
+                    <Grid container spacing={1}>
+                        <Grid item container spacing={2} alignItems="center">
+                            <Grid item md={3} sm={5} xs={12}>
                                 <TypeSelector
                                     value={this.state.sourceType}
                                     onChange={this.handleStateChange.bind(this, "sourceType")}
@@ -181,42 +177,45 @@ class Transformer extends React.Component {
                                     label="Source"
                                     options={sourceTypes}
                                     />
-                            </div>
-                        </Grid>
-                        <Grid item>
-                            <div className={classes.second}>
-                                <Editor
-                                    type={this.state.sourceType.format}
-                                    value={this.state.source}
-                                    onChange={this.handleStateChange.bind(this, "source")}
+                            </Grid>
+                            <Grid item md={9} sm={7} xs={12}>
+                                <TextField
+                                    fullWidth  
+                                    label="Base URI"  
+                                    variant="outlined" 
+                                    value={this.state.baseUri}
+                                    onChange={event => this.handleStateChange("baseUri", event.target.value)}
                                     />
-                            </div>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Editor
+                                type={this.state.sourceType.format}
+                                value={this.state.source}
+                                onChange={this.handleStateChange.bind(this, "source")}
+                                />
                         </Grid>
                     </Grid>
                 </Paper>
 
                 <Paper className={classes.paper} elevation={1}>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <div className={classes.control}>
-                                <TypeSelector
-                                    value={this.state.targetType}
-                                    onChange={this.handleStateChange.bind(this, "targetType")}
-                                    labelId="target-select-label"
-                                    label="Target"
-                                    options={targetTypes}
-                                    />
-                            </div>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item md={3} sm={5} xs={12}>
+                            <TypeSelector
+                                value={this.state.targetType}
+                                onChange={this.handleStateChange.bind(this, "targetType")}
+                                labelId="target-select-label"
+                                label="Target"
+                                options={targetTypes}
+                                />
                         </Grid>
-                        <Grid item>
-                            <div className={classes.second}>
-                                <TargetOptions
-                                    pretty={this.state.pretty || this.state.targetType.prettyDisabled}
-                                    prettyDisabled={this.state.targetType.prettyDisabled}
-                                    verbose={this.state.verbose}
-                                    onChange={this.handleTargetOptionsChange}
-                                    />
-                            </div>
+                        <Grid item md={9} sm={7} xs={12}>
+                            <TargetOptions
+                                pretty={this.state.pretty || this.state.targetType.prettyDisabled}
+                                prettyDisabled={this.state.targetType.prettyDisabled}
+                                verbose={this.state.verbose}
+                                onChange={this.handleTargetOptionsChange}
+                                />
                         </Grid>
                     </Grid>
                 </Paper>
