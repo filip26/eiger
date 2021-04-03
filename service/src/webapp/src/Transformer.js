@@ -6,9 +6,11 @@ import {
     Grid,
     Container,
     LinearProgress,
-    TextField
+    TextField,
+    Collapse,
+    Fade,
     } from '@material-ui/core/';
-    
+
 import MuiAlert from '@material-ui/lab/Alert';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -22,7 +24,7 @@ const types = [
         {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
         {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
         {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"},
-        {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}    
+        {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
 ]
 
 const sourceTypes = [ types[0], types[1], types[2] ];
@@ -88,6 +90,12 @@ const styles = theme => ({
         margin: `${theme.spacing(1)}px auto`,
         padding: theme.spacing(2),
     },
+    errorContainer: {
+        margin: `${theme.spacing(1)}px auto`,
+    },
+    error: {
+        padding: theme.spacing(1),
+    }
 });
 
 class Transformer extends React.Component {
@@ -102,7 +110,7 @@ class Transformer extends React.Component {
             targetType: targetTypes[0],
             processing: false,
             source: openApi,
-            baseUri: "/",
+            base: "/",
         }
     }
 
@@ -117,7 +125,7 @@ class Transformer extends React.Component {
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.baseUri})
+            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.base})
 
                 .then(async response => {
 
@@ -180,11 +188,11 @@ class Transformer extends React.Component {
                             </Grid>
                             <Grid item md={9} sm={7} xs={12}>
                                 <TextField
-                                    fullWidth  
-                                    label="Base URI"  
-                                    variant="outlined" 
-                                    value={this.state.baseUri}
-                                    onChange={event => this.handleStateChange("baseUri", event.target.value)}
+                                    fullWidth
+                                    label="Base URI"
+                                    variant="outlined"
+                                    value={this.state.base}
+                                    onChange={event => this.handleStateChange("base", event.target.value)}
                                     />
                             </Grid>
                         </Grid>
@@ -229,24 +237,24 @@ class Transformer extends React.Component {
                     disabled={this.state.processing}
                     >{this.state.processing ? "Processing" : "Process"}</Button>
 
-                {this.state.processing &&
+                <Collapse in={this.state.processing} timeout={250} mountOnEnter unmountOnExit>
                     <LinearProgress color="secondary"/>
-                }
+                </Collapse>
 
-                {this.state.error &&
+                <Collapse in={this.state.error != null} timeout={750} className={classes.errorContainer} mountOnEnter unmountOnExit>
                     <MuiAlert
-                        className={classes.paper}
+                        className={classes.error}
                         elevation={1}
                         variant="filled"
                         severity="error"
                         >{this.state.error}</MuiAlert>
-                    }
+                </Collapse>
 
-                {this.state.response &&
-                    <Paper className={classes.paper} elevation={1}>
+                <Fade in={this.state.response != null} timeout={1000} mountOnEnter unmountOnExit>
+                    <Paper elevation={1} className={classes.paper}>
                         <Viewer mediaType={this.state.responseMediaType} readOnly value={this.state.response}/>
                     </Paper>
-                    }
+                </Fade>
 
             </Container>
         </React.Fragment>
