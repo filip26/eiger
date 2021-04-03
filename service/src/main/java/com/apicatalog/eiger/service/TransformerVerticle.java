@@ -80,12 +80,11 @@ public class TransformerVerticle extends AbstractVerticle {
                     final RequestParameter base = parameters.queryParameter(PARAM_BASE);
 
                     try {
-
                         ctx.put(PARAM_BASE, base != null && !base.getString().isBlank() ? URI.create(base.getString().strip()) : null);
                         ctx.next();
 
                     } catch (IllegalArgumentException e) {
-                        ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
+                        ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN)).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
                     }
                 });
 
@@ -144,7 +143,7 @@ public class TransformerVerticle extends AbstractVerticle {
     @Override
     public void stop() throws Exception {
         if (startTime != null) {
-            System.out.println("Transformer verticle after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
+            System.out.println("Transformer verticle stopped after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
         }
     }
 
@@ -194,7 +193,7 @@ public class TransformerVerticle extends AbstractVerticle {
 
                 ctx.response()
                         .setStatusCode(200)
-                        .putHeader(HEADER_CONTENT_TYPE, acceptableContentType + "; charset=" + Charset.defaultCharset())
+                        .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(acceptableContentType))
                         .end(target.toString());
 
             } catch (Exception e) {
@@ -213,7 +212,7 @@ public class TransformerVerticle extends AbstractVerticle {
             if (e instanceof DocumentParserException) {
                 ctx.response()
                         .setStatusCode(400)
-                        .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
+                        .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN))
                         .end(e.getMessage());
 
                 return;
@@ -221,7 +220,7 @@ public class TransformerVerticle extends AbstractVerticle {
 
             ctx.response()
                     .setStatusCode(500)
-                    .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
+                    .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN))
                     .end(e.getMessage());
         }
     }
@@ -248,5 +247,9 @@ public class TransformerVerticle extends AbstractVerticle {
             return Integer.valueOf(envPort);
         }
         return 8080;
+    }
+
+    static final String contentTypeValue(final String mediaType) {
+        return mediaType + "; charset=" + Charset.defaultCharset();
     }
 }
