@@ -17,6 +17,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
 import com.apicatalog.alps.json.JsonDocumentParser;
@@ -28,6 +29,7 @@ import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -80,12 +82,11 @@ public class TransformerVerticle extends AbstractVerticle {
                     final RequestParameter base = parameters.queryParameter(PARAM_BASE);
 
                     try {
-
                         ctx.put(PARAM_BASE, base != null && !base.getString().isBlank() ? URI.create(base.getString().strip()) : null);
                         ctx.next();
 
                     } catch (IllegalArgumentException e) {
-                        ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
+                        ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN)).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
                     }
                 });
 
@@ -144,7 +145,7 @@ public class TransformerVerticle extends AbstractVerticle {
     @Override
     public void stop() throws Exception {
         if (startTime != null) {
-            System.out.println("Transformer verticle after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
+            System.out.println("Transformer verticle stopped after running for " +  DurationFormatUtils.formatDurationWords(Duration.between(startTime, Instant.now()).toMillis(), true, true) + ".");
         }
     }
 
@@ -194,7 +195,7 @@ public class TransformerVerticle extends AbstractVerticle {
 
                 ctx.response()
                         .setStatusCode(200)
-                        .putHeader(HEADER_CONTENT_TYPE, acceptableContentType + "; charset=" + Charset.defaultCharset())
+                        .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(acceptableContentType))
                         .end(target.toString());
 
             } catch (Exception e) {
@@ -211,17 +212,13 @@ public class TransformerVerticle extends AbstractVerticle {
             final Throwable e = ctx.failure();
 
             if (e instanceof DocumentParserException) {
-                ctx.response()
-                        .setStatusCode(400)
-                        .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
-                        .end(e.getMessage());
-
+                returnFormattedError(ctx, e);
                 return;
             }
 
             ctx.response()
                     .setStatusCode(500)
-                    .putHeader(HEADER_CONTENT_TYPE, MEDIA_TYPE_TEXT_PLAIN + "; charset=" + Charset.defaultCharset())
+                    .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN))
                     .end(e.getMessage());
         }
     }
@@ -248,5 +245,40 @@ public class TransformerVerticle extends AbstractVerticle {
             return Integer.valueOf(envPort);
         }
         return 8080;
+    }
+
+    static final String contentTypeValue(final String mediaType) {
+        return mediaType + "; charset=" + Charset.defaultCharset();
+    }
+
+    static final void returnFormattedError(final RoutingContext ctx, Throwable e) { 
+
+        final JsonObject error = new JsonObject();
+        
+        error.put("message", e.getMessage());
+        
+        if (e instanceof MalformedDocumentException) {
+    
+            final MalformedDocumentException me = (MalformedDocumentException)e;
+  
+            error.put("location", new JsonObject().put("line", me.getLineNumber()).put("column", me.getColumnNumber()));
+        }
+        
+        if (ctx.get(Constants.PARAM_BASE) != null) {
+            error.put("base", ctx.get(Constants.PARAM_BASE));
+        }
+        
+        error.put("mediaType", ctx.parsedHeaders().contentType().component() + "/" + ctx.parsedHeaders().contentType().subComponent());
+        
+        ctx.response()
+            .setStatusCode(400)
+            .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_JSON));
+
+        if ((boolean)ctx.get(Constants.PARAM_PRETTY)) {
+            ctx.end(error.encodePrettily());
+            
+        } else {
+            ctx.json(error);
+        }
     }
 }
