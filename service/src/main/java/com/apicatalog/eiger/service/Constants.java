@@ -26,6 +26,7 @@ final class Constants {
     static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
     
     static final String MEDIA_TYPE_YAML = "application/yaml";
+    static final String MEDIA_TYPE_JSON = "application/json";
 
     static final String PARAM_PRETTY = "pretty";
     static final String PARAM_VERBOSE = "verbose";

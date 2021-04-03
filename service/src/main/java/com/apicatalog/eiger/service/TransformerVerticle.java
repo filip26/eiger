@@ -29,7 +29,7 @@ import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
-import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -253,29 +253,32 @@ public class TransformerVerticle extends AbstractVerticle {
 
     static final void returnFormattedError(final RoutingContext ctx, Throwable e) { 
 
-        final Buffer response = Buffer.buffer(1000);
+        final JsonObject error = new JsonObject();
         
-        response.appendString("# Invalid ALPS document" + "\n")
-                .appendString("- error:" + "\n")
-                .appendString("    message: " + e.getMessage() + "\n");
-    
+        error.put("message", e.getMessage());
+        
         if (e instanceof MalformedDocumentException) {
     
             final MalformedDocumentException me = (MalformedDocumentException)e;
-    
-            response.appendString("    location:" + "\n")
-                    .appendString("      line: " + me.getLineNumber() + "\n")
-                    .appendString("      column: " + me.getColumnNumber() + "\n");
+  
+            error.put("location", new JsonObject().put("line", me.getLineNumber()).put("column", me.getColumnNumber()));
         }
         
         if (ctx.get(Constants.PARAM_BASE) != null) {
-            response.appendString("    base: '" + ctx.get(Constants.PARAM_BASE)  + "'\n");
+            error.put("base", ctx.get(Constants.PARAM_BASE));
         }
-        response.appendString("    mediaType: " + ctx.parsedHeaders().contentType().component() + "/" + ctx.parsedHeaders().contentType().subComponent() + "\n");
+        
+        error.put("mediaType", ctx.parsedHeaders().contentType().component() + "/" + ctx.parsedHeaders().contentType().subComponent());
         
         ctx.response()
             .setStatusCode(400)
-            .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_YAML))
-            .end(response);
+            .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_JSON));
+
+        if ((boolean)ctx.get(Constants.PARAM_PRETTY)) {
+            ctx.end(error.encodePrettily());
+            
+        } else {
+            ctx.json(error);
+        }
     }
 }

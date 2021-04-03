@@ -82,6 +82,30 @@ paths:
             application/alps+yaml:
               schema:
                 type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        location:
+          type: object
+          properties:
+            line:
+              type: integer
+            column:
+              type: integer
+        base: 
+          type: string
+        mediaType:
+          type: string
 `;
 
 
