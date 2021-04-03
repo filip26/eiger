@@ -17,6 +17,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
+import com.apicatalog.alps.error.MalformedDocumentException;
 import com.apicatalog.alps.io.DocumentParser;
 import com.apicatalog.alps.io.DocumentWriter;
 import com.apicatalog.alps.json.JsonDocumentParser;
@@ -28,6 +29,7 @@ import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -210,11 +212,7 @@ public class TransformerVerticle extends AbstractVerticle {
             final Throwable e = ctx.failure();
 
             if (e instanceof DocumentParserException) {
-                ctx.response()
-                        .setStatusCode(400)
-                        .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN))
-                        .end(e.getMessage());
-
+                returnFormattedError(ctx, e);
                 return;
             }
 
@@ -251,5 +249,33 @@ public class TransformerVerticle extends AbstractVerticle {
 
     static final String contentTypeValue(final String mediaType) {
         return mediaType + "; charset=" + Charset.defaultCharset();
+    }
+
+    static final void returnFormattedError(final RoutingContext ctx, Throwable e) { 
+
+        final Buffer response = Buffer.buffer(1000);
+        
+        response.appendString("# Invalid ALPS document" + "\n")
+                .appendString("- error:" + "\n")
+                .appendString("    message: " + e.getMessage() + "\n");
+    
+        if (e instanceof MalformedDocumentException) {
+    
+            final MalformedDocumentException me = (MalformedDocumentException)e;
+    
+            response.appendString("    location:" + "\n")
+                    .appendString("      line: " + me.getLineNumber() + "\n")
+                    .appendString("      column: " + me.getColumnNumber() + "\n");
+        }
+        
+        if (ctx.get(Constants.PARAM_BASE) != null) {
+            response.appendString("    base: '" + ctx.get(Constants.PARAM_BASE)  + "'\n");
+        }
+        response.appendString("    mediaType: " + ctx.parsedHeaders().contentType().component() + "/" + ctx.parsedHeaders().contentType().subComponent() + "\n");
+        
+        ctx.response()
+            .setStatusCode(400)
+            .putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_YAML))
+            .end(response);
     }
 }

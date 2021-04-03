@@ -24,6 +24,8 @@ final class Constants {
     static final String MEDIA_TYPE_OPEN_API = "application/vnd.oai.openapi";
 
     static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain";
+    
+    static final String MEDIA_TYPE_YAML = "application/yaml";
 
     static final String PARAM_PRETTY = "pretty";
     static final String PARAM_VERBOSE = "verbose";
