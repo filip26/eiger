@@ -51,8 +51,10 @@ export default function Header() {
                 <IconButton
                     target="_blank"
                     href="https://github.com/filip26/eiger"
+                    aria-label="GitHub Repository"
+                    rel="noopener"
                     >
-                    <GitHubIcon />
+                    <GitHubIcon/>
                 </IconButton>
             </Toolbar>
         </AppBar>

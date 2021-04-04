@@ -212,6 +212,7 @@ class Transformer extends React.Component {
                             </Grid>
                             <Grid item md={9} sm={7} xs={12}>
                                 <TextField
+                                    id="base-uri-input"
                                     fullWidth
                                     label="Base URI"
                                     variant="outlined"
