@@ -125,7 +125,7 @@ public class TransformerVerticle extends AbstractVerticle {
                                     .create()
                                     .setIncludeHidden(false)
                                     .setDefaultContentEncoding("UTF-8")
-                                    .setMaxAgeSeconds(600l)     // maxAge = 10 min
+                                    .setMaxAgeSeconds(3600l)     // maxAge = 1 hour
                             );
 
         // server
