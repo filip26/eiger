@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
         color: grey[200],
     },
     icon: {
-        marginRight: theme.spacing(1),
     },
     appName: {
         fontFamily: "'Montserrat', Roboto, sans-serif;",
@@ -40,9 +39,16 @@ export default function Header() {
     return (
         <AppBar position="fixed" className={classes.appBar}>
             <Toolbar variant="dense">
-                <FilterHdrIcon className={classes.icon}/>
+               <IconButton
+                    target="_blank"
+                    href="https://en.wikipedia.org/wiki/Eiger"
+                    aria-label="Eiger Mountain"
+                    rel="noopener"
+                    >
+                    <FilterHdrIcon className={classes.icon}/>
+                </IconButton>
+                
                 <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
-
                     Eiger <sup className={classes.version}>v0.4.9</sup>
                 </Typography>
 

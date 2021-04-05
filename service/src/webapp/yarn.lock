@@ -1182,6 +1182,16 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/montserrat@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-4.2.2.tgz#a1ad54b9302d6b840618fa1294fb4aec98e2b673"
+  integrity sha512-HnlV9Xim2mYa56Bz/UIO5r26Rq/DJWlYdMWTql+TE6n3yYMe8YV6dTwPzTbkr35IsyDq6cWy0rPert9MWyA2yA==
+
+"@fontsource/roboto@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@fontsource/roboto/-/roboto-4.2.2.tgz#39b87680b25915539e445cc6e0fac99e1a81f58b"
+  integrity sha512-VzYWCdqjrepaT7dezuaTZXKaW1L+f5FSp7DGxMqTrf81OTzh9xpKIpr8lgjPg2ZNwiT8rnU++mJ4hojsCnOoqw==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
