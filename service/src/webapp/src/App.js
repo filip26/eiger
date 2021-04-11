@@ -19,6 +19,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/montserrat/200.css";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/500.css"; 
+import "@fontsource/montserrat/800.css"; 
 
 let theme = responsiveFontSizes(createMuiTheme( {
     palette: {
@@ -30,8 +31,10 @@ let theme = responsiveFontSizes(createMuiTheme( {
             main: amber.A200,
         },
         background: {
-            default: "#121212"
-        }
+            default: "#131312",
+	    paper: "#212121",
+        },
+	
     }
 }));
 

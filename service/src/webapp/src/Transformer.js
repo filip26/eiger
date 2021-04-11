@@ -112,13 +112,13 @@ components:
 const styles = theme => ({
     paper: {
         margin: `${theme.spacing(1)}px auto`,
-        padding: theme.spacing(2),
+        padding: theme.spacing(2, 1, 1.5, 1),
     },
     errorContainer: {
         margin: `${theme.spacing(1)}px auto`,
     },
     error: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(1.5),
     }
 });
 
@@ -198,9 +198,8 @@ class Transformer extends React.Component {
             <Welcome />
 
             <Container maxWidth="lg">
-                <Paper className={classes.paper} elevation={1}>
-                    <Grid container spacing={1}>
-                        <Grid item container spacing={2} alignItems="center">
+                <Paper className={classes.paper} elevation={2}>
+                    <Grid container spacing={2} alignItems="center">
                             <Grid item md={3} sm={5} xs={12}>
                                 <TypeSelector
                                     value={this.state.sourceType}
@@ -220,18 +219,17 @@ class Transformer extends React.Component {
                                     onChange={event => this.handleStateChange("base", event.target.value)}
                                     />
                             </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
+                    </Grid>
+                </Paper>
+                <Paper className={classes.paper} elevation={2}>
                             <Editor
                                 type={this.state.sourceType.format}
                                 value={this.state.source}
                                 onChange={this.handleStateChange.bind(this, "source")}
                                 />
-                        </Grid>
-                    </Grid>
                 </Paper>
 
-                <Paper className={classes.paper} elevation={1}>
+                <Paper className={classes.paper} elevation={2}>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item md={3} sm={5} xs={12}>
                             <TypeSelector
@@ -269,14 +267,14 @@ class Transformer extends React.Component {
                 <Collapse in={this.state.error != null} timeout={750} className={classes.errorContainer} mountOnEnter unmountOnExit>
                     <MuiAlert
                         className={classes.error}
-                        elevation={1}
+                        elevation={2}
                         variant="filled"
                         severity="error"
                         >{this.state.error}</MuiAlert>
                 </Collapse>
 
                 <Fade in={this.state.response != null} timeout={1000} mountOnEnter unmountOnExit>
-                    <Paper elevation={1} className={classes.paper}>
+                    <Paper elevation={2} className={classes.paper}>
                         <Viewer mediaType={this.state.responseMediaType} readOnly value={this.state.response}/>
                     </Paper>
                 </Fade>

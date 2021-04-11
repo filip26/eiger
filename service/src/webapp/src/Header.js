@@ -10,18 +10,17 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 
-import GitHubIcon from '@material-ui/icons/GitHub';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
 const useStyles = makeStyles((theme) => ({
-    appBar: {
-        backgroundColor: grey[900],
-        color: grey[200],
+    bar: {
+      backgroundColor: theme.palette.background.default,
     },
     icon: {
+      color: theme.palette.text.secondary,
     },
-    appName: {
-        fontFamily: "'Montserrat', Roboto, sans-serif;",
+    name: {
+      fontFamily: 'Montserrat, Roboto, sans-serif',
     },
     padding: {
         flexGrow: 1,
@@ -37,32 +36,24 @@ export default function Header() {
     const classes = useStyles();
 
     return (
-        <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar variant="dense">
+        <AppBar position="fixed" className={classes.bar}>
+            <Toolbar>
                <IconButton
                     target="_blank"
                     href="https://en.wikipedia.org/wiki/Eiger"
                     aria-label="Eiger Mountain"
                     rel="noopener"
                     >
-                    <FilterHdrIcon className={classes.icon}/>
+                    <FilterHdrIcon className={classes.icon} fontSize="large"/>
                 </IconButton>
                 
-                <Typography variant="h6" color="inherit" noWrap className={classes.appName}>
-                    Eiger <sup className={classes.version}>v0.4.9</sup>
+                <Typography variant="h5" component="div" color="inherit" noWrap className={classes.name}>
+                    EIGER <sup className={classes.version}>SNAPSHOT</sup>
                 </Typography>
 
                 <div className={classes.padding} />
 
-                <IconButton
-                    target="_blank"
-                    href="https://github.com/filip26/eiger"
-                    aria-label="GitHub Repository"
-                    rel="noopener"
-                    >
-                    <GitHubIcon/>
-                </IconButton>
-            </Toolbar>
+           </Toolbar>
         </AppBar>
         );
 };
