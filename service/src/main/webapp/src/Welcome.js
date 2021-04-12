@@ -27,7 +27,7 @@ export default function Welcome() {
       <div className={classes.content}>
         <Container maxWidth="md">
 
-            <Typography component="h1" variant="h3" align="center" color="textSecondary" className={classes.name} gutterBottom>Transformer</Typography>
+            <Typography component="h1" variant="h3" align="center" className={classes.name} gutterBottom>Transformer</Typography>
 
             <Typography variant="body1" align="center" color="textSecondary" paragraph>
                 <Link href="https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps" color="inherit" target="_default">
