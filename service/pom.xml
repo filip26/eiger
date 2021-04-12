@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>eiger-service</artifactId>
 
-    <name>ALPS Service</name>
+    <name>Eiger Service</name>
 
     <parent>
         <groupId>com.apicatalog.eiger</groupId>
@@ -16,7 +16,7 @@
         <main.verticle>com.apicatalog.eiger.service.TransformerVerticle</main.verticle>
         <launcher.class>io.vertx.core.Launcher</launcher.class>
         
-        <frontend-src-dir>${project.basedir}/src/webapp</frontend-src-dir>
+        <frontend-src-dir>${project.basedir}/src/main/webapp</frontend-src-dir>
         <node.version>v12.3.1</node.version>
         <yarn.version>v1.16.0</yarn.version>
         <frontend-maven-plugin.version>1.7.6</frontend-maven-plugin.version>
@@ -180,7 +180,7 @@
 		    </executions>
 		</plugin>
 
-        <plugin>
+    <plugin>
 			<artifactId>maven-assembly-plugin</artifactId>
 			<executions>
 			  <execution>
@@ -203,7 +203,7 @@
 			    </manifestEntries>
 			  </archive>
 			</configuration>
-        </plugin>
+      </plugin>
 
         <plugin>
             <groupId>org.codehaus.mojo</groupId>

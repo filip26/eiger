@@ -18,40 +18,38 @@ import "@fontsource/roboto/500.css";
 
 import "@fontsource/montserrat/200.css";
 import "@fontsource/montserrat/400.css";
-import "@fontsource/montserrat/500.css"; 
-import "@fontsource/montserrat/800.css"; 
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/800.css";
 
 let theme = responsiveFontSizes(createMuiTheme( {
-    palette: {
-        type: 'dark',
-        primary: {
-            main: lightBlue[600],
-        },
-        secondary: {
-            main: amber.A200,
-        },
-        background: {
-            default: "#131312",
-	    paper: "#212121",
-        },
-	
-    }
+  palette: {
+    type: 'dark',
+    primary: {
+      main: lightBlue[600],
+    },
+    secondary: {
+      main: amber.A200,
+    },
+    background: {
+      default: "#131312",
+      paper: "#212121",
+    },
+  }
 }));
 
 export default function App() {
-
     return (
-        <NoSsr>
-            <React.Fragment>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Header />
-                    <main>
-                        <Transformer />
-                    </main>
-                    <Footer />
-                </ThemeProvider>
-            </React.Fragment>
-        </NoSsr>
+      <NoSsr>
+        <React.Fragment>
+          <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            <Header/>
+            <main>
+              <Transformer/>
+            </main>
+            <Footer/>
+          </ThemeProvider>
+        </React.Fragment>
+      </NoSsr>
   );
 }

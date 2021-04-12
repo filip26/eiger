@@ -6,17 +6,15 @@ import GitHubButton from 'react-github-btn'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
-
-   margin: theme.spacing(8, 0, 0, 0),
-  backgroundColor: theme.palette.common.black,
-    },
-  links: {
-     padding: theme.spacing(2, 0, 4, 0),
-
+    margin: theme.spacing(8, 0, 0, 0),
+    backgroundColor: theme.palette.common.black,
   },
-icon: {
-color: theme.palette.text.secondary,
-}
+  links: {
+    padding: theme.spacing(2, 0, 4, 0),
+  },
+  icon: {
+    color: theme.palette.text.secondary,
+  }
 }));
 
 export default function Footer() {
@@ -25,43 +23,40 @@ export default function Footer() {
 
     return (
         <Paper component="footer" className={classes.footer} elevation={0} >
+          <Grid container spacing={2} className={classes.links}>
 
-              <Grid container spacing={2} className={classes.links}>
-                <Grid item xs={12} align="center">
+            <Grid item xs={12} align="center">
+              <IconButton
+                target="_blank"
+                href="https://github.com/filip26/eiger"
+                aria-label="GitHub Repository"
+                rel="noopener"
+                className={classes.icon}
+                >
+                <GitHubIcon fontSize="large"
+              />
+              </IconButton>
+            </Grid>
 
-                <IconButton
-                    target="_blank"
-                    href="https://github.com/filip26/eiger"
-                    aria-label="GitHub Repository"
-                    rel="noopener"
-	            className={classes.icon}
-                    >
-                    <GitHubIcon fontSize="large" 
-	    />
-                </IconButton>
+            <Grid item xs={6} align="right">
+              <GitHubButton
+                href="https://github.com/filip26/eiger"
+                data-icon="octicon-star"
+                data-size="large"
+                data-show-count="true"
+                aria-label="Star filip26/eiger on GitHub"
+                >Star</GitHubButton>
+            </Grid>
 
-
-                </Grid>
-                <Grid item xs={6} align="right">
-                    <GitHubButton
-                        href="https://github.com/filip26/eiger"
-                        data-icon="octicon-star"
-                        data-size="large"
-                        data-show-count="true"
-                        aria-label="Star filip26/eiger on GitHub"
-                        >Star</GitHubButton>
-                </Grid>
-                <Grid item xs={6}>
-                    <GitHubButton
-                        href="https://github.com/sponsors/filip26"
-                        data-icon="octicon-heart"
-                        data-size="large"
-                        aria-label="Sponsor @filip26 on GitHub"
-                        >Sponsor</GitHubButton>
-                </Grid>
-              </Grid>
- 
- 
+            <Grid item xs={6}>
+              <GitHubButton
+                href="https://github.com/sponsors/filip26"
+                data-icon="octicon-heart"
+                data-size="large"
+                aria-label="Sponsor @filip26 on GitHub"
+                >Sponsor</GitHubButton>
+            </Grid>
+          </Grid>
         </Paper>
         );
 };

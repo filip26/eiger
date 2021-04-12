@@ -15,28 +15,28 @@ export default function TargetOptions(props) {
 
     return (
         <FormControl>
-            <FormGroup row>
-                <FormControlLabel disabled={props.prettyDisabled}
-                    control={
-                      <Checkbox
-                        checked={props.pretty}
-                        name="pretty"
+          <FormGroup row>
+            <FormControlLabel disabled={props.prettyDisabled}
+                control={
+                  <Checkbox
+                    checked={props.pretty}
+                    name="pretty"
+                    color="primary"
+                    onChange={event => handleChange("pretty", event)}
+                  />}
+                label="Pretty"
+                />
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={props.verbose}
                         color="primary"
-                        onChange={event => handleChange("pretty", event)}
-                      />}
-                    label="Pretty"
-                    />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={props.verbose}
-                            color="primary"
-                            name="checkedA"
-                            onChange={event => handleChange("verbose", event)}
-                            />}
-                    label="Verbose"
-                    />
-            </FormGroup>
+                        name="checkedA"
+                        onChange={event => handleChange("verbose", event)}
+                        />}
+                label="Verbose"
+                />
+          </FormGroup>
         </FormControl>
         );
 }
