@@ -246,7 +246,7 @@ class Transformer extends React.Component {
                         </Grid>
                         <Grid item md={9} sm={7} xs={12}>
                             <TargetOptions
-                                pretty={this.state.pretty || this.state.targetType.prettyDisabled}
+                                pretty={this.state.pretty || (this.state.targetType.prettyDisabled != null && this.state.targetType.prettyDisabled)}
                                 prettyDisabled={this.state.targetType.prettyDisabled}
                                 verbose={this.state.verbose}
                                 onChange={this.handleTargetOptionsChange}
