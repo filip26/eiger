@@ -12,7 +12,7 @@ if [ "$1" == "dev" ]
     java \
       -cp  $(echo target/dependency/*.jar | tr ' ' ':'):"target/classes" \
       $LAUNCHER $VERTX_CMD $VERTICLE \
-      --redeploy="src/main/**/*" \
+      --redeploy="src/main/java/**/*" \
       --on-redeploy="$CMD" \
       --redeploy-scan-period=1000 \
       --redeploy-grace-period=2500 \

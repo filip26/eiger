@@ -6,9 +6,9 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        fontSize: '16px'
-    }
+  root: {
+    fontSize: '16px'
+  }
 }));
 
 export default function Viewer(props) {
