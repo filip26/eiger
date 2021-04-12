@@ -121,6 +121,15 @@ public class TransformerVerticle extends AbstractVerticle {
                 .failureHandler(new ErrorHandler());
 
         // static resources
+        router
+            .get("/static/*")
+            .handler(StaticHandler
+                        .create("webroot/static/")
+                        .setIncludeHidden(false)
+                        .setDefaultContentEncoding("UTF-8")
+                        .setMaxAgeSeconds(100*24*3600l)
+                    );
+
         router.get().handler(StaticHandler
                                     .create()
                                     .setIncludeHidden(false)
