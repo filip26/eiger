@@ -20,15 +20,22 @@ import TargetOptions from './TargetOptions';
 import Editor from './Editor';
 import Viewer from './Viewer';
 
+import transform from './transform';
+
+
 const types = [
   {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
   {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-  {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"},
-  {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
+  {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi", prettyDisabled: true, verbose: false},
+  {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true},
+  {model: "asyncapi", format: "yaml", label: "AsyncAPI (YAML)", mediaType: "application/x-asyncapi", prettyDisabled: true, verbose: false},
+  {model: "protobuf", format: "c", label: "Protocol Buffers v3", mediaType: "application/protobuf", prettyDisabled: true, verbose: false},
+  {model: "sdl", format: "c", label: "SDL", mediaType: "application/x-sdl", prettyDisabled: true, verbose: false},
+//  {model: "wsdl", format: "xml", label: "WSDL", mediaType: "application/wsdl+xml"},
 ]
 
 const sourceTypes = [ types[0], types[1], types[2] ];
-const targetTypes = [ types[0], types[1], types[3] ];
+const targetTypes = [ types[0], types[1], types[3], types[4], types[2], types[5], types[6] ];
 
 const openApi = `openapi: 3.0.2
 info:
@@ -123,6 +130,9 @@ const styles = theme => ({
   },
   error: {
     padding: theme.spacing(1.5),
+  },
+  process: {
+    padding: theme.spacing(1.85, 0),
   }
 });
 
@@ -153,7 +163,7 @@ class Transformer extends React.Component {
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.base})
+            transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.base})
 
                 .then(async response => {
 
@@ -175,22 +185,6 @@ class Transformer extends React.Component {
                     console.error(error);
                     this.setState({error: "An internal application error has occurred.", response: null, processing: false});
                 });
-        });
-    }
-
-    transform = async (sourceType, source, targetType, options) => {
-
-        const url = '/transform?' + new URLSearchParams(options);
-
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': targetType.mediaType + ",*/*;q=0.1",
-                'Content-Type': sourceType.mediaType + "; charset=" + document.characterSet,
-            },
-            referrerPolicy: 'no-referrer',
-            cache: 'no-cache',
-            body: source,
         });
     }
 
@@ -249,6 +243,7 @@ class Transformer extends React.Component {
                                 pretty={this.state.pretty || (this.state.targetType.prettyDisabled != null && this.state.targetType.prettyDisabled)}
                                 prettyDisabled={this.state.targetType.prettyDisabled}
                                 verbose={this.state.verbose}
+                                verboseDisabled={this.state.targetType.verbose != null && !this.state.targetType.verbose}
                                 onChange={this.handleTargetOptionsChange}
                                 />
                         </Grid>
@@ -262,6 +257,7 @@ class Transformer extends React.Component {
                     size="large"
                     onClick={this.handleProcessing}
                     disabled={this.state.processing}
+                    className={classes.process}
                     >{this.state.processing ? "Processing" : "Process"}</Button>
 
                 <Collapse in={this.state.processing} timeout={250} mountOnEnter unmountOnExit>

@@ -8,7 +8,6 @@ import {
     } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
 
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   version: {
     fontSize: '10px',
-    color: grey[400],
+    color: theme.palette.text.secondary
   },
 }));
 

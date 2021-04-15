@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(14, 0, 4, 0),
   },
   name: {
-    fontFamily: "'Montserrat', Roboto, sans-serif;",
+    fontFamily: theme.typography.h1.fontFamily,
     fontWeight: 800,
   }
 }));

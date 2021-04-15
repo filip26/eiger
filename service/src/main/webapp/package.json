@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.2",
+    "alps-unified": "/home/filip/eclipse-workspace/alps-unified/",
     "codemirror": "^5.60.0",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",

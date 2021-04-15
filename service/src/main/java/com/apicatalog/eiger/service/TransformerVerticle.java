@@ -11,6 +11,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
@@ -29,6 +30,7 @@ import com.apicatalog.alps.yaml.YamlDocumentWriter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -88,6 +90,9 @@ public class TransformerVerticle extends AbstractVerticle {
                     } catch (IllegalArgumentException e) {
                         ctx.response().setStatusCode(400).putHeader(HEADER_CONTENT_TYPE, contentTypeValue(MEDIA_TYPE_TEXT_PLAIN)).end("Base [" + (base != null ? base.getString() : "null") + "] is not valid URI." );
                     }
+//                })
+//                .handler(ctx -> {
+                    
                 });
 
         // XML -> XML | JSON | YAML
@@ -169,7 +174,13 @@ public class TransformerVerticle extends AbstractVerticle {
         @Override
         public void handle(RoutingContext ctx) {
             try {
-                final Document document = parser.parse(ctx.get(PARAM_BASE), new ByteArrayInputStream(ctx.getBody().getBytes()));
+                
+                final byte[] body = Optional.ofNullable(ctx.getBody())
+                                        
+                                        .map(Buffer::getBytes)
+                                        .orElseThrow(() -> new DocumentParserException("Document is empty."));
+
+                final Document document = parser.parse(ctx.get(PARAM_BASE), new ByteArrayInputStream(body));
 
                 if (document == null) {
                     ctx.response().end();

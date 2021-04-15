@@ -22,7 +22,7 @@ export default function Viewer(props) {
         if (contentType.includes("json")) {
             return { name: "javascript", json: true };
         }
-        if (contentType.includes("yaml")) {
+        if (contentType.includes("yaml") || contentType.includes("application/vnd.oai.openapi") || contentType.includes("application/x-asyncapi")) {
             return "yaml";
         }
         if (contentType.includes("xml")) {
@@ -30,6 +30,9 @@ export default function Viewer(props) {
         }
         if (contentType.includes( "html")) {
             return "htmlmixed";
+        }
+        if (contentType.includes("application/protobuf") || contentType.includes("x-sdl")) {
+          return "clike";
         }
         return "text";
     }
