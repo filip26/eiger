@@ -1,0 +1,76 @@
+openapi: 3.0.2
+info:
+  title: Eiger Transformer API
+  version: 0.4.9
+servers:
+  - url: 'https://eiger.apicatalog.com'
+paths:
+  /transform:
+    post:
+      summary: Transforms ALPS and OAS documents
+      operationId: transform
+      parameters:
+        - name: verbose
+          in: query
+          description: Adds implicit attributes
+          schema:
+            type: boolean
+        - name: pretty
+          in: query
+          description: Enables indented output
+          schema:
+            type: boolean
+        - name: base
+          in: query
+          description: Sets base URI
+          schema:
+            type: string
+      requestBody:
+        description: An input document represention
+        content:
+          application/vnd.oai.openapi:
+            schema:
+              type: string
+          application/alps+xml:
+            schema:
+              type: string
+          application/alps+json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: An output document representation
+          content:
+            application/alps+xml:
+              schema:
+                type: string
+            application/alps+json:
+              schema:
+                type: string
+            application/alps+yaml:
+              schema:
+                type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        location:
+          type: object
+          properties:
+            line:
+              type: integer
+            column:
+              type: integer
+        base:
+          type: string
+        mediaType:
+          type: string

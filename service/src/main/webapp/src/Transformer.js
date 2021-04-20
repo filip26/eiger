@@ -22,99 +22,11 @@ import Viewer from './Viewer';
 
 import transform from './transform';
 
+import openApi from './api.oas.yaml';
+import mediaTypes from './media-types';
 
-const types = [
-  {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-  {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-  {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi", prettyDisabled: true, verbose: false},
-  {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true},
-  {model: "asyncapi", format: "yaml", label: "AsyncAPI (YAML)", mediaType: "application/x-asyncapi", prettyDisabled: true, verbose: false},
-  {model: "protobuf", format: "c", label: "Protocol Buffers v3", mediaType: "application/protobuf", prettyDisabled: true, verbose: false},
-  {model: "sdl", format: "c", label: "SDL", mediaType: "application/x-sdl", prettyDisabled: true, verbose: false},
-//  {model: "wsdl", format: "xml", label: "WSDL", mediaType: "application/wsdl+xml"},
-]
-
-const sourceTypes = [ types[0], types[1], types[2] ];
-const targetTypes = [ types[0], types[1], types[3], types[4], types[2], types[5], types[6] ];
-
-const openApi = `openapi: 3.0.2
-info:
-  title: Eiger Transformer API
-  version: 0.4.9
-servers:
-  - url: 'https://eiger.apicatalog.com'
-paths:
-  /transform:
-    post:
-      summary: Transforms ALPS and OAS documents
-      operationId: transform
-      parameters:
-        - name: verbose
-          in: query
-          description: Adds implicit attributes
-          schema:
-            type: boolean
-        - name: pretty
-          in: query
-          description: Enables indented output
-          schema:
-            type: boolean
-        - name: base
-          in: query
-          description: Sets base URI
-          schema:
-            type: string
-      requestBody:
-        description: An input document represention
-        content:
-          application/vnd.oai.openapi:
-            schema:
-              type: string
-          application/alps+xml:
-            schema:
-              type: string
-          application/alps+json:
-            schema:
-              type: string
-      responses:
-        '200':
-          description: An output document representation
-          content:
-            application/alps+xml:
-              schema:
-                type: string
-            application/alps+json:
-              schema:
-                type: string
-            application/alps+yaml:
-              schema:
-                type: string
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        location:
-          type: object
-          properties:
-            line:
-              type: integer
-            column:
-              type: integer
-        base:
-          type: string
-        mediaType:
-          type: string
-`;
-
+const sourceTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[2] ];
+const targetTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[3], mediaTypes[4], mediaTypes[2], mediaTypes[5], mediaTypes[6] ];
 
 const styles = theme => ({
   paper: {
@@ -147,9 +59,19 @@ class Transformer extends React.Component {
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
             processing: false,
-            source: openApi,
+            source: "",
             base: "/",
         }
+    }
+    
+    componentDidMount() {
+        fetch(openApi, { method: 'GET', })
+                  .then(async response => {
+                      if (response.status === 200) {
+                          const source = await response.text();
+                          this.setState({ source: source });
+                      }
+                  });
     }
 
     handleTargetOptionsChange = state => {

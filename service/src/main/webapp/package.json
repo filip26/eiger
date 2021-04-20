@@ -14,14 +14,14 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.2",
-    "alps-unified": "/home/filip/eclipse-workspace/alps-unified/",
+    "alps-unified": "file:../../../../../alps-unified",
     "codemirror": "^5.60.0",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^17.0.2",
     "react-github-btn": "^1.2.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -46,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "yaml-loader": "^0.6.0"
   }
 }

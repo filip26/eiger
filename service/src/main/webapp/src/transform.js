@@ -22,10 +22,12 @@ const execute = async (sourceType, source, targetType, options, method) => {
     return remote(sourceType, source, {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"}, options)
       
       .then(response => {
+
           if (response.status === 200 
-                && response.headers.get("content-length")
-                && response.headers.get("content-length") > 0
+//                && response.headers.get("content-length")
+//                && response.headers.get("content-length") > 0
                 ) {
+
             return response
                       .json()
                       .then(json => {
