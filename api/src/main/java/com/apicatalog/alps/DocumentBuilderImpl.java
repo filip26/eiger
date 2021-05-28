@@ -74,11 +74,19 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         return this;
     }
 
+    @Override
+    public DocumentBuilder title(String title) {
+        document.setTitle(title);
+        return this;
+    }
+
     static final class DocumentImpl implements Document {
 
         protected DocumentVersion version;
 
         protected URI baseUri;
+        
+        protected String title;
 
         protected Set<Documentation> documentation;
 
@@ -124,6 +132,15 @@ final class DocumentBuilderImpl implements DocumentBuilder {
 
         public void setBaseUri(URI baseUri) {
             this.baseUri = baseUri;
+        }
+        
+        @Override
+        public String title() {
+            return title;
+        }
+        
+        public void setTitle(String title) {
+            this.title = title;
         }
 
         @Override

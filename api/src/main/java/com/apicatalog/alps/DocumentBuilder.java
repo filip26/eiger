@@ -28,6 +28,8 @@ public interface DocumentBuilder {
     DocumentBuilder add(LinkBuilder link);
 
     DocumentBuilder base(URI baseUri);
+    
+    DocumentBuilder title(String title);
 
     Document build() throws InvalidDocumentException;
 }
