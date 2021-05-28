@@ -1,0 +1,9 @@
+{
+    "alps": {
+        "version": "1.0",
+        "descriptor": {
+            "id": "id",
+            "def": "https://schema.org/identifier"            
+        }
+    }
+}

@@ -13,7 +13,7 @@
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "Compacted contact profile",
            "input" : "t002-in.json", 
-		   "expected" : "t002-out.json"
+		       "expected" : "t002-out.json"
         },
         {
            "@id"    : "#t003",
@@ -31,23 +31,29 @@
            "@id"    : "#t005",
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "Custom attributes on 'ext'",
-           "input" : "t005-in.json",
-           "output" : "t005-in.json"
+           "input" : "t005-in.json"
          },
      		{
            "@id"    : "#t006",
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "'doc' with tags",
            "input" : "t006-in.json",
-           "output" : "t006-in.json"
+           "expected" : "t006-out.json"
         },
-             		{
+        {
            "@id"    : "#t007",
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "'link' with tags",
            "input" : "t007-in.json",
-           "output" : "t007-in.json"
-        },                
+           "expected" : "t007-out.json"
+        },
+        {
+           "@id"    : "#t008",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'def' on descriptor ",
+           "input" : "t008-in.json",
+           "expected" : "t008-out.json"
+        },
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
