@@ -152,7 +152,7 @@ final class JsonDescriptorParser {
         }
 
         if (jsonObject.containsKey(JsonConstants.DEFINITION)) {
-            builder.href(JsonUtils.getDefinition(jsonObject));
+            builder.definition(JsonUtils.getDefinition(jsonObject));
         }
     }
 
