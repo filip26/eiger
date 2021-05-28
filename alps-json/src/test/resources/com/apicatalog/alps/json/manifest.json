@@ -52,8 +52,15 @@
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "'def' on descriptor ",
            "input" : "t008-in.json",
-           "expected" : "t008-out.json"
+           "expected" : "t008-in.json"
         },
+        {
+           "@id"    : "#t009",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on document  ",
+           "input" : "t009-in.json",
+           "expected" : "t009-in.json"
+        },        
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
