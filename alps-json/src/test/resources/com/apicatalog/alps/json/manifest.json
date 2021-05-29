@@ -50,17 +50,24 @@
         {
            "@id"    : "#t008",
            "@type"  : ["#PositiveEvaluationTest"],
-           "name"  : "'def' on descriptor ",
+           "name"  : "'def' on descriptor",
            "input" : "t008-in.json",
            "expected" : "t008-in.json"
         },
         {
-           "@id"    : "#t009",
+           "@id"    : "#t010",
            "@type"  : ["#PositiveEvaluationTest"],
-           "name"  : "'title' on document  ",
-           "input" : "t009-in.json",
-           "expected" : "t009-in.json"
-        },        
+           "name"  : "'title' on descriptor",
+           "input" : "t010-in.json",
+           "expected" : "t010-in.json"
+        },
+        {
+           "@id"    : "#t011",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on link",
+           "input" : "t011-in.json",
+           "expected" : "t011-in.json"
+        },                
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],
