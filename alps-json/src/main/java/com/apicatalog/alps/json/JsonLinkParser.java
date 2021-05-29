@@ -25,6 +25,7 @@ import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
 import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 
 final class JsonLinkParser {
@@ -79,9 +80,22 @@ final class JsonLinkParser {
             throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.rel property must be string but was " + jsonRel.getValueType());
         }
 
+        String title = null;
+        final JsonValue jsonTitle = linkObject.get(JsonConstants.TITLE);
+
+        if (jsonTitle != null) {
+        
+            if (JsonUtils.isNotString(jsonTitle)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_REL, "Link.title property must be string but was " + jsonTitle.getValueType());
+            }
+
+            title = ((JsonString)jsonTitle).getString();
+        }
+
         return Alps.createLink()
                     .href(href)
                     .rel(JsonUtils.getString(jsonRel))
+                    .title(title)
                     .tag(JsonDescriptorParser.parseTag(linkObject))
                     .build();
     }
