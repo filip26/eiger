@@ -3,7 +3,9 @@ import React from 'react'
 import { IconButton, Snackbar } from '@material-ui/core';
 
 import MuiAlert from '@material-ui/lab/Alert';
+
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -15,12 +17,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '16px',
     position: 'relative'
   },
-  copy: {
+  controls: {
     position: 'absolute',
-    bottom: theme.spacing(2),
+    bottom: theme.spacing(1),
     right: theme.spacing(4),
     zIndex: 200,
-    color: theme.palette.text.secondary,
+  },
+  action: { 
+      color: theme.palette.text.secondary,
   },
 }));
 
@@ -55,8 +59,28 @@ export default function Viewer(props) {
         }
         return "text";
     }
+
+    const typeToFileExt = contentType => {
+
+        if (contentType.includes("json")) {
+            return ".json";
+        }
+        if (contentType.includes("yaml") || contentType.includes("application/vnd.oai.openapi") || contentType.includes("application/x-asyncapi")) {
+            return ".yml";
+        }
+        if (contentType.includes("xml")) {
+            return ".xml";
+        }
+        if (contentType.includes( "html")) {
+            return ".html";
+        }
+        if (contentType.includes("application/protobuf") || contentType.includes("x-sdl")) {
+          return ".c";
+        }
+        return "";
+    }
     
-    const handleCopy =  event => {
+    const handleCopy =  () => {
         navigator.clipboard.writeText(value);
         setOpen(true);
     };
@@ -69,12 +93,26 @@ export default function Viewer(props) {
       setOpen(false);
     };
 
+    const handleDownload = () => {
+      const element = document.createElement("a");
+      const file = new Blob([value], {type: mediaType});
+      element.href = URL.createObjectURL(file);
+      element.download =  "eiger-export" + typeToFileExt(mediaType);
+      document.body.appendChild(element);
+      element.click();
+    }
+
     return (
       <div>
         <div className={classes.root}>
-          <IconButton className={classes.copy} onClick={handleCopy}>
-            <FileCopyIcon/>
-          </IconButton>
+          <div className={classes.controls}>
+            <IconButton onClick={handleCopy} title="Copy the result to a clipboard" className={classes.action}>
+              <FileCopyIcon/>
+            </IconButton>
+            <IconButton onClick={handleDownload} title="Download the result"  className={classes.action}>
+              <CloudDownloadIcon/>
+            </IconButton>            
+          </div>
           <CodeMirror
               value={value}
               options={{
@@ -89,7 +127,7 @@ export default function Viewer(props) {
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <div>
              <Alert onClose={handleClose} severity="success">
-                Result has been copied to a clipboard.
+                The result has been copied to a clipboard.
               </Alert>
           </div>
         </Snackbar>
