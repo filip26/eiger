@@ -10,6 +10,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/service/src/webapp/"
+    directory: "/service/src/main/webapp/"
     schedule:
       interval: "daily" 
