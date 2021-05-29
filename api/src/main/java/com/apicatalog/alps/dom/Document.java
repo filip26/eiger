@@ -67,5 +67,5 @@ public interface Document {
      */
     URI baseUri();
     
-    String title();
+    Optional<String> title();
 }

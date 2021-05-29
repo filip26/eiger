@@ -67,9 +67,8 @@ public final class JsonDocumentWriter implements DocumentWriter {
         // version
         alps.add(JsonConstants.VERSION, JsonConstants.VERSION_1_0);
 
-        if (document.title() != null && !document.title().isBlank()) {
-            alps.add(JsonConstants.TITLE, document.title());
-        }
+        // title
+        document.title().ifPresent(title -> alps.add(JsonConstants.TITLE, title));
         
         // documentation
         JsonDocumentationWriter.toJson(document.documentation(), verbose).ifPresent(doc -> alps.add(JsonConstants.DOCUMENTATION, doc));

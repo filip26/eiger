@@ -14,4 +14,6 @@ public interface LinkBuilder {
     LinkBuilder rel(String string);
 
     LinkBuilder tag(List<String> tag);
+    
+    LinkBuilder title(String title);
 }

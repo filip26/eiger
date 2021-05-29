@@ -71,11 +71,21 @@ abstract class XmlElement {
 
     public void addText(char[] ch, int start, int length) {}
 
-    public void complete(XmlDescriptor descriptor) {}
+//    public <T extends XmlElement> void complete(T elemenet) {}
 
+    public void complete(XmlDescriptor doc) {}
+    
     public void complete(XmlDocumentation doc) {}
 
     public void complete(XmlLink link) {}
 
     public void complete(XmlExtension ext) {}
+
+    public void beginTitle(Deque<XmlElement> stack, Attributes attributes)  throws DocumentParserException {
+        final XmlTitle title = XmlTitle.create(stack);
+        stack.push(title);
+    }
+    
+    public void complete(XmlTitle title) {}
+
 }

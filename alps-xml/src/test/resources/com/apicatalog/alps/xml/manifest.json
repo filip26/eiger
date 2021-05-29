@@ -76,7 +76,21 @@
            "name"  : "'title' on document",
            "input" : "t011-in.xml",
            "expected" : "t011-in.xml"
-        },        
+        },
+        {
+           "@id"    : "#t012",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on link",
+           "input" : "t012-in.xml",
+           "expected" : "t012-in.xml"
+        },
+        {
+           "@id"    : "#t013",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on  link",
+           "input" : "t013-in.xml",
+           "expected" : "t013-in.xml"
+        },
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],

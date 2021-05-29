@@ -156,7 +156,8 @@ public class XmlDescriptor extends XmlElement {
             final boolean selfClose = descriptor.descriptors().isEmpty()
                     && descriptor.documentation().isEmpty()
                     && descriptor.links().isEmpty()
-                    && descriptor.extensions().isEmpty();
+                    && descriptor.extensions().isEmpty()
+                    && descriptor.title().isEmpty();
 
             writer.startDescriptor(descriptor, selfClose, verbose);
 
@@ -192,5 +193,10 @@ public class XmlDescriptor extends XmlElement {
     @Override
     public void complete(XmlExtension ext) {
         builder.add(ext.builder.build());
+    }
+    
+    @Override
+    public void complete(XmlTitle title) {
+        builder.title(title.getText());
     }
 }

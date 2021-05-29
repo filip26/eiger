@@ -3,6 +3,7 @@ package com.apicatalog.alps;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.apicatalog.alps.dom.element.Link;
 
@@ -36,11 +37,19 @@ final class LinkBuilderImpl implements LinkBuilder {
         this.link.tag = tag;
         return this;
     }
+    
+    @Override
+    public LinkBuilder title(String title) {
+        this.link.title = title;
+        return this;
+    }
 
     static final class LinkImpl implements Link {
 
         URI href;
         String rel;
+        
+        String title;
 
         List<String> tag;
 
@@ -57,6 +66,11 @@ final class LinkBuilderImpl implements LinkBuilder {
         @Override
         public List<String> tag() {
             return tag != null ? tag : Collections.emptyList();
+        }
+        
+        @Override
+        public Optional<String> title() {
+            return Optional.ofNullable(title);
         }
     }
 }
