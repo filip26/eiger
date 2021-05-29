@@ -108,6 +108,17 @@ public final class JsonDocumentParser implements DocumentParser {
 
         final DocumentBuilder builder = Alps.createDocument(DocumentVersion.VERSION_1_0).base(baseUri);
 
+        // title
+        if (alpsObject.containsKey(JsonConstants.TITLE)) {
+            final JsonValue title = alpsObject.get(JsonConstants.TITLE);
+
+            if (JsonUtils.isNotString(title)) {
+                throw new InvalidDocumentException(DocumentError.INVALID_TITLE, "The 'title' property value must be JSON string but was " + title);
+            }
+
+            builder.title(JsonUtils.getString(title));            
+        }
+        
         // documentation
         if (alpsObject.containsKey(JsonConstants.DOCUMENTATION)) {
             JsonDocumentationParser.parse(alpsObject.get(JsonConstants.DOCUMENTATION)).forEach(builder::add);

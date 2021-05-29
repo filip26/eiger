@@ -1,0 +1,10 @@
+{
+    "alps": {
+        "version": "1.0",
+        "link": {
+          "title": "A title on a link element",
+          "href": "https://apicatalog.com/example",
+          "rel": "test"
+          }
+    }
+}

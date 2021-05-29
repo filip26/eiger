@@ -16,6 +16,7 @@
 package com.apicatalog.alps.xml;
 
 import java.net.URI;
+import java.util.Deque;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -24,6 +25,7 @@ import com.apicatalog.alps.Alps;
 import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.DocumentWriterException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 
@@ -73,11 +75,16 @@ final class XmlDocument extends XmlElement {
     public void complete(XmlExtension ext) {
         builder.add(ext.builder.build());
     }
+    
+    @Override
+    public void complete(XmlTitle title) {
+        builder.title(title.getText());
+    }
 
     public static void write(Document document, DocumentStreamWriter writer, boolean verbose) throws DocumentWriterException {
 
-        writer.startDocument(document.version());
-
+        writer.startDocument(document);
+        
         XmlDocumentation.write(document.documentation(), writer, verbose);
 
         XmlLink.write(document.links(), writer);
@@ -91,5 +98,9 @@ final class XmlDocument extends XmlElement {
 
     public Document build(URI baseUri) throws InvalidDocumentException {
         return builder.base(baseUri).build();
+    }
+    
+    public void binTitle(Deque<XmlElement> stack, Attributes attributes)  throws DocumentParserException {
+        
     }
 }

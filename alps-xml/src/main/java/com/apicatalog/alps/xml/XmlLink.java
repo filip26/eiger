@@ -21,12 +21,13 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 
 import com.apicatalog.alps.Alps;
+import com.apicatalog.alps.LinkBuilder;
 import com.apicatalog.alps.dom.element.Link;
 import com.apicatalog.alps.error.DocumentWriterException;
 
 final class XmlLink extends XmlElement {
 
-    Link link;
+    LinkBuilder link;
 
     private XmlLink(int index) {
         super(XmlConstants.LINK, index);
@@ -47,10 +48,15 @@ final class XmlLink extends XmlElement {
 
         final XmlLink link = new XmlLink(index);
 
-        String href = attributes.getValue(XmlConstants.HREF);
-
-        if (href != null && href.isBlank()) {
-            href = null;
+        final String href = attributes.getValue(XmlConstants.HREF);
+        URI hrefUri = null;
+        
+        if (href != null && !href.isBlank()) {
+            try {
+                hrefUri = URI.create(href);
+            } catch (IllegalArgumentException e) {
+                //TODO
+            }
         }
 
         String rel = attributes.getValue(XmlConstants.RELATION);
@@ -60,11 +66,16 @@ final class XmlLink extends XmlElement {
         }
 
         link.link = Alps.createLink()
-                        .href(URI.create(href))
+                        .href(hrefUri)
                         .rel(rel)
                         .tag(XmlDescriptor.parseTag(attributes))
-                        .build();
+                        ;
 
         return link;
+    }
+    
+    @Override
+    public void complete(XmlTitle title) {
+        link.title(title.getText());
     }
 }

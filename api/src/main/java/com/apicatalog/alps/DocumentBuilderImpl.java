@@ -70,7 +70,13 @@ final class DocumentBuilderImpl implements DocumentBuilder {
 
     @Override
     public DocumentBuilder base(URI baseUri) {
-        document.setBaseUri(baseUri);
+        document.baseUri = baseUri;
+        return this;
+    }
+
+    @Override
+    public DocumentBuilder title(String title) {
+        document.title = title;
         return this;
     }
 
@@ -79,6 +85,8 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         protected DocumentVersion version;
 
         protected URI baseUri;
+        
+        protected String title;
 
         protected Set<Documentation> documentation;
 
@@ -121,9 +129,10 @@ final class DocumentBuilderImpl implements DocumentBuilder {
         public URI baseUri() {
             return baseUri;
         }
-
-        public void setBaseUri(URI baseUri) {
-            this.baseUri = baseUri;
+        
+        @Override
+        public Optional<String> title() {
+            return Optional.ofNullable(title);
         }
 
         @Override
