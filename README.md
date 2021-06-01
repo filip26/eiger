@@ -27,22 +27,9 @@ write |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 
 ## Service
 
-Alpha version is avaiable here [https://eiger.apicatalog.com](https://eiger.apicatalog.com)
+[https://eiger.apicatalog.com](https://eiger.apicatalog.com)
 
 ## CLI
-
-### Installation
-
-Download the latest package:
-
-- [eiger-cli-0.4.8-ubuntu-20.04.zip](https://bit.ly/3jb4LF0)
-- [eiger-cli-0.4.8-macos-11.0.zip](https://bit.ly/3rkaTh1)
-
-Extract the zip content and make `eiger` command executable.
-
-```ShellSession
-> chmod +x eiger
-```
 
 ### Usage
 
@@ -126,7 +113,7 @@ Options:
 
 ## Contributing
 
-Your contribution is welcome!
+All PR's welcome!
 
 ### Roadmap
 
