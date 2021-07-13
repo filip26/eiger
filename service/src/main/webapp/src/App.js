@@ -6,7 +6,7 @@ import NoSsr from '@material-ui/core/NoSsr'
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import amber from '@material-ui/core/colors/amber';
-import lightBlue from '@material-ui/core/colors/lightBlue';
+import teal from '@material-ui/core/colors/teal';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -24,15 +24,36 @@ import "@fontsource/montserrat/800.css";
 let theme = responsiveFontSizes(createMuiTheme( {
   palette: {
     type: 'dark',
-    primary: {
-      main: lightBlue[600],
+      primary: {
+        main: teal[500],
+      },
+      secondary: {
+        main: amber.A200,
+      },      
+      background: {
+        default: '#131312',
+        paper: '#1b1b1a',
+      }
     },
-    secondary: {
-      main: amber.A200,
+  typography: {
+    h1: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontWeight: 700,
     },
-    background: {
-      default: "#131312",
-      paper: "#212121",
+    h2: {
+      fontFamily: 'Montserrat, sans-serif',
+    },
+    h3: {
+      fontFamily: 'Montserrat, sans-serif',
+    },
+    h4: {
+      fontFamily: 'Montserrat, sans-serif',
+    },
+    h5: {
+      fontFamily: 'Montserrat, sans-serif',
+    },
+    h6: {
+      fontFamily: 'Montserrat, sans-serif',
     },
   }
 }));

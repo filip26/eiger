@@ -56,13 +56,41 @@
            "input" : "t008-in.xml",
            "expected" : "t008-out.xml"
         },
-		{
+		    {
            "@id"    : "#t009",
            "@type"  : ["#PositiveEvaluationTest"],
            "name"  : "Custom attributes on extension",
            "input" : "t009-in.xml",
            "expected" : "t009-in.xml"
         },                
+        {
+           "@id"    : "#t010",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'def' on descriptor",
+           "input" : "t010-in.xml",
+           "expected" : "t010-in.xml"
+        },
+        {
+           "@id"    : "#t011",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on document",
+           "input" : "t011-in.xml",
+           "expected" : "t011-in.xml"
+        },
+        {
+           "@id"    : "#t012",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on link",
+           "input" : "t012-in.xml",
+           "expected" : "t012-in.xml"
+        },
+        {
+           "@id"    : "#t013",
+           "@type"  : ["#PositiveEvaluationTest"],
+           "name"  : "'title' on  link",
+           "input" : "t013-in.xml",
+           "expected" : "t013-in.xml"
+        },
         {
            "@id"    : "#nt001",
            "@type"  : ["#NegativeEvaluationTest"],

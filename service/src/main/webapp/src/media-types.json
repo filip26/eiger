@@ -1,0 +1,53 @@
+[
+  {
+    "model": "alps",
+    "format": "xml", 
+    "label": "ALPS (XML)", 
+    "mediaType": "application/alps+xml"
+  },
+  {
+    "model": "alps",
+    "format": "json",
+    "label": "ALPS (JSON)",
+    "mediaType": "application/alps+json"
+  },
+  {
+    "model": "oas",
+    "format": "yaml",
+    "label": "OpenAPI v3 (YAML)",
+    "mediaType": "application/vnd.oai.openapi",
+    "prettyDisabled": true,
+    "verbose": false
+  },
+  {
+    "model": "alps",
+    "format": "yaml",
+    "label": "ALPS (YAML)",
+    "mediaType": "application/alps+yaml",
+    "prettyDisabled": true
+  },
+  {
+    "model": "asyncapi",
+    "format": "yaml",
+    "label": "AsyncAPI (YAML)",
+    "mediaType": "application/x-asyncapi",
+    "prettyDisabled": true,
+    "verbose": false
+  },
+  {
+    "model": "protobuf",
+    "format": "c", 
+    "label": "Protocol Buffers v3",
+    "mediaType": "application/protobuf",
+    "prettyDisabled": true,
+    "verbose": false
+  },
+  {
+    "model": "sdl", 
+    "format": "c",
+    "label": "SDL",
+    "mediaType": "application/x-sdl",
+    "prettyDisabled": true, 
+    "verbose": false
+  }
+]

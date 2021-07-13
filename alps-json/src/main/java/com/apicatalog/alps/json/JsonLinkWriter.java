@@ -46,6 +46,8 @@ final class JsonLinkWriter {
 
         final JsonObjectBuilder jsonLink = Json.createObjectBuilder();
 
+        link.title().ifPresent(title -> jsonLink.add(JsonConstants.TITLE, title));
+
         if (link.href() != null) {
             jsonLink.add(JsonConstants.HREF, link.href().toString());
         }
@@ -53,7 +55,7 @@ final class JsonLinkWriter {
         if (link.rel() != null && !link.rel().isBlank()) {
             jsonLink.add(JsonConstants.RELATION, link.rel());
         }
-
+        
         // tag
         if (!link.tag().isEmpty()) {
             jsonLink.add(JsonConstants.TAG, link.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));

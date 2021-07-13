@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.DescriptorType;
 import com.apicatalog.alps.dom.element.Documentation;
@@ -48,7 +48,7 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
     }
 
     @Override
-    public void startDocument(final DocumentVersion version) throws DocumentWriterException {
+    public void startDocument(final Document document) throws DocumentWriterException {
         try {
 
           writer.writeStartDocument(Charset.defaultCharset().name(), "1.0");
@@ -62,6 +62,19 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
 
           if (isPrettyPrint()) {
               writer.writeCharacters("\n");
+          }
+
+          if (document.title().isPresent()) {
+              
+              writeIndent();
+
+              writer.writeStartElement(XmlConstants.TITLE);
+              writeDocContent(document.title().get());
+              writer.writeEndElement();
+              
+              if (isPrettyPrint()) {
+                  writer.writeCharacters("\n");
+              }
           }
 
         } catch (XMLStreamException e) {
@@ -133,12 +146,6 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeAttribute(XmlConstants.RETURN_TYPE, returnType.get().toString());
             }
 
-            final Optional<String> title = descriptor.title();
-
-            if (title.isPresent()) {
-                writer.writeAttribute(XmlConstants.TITLE, title.get());
-            }
-
             // tag
             if (!descriptor.tag().isEmpty()) {
                 writer.writeAttribute(XmlConstants.TAG, descriptor.tag().stream().map(Object::toString).collect(Collectors.joining(" ")));
@@ -148,6 +155,23 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
                 writer.writeCharacters("\n");
             }
 
+            final Optional<String> title = descriptor.title();
+
+            if (title.isPresent()) {
+                depth++;
+                
+                writeIndent();
+                
+                writer.writeStartElement(XmlConstants.TITLE);
+                writeDocContent(title.get());
+                writer.writeEndElement();
+                depth--;
+
+                if (isPrettyPrint()) {
+                    writer.writeCharacters("\n");
+                }
+            }
+            
             if (!selfClose) {
                 depth++;
             }
@@ -255,7 +279,13 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
         try {
             writeIndent();
 
-            writer.writeEmptyElement(XmlConstants.LINK);
+            if (link.title().isEmpty()) {
+            
+                writer.writeEmptyElement(XmlConstants.LINK);
+                
+            } else {
+                writer.writeStartElement(XmlConstants.LINK);
+            }
 
             final URI href = link.href();
 
@@ -277,6 +307,31 @@ final class XmlDocumentStreamWriter implements DocumentStreamWriter {
             if (isPrettyPrint()) {
                 writer.writeCharacters("\n");
             }
+            
+            final Optional<String> title = link.title();
+
+            if (title.isPresent()) {
+                depth++;
+                
+                writeIndent();
+                
+                writer.writeStartElement(XmlConstants.TITLE);
+                writeDocContent(title.get());
+                writer.writeEndElement();
+                depth--;
+
+                if (isPrettyPrint()) {
+                    writer.writeCharacters("\n");
+                }
+                
+                writeIndent();
+                writer.writeEndElement();
+                
+                if (isPrettyPrint()) {
+                    writer.writeCharacters("\n");
+                }
+            }
+
 
         } catch (XMLStreamException e) {
             throw new DocumentWriterException(e);

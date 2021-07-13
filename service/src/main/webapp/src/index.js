@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/material-darker.css');
 
+require('codemirror/mode/clike/clike.js');
 require('codemirror/mode/xml/xml.js');
 require('codemirror/mode/yaml/yaml.js');
 require('codemirror/mode/javascript/javascript.js');

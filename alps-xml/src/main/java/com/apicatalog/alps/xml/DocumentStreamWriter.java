@@ -15,7 +15,7 @@
  */
 package com.apicatalog.alps.xml;
 
-import com.apicatalog.alps.dom.DocumentVersion;
+import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.element.Descriptor;
 import com.apicatalog.alps.dom.element.Documentation;
 import com.apicatalog.alps.dom.element.Extension;
@@ -24,7 +24,7 @@ import com.apicatalog.alps.error.DocumentWriterException;
 
 public interface DocumentStreamWriter {
 
-    void startDocument(DocumentVersion version) throws DocumentWriterException;
+    void startDocument(Document document) throws DocumentWriterException;
 
     void endDocument() throws DocumentWriterException;
 

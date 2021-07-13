@@ -20,94 +20,13 @@ import TargetOptions from './TargetOptions';
 import Editor from './Editor';
 import Viewer from './Viewer';
 
-const types = [
-  {model: "alps", format: "xml", label: "ALPS (XML)", mediaType: "application/alps+xml"},
-  {model: "alps", format: "json", label: "ALPS (JSON)", mediaType: "application/alps+json"},
-  {model: "oas", format: "yaml", label: "OpenAPI v3 (YAML)", mediaType: "application/vnd.oai.openapi"},
-  {model: "alps", format: "yaml", label: "ALPS (YAML)", mediaType: "application/alps+yaml", prettyDisabled: true}
-]
+import transform from './transform';
 
-const sourceTypes = [ types[0], types[1], types[2] ];
-const targetTypes = [ types[0], types[1], types[3] ];
+import openApi from './api.oas.yaml';
+import mediaTypes from './media-types';
 
-const openApi = `openapi: 3.0.2
-info:
-  title: Eiger Transformer API
-  version: 0.4.9
-servers:
-  - url: 'https://eiger.apicatalog.com'
-paths:
-  /transform:
-    post:
-      summary: Transforms ALPS and OAS documents
-      operationId: transform
-      parameters:
-        - name: verbose
-          in: query
-          description: Adds implicit attributes
-          schema:
-            type: boolean
-        - name: pretty
-          in: query
-          description: Enables indented output
-          schema:
-            type: boolean
-        - name: base
-          in: query
-          description: Sets base URI
-          schema:
-            type: string
-      requestBody:
-        description: An input document represention
-        content:
-          application/vnd.oai.openapi:
-            schema:
-              type: string
-          application/alps+xml:
-            schema:
-              type: string
-          application/alps+json:
-            schema:
-              type: string
-      responses:
-        '200':
-          description: An output document representation
-          content:
-            application/alps+xml:
-              schema:
-                type: string
-            application/alps+json:
-              schema:
-                type: string
-            application/alps+yaml:
-              schema:
-                type: string
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-components:
-  schemas:
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
-        location:
-          type: object
-          properties:
-            line:
-              type: integer
-            column:
-              type: integer
-        base:
-          type: string
-        mediaType:
-          type: string
-`;
-
+const sourceTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[2] ];
+const targetTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[3] /*, mediaTypes[4], mediaTypes[2], mediaTypes[5], mediaTypes[6]*/ ];
 
 const styles = theme => ({
   paper: {
@@ -123,6 +42,9 @@ const styles = theme => ({
   },
   error: {
     padding: theme.spacing(1.5),
+  },
+  process: {
+    padding: theme.spacing(1.85, 0),
   }
 });
 
@@ -137,9 +59,19 @@ class Transformer extends React.Component {
             sourceType: sourceTypes[2],
             targetType: targetTypes[0],
             processing: false,
-            source: openApi,
+            source: "",
             base: "/",
         }
+    }
+    
+    componentDidMount() {
+        fetch(openApi, { method: 'GET', })
+                  .then(async response => {
+                      if (response.status === 200) {
+                          const source = await response.text();
+                          this.setState({ source: source });
+                      }
+                  });
     }
 
     handleTargetOptionsChange = state => {
@@ -153,7 +85,7 @@ class Transformer extends React.Component {
     handleProcessing = () => {
         this.setState({processing: true}, () => {
 
-            this.transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.base})
+            transform(this.state.sourceType, this.state.source, this.state.targetType, {verbose: this.state.verbose, pretty: this.state.pretty, base: this.state.base})
 
                 .then(async response => {
 
@@ -175,22 +107,6 @@ class Transformer extends React.Component {
                     console.error(error);
                     this.setState({error: "An internal application error has occurred.", response: null, processing: false});
                 });
-        });
-    }
-
-    transform = async (sourceType, source, targetType, options) => {
-
-        const url = '/transform?' + new URLSearchParams(options);
-
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': targetType.mediaType + ",*/*;q=0.1",
-                'Content-Type': sourceType.mediaType + "; charset=" + document.characterSet,
-            },
-            referrerPolicy: 'no-referrer',
-            cache: 'no-cache',
-            body: source,
         });
     }
 
@@ -249,6 +165,7 @@ class Transformer extends React.Component {
                                 pretty={this.state.pretty || (this.state.targetType.prettyDisabled != null && this.state.targetType.prettyDisabled)}
                                 prettyDisabled={this.state.targetType.prettyDisabled}
                                 verbose={this.state.verbose}
+                                verboseDisabled={this.state.targetType.verbose != null && !this.state.targetType.verbose}
                                 onChange={this.handleTargetOptionsChange}
                                 />
                         </Grid>
@@ -262,6 +179,7 @@ class Transformer extends React.Component {
                     size="large"
                     onClick={this.handleProcessing}
                     disabled={this.state.processing}
+                    className={classes.process}
                     >{this.state.processing ? "Processing" : "Process"}</Button>
 
                 <Collapse in={this.state.processing} timeout={250} mountOnEnter unmountOnExit>

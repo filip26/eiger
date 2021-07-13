@@ -11,6 +11,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const expandTabs = cm => {
+    if (cm.somethingSelected()) {
+        cm.indentSelection("add");
+      
+    } else {
+      cm.replaceSelection(cm.getOption("indentWithTabs")? "\t": Array(cm.getOption("indentUnit") + 1).join(" "), "end", "+input");
+    }
+}
+
 export default function Editor(props) {
 
     const classes = useStyles();
@@ -23,6 +32,9 @@ export default function Editor(props) {
             mode: mode,
             theme: 'material-darker',
             lineNumbers: true,
+            extraKeys: {
+              Tab: expandTabs,
+            },
         };
 
     if (readOnly) {

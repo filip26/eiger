@@ -66,4 +66,6 @@ public interface Document {
      * @return base {@link URI}
      */
     URI baseUri();
+    
+    Optional<String> title();
 }

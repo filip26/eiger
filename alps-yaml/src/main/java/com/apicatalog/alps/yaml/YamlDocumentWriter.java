@@ -69,6 +69,9 @@ public final class YamlDocumentWriter implements DocumentWriter {
         // version
         alps.add(YamlConstants.VERSION, Yaml.createScalar(YamlConstants.VERSION_1_0));
 
+        // title
+        document.title().ifPresent(title -> alps.add(YamlConstants.TITLE, title));
+        
         // documentation
         YamlDocumentationWriter.toYaml(document.documentation(), verbose).ifPresent(doc -> alps.add(YamlConstants.DOCUMENTATION, doc));
 

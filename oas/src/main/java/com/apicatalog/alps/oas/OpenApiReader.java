@@ -18,6 +18,7 @@ import com.apicatalog.alps.DocumentBuilder;
 import com.apicatalog.alps.dom.Document;
 import com.apicatalog.alps.dom.DocumentVersion;
 import com.apicatalog.alps.dom.element.DescriptorType;
+import com.apicatalog.alps.error.DocumentError;
 import com.apicatalog.alps.error.DocumentParserException;
 import com.apicatalog.alps.error.InvalidDocumentException;
 import com.apicatalog.alps.io.DocumentParser;
@@ -58,8 +59,11 @@ public final class OpenApiReader implements DocumentParser {
     private static final Document parseContent(final String content) throws InvalidDocumentException {
 
         final SwaggerParseResult result = new OpenAPIV3Parser().readContents(content);
-        //TODO errors?
-
+        
+        if (result.getMessages() != null && !result.getMessages().isEmpty()) {
+            throw new InvalidDocumentException(DocumentError.INVALID_DOC, String.join(", ", result.getMessages()));
+        }
+ 
         final OpenAPI oas = result.getOpenAPI();
 
         if (oas == null) {

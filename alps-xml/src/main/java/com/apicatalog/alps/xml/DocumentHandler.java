@@ -79,21 +79,20 @@ final class DocumentHandler extends DefaultHandler {
             }
 
             if (XmlConstants.DOCUMENTATION.equals(elementName)) {
-
                 stack.peek().beginDocumentation(stack, attributes);
                 state = State.DOCUMENTATION;
 
             } else if (XmlConstants.DESCRIPTOR.equals(elementName)) {
-
                 stack.peek().beginDescriptor(stack, attributes);
 
             } else if (XmlConstants.LINK.equals(elementName)) {
-
                 stack.peek().beginLink(stack, attributes);
 
             } else if (XmlConstants.EXTENSION.equals(elementName)) {
-
                 stack.peek().beginExtension(stack, attributes);
+                
+            } else if (XmlConstants.TITLE.equals(elementName)) {
+                stack.peek().beginTitle(stack, attributes);
             }
 
         } catch (DocumentParserException e) {
@@ -129,6 +128,9 @@ final class DocumentHandler extends DefaultHandler {
 
                 } else if (XmlConstants.EXTENSION.equals(elementName)) {
                     stack.peek().complete((XmlExtension)child);
+                    
+                } else if (XmlConstants.TITLE.equals(elementName)) {
+                    stack.peek().complete((XmlTitle)child);
                 }
             }
 
@@ -144,12 +146,8 @@ final class DocumentHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-
         super.characters(ch, start, length);
-
-        if (State.DOCUMENTATION.equals(state)) {
-            stack.peek().addText(ch, start, length);
-        }
+        stack.peek().addText(ch, start, length);
     }
 
     public Document getDocument() throws DocumentParserException {

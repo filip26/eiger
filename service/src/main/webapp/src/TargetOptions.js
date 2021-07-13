@@ -26,7 +26,7 @@ export default function TargetOptions(props) {
                   />}
                 label="Pretty"
                 />
-            <FormControlLabel
+            <FormControlLabel disabled={props.verboseDisabled}
                 control={
                     <Checkbox
                         checked={props.verbose}
