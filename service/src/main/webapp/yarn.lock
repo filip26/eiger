@@ -1202,10 +1202,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fontsource/montserrat@^4.4.5":
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-4.4.5.tgz#f97ebea605f4a2d6b9b23a19bc9bf8fc6f4c79d5"
-  integrity sha512-1F3cR9OIp4Qi1AJHFg/SeFeUWLYemMgI3ldetx0mrlHoWeMuK+p2YentYIIZVkV9ogXOIE2QEw7VnHlGBPo7iw==
+"@fontsource/montserrat@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-4.5.0.tgz#8390d428c5eb440e78e33e13ff667ea4e0e27fb4"
+  integrity sha512-gbGuqmEf/hfwfzJzoeSMmCr+WKFmzs+fv1pm0aTM6iiMWhXJSmwfKzfWZL4c5a+PlCD/poySzXxu5yz0yjJ82A==
 
 "@fontsource/roboto@^4.4.5":
   version "4.4.5"
