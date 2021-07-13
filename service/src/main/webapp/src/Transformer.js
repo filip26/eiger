@@ -26,7 +26,7 @@ import openApi from './api.oas.yaml';
 import mediaTypes from './media-types';
 
 const sourceTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[2] ];
-const targetTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[3], mediaTypes[4], mediaTypes[2], mediaTypes[5], mediaTypes[6] ];
+const targetTypes = [ mediaTypes[0], mediaTypes[1], mediaTypes[3] /*, mediaTypes[4], mediaTypes[2], mediaTypes[5], mediaTypes[6]*/ ];
 
 const styles = theme => ({
   paper: {

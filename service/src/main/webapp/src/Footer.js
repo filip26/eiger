@@ -3,8 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { 
     Grid,  
-    Typography, 
-    Link, 
     Container 
     } from '@material-ui/core';
     
@@ -52,32 +50,6 @@ export default function Footer() {
                 data-size="large"
                 aria-label="Sponsor @filip26 on GitHub"
                 >Sponsor</GitHubButton>
-            </Grid>
-            
-            <Grid item xs={12} align="center">
-              <Typography paragraph className={classes.powered} color="textSecondary" variant="body1">
-                Powered by
-                              <Link
-                              color="textPrimary"
-                target="_blank"
-                href="https://github.com/filip26/eiger"
-                aria-label="Eiger GitHub Repository"
-                rel="noopener"
-                className={classes.link}
-                >@filip26/eiger</Link>
-                and 
-               <Link
-               color="textPrimary"
-                target="_blank"
-                href="https://github.com/mamund/alps-unified"
-                aria-label="ALPS Unified GitHub Repository"
-                rel="noopener"
-                className={classes.link}
-                >
-                @mamund/alps-unified</Link>
-
-              </Typography>
-
             </Grid>
 
           </Grid>
